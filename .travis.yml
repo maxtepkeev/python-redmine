@@ -5,5 +5,8 @@ python:
   - "3.3"
 install:
   - "pip install -r tests/requirements.txt --use-mirrors"
+  - "pip install coveralls"
 script:
   - "nosetests --with-coverage --cover-package=redmine"
+after_success:
+  - "coveralls"
