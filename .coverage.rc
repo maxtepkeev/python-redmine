@@ -1,0 +1,9 @@
+[run]
+source = redmine
+
+[report]
+omit =
+    */docs/*
+    */tests/*
+    */python?.?/*
+    */site-packages/*
