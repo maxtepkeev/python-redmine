@@ -83,6 +83,16 @@ class TestResources(unittest.TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
+    def test_resource_supports_dictionary_like_attr_retrieval(self):
+        self.response.json.return_value = responses['project']['get']
+        project = self.redmine.project.get(1)
+        self.assertEqual(project['id'], 1)
+        self.assertEqual(project['name'], 'Foo')
+
+    def test_resource_supports_url_retrieval(self):
+        self.response.json.return_value = responses['project']['get']
+        self.assertEqual(self.redmine.project.get(1).url, '{}/projects/1'.format(self.url))
+
     def test_project_version(self):
         self.assertEqual(self.redmine.project.resource_class.version, '1.0')
 

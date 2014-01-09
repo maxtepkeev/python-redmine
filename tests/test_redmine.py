@@ -46,7 +46,15 @@ class TestRedmineRequest(unittest.TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-    def test_successful_response(self):
+    def test_successful_response_via_username_password(self):
+        self.redmine.username = 'john'
+        self.redmine.password = 'qwerty'
+        self.response.status_code = 200
+        self.response.json.return_value = {'success': True}
+        self.assertEqual(self.redmine.request('get', self.url)['success'], True)
+
+    def test_successful_response_via_api_key(self):
+        self.redmine.key = '123'
         self.response.status_code = 200
         self.response.json.return_value = {'success': True}
         self.assertEqual(self.redmine.request('get', self.url)['success'], True)

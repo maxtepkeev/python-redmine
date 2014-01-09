@@ -105,6 +105,12 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(project.identifier, 'foo')
         self.assertEqual(project.id, 1)
 
+    @mock.patch('requests.get')
+    def test_get_single_resource_not_found(self, mock_get):
+        mock_get.return_value = mock.Mock()
+        project = self.redmine.project.get('foo')
+        self.assertEqual(project, None)
+
     def test_get_all_resources(self):
         self.assertIsInstance(self.redmine.project.all(), ResourceSet)
 

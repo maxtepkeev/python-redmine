@@ -38,9 +38,13 @@ class TestResultSet(unittest.TestCase):
     def test_supports_len(self):
         self.assertEqual(len(self.redmine.project.all()), 3)
 
-    def test_get_method(self):
+    def test_get_method_resource_found(self):
         projects = self.redmine.project.all().get(2)
         self.assertEqual(projects.id, 2)
+
+    def test_get_method_resource_not_found(self):
+        projects = self.redmine.project.all().get(6)
+        self.assertEqual(projects, None)
 
     def test_filter_method(self):
         projects = self.redmine.project.all().filter((1, 3))
