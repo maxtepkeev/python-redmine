@@ -41,3 +41,40 @@ a simple but powerful Pythonic API inspired by a well-known `Django ORM
     'Vacation'
     >>> project.issues[0].time_entries
     <redmine.resultsets.ResourceSet object with TimeEntry resources>
+
+Dependencies
+------------
+
+Python Redmine relies heavily on great `Requests <http://docs.python-requests.org>`_
+library by Kenneth Reitz for all the http(s) calls.
+
+Installation
+------------
+
+To install Python Redmine, simply:
+
+.. code-block:: bash
+
+    $ pip install python-redmine
+
+or:
+
+.. code-block:: bash
+
+    $ easy_install python-redmine
+
+Documentation
+-------------
+
+Documentation is available at http://python-redmine.readthedocs.org.
+
+Contact and Support
+-------------------
+
+I will be glad to get your feedback, pull requests, issues, whatever. Feel free to contact me for any questions.
+
+Copyright and License
+---------------------
+
+``python-redmine`` is protected by Apache 2.0 licence. Check the `LICENCE
+<https://github.com/maxtepkeev/python-redmine/blob/master/LICENSE>`_ for details.
