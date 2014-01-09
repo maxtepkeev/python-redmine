@@ -76,5 +76,5 @@ I will be glad to get your feedback, pull requests, issues, whatever. Feel free 
 Copyright and License
 ---------------------
 
-``python-redmine`` is protected by Apache 2.0 licence. Check the `LICENCE
+``python-redmine`` is protected by Apache 2.0 licence. Check the `LICENSE
 <https://github.com/maxtepkeev/python-redmine/blob/master/LICENSE>`_ for details.
