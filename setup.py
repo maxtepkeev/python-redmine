@@ -1,10 +1,10 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 setup(
     name='python-redmine',
     version='0.1.0',
-    packages=find_packages(),
+    packages=['redmine'],
     url='https://github.com/maxtepkeev/python-redmine',
     license=open('LICENSE').read(),
     author='Max Tepkeev',
