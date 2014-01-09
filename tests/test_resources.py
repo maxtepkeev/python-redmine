@@ -83,15 +83,48 @@ class TestResources(unittest.TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-    def test_resource_supports_dictionary_like_attr_retrieval(self):
+    def test_supports_dictionary_like_attribute_retrieval(self):
         self.response.json.return_value = responses['project']['get']
         project = self.redmine.project.get(1)
         self.assertEqual(project['id'], 1)
         self.assertEqual(project['name'], 'Foo')
 
-    def test_resource_supports_url_retrieval(self):
+    def test_supports_url_retrieval(self):
         self.response.json.return_value = responses['project']['get']
         self.assertEqual(self.redmine.project.get(1).url, '{}/projects/1'.format(self.url))
+
+    def test_has_custom_repr(self):
+        self.response.json.return_value = responses['project']['get']
+        self.assertEqual(self.redmine.project.get(1).__repr__(), '<redmine.resources.Project #1 "Foo">')
+
+    def test_can_refresh_itself(self):
+        self.response.json.return_value = responses['project']['get']
+        project = self.redmine.project.get(1)
+        self.assertEqual(project.id, 1)
+        self.assertEqual(project.name, 'Foo')
+        self.response.json.return_value = {'project': {'id': 2, 'name': 'Bar'}}
+        project = project.refresh()
+        self.assertEqual(project.id, 2)
+        self.assertEqual(project.name, 'Bar')
+
+    def test_resource_dict_is_converted_to_resource_object(self):
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        issue.attributes['author'] = {'id': 1, 'name': 'John Smith'}
+        self.assertEqual(issue.author.__repr__(), '<redmine.resources.User #1 "John Smith">')
+
+    def test_resource_list_of_dicts_is_converted_to_resource_set(self):
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        issue.attributes['custom_fields'] = [{'id': 1, 'name': 'Foo'}, {'id': 2, 'name': 'Bar'}]
+        self.assertEqual(
+            issue.custom_fields.__repr__(),
+            '<redmine.resultsets.ResourceSet object with CustomField resources>'
+        )
+
+    def test_dir_returns_resource_attributes(self):
+        self.response.json.return_value = responses['issue']['get']
+        self.assertEqual(dir(self.redmine.issue.get(1)), ['id', 'relations', 'subject', 'time_entries'])
 
     def test_project_version(self):
         self.assertEqual(self.redmine.project.resource_class.version, '1.0')
@@ -151,6 +184,18 @@ class TestResources(unittest.TestCase):
         self.assertIsInstance(issue.relations, ResourceSet)
         self.assertIsInstance(issue.time_entries, ResourceSet)
 
+    def test_issue_supports_repr_without_subject(self):
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        del issue['attributes']['subject']
+        self.assertEqual(issue.__repr__(), '<redmine.resources.Issue #1>')
+
+    def test_issue_journals(self):
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        issue.attributes['journals'] = [{'id': 1}]
+        self.assertEqual(issue.journals[0].__repr__(), '<redmine.resources.IssueJournal #1>')
+
     def test_time_entry_version(self):
         self.assertEqual(self.redmine.time_entry.resource_class.version, '1.1')
 
@@ -209,6 +254,14 @@ class TestResources(unittest.TestCase):
         wiki_pages = self.redmine.wiki_page.filter(project_id=1)
         self.assertEqual(wiki_pages[0].title, 'Foo')
         self.assertEqual(wiki_pages[1].title, 'Bar')
+
+    def test_wiki_page_refresh_by_title(self):
+        self.response.json.return_value = responses['wiki_page']['get']
+        wiki_page = self.redmine.wiki_page.get('title', project_id=1)
+        self.assertEqual(wiki_page.title, 'Foo')
+        self.response.json.return_value = {'wiki_page': {'title': 'Bar'}}
+        wiki_page = wiki_page.refresh()
+        self.assertEqual(wiki_page.title, 'Bar')
 
     def test_project_membership_version(self):
         self.assertEqual(self.redmine.project_membership.resource_class.version, '1.4')
@@ -393,3 +446,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(fields[0].name, 'Foo')
         self.assertEqual(fields[1].id, 2)
         self.assertEqual(fields[1].name, 'Bar')
+
+    def test_custom_field_return_value_even_if_there_is_none(self):
+        self.response.json.return_value = responses['custom_field']['all']
+        fields = self.redmine.custom_field.all()
+        self.assertEqual(fields[0].id, 1)
+        self.assertEqual(fields[0].name, 'Foo')
+        self.assertEqual(fields[0].value, 0)

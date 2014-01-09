@@ -117,6 +117,9 @@ class TestResourceManager(unittest.TestCase):
     def test_get_filtered_resources(self):
         self.assertIsInstance(self.redmine.issue.filter(project_id='foo'), ResourceSet)
 
+    def test_try_to_get_all_resources_if_filtering_fails(self):
+        self.assertIsInstance(self.redmine.time_entry.filter(bad_filter='foo'), ResourceSet)
+
     def test_resource_get_method_unsupported_exception(self):
         self.assertRaises(ResourceBadMethodError, lambda: self.redmine.enumeration.get('foo'))
 

@@ -18,6 +18,12 @@ class TestResultSet(unittest.TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
+    def test_has_custom_repr(self):
+        self.assertEqual(
+            self.redmine.project.all().__repr__(),
+            '<redmine.resultsets.ResourceSet object with Project resources>'
+        )
+
     def test_limit_offset(self):
         self.response.json.return_value = {'projects': response['projects'][1:3]}
         projects = self.redmine.project.all()[1:3]
