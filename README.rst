@@ -7,6 +7,18 @@ project management application. Redmine exposes some of it's data via `REST API
 a simple but powerful Pythonic API inspired by a well-known `Django ORM
 <https://docs.djangoproject.com/en/dev/topics/db/queries/>`_:
 
+.. image:: https://badge.fury.io/py/python-redmine.png
+    :target: http://badge.fury.io/py/python-redmine
+
+.. image:: https://pypip.in/d/python-redmine/badge.png
+    :target: https://crate.io/packages/python-redmine
+
+.. image:: https://travis-ci.org/maxtepkeev/python-redmine.png?branch=master
+    :target: https://travis-ci.org/maxtepkeev/python-redmine
+
+.. image:: https://coveralls.io/repos/maxtepkeev/python-redmine/badge.png?branch=master
+    :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
+
 .. code-block:: python
 
     >>> redmine = Redmine('http://demo.redmine.org')
@@ -29,4 +41,3 @@ a simple but powerful Pythonic API inspired by a well-known `Django ORM
     'Vacation'
     >>> project.issues[0].time_entries
     <redmine.resultsets.ResourceSet object with TimeEntry resources>
-
