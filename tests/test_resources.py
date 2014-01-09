@@ -124,7 +124,11 @@ class TestResources(unittest.TestCase):
 
     def test_dir_returns_resource_attributes(self):
         self.response.json.return_value = responses['issue']['get']
-        self.assertEqual(dir(self.redmine.issue.get(1)), ['id', 'relations', 'subject', 'time_entries'])
+        attributes = dir(self.redmine.issue.get(1))
+        self.assertIn('id', attributes)
+        self.assertIn('subject', attributes)
+        self.assertIn('relations', attributes)
+        self.assertIn('time_entries', attributes)
 
     def test_project_version(self):
         self.assertEqual(self.redmine.project.resource_class.version, '1.0')
