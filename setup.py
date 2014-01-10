@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='python-redmine',
-    version='0.1.0',
+    version='0.1.1',
     packages=['redmine'],
     url='https://github.com/maxtepkeev/python-redmine',
     license=open('LICENSE').read(),
@@ -24,6 +24,7 @@ setup(
         'Environment :: Console',
         'Environment :: Web Environment',
         'Operating System :: OS Independent',
+        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',

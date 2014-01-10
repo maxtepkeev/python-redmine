@@ -43,10 +43,3 @@ Table of contents
     exceptions
     license
     changelog
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
