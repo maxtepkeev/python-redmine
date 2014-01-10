@@ -113,7 +113,7 @@ class _Resource(object):
 
     def __dir__(self):
         """We need to show only real Redmine resource attributes on dir() call"""
-        return self.attributes.keys()
+        return list(self.attributes.keys())
 
     def __iter__(self):
         """Provides a way to iterate through resource attributes and its values"""
