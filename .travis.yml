@@ -1,12 +1,14 @@
 language: python
 python:
-  - "2.7"
-  - "3.2"
-  - "3.3"
+  - 2.6
+  - 2.7
+  - 3.2
+  - 3.3
 install:
-  - "pip install -r tests/requirements.txt --use-mirrors"
-  - "pip install coveralls"
+  - pip install -r tests/requirements.txt --use-mirrors
+  - pip install coveralls
+  - if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install unittest2; fi
 script:
-  - "nosetests --with-coverage --cover-package=redmine"
+  - nosetests --with-coverage --cover-erase --cover-package=redmine
 after_success:
-  - "coveralls"
+  - coveralls

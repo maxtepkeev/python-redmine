@@ -1,3 +1,4 @@
+import sys
 from datetime import datetime
 from redmine.managers import ResourceManager
 from redmine.exceptions import ResourceAttrError
@@ -84,7 +85,7 @@ class _Resource(object):
 
             # If item should be requested from Redmine, let's do it
             elif item in _RESOURCE_RELATIONS_MAP and self.attributes[item] is None:
-                filters = {'{}_id'.format(self.__class__.__name__.lower()): self.id}
+                filters = {'{0}_id'.format(self.__class__.__name__.lower()): self.id}
                 manager = ResourceManager(self.manager.redmine, _RESOURCE_RELATIONS_MAP[item])
                 return manager.filter(**filters)
 
@@ -121,11 +122,11 @@ class _Resource(object):
 
     def __repr__(self):
         """Official representation of the Redmine resource"""
-        return '<{}.{} #{} "{}">'.format(
+        return '<{0}.{1} #{2} "{3}">'.format(
             self.__class__.__module__,
             self.__class__.__name__,
             self.id,
-            self.name
+            self.name.encode('utf-8') if sys.version_info[0] < 3 else self.name
         )
 
 
@@ -134,7 +135,7 @@ class Project(_Resource):
     container_all = 'projects'
     container_one = 'project'
     query_all = '/projects.json'
-    query_one = '/projects/{}.json'
+    query_one = '/projects/{0}.json'
 
     _relations = {
         'wiki_pages': None,
@@ -152,7 +153,7 @@ class Issue(_Resource):
     container_one = 'issue'
     container_filter = 'issues'
     query_all = '/issues.json'
-    query_one = '/issues/{}.json'
+    query_one = '/issues/{0}.json'
     query_filter = '/issues.json'
 
     _relations = {
@@ -162,14 +163,14 @@ class Issue(_Resource):
 
     def __repr__(self):
         try:
-            return '<{}.{} #{} "{}">'.format(
+            return '<{0}.{1} #{2} "{3}">'.format(
                 self.__class__.__module__,
                 self.__class__.__name__,
                 self.id,
-                self.subject
+                self.subject.encode('utf-8') if sys.version_info[0] < 3 else self.subject
             )
         except ResourceAttrError:
-            return '<{}.{} #{}>'.format(
+            return '<{0}.{1} #{2}>'.format(
                 self.__class__.__module__,
                 self.__class__.__name__,
                 self.id
@@ -182,11 +183,11 @@ class TimeEntry(_Resource):
     container_one = 'time_entry'
     container_filter = 'time_entries'
     query_all = '/time_entries.json'
-    query_one = '/time_entries/{}.json'
+    query_one = '/time_entries/{0}.json'
     query_filter = '/issues/{issue_id}/time_entries.json'
 
     def __repr__(self):
-        return '<{}.{} #{}>'.format(
+        return '<{0}.{1} #{2}>'.format(
             self.__class__.__module__,
             self.__class__.__name__,
             self.id
@@ -202,14 +203,14 @@ class Enumeration(_Resource):
 class Attachment(_Resource):
     version = '1.3'
     container_one = 'attachment'
-    query_one = '/attachments/{}.json'
+    query_one = '/attachments/{0}.json'
 
     def __repr__(self):
-        return '<{}.{} #{} "{}">'.format(
+        return '<{0}.{1} #{2} "{3}">'.format(
             self.__class__.__module__,
             self.__class__.__name__,
             self.id,
-            self.filename
+            self.filename.encode('utf-8') if sys.version_info[0] < 3 else self.filename
         )
 
 
@@ -217,7 +218,7 @@ class IssueJournal(_Resource):
     version = '1.0'
 
     def __repr__(self):
-        return '<{}.{} #{}>'.format(
+        return '<{0}.{1} #{2}>'.format(
             self.__class__.__module__,
             self.__class__.__name__,
             self.id
@@ -229,16 +230,16 @@ class WikiPage(_Resource):
     container_filter = 'wiki_pages'
     container_one = 'wiki_page'
     query_filter = '/projects/{project_id}/wiki/index.json'
-    query_one = '/projects/{project_id}/wiki/{}.json'
+    query_one = '/projects/{project_id}/wiki/{0}.json'
 
     def refresh(self):
         return self.manager.get(self.title, **{'project_id': self.manager.params['project_id']})
 
     def __repr__(self):
-        return '<{}.{} "{}">'.format(
+        return '<{0}.{1} "{2}">'.format(
             self.__class__.__module__,
             self.__class__.__name__,
-            self.title
+            self.title.encode('utf-8') if sys.version_info[0] < 3 else self.title
         )
 
 
@@ -247,10 +248,10 @@ class ProjectMembership(_Resource):
     container_filter = 'memberships'
     container_one = 'membership'
     query_filter = '/projects/{project_id}/memberships.json'
-    query_one = '/memberships/{}.json'
+    query_one = '/memberships/{0}.json'
 
     def __repr__(self):
-        return '<{}.{} #{}>'.format(
+        return '<{0}.{1} #{2}>'.format(
             self.__class__.__module__,
             self.__class__.__name__,
             self.id
@@ -262,7 +263,7 @@ class IssueCategory(_Resource):
     container_filter = 'issue_categories'
     container_one = 'issue_category'
     query_filter = '/projects/{project_id}/issue_categories.json'
-    query_one = '/issue_categories/{}.json'
+    query_one = '/issue_categories/{0}.json'
 
 
 class IssueRelation(_Resource):
@@ -270,10 +271,10 @@ class IssueRelation(_Resource):
     container_filter = 'relations'
     container_one = 'relation'
     query_filter = '/issues/{issue_id}/relations.json'
-    query_one = '/relations/{}.json'
+    query_one = '/relations/{0}.json'
 
     def __repr__(self):
-        return '<{}.{} #{}>'.format(
+        return '<{0}.{1} #{2}>'.format(
             self.__class__.__module__,
             self.__class__.__name__,
             self.id
@@ -285,7 +286,7 @@ class Version(_Resource):
     container_filter = 'versions'
     container_one = 'version'
     query_filter = '/projects/{project_id}/versions.json'
-    query_one = '/versions/{}.json'
+    query_one = '/versions/{0}.json'
 
 
 class User(_Resource):
@@ -294,19 +295,19 @@ class User(_Resource):
     container_one = 'user'
     container_filter = 'users'
     query_all = '/users.json'
-    query_one = '/users/{}.json'
+    query_one = '/users/{0}.json'
     query_filter = '/users.json'
 
     def __repr__(self):
         try:
             return super(User, self).__repr__()
         except ResourceAttrError:
-            return '<{}.{} #{} "{} {}">'.format(
+            return '<{0}.{1} #{2} "{3} {4}">'.format(
                 self.__class__.__module__,
                 self.__class__.__name__,
                 self.id,
-                self.firstname,
-                self.lastname
+                self.firstname.encode('utf-8') if sys.version_info[0] < 3 else self.firstname,
+                self.lastname.encode('utf-8') if sys.version_info[0] < 3 else self.lastname
             )
 
 
@@ -315,7 +316,7 @@ class Group(_Resource):
     container_all = 'groups'
     container_one = 'group'
     query_all = '/groups.json'
-    query_one = '/groups/{}.json'
+    query_one = '/groups/{0}.json'
 
 
 class Role(_Resource):
@@ -323,7 +324,7 @@ class Role(_Resource):
     container_all = 'roles'
     container_one = 'role'
     query_all = '/roles.json'
-    query_one = '/roles/{}.json'
+    query_one = '/roles/{0}.json'
 
 
 class News(_Resource):

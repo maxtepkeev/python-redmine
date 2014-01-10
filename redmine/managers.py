@@ -84,7 +84,7 @@ class ResourceManager(object):
         if self.resource_class.query_one is None or self.resource_class.container_one is None:
             raise ResourceBadMethodError()
 
-        self.url = '{}{}'.format(self.redmine.url, self.resource_class.query_one.format(resource_id, **params))
+        self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_one.format(resource_id, **params))
         self.params = params
         self.container = self.resource_class.container_one
 
@@ -98,7 +98,7 @@ class ResourceManager(object):
         if self.resource_class.query_all is None or self.resource_class.container_all is None:
             raise ResourceBadMethodError()
 
-        self.url = '{}{}'.format(self.redmine.url, self.resource_class.query_all)
+        self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_all)
         self.params = params
         self.container = self.resource_class.container_all
         return ResourceSet(self)
@@ -112,11 +112,11 @@ class ResourceManager(object):
             raise ResourceNoFiltersProvidedError()
 
         try:
-            self.url = '{}{}'.format(self.redmine.url, self.resource_class.query_filter.format(**filters))
+            self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_filter.format(**filters))
             self.container = self.resource_class.container_filter.format(**filters)
         except KeyError:
             if self.resource_class.query_all is not None and self.resource_class.container_all is not None:
-                self.url = '{}{}'.format(self.redmine.url, self.resource_class.query_all)
+                self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_all)
                 self.container = self.resource_class.container_all
             else:
                 raise ResourceFilterError()

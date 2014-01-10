@@ -61,7 +61,7 @@ class ResourceSet(object):
 
     def __repr__(self):
         """Official representation of ResourceSet object"""
-        return '<{}.{} object with {} resources>'.format(
+        return '<{0}.{1} object with {2} resources>'.format(
             self.__class__.__module__,
             self.__class__.__name__,
             self.manager.resource_class.__name__
