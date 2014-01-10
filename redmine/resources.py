@@ -59,6 +59,7 @@ class _Resource(object):
     query_filter = None
 
     _relations = {}
+    __length_hint__ = None  # fixes Python 2.6 list() call on resource object
 
     def __init__(self, manager, attributes):
         """Accepts manager instance object and resource attributes dict"""
