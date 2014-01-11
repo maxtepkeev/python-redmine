@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.1.2 (2014-0X-XX)
+
+Added: ``ServerError`` and ``ValidationError`` exceptions
+
 0.1.1 (2014-01-10)
 ------------------
 

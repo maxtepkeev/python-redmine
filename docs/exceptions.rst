@@ -16,6 +16,12 @@ is the list of all exceptions that Python Redmine can throw:
 ``ImpersonateError``
     Invalid impersonate login provided
 
+``ServerError``
+    Redmine internal error
+
+``ValidationError``
+    Redmine validation errors occured on create/update resource
+
 ``ResourceSetIndexError``
     Index doesn't exist in the ResourceSet
 

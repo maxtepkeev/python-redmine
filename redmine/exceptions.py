@@ -1,10 +1,7 @@
 class BaseRedmineError(Exception):
     """Base exception class for Redmine exceptions"""
-    def __init__(self, message):
-        self.message = message
-
-    def __str__(self):
-        return self.message
+    def __init__(self, *args, **kwargs):
+        super(BaseRedmineError, self).__init__(*args, **kwargs)
 
 
 class ResourceError(BaseRedmineError):
@@ -23,6 +20,18 @@ class ImpersonateError(BaseRedmineError):
     """Invalid impersonate login provided"""
     def __init__(self):
         super(ImpersonateError, self).__init__("Impersonate login provided doesn't exist or isn't active")
+
+
+class ServerError(BaseRedmineError):
+    """Redmine internal error"""
+    def __init__(self):
+        super(ServerError, self).__init__('Redmine returned internal error, perhaps you are doing something wrong')
+
+
+class ValidationError(BaseRedmineError):
+    """Redmine validation error"""
+    def __init__(self, error):
+        super(ValidationError, self).__init__(error)
 
 
 class ResourceSetIndexError(BaseRedmineError):
