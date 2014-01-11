@@ -30,8 +30,8 @@ class ResourceManager(object):
         self.redmine = redmine
         self.resource_class = resource_class
 
-    def request(self, method, **params):
-        """A proxy for Redmine object request which also does some extra work for resource retrieval"""
+    def retrieve(self, **params):
+        """A proxy for Redmine object request which does some extra work for resource retrieval"""
         self.params.update(**params)
 
         # Redmine allows us to only return 100 resources per request, so if
@@ -45,7 +45,7 @@ class ResourceManager(object):
                 self.params['limit'] = 100
 
                 while True:
-                    response = self.redmine.request(method, self.url, **self.params)
+                    response = self.redmine.request('get', self.url, params=self.params)
 
                     if response is None:
                         break
@@ -58,7 +58,7 @@ class ResourceManager(object):
             # we want to get > 100 resources
             else:
                 while self.params['limit'] > 0:
-                    response = self.redmine.request(method, self.url, **self.params)
+                    response = self.redmine.request('get', self.url, params=self.params)
 
                     if response is None:
                         break
@@ -69,7 +69,7 @@ class ResourceManager(object):
 
             return results
 
-        return self.redmine.request(method, self.url, **self.params)[self.container]
+        return self.redmine.request('get', self.url, params=self.params)[self.container]
 
     def to_resource(self, resource):
         """Converts a single resource dict from Redmine result set to resource object"""
@@ -89,7 +89,7 @@ class ResourceManager(object):
         self.container = self.resource_class.container_one
 
         try:
-            return self.resource_class(self, self.request('get'))
+            return self.resource_class(self, self.retrieve())
         except TypeError:
             return None
 
@@ -123,3 +123,15 @@ class ResourceManager(object):
 
         self.params = filters
         return ResourceSet(self)
+
+    def create(self, **fields):
+        """Creates a new resource in Redmine database and returns resource object on success"""
+        if self.resource_class.query_create is None or self.resource_class.container_create is None:
+            raise ResourceBadMethodError()
+
+        self.container = self.resource_class.container_one
+        url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_create)
+        container = self.resource_class.container_create
+        resource = self.redmine.request('post', url, data={container: fields})[self.container]
+        self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_one.format(resource['id']))
+        return self.resource_class(self, resource)
