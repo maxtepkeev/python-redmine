@@ -130,6 +130,12 @@ class TestResources(unittest.TestCase):
         self.assertIn('relations', attributes)
         self.assertIn('time_entries', attributes)
 
+    def test_supports_iteration(self):
+        self.response.json.return_value = responses['project']['get']
+        project = list(self.redmine.project.get(1))
+        self.assertIn(('name', 'Foo'), project)
+        self.assertIn(('id', 1), project)
+
     def test_project_version(self):
         self.assertEqual(self.redmine.project.resource_class.version, '1.0')
 

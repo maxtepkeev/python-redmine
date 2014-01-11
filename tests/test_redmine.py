@@ -42,9 +42,12 @@ class TestRedmineRequest(unittest.TestCase):
         self.url = URL
         self.redmine = Redmine(self.url)
         self.response = mock.Mock()
-        patcher = mock.patch('requests.get', return_value=self.response)
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        patcher_get = mock.patch('requests.get', return_value=self.response)
+        patcher_post = mock.patch('requests.post', return_value=self.response)
+        patcher_get.start()
+        patcher_post.start()
+        self.addCleanup(patcher_get.stop)
+        self.addCleanup(patcher_post.stop)
 
     def test_successful_response_via_username_password(self):
         self.redmine.username = 'john'
@@ -69,6 +72,17 @@ class TestRedmineRequest(unittest.TestCase):
         self.redmine.impersonate = 'not_exists'
         self.response.status_code = 412
         self.assertRaises(ImpersonateError, lambda: self.redmine.request('get', self.url))
+
+    def test_server_error_exception(self):
+        from redmine.exceptions import ServerError
+        self.response.status_code = 500
+        self.assertRaises(ServerError, lambda: self.redmine.request('post', self.url))
+
+    def test_validation_error_exception(self):
+        from redmine.exceptions import ValidationError
+        self.response.status_code = 422
+        self.response.json.return_value = {'errors': ['foo', 'bar']}
+        self.assertRaises(ValidationError, lambda: self.redmine.request('post', self.url))
 
     def test_none_response(self):
         self.assertEqual(self.redmine.request('get', self.url), None)

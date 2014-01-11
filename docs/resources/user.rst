@@ -9,7 +9,7 @@ Create
 Supported keyword arguments:
 
 * **login**. (required). User login.
-* **password**. User password
+* **password**. User password.
 * **firstname**. (required).
 * **lastname**. (required).
 * **mail**. (required).

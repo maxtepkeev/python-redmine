@@ -20,17 +20,38 @@ class TestResultSet(unittest.TestCase):
 
     def test_has_custom_repr(self):
         self.assertEqual(
-            self.redmine.project.all().__repr__(),
+            repr(self.redmine.project.all()),
             '<redmine.resultsets.ResourceSet object with Project resources>'
         )
 
-    def test_limit_offset(self):
+    def test_offset_limit(self):
         self.response.json.return_value = {'projects': response['projects'][1:3]}
         projects = self.redmine.project.all()[1:3]
         self.assertEqual(projects.limit, 3)
         self.assertEqual(projects.offset, 1)
         self.assertEqual(projects[0].id, 2)
         self.assertEqual(projects[1].id, 3)
+
+    def test_limit_more_than_100(self):
+        self.response.json.return_value = response
+        projects = self.redmine.project.all()[:200]
+        self.assertEqual(projects.limit, 200)
+        self.assertEqual(projects.offset, 0)
+        self.assertEqual(projects[0].id, 1)
+        self.assertEqual(projects[1].id, 2)
+        self.assertEqual(projects[2].id, 3)
+
+    def test_resultset_is_empty(self):
+        self.response.json.return_value = None
+        projects = self.redmine.project.all()
+        self.assertEqual(len(projects), 0)
+        self.assertEqual(list(projects), [])
+
+    def test_sliced_resultset_is_empty(self):
+        self.response.json.return_value = None
+        projects = self.redmine.project.all()[:200]
+        self.assertEqual(len(projects), 0)
+        self.assertEqual(list(projects), [])
 
     def test_supports_iteration(self):
         projects = list(self.redmine.project.all())

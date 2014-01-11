@@ -120,6 +120,14 @@ class TestResourceManager(unittest.TestCase):
     def test_try_to_get_all_resources_if_filtering_fails(self):
         self.assertIsInstance(self.redmine.time_entry.filter(bad_filter='foo'), ResourceSet)
 
+    @mock.patch('requests.post')
+    def test_create_resource(self, mock_post):
+        mock_post.return_value = response = mock.Mock(status_code=201)
+        response.json.return_value = {'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1}}
+        user = self.redmine.user.create(firstname='John', lastname='Smith')
+        self.assertEqual(user.firstname, 'John')
+        self.assertEqual(user.lastname, 'Smith')
+
     def test_resource_get_method_unsupported_exception(self):
         self.assertRaises(ResourceBadMethodError, lambda: self.redmine.enumeration.get('foo'))
 
@@ -128,6 +136,9 @@ class TestResourceManager(unittest.TestCase):
 
     def test_resource_filter_method_unsupported_exception(self):
         self.assertRaises(ResourceBadMethodError, lambda: self.redmine.project.filter())
+
+    def test_resource_create_method_unsupported_exception(self):
+        self.assertRaises(ResourceBadMethodError, lambda: self.redmine.query.create())
 
     def test_filter_no_filters_exception(self):
         from redmine.exceptions import ResourceNoFiltersProvidedError
