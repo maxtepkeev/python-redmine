@@ -6,7 +6,20 @@ Supported by Redmine starting from version 1.1
 Create
 ------
 
-Not yet supported by Python Redmine
+Supported keyword arguments:
+
+* **login**. (required). User login.
+* **password**. User password
+* **firstname**. (required).
+* **lastname**. (required).
+* **mail**. (required).
+* **auth_source_id**. Authentication mode id.
+
+.. code-block:: python
+
+    >>> user = redmine.user.create(login='jsmith', password='qwerty', firstname='John', lastname='Smith', mail='john@smith.com', auth_source_id=1)
+    >>> user
+    <redmine.resources.User #32 "John Smith">
 
 Read
 ----
