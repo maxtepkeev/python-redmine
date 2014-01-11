@@ -51,7 +51,7 @@ class ResourceSet(object):
     def __iter__(self):
         """Returns requested resources in a lazy fashion"""
         if self.resources is None:
-            self.resources = self.manager.request('get', **{'limit': self.limit, 'offset': self.offset})
+            self.resources = self.manager.retrieve(limit=self.limit, offset=self.offset)
 
         return iter(self.manager.to_resource(resource) for resource in self.resources)
 

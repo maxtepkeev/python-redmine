@@ -1,5 +1,5 @@
-import sys
 from datetime import datetime
+from redmine import to_string
 from redmine.managers import ResourceManager
 from redmine.exceptions import ResourceAttrError
 
@@ -54,9 +54,11 @@ class _Resource(object):
     container_all = None
     container_one = None
     container_filter = None
+    container_create = None
     query_all = None
     query_one = None
     query_filter = None
+    query_create = None
 
     _relations = {}
     __length_hint__ = None  # fixes Python 2.6 list() call on resource object
@@ -127,7 +129,7 @@ class _Resource(object):
             self.__class__.__module__,
             self.__class__.__name__,
             self.id,
-            self.name.encode('utf-8') if sys.version_info[0] < 3 else self.name
+            to_string(self.name)
         )
 
 
@@ -168,7 +170,7 @@ class Issue(_Resource):
                 self.__class__.__module__,
                 self.__class__.__name__,
                 self.id,
-                self.subject.encode('utf-8') if sys.version_info[0] < 3 else self.subject
+                to_string(self.subject)
             )
         except ResourceAttrError:
             return '<{0}.{1} #{2}>'.format(
@@ -211,7 +213,7 @@ class Attachment(_Resource):
             self.__class__.__module__,
             self.__class__.__name__,
             self.id,
-            self.filename.encode('utf-8') if sys.version_info[0] < 3 else self.filename
+            to_string(self.filename)
         )
 
 
@@ -234,13 +236,13 @@ class WikiPage(_Resource):
     query_one = '/projects/{project_id}/wiki/{0}.json'
 
     def refresh(self):
-        return self.manager.get(self.title, **{'project_id': self.manager.params['project_id']})
+        return self.manager.get(self.title, project_id=self.manager.params['project_id'])
 
     def __repr__(self):
         return '<{0}.{1} "{2}">'.format(
             self.__class__.__module__,
             self.__class__.__name__,
-            self.title.encode('utf-8') if sys.version_info[0] < 3 else self.title
+            to_string(self.title)
         )
 
 
@@ -295,9 +297,11 @@ class User(_Resource):
     container_all = 'users'
     container_one = 'user'
     container_filter = 'users'
+    container_create = 'user'
     query_all = '/users.json'
     query_one = '/users/{0}.json'
     query_filter = '/users.json'
+    query_create = '/users.json'
 
     def __repr__(self):
         try:
@@ -307,8 +311,8 @@ class User(_Resource):
                 self.__class__.__module__,
                 self.__class__.__name__,
                 self.id,
-                self.firstname.encode('utf-8') if sys.version_info[0] < 3 else self.firstname,
-                self.lastname.encode('utf-8') if sys.version_info[0] < 3 else self.lastname
+                to_string(self.firstname),
+                to_string(self.lastname)
             )
 
 
