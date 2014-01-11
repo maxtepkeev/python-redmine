@@ -1,6 +1,18 @@
+import sys
+import json
 import requests
 from redmine.managers import ResourceManager
-from redmine.exceptions import AuthError, ImpersonateError
+from redmine.exceptions import (
+    AuthError,
+    ImpersonateError,
+    ServerError,
+    ValidationError
+)
+
+
+def to_string(string):
+    """Converts unicode to utf-8 if on Python 2, leaves as it is if on Python 3"""
+    return string.encode('utf-8') if sys.version_info[0] < 3 else string
 
 
 class Redmine(object):
@@ -19,12 +31,16 @@ class Redmine(object):
         """Returns either ResourceSet or Resource object depending on the method used on the ResourceManager"""
         return ResourceManager(self, resource)
 
-    def request(self, method, url, **params):
+    def request(self, method, url, params=None, data=None):
         """Makes requests to Redmine and returns result in json format"""
         kwargs = {
             'headers': {},
-            'params': params,
+            'params': params or {},
+            'data': json.dumps(data) if data is not None else {},
         }
+
+        if method in ('post', 'put'):
+            kwargs['headers']['Content-Type'] = 'application/json'
 
         if self.impersonate is not None:
             kwargs['headers']['X-Redmine-Switch-User'] = self.impersonate
@@ -37,11 +53,15 @@ class Redmine(object):
 
         response = getattr(requests, method)(url, **kwargs)
 
-        if response.status_code == 200:
+        if response.status_code in (200, 201):
             return response.json()
         elif response.status_code == 401:
             raise AuthError()
         elif response.status_code == 412 and self.impersonate is not None:
             raise ImpersonateError()
+        elif response.status_code == 422:
+            raise ValidationError(to_string(', '.join(response.json()['errors'])))
+        elif response.status_code == 500:
+            raise ServerError()
 
         return None
