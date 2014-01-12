@@ -6,7 +6,8 @@ from redmine.exceptions import (
     ResourceFilterError,
     ResourceNoFiltersProvidedError,
     ResourceNoFieldsProvidedError,
-    ResourceVersionMismatchError
+    ResourceVersionMismatchError,
+    ValidationError
 )
 
 
@@ -88,11 +89,7 @@ class ResourceManager(object):
         self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_one.format(resource_id, **params))
         self.params = params
         self.container = self.resource_class.container_one
-
-        try:
-            return self.resource_class(self, self.retrieve())
-        except TypeError:
-            return None
+        return self.resource_class(self, self.retrieve())
 
     def all(self, **params):
         """Returns a ResourceSet object with all Resource objects"""
@@ -133,8 +130,12 @@ class ResourceManager(object):
         if not fields:
             raise ResourceNoFieldsProvidedError
 
+        try:
+            url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_create.format(**fields))
+        except KeyError as exception:
+            raise ValidationError('{} field is required'.format(exception))
+
         self.container = self.resource_class.container_one
-        url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_create)
         container = self.resource_class.container_create
         resource = self.redmine.request('post', url, data={container: fields})[self.container]
         self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_one.format(resource['id']))

@@ -105,12 +105,6 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(project.identifier, 'foo')
         self.assertEqual(project.id, 1)
 
-    @mock.patch('requests.get')
-    def test_get_single_resource_not_found(self, mock_get):
-        mock_get.return_value = mock.Mock()
-        project = self.redmine.project.get('foo')
-        self.assertEqual(project, None)
-
     def test_get_all_resources(self):
         self.assertIsInstance(self.redmine.project.all(), ResourceSet)
 
@@ -151,3 +145,7 @@ class TestResourceManager(unittest.TestCase):
     def test_create_no_fields_exception(self):
         from redmine.exceptions import ResourceNoFieldsProvidedError
         self.assertRaises(ResourceNoFieldsProvidedError, lambda: self.redmine.user.create())
+
+    def test_create_validation_exception(self):
+        from redmine.exceptions import ValidationError
+        self.assertRaises(ValidationError, lambda: self.redmine.issue_category.create(foo='bar'))
