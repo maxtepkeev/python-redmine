@@ -92,7 +92,7 @@ object what datetime formatting do you use, e.g. if the string returned is ``31.
 
 .. code-block:: python
 
-    redmine = Redmine('http://demo.redmine.org', date_format='%d.%m.%Y', datetime_format=('%d.%m.%YT%H:%M:%SZ')
+    redmine = Redmine('http://demo.redmine.org', date_format='%d.%m.%Y', datetime_format='%d.%m.%YT%H:%M:%SZ')
 
 .. hint::
 
