@@ -354,8 +354,10 @@ class Group(_Resource):
     version = '2.1'
     container_all = 'groups'
     container_one = 'group'
+    container_create = 'group'
     query_all = '/groups.json'
     query_one = '/groups/{0}.json'
+    query_create = '/groups.json'
 
 
 class Role(_Resource):

@@ -79,9 +79,12 @@ class TestResources(unittest.TestCase):
         self.url = URL
         self.redmine = Redmine(self.url)
         self.response = mock.Mock(status_code=200)
-        patcher = mock.patch('requests.get', return_value=self.response)
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        patcher_get = mock.patch('requests.get', return_value=self.response)
+        patcher_post = mock.patch('requests.post', return_value=self.response)
+        patcher_get.start()
+        patcher_post.start()
+        self.addCleanup(patcher_get.stop)
+        self.addCleanup(patcher_post.stop)
 
     def test_supports_dictionary_like_attribute_retrieval(self):
         self.response.json.return_value = responses['project']['get']
@@ -419,6 +422,13 @@ class TestResources(unittest.TestCase):
         self.assertEqual(users[1].id, 2)
         self.assertEqual(users[1].firstname, 'Jack')
 
+    def test_user_create(self):
+        self.response.status_code = 201
+        self.response.json.return_value = responses['user']['get']
+        user = self.redmine.user.create(firstname='John', lastname='Smith')
+        self.assertEqual(user.firstname, 'John')
+        self.assertEqual(user.lastname, 'Smith')
+
     def test_user_custom_str(self):
         self.response.json.return_value = responses['user']['get']
         self.assertEqual(str(self.redmine.user.get(1)), 'John Smith')
@@ -443,6 +453,12 @@ class TestResources(unittest.TestCase):
         self.assertEqual(groups[0].name, 'Foo')
         self.assertEqual(groups[1].id, 2)
         self.assertEqual(groups[1].name, 'Bar')
+
+    def test_group_create(self):
+        self.response.status_code = 201
+        self.response.json.return_value = responses['group']['get']
+        group = self.redmine.group.create(name='Foo')
+        self.assertEqual(group.name, 'Foo')
 
     def test_role_version(self):
         self.assertEqual(self.redmine.role.resource_class.version, '1.4')

@@ -5,7 +5,7 @@ Changelog
 ------------------
 
 - Added: ``ServerError``, ``ValidationError`` and ``ResourceNoFieldsProvidedError`` exceptions
-- Added: Create functionality for User resource
+- Added: Create functionality for User and Group resources
 - Added: Informal string representation, i.e. __str__(), to all resources
 - Changed: reimplemented fix for __repr__() from 0.1.1
 

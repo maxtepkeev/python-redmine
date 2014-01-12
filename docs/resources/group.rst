@@ -6,7 +6,16 @@ Supported by Redmine starting from version 2.1
 Create
 ------
 
-Not yet supported by Python Redmine
+Supported keyword arguments:
+
+* **name** (required). Group name.
+* **user_ids** (optional). Ids of users to add to a group as a list or tuple.
+
+.. code-block:: python
+
+    >>> group = redmine.group.create(name='Developers', user_ids=[13, 15, 25])
+    >>> group
+    <redmine.resources.Group #8 "Developers">
 
 Read
 ----
