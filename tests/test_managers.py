@@ -147,3 +147,7 @@ class TestResourceManager(unittest.TestCase):
     def test_filter_unknown_filters_exception(self):
         from redmine.exceptions import ResourceFilterError
         self.assertRaises(ResourceFilterError, lambda: self.redmine.version.filter(foo='bar'))
+
+    def test_create_no_fields_exception(self):
+        from redmine.exceptions import ResourceNoFieldsProvidedError
+        self.assertRaises(ResourceNoFieldsProvidedError, lambda: self.redmine.user.create())
