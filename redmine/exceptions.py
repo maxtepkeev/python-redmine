@@ -10,6 +10,12 @@ class ResourceError(BaseRedmineError):
         super(ResourceError, self).__init__('Unsupported redmine resource')
 
 
+class ResourceNotFoundError(BaseRedmineError):
+    """Resource not found"""
+    def __init__(self):
+        super(ResourceNotFoundError, self).__init__("Requested resource doesn't exist")
+
+
 class AuthError(BaseRedmineError):
     """Invalid authentication details"""
     def __init__(self):

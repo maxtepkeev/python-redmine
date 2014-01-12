@@ -84,5 +84,10 @@ class TestRedmineRequest(unittest.TestCase):
         self.response.json.return_value = {'errors': ['foo', 'bar']}
         self.assertRaises(ValidationError, lambda: self.redmine.request('post', self.url))
 
+    def test_not_found_error_exception(self):
+        from redmine.exceptions import ResourceNotFoundError
+        self.response.status_code = 404
+        self.assertRaises(ResourceNotFoundError, lambda: self.redmine.request('get', self.url))
+
     def test_none_response(self):
         self.assertEqual(self.redmine.request('get', self.url), None)

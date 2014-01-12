@@ -6,7 +6,8 @@ from redmine.exceptions import (
     AuthError,
     ImpersonateError,
     ServerError,
-    ValidationError
+    ValidationError,
+    ResourceNotFoundError
 )
 
 
@@ -57,6 +58,8 @@ class Redmine(object):
             return response.json()
         elif response.status_code == 401:
             raise AuthError()
+        elif response.status_code == 404:
+            raise ResourceNotFoundError
         elif response.status_code == 412 and self.impersonate is not None:
             raise ImpersonateError()
         elif response.status_code == 422:
