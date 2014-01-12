@@ -290,8 +290,10 @@ class IssueCategory(_Resource):
     version = '1.3'
     container_filter = 'issue_categories'
     container_one = 'issue_category'
+    container_create = 'issue_category'
     query_filter = '/projects/{project_id}/issue_categories.json'
     query_one = '/issue_categories/{0}.json'
+    query_create = '/projects/{project_id}/issue_categories.json'
 
 
 class IssueRelation(_Resource):

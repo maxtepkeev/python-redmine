@@ -358,6 +358,12 @@ class TestResources(unittest.TestCase):
         self.assertEqual(categories[1].id, 2)
         self.assertEqual(categories[1].name, 'Bar')
 
+    def test_issue_category_create(self):
+        self.response.status_code = 201
+        self.response.json.return_value = responses['issue_category']['get']
+        category = self.redmine.issue_category.create(project_id='foo', name='Foo')
+        self.assertEqual(category.name, 'Foo')
+
     def test_issue_relation_version(self):
         self.assertEqual(self.redmine.issue_relation.resource_class.version, '1.3')
 
