@@ -4,9 +4,22 @@ Changelog
 0.1.2 (2014-0X-XX)
 ------------------
 
-- Added: ``ServerError``, ``ValidationError`` and ``ResourceNoFieldsProvidedError`` exceptions
-- Added: Create functionality for User and Group resources
+- Added: New exceptions:
+
+  * ServerError
+  * ValidationError
+  * ResourceNoFieldsProvidedError
+  * ResourceNotFoundError
+
+- Added: Create functionality for resources (see docs for details):
+
+  * User
+  * Group
+  * IssueCategory
+
 - Added: Informal string representation, i.e. __str__(), to all resources
+- Changed: ResourceManager get() method now throws a ``ResourceNotFoundError`` exception if
+  resource wasn't found instead of returning None in previous versions
 - Changed: reimplemented fix for __repr__() from 0.1.1
 
 0.1.1 (2014-01-10)
