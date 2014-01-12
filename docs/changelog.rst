@@ -4,9 +4,9 @@ Changelog
 0.1.2 (2014-0X-XX)
 ------------------
 
-Added: ``ServerError`` and ``ValidationError`` exceptions
-Added: Create functionality for User resource
-Changed: reimplemented fix for __repr__() from 0.1.1
+- Added: ``ServerError`` and ``ValidationError`` exceptions
+- Added: Create functionality for User resource
+- Changed: reimplemented fix for __repr__() from 0.1.1
 
 0.1.1 (2014-01-10)
 ------------------

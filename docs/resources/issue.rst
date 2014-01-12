@@ -82,6 +82,7 @@ Supported filters:
   project_id=XXX&subproject_id=!* to get only the issues of a given project and
   none of its subprojects.
 * **tracker_id**. Get issues from the tracker with the given id.
+* **query_id**. Get issues for the given query_id only.
 * **status_id**. Get issues with the given status id only. Possible values are:
 
   - open - open issues

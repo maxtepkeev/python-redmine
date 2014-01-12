@@ -21,6 +21,9 @@ Supported keyword arguments:
 
 * **project_id**. Get wiki page from the project with the given id, where id is either
   project id or project identifier.
+* **include**. Can be used to fetch associated data in one call. Accepted values (separated by comma):
+
+  - attachments
 
 .. code-block:: python
 
