@@ -6,6 +6,7 @@ Changelog
 
 - Added: ``ServerError`` and ``ValidationError`` exceptions
 - Added: Create functionality for User resource
+- Added: Informal string representation, i.e. __str__(), to all resources
 - Changed: reimplemented fix for __repr__() from 0.1.1
 
 0.1.1 (2014-01-10)

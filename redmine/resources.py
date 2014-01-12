@@ -123,8 +123,12 @@ class _Resource(object):
         """Provides a way to iterate through resource attributes and its values"""
         return iter(self.attributes.items())
 
+    def __str__(self):
+        """Informal representation of the Redmine resource object"""
+        return to_string(self.name)
+
     def __repr__(self):
-        """Official representation of the Redmine resource"""
+        """Official representation of the Redmine resource object"""
         return '<{0}.{1} #{2} "{3}">'.format(
             self.__class__.__module__,
             self.__class__.__name__,
@@ -164,6 +168,12 @@ class Issue(_Resource):
         'time_entries': None,
     }
 
+    def __str__(self):
+        try:
+            return to_string(self.subject)
+        except ResourceAttrError:
+            return str(self.id)
+
     def __repr__(self):
         try:
             return '<{0}.{1} #{2} "{3}">'.format(
@@ -189,6 +199,9 @@ class TimeEntry(_Resource):
     query_one = '/time_entries/{0}.json'
     query_filter = '/issues/{issue_id}/time_entries.json'
 
+    def __str__(self):
+        return str(self.id)
+
     def __repr__(self):
         return '<{0}.{1} #{2}>'.format(
             self.__class__.__module__,
@@ -208,6 +221,9 @@ class Attachment(_Resource):
     container_one = 'attachment'
     query_one = '/attachments/{0}.json'
 
+    def __str__(self):
+        return to_string(self.filename)
+
     def __repr__(self):
         return '<{0}.{1} #{2} "{3}">'.format(
             self.__class__.__module__,
@@ -219,6 +235,9 @@ class Attachment(_Resource):
 
 class IssueJournal(_Resource):
     version = '1.0'
+
+    def __str__(self):
+        return str(self.id)
 
     def __repr__(self):
         return '<{0}.{1} #{2}>'.format(
@@ -238,6 +257,9 @@ class WikiPage(_Resource):
     def refresh(self):
         return self.manager.get(self.title, project_id=self.manager.params['project_id'])
 
+    def __str__(self):
+        return to_string(self.title)
+
     def __repr__(self):
         return '<{0}.{1} "{2}">'.format(
             self.__class__.__module__,
@@ -252,6 +274,9 @@ class ProjectMembership(_Resource):
     container_one = 'membership'
     query_filter = '/projects/{project_id}/memberships.json'
     query_one = '/memberships/{0}.json'
+
+    def __str__(self):
+        return str(self.id)
 
     def __repr__(self):
         return '<{0}.{1} #{2}>'.format(
@@ -275,6 +300,9 @@ class IssueRelation(_Resource):
     container_one = 'relation'
     query_filter = '/issues/{issue_id}/relations.json'
     query_one = '/relations/{0}.json'
+
+    def __str__(self):
+        return str(self.id)
 
     def __repr__(self):
         return '<{0}.{1} #{2}>'.format(
@@ -302,6 +330,12 @@ class User(_Resource):
     query_one = '/users/{0}.json'
     query_filter = '/users.json'
     query_create = '/users.json'
+
+    def __str__(self):
+        try:
+            return super(User, self).__str__()
+        except ResourceAttrError:
+            return '{0} {1}'.format(to_string(self.firstname), to_string(self.lastname))
 
     def __repr__(self):
         try:

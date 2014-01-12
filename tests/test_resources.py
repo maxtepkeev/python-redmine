@@ -93,6 +93,10 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = responses['project']['get']
         self.assertEqual(self.redmine.project.get(1).url, '{0}/projects/1'.format(self.url))
 
+    def test_custom_str(self):
+        self.response.json.return_value = responses['project']['get']
+        self.assertEqual(str(self.redmine.project.get(1)), 'Foo')
+
     def test_custom_repr(self):
         self.response.json.return_value = responses['project']['get']
         self.assertEqual(repr(self.redmine.project.get(1)), '<redmine.resources.Project #1 "Foo">')
@@ -204,10 +208,21 @@ class TestResources(unittest.TestCase):
         del issue['attributes']['subject']
         self.assertEqual(repr(issue), '<redmine.resources.Issue #1>')
 
+    def test_issue_custom_str(self):
+        self.response.json.return_value = responses['issue']['get']
+        self.assertEqual(str(self.redmine.issue.get(1)), 'Foo')
+
+    def test_issue_custom_str_without_subject(self):
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        del issue['attributes']['subject']
+        self.assertEqual(str(issue), '1')
+
     def test_issue_journals(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
         issue.attributes['journals'] = [{'id': 1}]
+        self.assertEqual(str(issue.journals[0]), '1')
         self.assertEqual(repr(issue.journals[0]), '<redmine.resources.IssueJournal #1>')
 
     def test_time_entry_version(self):
@@ -235,6 +250,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(time_entries[1].id, 2)
         self.assertEqual(time_entries[1].hours, 4)
 
+    def test_time_entry_custom_str(self):
+        self.response.json.return_value = responses['time_entry']['get']
+        self.assertEqual(str(self.redmine.time_entry.get(1)), '1')
+
     def test_time_entry_custom_repr(self):
         self.response.json.return_value = responses['time_entry']['get']
         self.assertEqual(repr(self.redmine.time_entry.get(1)), '<redmine.resources.TimeEntry #1>')
@@ -258,6 +277,10 @@ class TestResources(unittest.TestCase):
         attachment = self.redmine.attachment.get(1)
         self.assertEqual(attachment.id, 1)
         self.assertEqual(attachment.filename, 'foo.jpg')
+
+    def test_attachment_custom_str(self):
+        self.response.json.return_value = responses['attachment']['get']
+        self.assertEqual(str(self.redmine.attachment.get(1)), 'foo.jpg')
 
     def test_attachment_custom_repr(self):
         self.response.json.return_value = responses['attachment']['get']
@@ -285,6 +308,10 @@ class TestResources(unittest.TestCase):
         wiki_page = wiki_page.refresh()
         self.assertEqual(wiki_page.title, 'Bar')
 
+    def test_wiki_page_custom_str(self):
+        self.response.json.return_value = responses['wiki_page']['get']
+        self.assertEqual(str(self.redmine.wiki_page.get('title', project_id=1)), 'Foo')
+
     def test_wiki_page_custom_repr(self):
         self.response.json.return_value = responses['wiki_page']['get']
         self.assertEqual(repr(self.redmine.wiki_page.get('title', project_id=1)), '<redmine.resources.WikiPage "Foo">')
@@ -302,6 +329,10 @@ class TestResources(unittest.TestCase):
         memberships = self.redmine.project_membership.filter(project_id=1)
         self.assertEqual(memberships[0].id, 1)
         self.assertEqual(memberships[1].id, 2)
+
+    def test_project_membership_custom_str(self):
+        self.response.json.return_value = responses['project_membership']['get']
+        self.assertEqual(str(self.redmine.project_membership.get(1)), '1')
 
     def test_project_membership_custom_repr(self):
         self.response.json.return_value = responses['project_membership']['get']
@@ -337,6 +368,10 @@ class TestResources(unittest.TestCase):
         relations = self.redmine.issue_relation.filter(issue_id=1)
         self.assertEqual(relations[0].id, 1)
         self.assertEqual(relations[1].id, 2)
+
+    def test_issue_relation_custom_str(self):
+        self.response.json.return_value = responses['issue_relation']['get']
+        self.assertEqual(str(self.redmine.issue_relation.get(1)), '1')
 
     def test_issue_relation_custom_repr(self):
         self.response.json.return_value = responses['issue_relation']['get']
@@ -383,6 +418,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(users[0].firstname, 'John')
         self.assertEqual(users[1].id, 2)
         self.assertEqual(users[1].firstname, 'Jack')
+
+    def test_user_custom_str(self):
+        self.response.json.return_value = responses['user']['get']
+        self.assertEqual(str(self.redmine.user.get(1)), 'John Smith')
 
     def test_user_custom_repr(self):
         self.response.json.return_value = responses['user']['get']
