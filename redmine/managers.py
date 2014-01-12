@@ -133,7 +133,7 @@ class ResourceManager(object):
         try:
             url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_create.format(**fields))
         except KeyError as exception:
-            raise ValidationError('{} field is required'.format(exception))
+            raise ValidationError('{0} field is required'.format(exception))
 
         self.container = self.resource_class.container_one
         container = self.resource_class.container_create
