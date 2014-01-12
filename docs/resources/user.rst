@@ -8,12 +8,12 @@ Create
 
 Supported keyword arguments:
 
-* **login**. (required). User login.
-* **password**. User password.
-* **firstname**. (required).
-* **lastname**. (required).
-* **mail**. (required).
-* **auth_source_id**. Authentication mode id.
+* **login** (required). User login.
+* **password** (optional). User password.
+* **firstname** (required).
+* **lastname** (required).
+* **mail** (required).
+* **auth_source_id** (optional). Authentication mode id.
 
 .. code-block:: python
 
