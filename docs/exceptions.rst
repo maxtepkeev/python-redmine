@@ -37,6 +37,9 @@ is the list of all exceptions that Python Redmine can throw:
 ``ResourceNoFiltersProvidedError``
     No filter(s) provided
 
+``ResourceNoFieldsProvidedError``
+    No field(s) provided
+
 ``ResourceAttrError``
     Resource doesn't have the requested attribute
 

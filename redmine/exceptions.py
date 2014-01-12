@@ -43,7 +43,7 @@ class ResourceSetIndexError(BaseRedmineError):
 class ResourceSetFilterParamError(BaseRedmineError):
     """Resource set filter method expects to receive either a list or tuple"""
     def __init__(self):
-        super(ResourceSetFilterParamError, self).__init__("Method expects to receive either a list or tuple of ids")
+        super(ResourceSetFilterParamError, self).__init__('Method expects to receive either a list or tuple of ids')
 
 
 class ResourceBadMethodError(BaseRedmineError):
@@ -61,7 +61,13 @@ class ResourceFilterError(BaseRedmineError):
 class ResourceNoFiltersProvidedError(BaseRedmineError):
     """No filter(s) provided"""
     def __init__(self):
-        super(ResourceNoFiltersProvidedError, self).__init__("Resource needs some filters to be filtered on")
+        super(ResourceNoFiltersProvidedError, self).__init__('Resource needs some filters to be filtered on')
+
+
+class ResourceNoFieldsProvidedError(BaseRedmineError):
+    """No field(s) provided"""
+    def __init__(self):
+        super(ResourceNoFieldsProvidedError, self).__init__('Resource needs some fields to be created')
 
 
 class ResourceAttrError(BaseRedmineError):

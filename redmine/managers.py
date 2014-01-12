@@ -5,6 +5,7 @@ from redmine.exceptions import (
     ResourceBadMethodError,
     ResourceFilterError,
     ResourceNoFiltersProvidedError,
+    ResourceNoFieldsProvidedError,
     ResourceVersionMismatchError
 )
 
@@ -128,6 +129,9 @@ class ResourceManager(object):
         """Creates a new resource in Redmine database and returns resource object on success"""
         if self.resource_class.query_create is None or self.resource_class.container_create is None:
             raise ResourceBadMethodError()
+
+        if not fields:
+            raise ResourceNoFieldsProvidedError
 
         self.container = self.resource_class.container_one
         url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_create)
