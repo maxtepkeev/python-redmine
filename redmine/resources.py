@@ -318,8 +318,10 @@ class Version(_Resource):
     version = '1.3'
     container_filter = 'versions'
     container_one = 'version'
+    container_create = 'version'
     query_filter = '/projects/{project_id}/versions.json'
     query_one = '/versions/{0}.json'
+    query_create = '/projects/{project_id}/versions.json'
 
 
 class User(_Resource):

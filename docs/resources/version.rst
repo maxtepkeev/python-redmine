@@ -6,7 +6,33 @@ Supported by Redmine starting from version 1.3
 Create
 ------
 
-Not yet supported by Python Redmine
+Supported keyword arguments:
+
+* **project_id** (required). The id of the project, where id is either project id or project identifier.
+* **name** (required). Version name.
+* **status** (optional). Status of the version, available values are:
+
+  - open (default)
+  - locked
+  - closed
+
+* **sharing** (optional). Version sharing in, available values are:
+
+  - none (default)
+  - descendants
+  - hierarchy
+  - tree
+  - system
+
+* **due_date** (optional). Expiration date.
+* **description** (optional). Version description.
+* **wiki_page_title** (optional). Version wiki page title.
+
+.. code-block:: python
+
+    >>> version = redmine.version.create(project_id='vacation', name='Vacation', status='open', sharing='none', due_date='2014-01-30', description='my vacation', wiki_page_title='Vacation')
+    >>> version
+    <redmine.resources.Version #235 "Vacation">
 
 Read
 ----

@@ -403,6 +403,12 @@ class TestResources(unittest.TestCase):
         self.assertEqual(versions[1].id, 2)
         self.assertEqual(versions[1].name, 'Bar')
 
+    def test_version_create(self):
+        self.response.status_code = 201
+        self.response.json.return_value = responses['version']['get']
+        version = self.redmine.version.create(project_id='foo', name='Foo')
+        self.assertEqual(version.name, 'Foo')
+
     def test_user_version(self):
         self.assertEqual(self.redmine.user.resource_class.version, '1.1')
 
