@@ -1,5 +1,6 @@
 from distutils.version import LooseVersion
 from redmine.resultsets import ResourceSet
+from redmine.utilities import MemorizeFormatter
 from redmine.exceptions import (
     ResourceError,
     ResourceBadMethodError,
@@ -130,13 +131,15 @@ class ResourceManager(object):
         if not fields:
             raise ResourceNoFieldsProvidedError
 
+        formatter = MemorizeFormatter()
+
         try:
-            url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_create.format(**fields))
+            url = '{0}{1}'.format(self.redmine.url, formatter.format(self.resource_class.query_create, **fields))
         except KeyError as exception:
             raise ValidationError('{0} field is required'.format(exception))
 
         self.container = self.resource_class.container_one
         container = self.resource_class.container_create
-        resource = self.redmine.request('post', url, data={container: fields})[self.container]
+        resource = self.redmine.request('post', url, data={container: formatter.unused_kwargs})[self.container]
         self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_one.format(resource['id']))
         return self.resource_class(self, resource)

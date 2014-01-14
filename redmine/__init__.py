@@ -1,7 +1,7 @@
-import sys
 import json
 import requests
 from redmine.managers import ResourceManager
+from redmine.utilities import to_string
 from redmine.exceptions import (
     AuthError,
     ImpersonateError,
@@ -9,11 +9,6 @@ from redmine.exceptions import (
     ValidationError,
     ResourceNotFoundError
 )
-
-
-def to_string(string):
-    """Converts unicode to utf-8 if on Python 2, leaves as it is if on Python 3"""
-    return string.encode('utf-8') if sys.version_info[0] < 3 else string
 
 
 class Redmine(object):

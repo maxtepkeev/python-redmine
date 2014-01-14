@@ -1,5 +1,5 @@
 from datetime import datetime
-from redmine import to_string
+from redmine.utilities import to_string
 from redmine.managers import ResourceManager
 from redmine.exceptions import ResourceAttrError
 
@@ -302,8 +302,10 @@ class IssueRelation(_Resource):
     version = '1.3'
     container_filter = 'relations'
     container_one = 'relation'
+    container_create = 'relation'
     query_filter = '/issues/{issue_id}/relations.json'
     query_one = '/relations/{0}.json'
+    query_create = '/issues/{issue_id}/relations.json'
 
     def __str__(self):
         return str(self.id)

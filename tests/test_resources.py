@@ -256,7 +256,7 @@ class TestResources(unittest.TestCase):
     def test_time_entry_create(self):
         self.response.status_code = 201
         self.response.json.return_value = responses['time_entry']['get']
-        time_entry = self.redmine.time_entry.create(issue_id='foo', hours=2)
+        time_entry = self.redmine.time_entry.create(issue_id=1, hours=2)
         self.assertEqual(time_entry.id, 1)
         self.assertEqual(time_entry.hours, 2)
 
@@ -384,6 +384,12 @@ class TestResources(unittest.TestCase):
         relations = self.redmine.issue_relation.filter(issue_id=1)
         self.assertEqual(relations[0].id, 1)
         self.assertEqual(relations[1].id, 2)
+
+    def test_issue_relation_create(self):
+        self.response.status_code = 201
+        self.response.json.return_value = responses['issue_relation']['get']
+        relation = self.redmine.issue_relation.create(issue_id=1, issue_to_id=2)
+        self.assertEqual(relation.id, 1)
 
     def test_issue_relation_custom_str(self):
         self.response.json.return_value = responses['issue_relation']['get']
