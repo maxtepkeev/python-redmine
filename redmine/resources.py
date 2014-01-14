@@ -195,9 +195,11 @@ class TimeEntry(_Resource):
     container_all = 'time_entries'
     container_one = 'time_entry'
     container_filter = 'time_entries'
+    container_create = 'time_entry'
     query_all = '/time_entries.json'
     query_one = '/time_entries/{0}.json'
     query_filter = '/issues/{issue_id}/time_entries.json'
+    query_create = '/time_entries.json'
 
     def __str__(self):
         return str(self.id)

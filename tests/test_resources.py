@@ -253,6 +253,13 @@ class TestResources(unittest.TestCase):
         self.assertEqual(time_entries[1].id, 2)
         self.assertEqual(time_entries[1].hours, 4)
 
+    def test_time_entry_create(self):
+        self.response.status_code = 201
+        self.response.json.return_value = responses['time_entry']['get']
+        time_entry = self.redmine.time_entry.create(issue_id='foo', hours=2)
+        self.assertEqual(time_entry.id, 1)
+        self.assertEqual(time_entry.hours, 2)
+
     def test_time_entry_custom_str(self):
         self.response.json.return_value = responses['time_entry']['get']
         self.assertEqual(str(self.redmine.time_entry.get(1)), '1')

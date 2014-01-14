@@ -17,6 +17,7 @@ Changelog
   * Group
   * IssueCategory
   * Version
+  * TimeEntry
 
 - Added: Informal string representation to all resources, i.e. __str__()
 - Changed: ResourceManager get() method now throws a ``ResourceNotFoundError`` exception if

@@ -6,7 +6,20 @@ Supported by Redmine starting from version 1.1
 Create
 ------
 
-Not yet supported by Python Redmine
+Supported keyword arguments:
+
+* **issue_id** or **project_id** (required). The issue id or project id to log time on.
+* **spent_on** (optional). The date the time was spent (defaults to the current date if not set).
+* **hours** (required). The number of spent hours.
+* **activity_id** (optional). The id of the time activity. This parameter is required unless a
+  default activity is defined in Redmine.
+* **comments** (optional). Short description for the entry (255 characters max).
+
+.. code-block:: python
+
+    >>> time_entry = redmine.time_entry.create(issue_id=123, spent_on='2014-01-14', hours=3, activity_id=10, comments='hello')
+    >>> time_entry
+    <redmine.resources.TimeEntry #12345>
 
 Read
 ----
