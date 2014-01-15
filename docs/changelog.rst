@@ -7,6 +7,7 @@ Changelog
 - Added: New exceptions:
 
   * ServerError
+  * NoFileError
   * ValidationError
   * ResourceNoFieldsProvidedError
   * ResourceNotFoundError

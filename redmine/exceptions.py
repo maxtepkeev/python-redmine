@@ -10,6 +10,12 @@ class ResourceError(BaseRedmineError):
         super(ResourceError, self).__init__('Unsupported redmine resource')
 
 
+class NoFileError(BaseRedmineError):
+    """File doesn't exist exception"""
+    def __init__(self):
+        super(NoFileError, self).__init__("Can't upload the file that doesn't exist")
+
+
 class ResourceNotFoundError(BaseRedmineError):
     """Resource not found"""
     def __init__(self):

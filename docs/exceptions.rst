@@ -10,6 +10,9 @@ is the list of all exceptions that Python Redmine can throw:
 ``ResourceError``
     Unsupported Redmine resource exception
 
+``NoFileError``
+    File doesn't exist exception
+
 ``ResourceNotFoundError``
     Requested resource doesn't exist
 
