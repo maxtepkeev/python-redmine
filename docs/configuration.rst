@@ -26,7 +26,7 @@ Location
 ++++++++
 
 Now you need to configure the Redmine object and pass it a few parameters. The only required
-parameter is the Redmine location:
+parameter is the Redmine location (without the forward slash in the end):
 
 .. code-block:: python
 
