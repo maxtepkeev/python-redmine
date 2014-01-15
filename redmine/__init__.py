@@ -50,7 +50,10 @@ class Redmine(object):
         response = getattr(requests, method)(url, **kwargs)
 
         if response.status_code in (200, 201):
-            return response.json()
+            if response.status_code == 200 and method == 'put':
+                return response.text
+            else:
+                return response.json()
         elif response.status_code == 401:
             raise AuthError()
         elif response.status_code == 404:

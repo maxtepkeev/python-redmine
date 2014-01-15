@@ -44,10 +44,13 @@ class TestRedmineRequest(unittest.TestCase):
         self.response = mock.Mock()
         patcher_get = mock.patch('requests.get', return_value=self.response)
         patcher_post = mock.patch('requests.post', return_value=self.response)
+        patcher_put = mock.patch('requests.put', return_value=self.response)
         patcher_get.start()
         patcher_post.start()
+        patcher_put.start()
         self.addCleanup(patcher_get.stop)
         self.addCleanup(patcher_post.stop)
+        self.addCleanup(patcher_put.stop)
 
     def test_successful_response_via_username_password(self):
         self.redmine.username = 'john'
@@ -61,6 +64,11 @@ class TestRedmineRequest(unittest.TestCase):
         self.response.status_code = 200
         self.response.json.return_value = {'success': True}
         self.assertEqual(self.redmine.request('get', self.url)['success'], True)
+
+    def test_successful_response_via_put_method(self):
+        self.response.status_code = 200
+        self.response.text = ''
+        self.assertEqual(self.redmine.request('put', self.url), '')
 
     def test_auth_error_exception(self):
         from redmine.exceptions import AuthError
