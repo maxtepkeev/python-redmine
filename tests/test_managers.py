@@ -149,3 +149,11 @@ class TestResourceManager(unittest.TestCase):
     def test_create_validation_exception(self):
         from redmine.exceptions import ValidationError
         self.assertRaises(ValidationError, lambda: self.redmine.issue_category.create(foo='bar'))
+
+    @mock.patch('requests.put')
+    @mock.patch('requests.post')
+    def test_create_validation_exception_via_put(self, mock_post, mock_put):
+        from redmine.exceptions import ValidationError
+        mock_post.return_value = mock.Mock(status_code=404)
+        mock_put.return_value = mock.Mock(status_code=200, text='')
+        self.assertRaises(ValidationError, lambda: self.redmine.user.create(firstname='John', lastname='Smith'))

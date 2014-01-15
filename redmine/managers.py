@@ -8,6 +8,7 @@ from redmine.exceptions import (
     ResourceNoFiltersProvidedError,
     ResourceNoFieldsProvidedError,
     ResourceVersionMismatchError,
+    ResourceNotFoundError,
     ValidationError
 )
 
@@ -139,7 +140,23 @@ class ResourceManager(object):
             raise ValidationError('{0} field is required'.format(exception))
 
         self.container = self.resource_class.container_one
-        container = self.resource_class.container_create
-        resource = self.redmine.request('post', url, data={container: formatter.unused_kwargs})[self.container]
-        self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_one.format(resource['id']))
-        return self.resource_class(self, resource)
+        data = {self.resource_class.container_create: formatter.unused_kwargs}
+
+        # Almost all resources are created via POST method, but some
+        # resources are created via PUT, so we should check for this
+        try:
+            response = self.redmine.request('post', url, data=data)
+        except ResourceNotFoundError:
+            response = self.redmine.request('put', url, data=data)
+
+        if self.container in response:
+            resource = self.resource_class(self, response[self.container])
+        else:
+            raise ValidationError('Resource already exists')  # fix for repeated PUT requests
+
+        self.params = formatter.used_kwargs
+        self.url = '{0}{1}'.format(
+            self.redmine.url,
+            self.resource_class.query_one.format(resource.internal_id, **fields)
+        )
+        return resource

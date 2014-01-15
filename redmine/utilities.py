@@ -10,12 +10,12 @@ def to_string(string):
 class MemorizeFormatter(Formatter):
     """Memorizes all arguments, used during string formatting"""
     def __init__(self):
-        self.used_args = {}
+        self.used_kwargs = {}
         self.unused_kwargs = {}
 
     def check_unused_args(self, used_args, args, kwargs):
         for item in used_args:
+            self.used_kwargs[item] = kwargs[item]
             del kwargs[item]
 
-        self.used_args = used_args
         self.unused_kwargs = kwargs
