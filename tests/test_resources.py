@@ -340,6 +340,12 @@ class TestResources(unittest.TestCase):
         self.assertEqual(memberships[0].id, 1)
         self.assertEqual(memberships[1].id, 2)
 
+    def test_project_membership_create(self):
+        self.response.status_code = 201
+        self.response.json.return_value = responses['project_membership']['get']
+        membership = self.redmine.project_membership.create(project_id='foo', user_id=1, role_ids=[1, 2])
+        self.assertEqual(membership.id, 1)
+
     def test_project_membership_custom_str(self):
         self.response.json.return_value = responses['project_membership']['get']
         self.assertEqual(str(self.redmine.project_membership.get(1)), '1')

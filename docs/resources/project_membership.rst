@@ -6,7 +6,17 @@ Supported by Redmine starting from version 1.4
 Create
 ------
 
-Not yet supported by Python Redmine
+Supported keyword arguments:
+
+* **project_id** (required). The id of the project, where id is either project id or project identifier.
+* **user_id** (required). Id of the user to add to the project.
+* **role_ids** (required). List or tuple of role ids to add to the user in this project.
+
+.. code-block:: python
+
+    >>> membership = redmine.project_membership.create(project_id='vacation', user_id=1, role_ids=[1, 2])
+    >>> membership
+    <redmine.resources.ProjectMembership #123>
 
 Read
 ----
