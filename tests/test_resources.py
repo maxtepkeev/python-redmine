@@ -81,10 +81,13 @@ class TestResources(unittest.TestCase):
         self.response = mock.Mock(status_code=200)
         patcher_get = mock.patch('requests.get', return_value=self.response)
         patcher_post = mock.patch('requests.post', return_value=self.response)
+        patcher_put = mock.patch('requests.put', return_value=self.response)
         patcher_get.start()
         patcher_post.start()
+        patcher_put.start()
         self.addCleanup(patcher_get.stop)
         self.addCleanup(patcher_post.stop)
+        self.addCleanup(patcher_put.stop)
 
     def test_supports_dictionary_like_attribute_retrieval(self):
         self.response.json.return_value = responses['project']['get']
@@ -95,6 +98,10 @@ class TestResources(unittest.TestCase):
     def test_supports_url_retrieval(self):
         self.response.json.return_value = responses['project']['get']
         self.assertEqual(self.redmine.project.get(1).url, '{0}/projects/1'.format(self.url))
+
+    def test_supports_internal_id(self):
+        self.response.json.return_value = responses['project']['get']
+        self.assertEqual(self.redmine.project.get(1).internal_id, 1)
 
     def test_custom_str(self):
         self.response.json.return_value = responses['project']['get']
@@ -310,6 +317,12 @@ class TestResources(unittest.TestCase):
         self.assertEqual(wiki_pages[0].title, 'Foo')
         self.assertEqual(wiki_pages[1].title, 'Bar')
 
+    def test_wiki_page_create(self):
+        self.response.status_code = 201
+        self.response.json.return_value = responses['wiki_page']['get']
+        wiki_page = self.redmine.wiki_page.create(project_id='foo', title='Foo')
+        self.assertEqual(wiki_page.title, 'Foo')
+
     def test_wiki_page_refresh_by_title(self):
         self.response.json.return_value = responses['wiki_page']['get']
         wiki_page = self.redmine.wiki_page.get('title', project_id=1)
@@ -317,6 +330,10 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = {'wiki_page': {'title': 'Bar'}}
         wiki_page = wiki_page.refresh()
         self.assertEqual(wiki_page.title, 'Bar')
+
+    def test_wiki_page_supports_internal_id(self):
+        self.response.json.return_value = responses['wiki_page']['get']
+        self.assertEqual(self.redmine.wiki_page.get('Foo', project_id=1).internal_id, 'Foo')
 
     def test_wiki_page_custom_str(self):
         self.response.json.return_value = responses['wiki_page']['get']

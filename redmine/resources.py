@@ -115,6 +115,11 @@ class _Resource(object):
         """Returns full url to the resource for humans"""
         return self.manager.url.replace('.json', '')
 
+    @property
+    def internal_id(self):
+        """Returns identifier of the resource for usage in internals of the library"""
+        return self.id
+
     def __dir__(self):
         """We need to show only real Redmine resource attributes on dir() call"""
         return list(self.attributes.keys())
@@ -253,11 +258,17 @@ class WikiPage(_Resource):
     version = '2.2'
     container_filter = 'wiki_pages'
     container_one = 'wiki_page'
+    container_create = 'wiki_page'
     query_filter = '/projects/{project_id}/wiki/index.json'
     query_one = '/projects/{project_id}/wiki/{0}.json'
+    query_create = '/projects/{project_id}/wiki/{title}.json'
 
     def refresh(self):
         return self.manager.get(self.title, project_id=self.manager.params['project_id'])
+
+    @property
+    def internal_id(self):
+        return self.title
 
     def __str__(self):
         return to_string(self.title)

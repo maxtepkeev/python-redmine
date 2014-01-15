@@ -6,7 +6,18 @@ Supported by Redmine starting from version 2.2
 Create
 ------
 
-Not yet supported by Python Redmine
+Supported keyword arguments:
+
+* **project_id** (required). Create wiki page in the given project id.
+* **title** (required). Title of the wiki page.
+* **text** (required): Text of the wiki page.
+* **comments** (optional). Comments of the wiki page.
+
+.. code-block:: python
+
+    >>> wiki_page = redmine.wiki_page.create(project_id='vacation', title='FooBar', text='foo', comments='bar')
+    >>> wiki_page
+    <redmine.resources.WikiPage "FooBar">
 
 Read
 ----
