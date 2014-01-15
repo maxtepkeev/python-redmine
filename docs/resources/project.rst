@@ -6,7 +6,22 @@ Supported by Redmine starting from version 1.0
 Create
 ------
 
-Not yet supported by Python Redmine
+Supported keyword arguments:
+
+* **name** (required). Project name.
+* **identifier** (required). Project identifier.
+* **description** (optional). Project description.
+* **homepage** (optional). Project homepage url.
+* **is_public** (optional). Whether project is public.
+* **parent_id** (optional). Project's parent project id.
+* **inherit_members** (optional). Whether project will inherit parent project's members.
+* **custom_field_values** (optional). Value of custom fields as a dictionary in the form of {id: value}.
+
+.. code-block:: python
+
+    >>> project = redmine.project.create(name='Vacation', identifier='vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, custom_field_values={2: 'foobar'})
+    >>> project
+    <redmine.resources.Project #123 "Vacation">
 
 Read
 ----

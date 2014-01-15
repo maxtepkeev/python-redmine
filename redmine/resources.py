@@ -146,8 +146,10 @@ class Project(_Resource):
     version = '1.0'
     container_all = 'projects'
     container_one = 'project'
+    container_create = 'project'
     query_all = '/projects.json'
     query_one = '/projects/{0}.json'
+    query_create = '/projects.json'
 
     _relations = {
         'wiki_pages': None,
