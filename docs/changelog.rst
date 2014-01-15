@@ -25,6 +25,7 @@ Changelog
   * Issue
 
 - Added: Informal string representation to all resources, i.e. __str__()
+- Fixed: Conversion of issue priorities to enumeration resource object didn't work
 - Changed: ResourceManager get() method now throws a ``ResourceNotFoundError`` exception if
   resource wasn't found instead of returning None in previous versions
 - Changed: reimplemented fix for __repr__() from 0.1.1

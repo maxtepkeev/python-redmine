@@ -30,6 +30,7 @@ _RESOURCE_MAP = {
     'status': 'IssueStatus',
     'user': 'User',
     'issue': 'Issue',
+    'priority': 'Enumeration',
     'activity': 'Enumeration',
     'category': 'IssueCategory',
 }
