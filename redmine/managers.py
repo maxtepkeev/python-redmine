@@ -28,7 +28,7 @@ class ResourceManager(object):
         except AttributeError:
             raise ResourceError()
 
-        if redmine.ver is not None and LooseVersion(str(redmine.ver)) < LooseVersion(resource_class.version):
+        if redmine.ver is not None and LooseVersion(str(redmine.ver)) < LooseVersion(resource_class.redmine_version):
             raise ResourceVersionMismatchError()
 
         self.redmine = redmine

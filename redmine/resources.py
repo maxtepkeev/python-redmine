@@ -51,7 +51,7 @@ _RESOURCE_RELATIONS_MAP = {
 
 class _Resource(object):
     """Implementation of Redmine resource"""
-    version = None
+    redmine_version = None
     container_all = None
     container_one = None
     container_filter = None
@@ -129,6 +129,10 @@ class _Resource(object):
         """Provides a way to iterate through resource attributes and its values"""
         return iter(self.attributes.items())
 
+    def __int__(self):
+        """Integer representation of the Redmine resource object"""
+        return self.id
+
     def __str__(self):
         """Informal representation of the Redmine resource object"""
         return to_string(self.name)
@@ -144,7 +148,7 @@ class _Resource(object):
 
 
 class Project(_Resource):
-    version = '1.0'
+    redmine_version = '1.0'
     container_all = 'projects'
     container_one = 'project'
     container_create = 'project'
@@ -163,7 +167,7 @@ class Project(_Resource):
 
 
 class Issue(_Resource):
-    version = '1.0'
+    redmine_version = '1.0'
     container_all = 'issues'
     container_one = 'issue'
     container_filter = 'issues'
@@ -201,7 +205,7 @@ class Issue(_Resource):
 
 
 class TimeEntry(_Resource):
-    version = '1.1'
+    redmine_version = '1.1'
     container_all = 'time_entries'
     container_one = 'time_entry'
     container_filter = 'time_entries'
@@ -223,13 +227,13 @@ class TimeEntry(_Resource):
 
 
 class Enumeration(_Resource):
-    version = '2.2'
+    redmine_version = '2.2'
     container_filter = '{resource}'
     query_filter = '/enumerations/{resource}.json'
 
 
 class Attachment(_Resource):
-    version = '1.3'
+    redmine_version = '1.3'
     container_one = 'attachment'
     query_one = '/attachments/{0}.json'
 
@@ -246,7 +250,7 @@ class Attachment(_Resource):
 
 
 class IssueJournal(_Resource):
-    version = '1.0'
+    redmine_version = '1.0'
 
     def __str__(self):
         return str(self.id)
@@ -260,7 +264,7 @@ class IssueJournal(_Resource):
 
 
 class WikiPage(_Resource):
-    version = '2.2'
+    redmine_version = '2.2'
     container_filter = 'wiki_pages'
     container_one = 'wiki_page'
     container_create = 'wiki_page'
@@ -275,6 +279,9 @@ class WikiPage(_Resource):
     def internal_id(self):
         return self.title
 
+    def __int__(self):
+        return self.version
+
     def __str__(self):
         return to_string(self.title)
 
@@ -287,7 +294,7 @@ class WikiPage(_Resource):
 
 
 class ProjectMembership(_Resource):
-    version = '1.4'
+    redmine_version = '1.4'
     container_filter = 'memberships'
     container_one = 'membership'
     container_create = 'membership'
@@ -307,7 +314,7 @@ class ProjectMembership(_Resource):
 
 
 class IssueCategory(_Resource):
-    version = '1.3'
+    redmine_version = '1.3'
     container_filter = 'issue_categories'
     container_one = 'issue_category'
     container_create = 'issue_category'
@@ -317,7 +324,7 @@ class IssueCategory(_Resource):
 
 
 class IssueRelation(_Resource):
-    version = '1.3'
+    redmine_version = '1.3'
     container_filter = 'relations'
     container_one = 'relation'
     container_create = 'relation'
@@ -337,7 +344,7 @@ class IssueRelation(_Resource):
 
 
 class Version(_Resource):
-    version = '1.3'
+    redmine_version = '1.3'
     container_filter = 'versions'
     container_one = 'version'
     container_create = 'version'
@@ -347,7 +354,7 @@ class Version(_Resource):
 
 
 class User(_Resource):
-    version = '1.1'
+    redmine_version = '1.1'
     container_all = 'users'
     container_one = 'user'
     container_filter = 'users'
@@ -377,7 +384,7 @@ class User(_Resource):
 
 
 class Group(_Resource):
-    version = '2.1'
+    redmine_version = '2.1'
     container_all = 'groups'
     container_one = 'group'
     container_create = 'group'
@@ -387,7 +394,7 @@ class Group(_Resource):
 
 
 class Role(_Resource):
-    version = '1.4'
+    redmine_version = '1.4'
     container_all = 'roles'
     container_one = 'role'
     query_all = '/roles.json'
@@ -395,7 +402,7 @@ class Role(_Resource):
 
 
 class News(_Resource):
-    version = '1.1'
+    redmine_version = '1.1'
     container_all = 'news'
     container_filter = 'news'
     query_all = '/news.json'
@@ -403,25 +410,25 @@ class News(_Resource):
 
 
 class IssueStatus(_Resource):
-    version = '1.3'
+    redmine_version = '1.3'
     container_all = 'issue_statuses'
     query_all = '/issue_statuses.json'
 
 
 class Tracker(_Resource):
-    version = '1.3'
+    redmine_version = '1.3'
     container_all = 'trackers'
     query_all = '/trackers.json'
 
 
 class Query(_Resource):
-    version = '1.3'
+    redmine_version = '1.3'
     container_all = 'queries'
     query_all = '/queries.json'
 
 
 class CustomField(_Resource):
-    version = '2.4'
+    redmine_version = '2.4'
     container_all = 'custom_fields'
     query_all = '/custom_fields.json'
 
