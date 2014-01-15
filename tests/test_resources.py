@@ -209,6 +209,13 @@ class TestResources(unittest.TestCase):
         self.assertEqual(issues[1].id, 2)
         self.assertEqual(issues[1].subject, 'Bar')
 
+    def test_issue_create(self):
+        self.response.status_code = 201
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.create(project_id='bar', subject='Foo')
+        self.assertEqual(issue.id, 1)
+        self.assertEqual(issue.subject, 'Foo')
+
     def test_issue_relations(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)

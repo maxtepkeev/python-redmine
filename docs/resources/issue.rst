@@ -6,7 +6,31 @@ Supported by Redmine starting from version 1.0
 Create
 ------
 
-Not yet supported by Python Redmine
+Supported keyword arguments:
+
+* **project_id** (required). Project identifier where issue will be created.
+* **subject** (required). Issue subject.
+* **tracker_id** (optional). Issue tracker id.
+* **description** (optional). Issue description.
+* **status_id** (optional). Issue status id.
+* **priority_id** (optional). Issue priority id.
+* **category_id** (optional). Issue category id.
+* **fixed_version_id** (optional). Issue version id.
+* **is_private** (optional). Whether issue is private.
+* **assigned_to_id** (optional). Issue will be assigned to this user id.
+* **watcher_user_ids** (optional). User ids who will be watching this issue as a list or tuple.
+* **parent_issue_id** (optional). Id of the parent issue.
+* **start_date** (optional). Issue start date.
+* **due_date** (optional). Issue end date.
+* **estimated_hours** (optional). Issue estimated hours.
+* **done_ratio** (optional). Issue done ratio.
+* **custom_fields** (optional). Value of custom fields as a dictionary in the form of {id: value}.
+
+.. code-block:: python
+
+    >>> issue = redmine.issue.create(project_id='vacation', subject='Vacation', tracker_id=8, description='foo', status_id=3, priority_id=7, assigned_to_id=123, watcher_user_ids=[123], parent_issue_id=345, start_date='2014-01-01', due_date='2014-02-01', estimated_hours=4, done_ratio=40)
+    >>> issue
+    <redmine.resources.Issue #123 "Vacation">
 
 Read
 ----

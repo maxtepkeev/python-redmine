@@ -166,9 +166,11 @@ class Issue(_Resource):
     container_all = 'issues'
     container_one = 'issue'
     container_filter = 'issues'
+    container_create = 'issue'
     query_all = '/issues.json'
     query_one = '/issues/{0}.json'
     query_filter = '/issues.json'
+    query_create = '/issues.json'
 
     _relations = {
         'relations': None,
