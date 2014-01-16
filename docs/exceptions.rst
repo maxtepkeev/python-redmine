@@ -25,7 +25,7 @@ is the list of all exceptions that Python Redmine can throw:
 ``ServerError``
     Redmine internal error
 
-``ValidationError``
+``ValidationError(error)``
     Redmine validation errors occured on create/update resource
 
 ``ResourceSetIndexError``
@@ -49,7 +49,7 @@ is the list of all exceptions that Python Redmine can throw:
 ``ResourceAttrError``
     Resource doesn't have the requested attribute
 
-``VersionMismatchError``
+``VersionMismatchError(feature)``
     Feature isn't supported on specified Redmine version
 
 ``ResourceVersionMismatchError``
