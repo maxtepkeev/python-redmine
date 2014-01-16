@@ -25,10 +25,16 @@ Supported keyword arguments:
 * **estimated_hours** (optional). Issue estimated hours.
 * **done_ratio** (optional). Issue done ratio.
 * **custom_fields** (optional). Value of custom fields as a dictionary in the form of {id: value}.
+* **uploads** (optional). List or tuple of dicts in the form of [{'': ''}, {'': ''}], accepted keys are:
+
+  - path (required). Absolute path to the file that should be uploaded.
+  - filename (optional). Name of the file after upload.
+  - description (optional). Description of the file.
+  - content_type (optional). Content type of the file.
 
 .. code-block:: python
 
-    >>> issue = redmine.issue.create(project_id='vacation', subject='Vacation', tracker_id=8, description='foo', status_id=3, priority_id=7, assigned_to_id=123, watcher_user_ids=[123], parent_issue_id=345, start_date='2014-01-01', due_date='2014-02-01', estimated_hours=4, done_ratio=40)
+    >>> issue = redmine.issue.create(project_id='vacation', subject='Vacation', tracker_id=8, description='foo', status_id=3, priority_id=7, assigned_to_id=123, watcher_user_ids=[123], parent_issue_id=345, start_date='2014-01-01', due_date='2014-02-01', estimated_hours=4, done_ratio=40, uploads=[{'path': '/some/path/to/file'}, {'path': '/some/path/to/file2'}])
     >>> issue
     <redmine.resources.Issue #123 "Vacation">
 

@@ -10,7 +10,15 @@ support the requested operation, an exception will be thrown.
 Create
 ------
 
-Not yet supported by Python Redmine
+Resources can be created via ``create`` method. Each resource supports different keyword
+arguments. Unfortunately Redmine doesn't support the creation of some resources via REST
+API. You can read more about it in each resource's documentation.
+
+.. code-block:: python
+
+    >>> project = redmine.project.create(name='Vacation', identifier='vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, custom_field_values={2: 'foobar'})
+    >>> project
+    <redmine.resources.Project #123 "Vacation">
 
 Read
 ----

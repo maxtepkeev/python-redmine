@@ -6,7 +6,7 @@ Supported by Redmine starting from version 1.3
 Create
 ------
 
-Not yet supported by Python Redmine
+Not supported by Redmine. Some resources support adding attachments via it's create/update methods, e.g. issue.
 
 Read
 ----

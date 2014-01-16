@@ -1,10 +1,10 @@
 Changelog
 =========
 
-0.1.2 (2014-0X-XX)
+0.2.0 (2014-01-16)
 ------------------
 
-- Added: New exceptions (see docs for details):
+- Added: New exceptions:
 
   * ServerError
   * NoFileError
@@ -26,7 +26,7 @@ Changelog
   * Project
   * Issue
 
-- Added: File upload support
+- Added: File upload support, see upload() method in Redmine class
 - Added: Integer representation to all resources, i.e. __int__()
 - Added: Informal string representation to all resources, i.e. __str__()
 - Fixed: Conversion of issue priorities to enumeration resource object didn't work
