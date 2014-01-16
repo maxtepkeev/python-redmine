@@ -4,11 +4,12 @@ Changelog
 0.1.2 (2014-0X-XX)
 ------------------
 
-- Added: New exceptions:
+- Added: New exceptions (see docs for details):
 
   * ServerError
   * NoFileError
   * ValidationError
+  * VersionMismatchError
   * ResourceNoFieldsProvidedError
   * ResourceNotFoundError
 

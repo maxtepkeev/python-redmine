@@ -88,7 +88,13 @@ class ResourceAttrError(BaseRedmineError):
         super(ResourceAttrError, self).__init__("Resource doesn't have the requested attribute")
 
 
-class ResourceVersionMismatchError(BaseRedmineError):
+class VersionMismatchError(BaseRedmineError):
+    """Feature isn't supported on specified Redmine version"""
+    def __init__(self, feature):
+        super(VersionMismatchError, self).__init__("{0} isn't supported on specified Redmine version".format(feature))
+
+
+class ResourceVersionMismatchError(VersionMismatchError):
     """Resource isn't supported on specified Redmine version"""
     def __init__(self):
-        super(ResourceVersionMismatchError, self).__init__("Resource isn't supported on specified Redmine version")
+        super(ResourceVersionMismatchError, self).__init__('Resource')

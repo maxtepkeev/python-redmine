@@ -49,5 +49,8 @@ is the list of all exceptions that Python Redmine can throw:
 ``ResourceAttrError``
     Resource doesn't have the requested attribute
 
+``VersionMismatchError``
+    Feature isn't supported on specified Redmine version
+
 ``ResourceVersionMismatchError``
     Resource isn't supported on specified Redmine version
