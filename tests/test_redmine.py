@@ -70,11 +70,11 @@ class TestRedmineRequest(unittest.TestCase):
         self.response.text = ''
         self.assertEqual(self.redmine.request('put', self.url), '')
 
-    @mock.patch('builtins.open', mock.mock_open())
+    @mock.patch('redmine.open', mock.mock_open(), create=True)
     def test_successful_file_upload(self):
         self.response.status_code = 201
         self.response.json.return_value = {'upload': {'token': '123456'}}
-        self.assertEqual(self.redmine.upload('foo',), '123456')
+        self.assertEqual(self.redmine.upload('foo'), '123456')
 
     def test_file_upload_no_file_exception(self):
         from redmine.exceptions import NoFileError

@@ -36,12 +36,12 @@ class Redmine(object):
             raise VersionMismatchError('File upload')
 
         try:
-            fileobj = open(filepath)
+            with open(filepath) as stream:
+                url = '{0}{1}'.format(self.url, '/uploads.json')
+                response = self.request('post', url, data=stream, headers={'Content-Type': 'application/octet-stream'})
         except IOError:
             raise NoFileError()
 
-        url = '{0}{1}'.format(self.url, '/uploads.json')
-        response = self.request('post', url, data=fileobj, headers={'Content-Type': 'application/octet-stream'})
         return response['upload']['token']
 
     def request(self, method, url, headers=None, params=None, data=None):
