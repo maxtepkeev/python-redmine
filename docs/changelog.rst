@@ -26,6 +26,7 @@ Changelog
   * Project
   * Issue
 
+- Added: File upload support
 - Added: Integer representation to all resources, i.e. __int__()
 - Added: Informal string representation to all resources, i.e. __str__()
 - Fixed: Conversion of issue priorities to enumeration resource object didn't work

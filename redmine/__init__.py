@@ -1,5 +1,6 @@
 import json
 import requests
+from distutils.version import LooseVersion
 from redmine.managers import ResourceManager
 from redmine.utilities import to_string
 from redmine.exceptions import (
@@ -7,6 +8,8 @@ from redmine.exceptions import (
     ImpersonateError,
     ServerError,
     ValidationError,
+    NoFileError,
+    VersionMismatchError,
     ResourceNotFoundError
 )
 
@@ -27,15 +30,30 @@ class Redmine(object):
         """Returns either ResourceSet or Resource object depending on the method used on the ResourceManager"""
         return ResourceManager(self, resource)
 
-    def request(self, method, url, params=None, data=None):
+    def upload(self, filepath):
+        """Uploads file from filepath to Redmine and returns an assigned token"""
+        if self.ver is not None and LooseVersion(str(self.ver)) < LooseVersion('1.4.0'):
+            raise VersionMismatchError('File upload')
+
+        try:
+            fileobj = open(filepath)
+        except IOError:
+            raise NoFileError()
+
+        url = '{0}{1}'.format(self.url, '/uploads.json')
+        response = self.request('post', url, data=fileobj, headers={'Content-Type': 'application/octet-stream'})
+        return response['upload']['token']
+
+    def request(self, method, url, headers=None, params=None, data=None):
         """Makes requests to Redmine and returns result in json format"""
         kwargs = {
-            'headers': {},
+            'headers': headers or {},
             'params': params or {},
-            'data': json.dumps(data) if data is not None else {},
+            'data': data or {},
         }
 
-        if method in ('post', 'put'):
+        if not 'Content-Type' in kwargs['headers'] and method in ('post', 'put'):
+            kwargs['data'] = json.dumps(data)
             kwargs['headers']['Content-Type'] = 'application/json'
 
         if self.impersonate is not None:

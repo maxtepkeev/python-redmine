@@ -70,6 +70,21 @@ class TestRedmineRequest(unittest.TestCase):
         self.response.text = ''
         self.assertEqual(self.redmine.request('put', self.url), '')
 
+    @mock.patch('builtins.open', mock.mock_open())
+    def test_successful_file_upload(self):
+        self.response.status_code = 201
+        self.response.json.return_value = {'upload': {'token': '123456'}}
+        self.assertEqual(self.redmine.upload('foo',), '123456')
+
+    def test_file_upload_no_file_exception(self):
+        from redmine.exceptions import NoFileError
+        self.assertRaises(NoFileError, lambda: self.redmine.upload('foo',))
+
+    def test_file_upload_not_supported_exception(self):
+        from redmine.exceptions import VersionMismatchError
+        self.redmine.ver = '1.0.0'
+        self.assertRaises(VersionMismatchError, lambda: self.redmine.upload('foo',))
+
     def test_auth_error_exception(self):
         from redmine.exceptions import AuthError
         self.response.status_code = 401
