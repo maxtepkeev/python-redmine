@@ -132,6 +132,10 @@ class ResourceManager(object):
         if not fields:
             raise ResourceNoFieldsProvidedError
 
+        if 'uploads' in fields:
+            for index, upload in enumerate(fields['uploads']):
+                fields['uploads'][index]['token'] = self.redmine.upload(upload.get('path', ''))
+
         formatter = MemorizeFormatter()
 
         try:

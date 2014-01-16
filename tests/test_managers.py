@@ -122,6 +122,18 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(user.firstname, 'John')
         self.assertEqual(user.lastname, 'Smith')
 
+    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    @mock.patch('requests.post')
+    def test_create_resource_with_uploads(self, mock_post):
+        mock_post.return_value = response = mock.Mock(status_code=201)
+        response.json.return_value = {
+            'upload': {'token': '123456'},
+            'issue': {'subject': 'Foo', 'project_id': 1, 'id': 1}
+        }
+        issue = self.redmine.issue.create(project_id=1, subject='Foo', uploads=[{'path': 'foo'}])
+        self.assertEqual(issue.project_id, 1)
+        self.assertEqual(issue.subject, 'Foo')
+
     def test_resource_get_method_unsupported_exception(self):
         self.assertRaises(ResourceBadMethodError, lambda: self.redmine.enumeration.get('foo'))
 
