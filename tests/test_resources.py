@@ -512,6 +512,9 @@ class TestResources(unittest.TestCase):
         self.assertEqual(user.firstname, 'John')
         self.assertEqual(user.lastname, 'Smith')
 
+    def test_user_delete(self):
+        self.assertEqual(self.redmine.user.delete(1), True)
+
     def test_user_custom_str(self):
         self.response.json.return_value = responses['user']['get']
         self.assertEqual(str(self.redmine.user.get(1)), 'John Smith')

@@ -367,6 +367,7 @@ class User(_Resource):
     query_one = '/users/{0}.json'
     query_filter = '/users.json'
     query_create = '/users.json'
+    query_delete = '/users/{0}.json'
 
     def __str__(self):
         try:

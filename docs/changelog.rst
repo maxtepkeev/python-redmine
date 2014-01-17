@@ -6,10 +6,11 @@ Changelog
 
 - Added: Delete functionality for resources (see docs for details):
 
+  * User
   * Group
   * Version
-  * Issue
   * ProjectMembership
+  * Issue
 
 0.2.0 (2014-01-16)
 ------------------
