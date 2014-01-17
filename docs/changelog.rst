@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.2.1 (2014-0X-XX)
+------------------
+
+- Added: Delete functionality for resources (see docs for details):
+
+  * Group
+
 0.2.0 (2014-01-16)
 ------------------
 

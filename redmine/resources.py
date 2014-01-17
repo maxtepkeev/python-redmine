@@ -60,6 +60,7 @@ class _Resource(object):
     query_one = None
     query_filter = None
     query_create = None
+    query_delete = None
 
     _relations = {}
     __length_hint__ = None  # fixes Python 2.6 list() call on resource object
@@ -391,6 +392,7 @@ class Group(_Resource):
     query_all = '/groups.json'
     query_one = '/groups/{0}.json'
     query_create = '/groups.json'
+    query_delete = '/groups/{0}.json'
 
 
 class Role(_Resource):

@@ -82,7 +82,7 @@ class TestResources(unittest.TestCase):
         patcher_get = mock.patch('requests.get', return_value=self.response)
         patcher_post = mock.patch('requests.post', return_value=self.response)
         patcher_put = mock.patch('requests.put', return_value=self.response)
-        patcher_delete = mock.patch('requests.delete', return_value=True)
+        patcher_delete = mock.patch('requests.delete', return_value=self.response)
         patcher_get.start()
         patcher_post.start()
         patcher_put.start()
@@ -533,6 +533,9 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = responses['group']['get']
         group = self.redmine.group.create(name='Foo')
         self.assertEqual(group.name, 'Foo')
+
+    def test_group_delete(self):
+        self.assertEqual(self.redmine.group.delete(1), True)
 
     def test_role_version(self):
         self.assertEqual(self.redmine.role.resource_class.redmine_version, '1.4')
