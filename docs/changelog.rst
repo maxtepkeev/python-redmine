@@ -8,6 +8,7 @@ Changelog
 
   * User
   * Group
+  * IssueCategory
   * Version
   * ProjectMembership
   * Issue

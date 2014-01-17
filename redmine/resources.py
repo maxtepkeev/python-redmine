@@ -324,6 +324,7 @@ class IssueCategory(_Resource):
     query_filter = '/projects/{project_id}/issue_categories.json'
     query_one = '/issue_categories/{0}.json'
     query_create = '/projects/{project_id}/issue_categories.json'
+    query_delete = '/issue_categories/{0}.json'
 
 
 class IssueRelation(_Resource):

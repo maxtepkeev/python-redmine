@@ -426,6 +426,9 @@ class TestResources(unittest.TestCase):
         category = self.redmine.issue_category.create(project_id='foo', name='Foo')
         self.assertEqual(category.name, 'Foo')
 
+    def test_issue_category_delete(self):
+        self.assertEqual(self.redmine.issue_category.delete(1), True)
+
     def test_issue_relation_version(self):
         self.assertEqual(self.redmine.issue_relation.resource_class.redmine_version, '1.3')
 
