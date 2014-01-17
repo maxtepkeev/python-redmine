@@ -177,6 +177,7 @@ class Issue(_Resource):
     query_one = '/issues/{0}.json'
     query_filter = '/issues.json'
     query_create = '/projects/{project_id}/issues.json'
+    query_delete = '/issues/{0}.json'
 
     _relations = {
         'relations': None,

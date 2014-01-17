@@ -223,6 +223,9 @@ class TestResources(unittest.TestCase):
         self.assertEqual(issue.id, 1)
         self.assertEqual(issue.subject, 'Foo')
 
+    def test_issue_delete(self):
+        self.assertEqual(self.redmine.issue.delete(1), True)
+
     def test_issue_relations(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
