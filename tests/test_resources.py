@@ -82,12 +82,15 @@ class TestResources(unittest.TestCase):
         patcher_get = mock.patch('requests.get', return_value=self.response)
         patcher_post = mock.patch('requests.post', return_value=self.response)
         patcher_put = mock.patch('requests.put', return_value=self.response)
+        patcher_delete = mock.patch('requests.delete', return_value=True)
         patcher_get.start()
         patcher_post.start()
         patcher_put.start()
+        patcher_delete.start()
         self.addCleanup(patcher_get.stop)
         self.addCleanup(patcher_post.stop)
         self.addCleanup(patcher_put.stop)
+        self.addCleanup(patcher_delete.stop)
 
     def test_supports_dictionary_like_attribute_retrieval(self):
         self.response.json.return_value = responses['project']['get']

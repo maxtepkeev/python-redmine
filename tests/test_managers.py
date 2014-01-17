@@ -122,6 +122,11 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(user.firstname, 'John')
         self.assertEqual(user.lastname, 'Smith')
 
+    @mock.patch('requests.delete')
+    def test_create_resource(self, mock_post):
+        mock_post.return_value = mock.Mock(status_code=200)
+        self.assertEqual(self.redmine.group.delete(1), True)
+
     @mock.patch('redmine.open', mock.mock_open(), create=True)
     @mock.patch('requests.post')
     def test_create_resource_with_uploads(self, mock_post):
@@ -145,6 +150,9 @@ class TestResourceManager(unittest.TestCase):
 
     def test_resource_create_method_unsupported_exception(self):
         self.assertRaises(ResourceBadMethodError, lambda: self.redmine.query.create())
+
+    def test_resource_delete_method_unsupported_exception(self):
+        self.assertRaises(ResourceBadMethodError, lambda: self.redmine.query.delete(1))
 
     def test_filter_no_filters_exception(self):
         from redmine.exceptions import ResourceNoFiltersProvidedError

@@ -164,3 +164,11 @@ class ResourceManager(object):
             self.resource_class.query_one.format(resource.internal_id, **fields)
         )
         return resource
+
+    def delete(self, resource_id, **params):
+        """Deletes a Resource object by resource id (can be either integer id or string identifier)"""
+        if self.resource_class.query_delete is None:
+            raise ResourceBadMethodError()
+
+        url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_delete.format(resource_id, **params))
+        return self.redmine.request('delete', url, params=params)
