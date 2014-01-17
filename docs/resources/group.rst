@@ -67,5 +67,5 @@ Supported keyword arguments: None
 
 .. code-block:: python
 
-    >>> groups = redmine.group.delete(1)
+    >>> redmine.group.delete(1)
     >>> True
