@@ -156,6 +156,7 @@ class Project(_Resource):
     query_all = '/projects.json'
     query_one = '/projects/{0}.json'
     query_create = '/projects.json'
+    query_delete = '/projects/{0}.json'
 
     _relations = {
         'wiki_pages': None,
