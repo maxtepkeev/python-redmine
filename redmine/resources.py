@@ -352,6 +352,7 @@ class Version(_Resource):
     query_filter = '/projects/{project_id}/versions.json'
     query_one = '/versions/{0}.json'
     query_create = '/projects/{project_id}/versions.json'
+    query_delete = '/versions/{0}.json'
 
 
 class User(_Resource):

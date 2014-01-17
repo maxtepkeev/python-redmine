@@ -471,6 +471,9 @@ class TestResources(unittest.TestCase):
         version = self.redmine.version.create(project_id='foo', name='Foo')
         self.assertEqual(version.name, 'Foo')
 
+    def test_version_delete(self):
+        self.assertEqual(self.redmine.version.delete(1), True)
+
     def test_user_version(self):
         self.assertEqual(self.redmine.user.resource_class.redmine_version, '1.1')
 

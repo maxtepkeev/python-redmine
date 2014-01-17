@@ -94,4 +94,9 @@ Not yet supported by Python Redmine
 Delete
 ------
 
-Not yet supported by Python Redmine
+Supported keyword arguments: None
+
+.. code-block:: python
+
+    >>> redmine.version.delete(1)
+    >>> True

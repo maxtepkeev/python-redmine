@@ -7,6 +7,7 @@ Changelog
 - Added: Delete functionality for resources (see docs for details):
 
   * Group
+  * Version
 
 0.2.0 (2014-01-16)
 ------------------
