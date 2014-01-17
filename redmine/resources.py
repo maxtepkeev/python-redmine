@@ -303,6 +303,7 @@ class ProjectMembership(_Resource):
     query_filter = '/projects/{project_id}/memberships.json'
     query_one = '/memberships/{0}.json'
     query_create = '/projects/{project_id}/memberships.json'
+    query_delete = '/memberships/{0}.json'
 
     def __str__(self):
         return str(self.id)

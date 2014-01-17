@@ -9,6 +9,7 @@ Changelog
   * Group
   * Version
   * Issue
+  * ProjectMembership
 
 0.2.0 (2014-01-16)
 ------------------
