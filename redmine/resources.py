@@ -337,6 +337,7 @@ class IssueRelation(_Resource):
     query_filter = '/issues/{issue_id}/relations.json'
     query_one = '/relations/{0}.json'
     query_create = '/issues/{issue_id}/relations.json'
+    query_delete = '/relations/{0}.json'
 
     def __str__(self):
         return str(self.id)

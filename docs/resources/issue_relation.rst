@@ -87,4 +87,9 @@ Not supported by Redmine
 Delete
 ------
 
-Not yet supported by Python Redmine
+Supported keyword arguments: None
+
+.. code-block:: python
+
+    >>> redmine.issue_relation.delete(1)
+    >>> True

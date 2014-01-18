@@ -11,6 +11,7 @@ Changelog
   * IssueCategory
   * Version
   * TimeEntry
+  * IssueRelation
   * ProjectMembership
   * Project
   * Issue
