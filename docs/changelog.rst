@@ -4,7 +4,7 @@ Changelog
 0.2.1 (2014-0X-XX)
 ------------------
 
-- Added: Delete functionality for resources (see docs for details):
+- Added: Delete functionality for resources via delete method (see docs for details):
 
   * User
   * Group
@@ -16,6 +16,9 @@ Changelog
   * WikiPage
   * Project
   * Issue
+
+- Changed: ResourceManager get() method now raises a ``ValidationError`` exception if
+  required keyword arguments aren't passed
 
 0.2.0 (2014-01-16)
 ------------------
@@ -29,7 +32,7 @@ Changelog
   * ResourceNoFieldsProvidedError
   * ResourceNotFoundError
 
-- Added: Create functionality for resources (see docs for details):
+- Added: Create functionality for resources via create method (see docs for details):
 
   * User
   * Group
@@ -47,7 +50,7 @@ Changelog
 - Added: Informal string representation to all resources, i.e. __str__()
 - Fixed: Conversion of issue priorities to enumeration resource object didn't work
 - Changed: Renamed version attribute to redmine_version in all resources to avoid name intersections
-- Changed: ResourceManager get() method now throws a ``ResourceNotFoundError`` exception if
+- Changed: ResourceManager get() method now raises a ``ResourceNotFoundError`` exception if
   resource wasn't found instead of returning None in previous versions
 - Changed: reimplemented fix for __repr__() from 0.1.1
 

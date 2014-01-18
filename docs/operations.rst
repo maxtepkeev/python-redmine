@@ -159,4 +159,14 @@ Not yet supported by Python Redmine
 Delete
 ------
 
-Not yet supported by Python Redmine
+Resources can be deleted via ``delete`` method. Unfortunately Redmine doesn't support the deletion
+of some resources via REST API. You can read more about it in each resource's documentation.
+
+.. code-block:: python
+
+    >>> redmine.project.delete(1)
+    >>> True
+
+.. warning::
+
+    Deleted resources can't be restored. Use this method carefully.
