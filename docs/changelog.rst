@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.3.1 (2014-0X-XX)
+------------------
+
+- Added: New exceptions:
+
+  * NotSettableAttrError
+
 0.3.0 (2014-01-18)
 ------------------
 

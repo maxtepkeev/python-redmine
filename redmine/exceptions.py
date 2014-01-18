@@ -88,6 +88,12 @@ class ResourceAttrError(BaseRedmineError):
         super(ResourceAttrError, self).__init__("Resource doesn't have the requested attribute")
 
 
+class NotSettableAttrError(BaseRedmineError):
+    """Resource can't set attribute that doesn't exist or is read only"""
+    def __init__(self):
+        super(NotSettableAttrError, self).__init__("Can't set attribute that doesn't exist or is read only")
+
+
 class VersionMismatchError(BaseRedmineError):
     """Feature isn't supported on specified Redmine version"""
     def __init__(self, feature):
