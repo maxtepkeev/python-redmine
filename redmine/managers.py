@@ -83,6 +83,10 @@ class ResourceManager(object):
         """Converts an iterable with resource dicts from Redmine result set to ResourceSet object"""
         return ResourceSet(self, resources)
 
+    def new(self):
+        """Returns new empty resource"""
+        return self.to_resource({})
+
     def get(self, resource_id, **params):
         """Returns a Resource object directly by resource id (can be either integer id or string identifier)"""
         if self.resource_class.query_one is None or self.resource_class.container_one is None:
@@ -158,7 +162,7 @@ class ResourceManager(object):
             response = self.redmine.request('put', url, data=data)
 
         try:
-            resource = self.resource_class(self, response[self.container])
+            resource = self.to_resource(response[self.container])
         except TypeError:
             raise ValidationError('Resource already exists')  # fix for repeated PUT requests
 

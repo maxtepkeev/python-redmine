@@ -134,6 +134,10 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(issue.project_id, 1)
         self.assertEqual(issue.subject, 'Foo')
 
+    def test_create_empty_resource(self):
+        project = self.redmine.project.new()
+        self.assertEqual(project.attributes, project._relations)
+
     @mock.patch('requests.put')
     def test_update_resource(self, mock_post):
         mock_post.return_value = mock.Mock(status_code=200)
