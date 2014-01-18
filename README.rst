@@ -13,6 +13,10 @@ Python Redmine
 .. image:: https://coveralls.io/repos/maxtepkeev/python-redmine/badge.png?branch=master
     :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
 
+.. raw:: html
+
+    <script data-gittip-username="maxtepkeev" data-gittip-widget="button" src="//gttp.co/v1.js"></script>
+
 Python Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`_
 project management application. Redmine exposes some of it's data via `REST API
 <http://www.redmine.org/projects/redmine/wiki/Rest_api>`_ for which Python Redmine provides
