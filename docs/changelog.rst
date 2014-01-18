@@ -13,6 +13,7 @@ Changelog
   * TimeEntry
   * IssueRelation
   * ProjectMembership
+  * WikiPage
   * Project
   * Issue
 

@@ -82,4 +82,12 @@ Not yet supported by Python Redmine
 Delete
 ------
 
-Not yet supported by Python Redmine
+Supported keyword arguments:
+
+* **project_id** (required). Delete wiki page from the project with the given id, where id is either
+  project id or project identifier.
+
+.. code-block:: python
+
+    >>> redmine.wiki_page.delete('Foo', project_id=1)
+    >>> True

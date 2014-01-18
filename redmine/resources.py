@@ -275,6 +275,7 @@ class WikiPage(_Resource):
     query_filter = '/projects/{project_id}/wiki/index.json'
     query_one = '/projects/{project_id}/wiki/{0}.json'
     query_create = '/projects/{project_id}/wiki/{title}.json'
+    query_delete = '/projects/{project_id}/wiki/{0}.json'
 
     def refresh(self):
         return self.manager.get(self.title, project_id=self.manager.params['project_id'])
