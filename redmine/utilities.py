@@ -15,7 +15,8 @@ class MemorizeFormatter(Formatter):
 
     def check_unused_args(self, used_args, args, kwargs):
         for item in used_args:
-            self.used_kwargs[item] = kwargs[item]
-            del kwargs[item]
+            if item in kwargs:
+                self.used_kwargs[item] = kwargs[item]
+                del kwargs[item]
 
         self.unused_kwargs = kwargs

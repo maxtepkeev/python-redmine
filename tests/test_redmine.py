@@ -67,8 +67,8 @@ class TestRedmineRequest(unittest.TestCase):
 
     def test_successful_response_via_put_method(self):
         self.response.status_code = 200
-        self.response.text = ''
-        self.assertEqual(self.redmine.request('put', self.url), '')
+        self.response.return_value = True
+        self.assertEqual(self.redmine.request('put', self.url), True)
 
     @mock.patch('redmine.open', mock.mock_open(), create=True)
     def test_successful_file_upload(self):

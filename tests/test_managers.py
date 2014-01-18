@@ -1,7 +1,7 @@
 from tests import unittest, mock, Redmine, URL
 from redmine.managers import ResourceManager
 from redmine.resultsets import ResourceSet
-from redmine.exceptions import ResourceBadMethodError
+from redmine.exceptions import ResourceBadMethodError, ValidationError
 
 
 class TestResourceManager(unittest.TestCase):
@@ -122,11 +122,6 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(user.firstname, 'John')
         self.assertEqual(user.lastname, 'Smith')
 
-    @mock.patch('requests.delete')
-    def test_create_resource(self, mock_post):
-        mock_post.return_value = mock.Mock(status_code=200)
-        self.assertEqual(self.redmine.group.delete(1), True)
-
     @mock.patch('redmine.open', mock.mock_open(), create=True)
     @mock.patch('requests.post')
     def test_create_resource_with_uploads(self, mock_post):
@@ -139,6 +134,16 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(issue.project_id, 1)
         self.assertEqual(issue.subject, 'Foo')
 
+    @mock.patch('requests.put')
+    def test_update_resource(self, mock_post):
+        mock_post.return_value = mock.Mock(status_code=200)
+        self.assertEqual(self.redmine.project.update(1, name='Bar'), True)
+
+    @mock.patch('requests.delete')
+    def test_delete_resource(self, mock_post):
+        mock_post.return_value = mock.Mock(status_code=200)
+        self.assertEqual(self.redmine.group.delete(1), True)
+
     def test_resource_get_method_unsupported_exception(self):
         self.assertRaises(ResourceBadMethodError, lambda: self.redmine.enumeration.get('foo'))
 
@@ -150,6 +155,9 @@ class TestResourceManager(unittest.TestCase):
 
     def test_resource_create_method_unsupported_exception(self):
         self.assertRaises(ResourceBadMethodError, lambda: self.redmine.query.create())
+
+    def test_resource_update_method_unsupported_exception(self):
+        self.assertRaises(ResourceBadMethodError, lambda: self.redmine.query.update(1))
 
     def test_resource_delete_method_unsupported_exception(self):
         self.assertRaises(ResourceBadMethodError, lambda: self.redmine.query.delete(1))
@@ -166,22 +174,25 @@ class TestResourceManager(unittest.TestCase):
         from redmine.exceptions import ResourceNoFieldsProvidedError
         self.assertRaises(ResourceNoFieldsProvidedError, lambda: self.redmine.user.create())
 
+    def test_update_no_fields_exception(self):
+        from redmine.exceptions import ResourceNoFieldsProvidedError
+        self.assertRaises(ResourceNoFieldsProvidedError, lambda: self.redmine.project.update(1))
+
     def test_get_validation_exception(self):
-        from redmine.exceptions import ValidationError
         self.assertRaises(ValidationError, lambda: self.redmine.wiki_page.get('foo'))
 
     def test_create_validation_exception(self):
-        from redmine.exceptions import ValidationError
         self.assertRaises(ValidationError, lambda: self.redmine.issue_category.create(foo='bar'))
 
+    def test_update_validation_exception(self):
+        self.assertRaises(ValidationError, lambda: self.redmine.wiki_page.update('Foo', title='Bar'))
+
     def test_delete_validation_exception(self):
-        from redmine.exceptions import ValidationError
         self.assertRaises(ValidationError, lambda: self.redmine.wiki_page.delete('Foo'))
 
     @mock.patch('requests.put')
     @mock.patch('requests.post')
     def test_create_validation_exception_via_put(self, mock_post, mock_put):
-        from redmine.exceptions import ValidationError
         mock_post.return_value = mock.Mock(status_code=404)
-        mock_put.return_value = mock.Mock(status_code=200, text='')
+        mock_put.return_value = mock.Mock(status_code=200)
         self.assertRaises(ValidationError, lambda: self.redmine.user.create(firstname='John', lastname='Smith'))

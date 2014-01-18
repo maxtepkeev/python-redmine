@@ -79,7 +79,7 @@ class ResourceNoFiltersProvidedError(BaseRedmineError):
 class ResourceNoFieldsProvidedError(BaseRedmineError):
     """No field(s) provided"""
     def __init__(self):
-        super(ResourceNoFieldsProvidedError, self).__init__('Resource needs some fields to be created')
+        super(ResourceNoFieldsProvidedError, self).__init__('Resource needs some fields to be created/updated')
 
 
 class ResourceAttrError(BaseRedmineError):

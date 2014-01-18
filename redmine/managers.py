@@ -157,9 +157,9 @@ class ResourceManager(object):
         except ResourceNotFoundError:
             response = self.redmine.request('put', url, data=data)
 
-        if self.container in response:
+        try:
             resource = self.resource_class(self, response[self.container])
-        else:
+        except TypeError:
             raise ValidationError('Resource already exists')  # fix for repeated PUT requests
 
         self.params = formatter.used_kwargs
@@ -168,6 +168,26 @@ class ResourceManager(object):
             self.resource_class.query_one.format(resource.internal_id, **fields)
         )
         return resource
+
+    def update(self, resource_id, **fields):
+        """Updates a Resource object by resource id (can be either integer id or string identifier)"""
+        if self.resource_class.query_update is None or self.resource_class.container_update is None:
+            raise ResourceBadMethodError()
+
+        if not fields:
+            raise ResourceNoFieldsProvidedError
+
+        formatter = MemorizeFormatter()
+
+        try:
+            url = '{0}{1}'.format(
+                self.redmine.url,
+                formatter.format(self.resource_class.query_update, resource_id, **fields)
+            )
+        except KeyError as exception:
+            raise ValidationError('{0} argument is required'.format(exception))
+
+        return self.redmine.request('put', url, data={self.resource_class.container_update: formatter.unused_kwargs})
 
     def delete(self, resource_id, **params):
         """Deletes a Resource object by resource id (can be either integer id or string identifier)"""

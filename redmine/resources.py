@@ -56,10 +56,12 @@ class _Resource(object):
     container_one = None
     container_filter = None
     container_create = None
+    container_update = None
     query_all = None
     query_one = None
     query_filter = None
     query_create = None
+    query_update = None
     query_delete = None
 
     _relations = {}
