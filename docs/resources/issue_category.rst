@@ -80,7 +80,7 @@ Delete
 Supported keyword arguments:
 
 * **reassign_to_id** (optional). When there are issues assigned to the category you are
-  deleting, this parameter lets you reassign these issues to the category with given id
+  deleting, this parameter lets you reassign these issues to the category with given id.
 
 .. code-block:: python
 
