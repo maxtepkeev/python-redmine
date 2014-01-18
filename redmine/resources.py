@@ -217,6 +217,7 @@ class TimeEntry(_Resource):
     query_one = '/time_entries/{0}.json'
     query_filter = '/issues/{issue_id}/time_entries.json'
     query_create = '/time_entries.json'
+    query_delete = '/time_entries/{0}.json'
 
     def __str__(self):
         return str(self.id)

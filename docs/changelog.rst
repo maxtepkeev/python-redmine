@@ -10,6 +10,7 @@ Changelog
   * Group
   * IssueCategory
   * Version
+  * TimeEntry
   * ProjectMembership
   * Project
   * Issue
