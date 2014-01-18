@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.2.1 (2014-0X-XX)
+0.3.0 (2014-01-18)
 ------------------
 
 - Added: Delete functionality for resources via delete method (see docs for details):

@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='python-redmine',
-    version='0.2.0',
+    version='0.3.0',
     packages=['redmine'],
     url='https://github.com/maxtepkeev/python-redmine',
     license=open('LICENSE').read(),
