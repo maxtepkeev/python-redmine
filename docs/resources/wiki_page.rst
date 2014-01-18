@@ -32,13 +32,14 @@ Supported keyword arguments:
 
 * **project_id**. Get wiki page from the project with the given id, where id is either
   project id or project identifier.
+* **version**. Get wiki page of a requested version.
 * **include**. Can be used to fetch associated data in one call. Accepted values (separated by comma):
 
   - attachments
 
 .. code-block:: python
 
-    >>> wiki_page = redmine.wiki_page.get('Photos', project_id='vacation')
+    >>> wiki_page = redmine.wiki_page.get('Photos', project_id='vacation', version=12)
     >>> wiki_page
     <redmine.resources.WikiPage "Photos">
 
