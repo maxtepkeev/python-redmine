@@ -166,6 +166,10 @@ class TestResourceManager(unittest.TestCase):
         from redmine.exceptions import ResourceNoFieldsProvidedError
         self.assertRaises(ResourceNoFieldsProvidedError, lambda: self.redmine.user.create())
 
+    def test_get_validation_exception(self):
+        from redmine.exceptions import ValidationError
+        self.assertRaises(ValidationError, lambda: self.redmine.wiki_page.get('foo'))
+
     def test_create_validation_exception(self):
         from redmine.exceptions import ValidationError
         self.assertRaises(ValidationError, lambda: self.redmine.issue_category.create(foo='bar'))

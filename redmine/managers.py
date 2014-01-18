@@ -88,7 +88,11 @@ class ResourceManager(object):
         if self.resource_class.query_one is None or self.resource_class.container_one is None:
             raise ResourceBadMethodError()
 
-        self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_one.format(resource_id, **params))
+        try:
+            self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_one.format(resource_id, **params))
+        except KeyError as exception:
+            raise ValidationError('{0} argument is required'.format(exception))
+
         self.params = params
         self.container = self.resource_class.container_one
         return self.resource_class(self, self.retrieve())
