@@ -170,5 +170,9 @@ class ResourceManager(object):
         if self.resource_class.query_delete is None:
             raise ResourceBadMethodError()
 
-        url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_delete.format(resource_id, **params))
+        try:
+            url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_delete.format(resource_id, **params))
+        except KeyError as exception:
+            raise ValidationError('{0} argument is required'.format(exception))
+
         return self.redmine.request('delete', url, params=params)

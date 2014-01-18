@@ -170,6 +170,10 @@ class TestResourceManager(unittest.TestCase):
         from redmine.exceptions import ValidationError
         self.assertRaises(ValidationError, lambda: self.redmine.issue_category.create(foo='bar'))
 
+    def test_delete_validation_exception(self):
+        from redmine.exceptions import ValidationError
+        self.assertRaises(ValidationError, lambda: self.redmine.wiki_page.delete('Foo'))
+
     @mock.patch('requests.put')
     @mock.patch('requests.post')
     def test_create_validation_exception_via_put(self, mock_post, mock_put):
