@@ -106,6 +106,43 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = responses['project']['get']
         self.assertEqual(self.redmine.project.get(1).internal_id, 1)
 
+    def test_supports_setting_of_attributes(self):
+        project = self.redmine.project.new()
+        project.name = 'Foo'
+        project.description = 'Bar'
+        self.assertEqual(project.name, 'Foo')
+        self.assertEqual(project.description, 'Bar')
+
+    def test_supports_setting_of_attributes_via_dict(self):
+        project = self.redmine.project.new()
+        project['name'] = 'Foo'
+        project['description'] = 'Bar'
+        self.assertEqual(project.name, 'Foo')
+        self.assertEqual(project.description, 'Bar')
+
+    def test_setting_readonly_attrs_raises_exception(self):
+        from redmine.exceptions import ReadonlyAttrError
+        with self.assertRaises(ReadonlyAttrError):
+            project = self.redmine.project.new()
+            project.id = 1
+
+    def test_saving_new_resource_creates_it(self):
+        self.response.status_code = 201
+        self.response.json.return_value = responses['project']['get']
+        project = self.redmine.project.new()
+        project.name = 'Foo'
+        self.assertEqual(project.save(), True)
+        self.assertEqual(project.id, 1)
+
+    def test_saving_existing_resource_updates_it(self):
+        self.response.json.return_value = responses['project']['get']
+        project = self.redmine.project.get(1)
+        project.name = 'Bar'
+        self.assertEqual(project.save(), True)
+        self.response.json.return_value = {'project': {'id': 1, 'name': 'Bar'}}
+        project = project.refresh()
+        self.assertEqual(project.name, 'Bar')
+
     def test_custom_int(self):
         self.response.json.return_value = responses['project']['get']
         self.assertEqual(int(self.redmine.project.get(1)), 1)

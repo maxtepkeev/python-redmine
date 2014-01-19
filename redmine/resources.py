@@ -1,7 +1,7 @@
 from datetime import datetime
 from redmine.utilities import to_string
 from redmine.managers import ResourceManager
-from redmine.exceptions import ResourceAttrError
+from redmine.exceptions import ResourceAttrError, ReadonlyAttrError
 
 # Resources which when accessed from some other
 # resource should become a ResourceSet object
@@ -64,7 +64,9 @@ class _Resource(object):
     query_update = None
     query_delete = None
 
+    _changes = {}
     _relations = {}
+    _readonly = ('id', 'created_on', 'updated_on')
     __length_hint__ = None  # fixes Python 2.6 list() call on resource object
 
     def __init__(self, manager, attributes):
@@ -76,6 +78,10 @@ class _Resource(object):
     def __getitem__(self, item):
         """Provides a dictionary like access to resource attributes"""
         return getattr(self, item)
+
+    def __setitem__(self, item, value):
+        """Provides a dictionary like setter for resource attributes"""
+        return setattr(self, item, value)
 
     def __getattr__(self, item):
         """Returns the requested attribute and makes a conversion if needed"""
@@ -92,7 +98,7 @@ class _Resource(object):
 
             # If item should be requested from Redmine, let's do it
             elif item in _RESOURCE_RELATIONS_MAP and self.attributes[item] is None:
-                filters = {'{0}_id'.format(self.__class__.__name__.lower()): self.id}
+                filters = {'{0}_id'.format(self.__class__.__name__.lower()): self.internal_id}
                 manager = ResourceManager(self.manager.redmine, _RESOURCE_RELATIONS_MAP[item])
                 return manager.filter(**filters)
 
@@ -110,9 +116,29 @@ class _Resource(object):
         except KeyError:
             raise ResourceAttrError()
 
+    def __setattr__(self, item, value):
+        """Sets the requested attribute"""
+        if item in ('manager', 'attributes'):
+            super(_Resource, self).__setattr__(item, value)
+        elif item in self._readonly:
+            raise ReadonlyAttrError()
+        else:
+            self._changes[item] = value
+            self.attributes[item] = value
+
     def refresh(self, **params):
         """Reloads resource data from Redmine"""
-        return self.manager.get(self.id, **params)
+        return self.manager.get(self.internal_id, **params)
+
+    def save(self):
+        """Creates or updates a resource"""
+        if any(item in self.attributes for item in self._readonly):
+            return self.manager.update(self.internal_id, **self._changes)
+
+        for item, value in self.manager.create(**self._changes):
+            self.attributes[item] = value
+
+        return True
 
     @property
     def url(self):
@@ -280,7 +306,7 @@ class WikiPage(_Resource):
     query_delete = '/projects/{project_id}/wiki/{0}.json'
 
     def refresh(self):
-        return self.manager.get(self.title, project_id=self.manager.params['project_id'])
+        return super(WikiPage, self).refresh(project_id=self.manager.params.get('project_id', 0))
 
     @property
     def internal_id(self):
