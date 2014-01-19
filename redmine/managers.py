@@ -184,14 +184,19 @@ class ResourceManager(object):
         formatter = MemorizeFormatter()
 
         try:
-            url = '{0}{1}'.format(
-                self.redmine.url,
-                formatter.format(self.resource_class.query_update, resource_id, **fields)
-            )
+            query_update = formatter.format(self.resource_class.query_update, resource_id, **fields)
         except KeyError as exception:
-            raise ValidationError('{0} argument is required'.format(exception))
+            param = str(exception).replace("'", "")
 
-        return self.redmine.request('put', url, data={self.resource_class.container_update: formatter.unused_kwargs})
+            if param in self.params:
+                fields[param] = self.params[param]
+                query_update = formatter.format(self.resource_class.query_update, resource_id, **fields)
+            else:
+                raise ValidationError('{0} argument is required'.format(exception))
+
+        url = '{0}{1}'.format(self.redmine.url, query_update)
+        data = {self.resource_class.container_update: formatter.unused_kwargs}
+        return self.redmine.request('put', url, data=data)
 
     def delete(self, resource_id, **params):
         """Deletes a Resource object by resource id (can be either integer id or string identifier)"""
