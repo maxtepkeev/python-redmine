@@ -6,7 +6,7 @@ Changelog
 
 - Added: New exceptions:
 
-  * NotSettableAttrError
+  * ReadonlyAttrError
 
 0.3.0 (2014-01-18)
 ------------------

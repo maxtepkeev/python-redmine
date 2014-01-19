@@ -88,10 +88,10 @@ class ResourceAttrError(BaseRedmineError):
         super(ResourceAttrError, self).__init__("Resource doesn't have the requested attribute")
 
 
-class NotSettableAttrError(BaseRedmineError):
-    """Resource can't set attribute that doesn't exist or is read only"""
+class ReadonlyAttrError(BaseRedmineError):
+    """Resource can't set attribute that is read only"""
     def __init__(self):
-        super(NotSettableAttrError, self).__init__("Can't set attribute that doesn't exist or is read only")
+        super(ReadonlyAttrError, self).__init__("Can't set read only attribute")
 
 
 class VersionMismatchError(BaseRedmineError):
