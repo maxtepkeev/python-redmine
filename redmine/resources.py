@@ -1,7 +1,7 @@
 from datetime import datetime
 from redmine.utilities import to_string
 from redmine.managers import ResourceManager
-from redmine.exceptions import ResourceAttrError, ReadonlyAttrError
+from redmine.exceptions import BaseRedmineError, ResourceAttrError, ReadonlyAttrError
 
 # Resources which when accessed from some other
 # resource should become a ResourceSet object
@@ -51,6 +51,9 @@ _RESOURCE_RELATIONS_MAP = {
 
 class _Resource(object):
     """Implementation of Redmine resource"""
+    manager = None
+    attributes = {}
+
     redmine_version = None
     container_all = None
     container_one = None
@@ -66,7 +69,7 @@ class _Resource(object):
 
     _changes = {}
     _relations = {}
-    _readonly = ('id', 'created_on', 'updated_on')
+    _readonly = ('id', 'created_on', 'updated_on', 'author')
     __length_hint__ = None  # fixes Python 2.6 list() call on resource object
 
     def __init__(self, manager, attributes):
@@ -118,7 +121,7 @@ class _Resource(object):
 
     def __setattr__(self, item, value):
         """Sets the requested attribute"""
-        if item in ('manager', 'attributes'):
+        if item in self.__class__.__base__.__dict__:
             super(_Resource, self).__setattr__(item, value)
         elif item in self._readonly:
             raise ReadonlyAttrError()
@@ -133,11 +136,13 @@ class _Resource(object):
     def save(self):
         """Creates or updates a resource"""
         if any(item in self.attributes for item in self._readonly):
-            return self.manager.update(self.internal_id, **self._changes)
+            self.manager.update(self.internal_id, **self._changes)
+            self.attributes['updated_on'] = datetime.utcnow().strftime(self.manager.redmine.datetime_format)
+        else:
+            for item, value in self.manager.create(**self._changes):
+                self.attributes[item] = value
 
-        for item, value in self.manager.create(**self._changes):
-            self.attributes[item] = value
-
+        self._changes = {}
         return True
 
     @property
