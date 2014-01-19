@@ -85,6 +85,11 @@ class TestRedmineRequest(unittest.TestCase):
         self.redmine.ver = '1.0.0'
         self.assertRaises(VersionMismatchError, lambda: self.redmine.upload('foo',))
 
+    def test_conflict_error_exception(self):
+        from redmine.exceptions import ConflictError
+        self.response.status_code = 409
+        self.assertRaises(ConflictError, lambda: self.redmine.request('put', self.url))
+
     def test_auth_error_exception(self):
         from redmine.exceptions import AuthError
         self.response.status_code = 401

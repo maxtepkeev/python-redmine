@@ -5,6 +5,7 @@ from redmine.managers import ResourceManager
 from redmine.utilities import to_string
 from redmine.exceptions import (
     AuthError,
+    ConflictError,
     ImpersonateError,
     ServerError,
     ValidationError,
@@ -75,6 +76,8 @@ class Redmine(object):
             raise AuthError()
         elif response.status_code == 404:
             raise ResourceNotFoundError
+        elif response.status_code == 409:
+            raise ConflictError
         elif response.status_code == 412 and self.impersonate is not None:
             raise ImpersonateError()
         elif response.status_code == 422:

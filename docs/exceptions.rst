@@ -16,6 +16,9 @@ is the list of all exceptions that Python Redmine can throw:
 ``ResourceNotFoundError``
     Requested resource doesn't exist
 
+``ConflictError``
+    Resource version on the server is newer than client's
+
 ``AuthError``
     Invalid authentication details
 

@@ -6,6 +6,7 @@ Changelog
 
 - Added: New exceptions:
 
+  * ConflictError
   * ReadonlyAttrError
 
 0.3.0 (2014-01-18)

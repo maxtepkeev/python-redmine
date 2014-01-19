@@ -22,6 +22,12 @@ class ResourceNotFoundError(BaseRedmineError):
         super(ResourceNotFoundError, self).__init__("Requested resource doesn't exist")
 
 
+class ConflictError(BaseRedmineError):
+    """Resource version on the server is newer than client's"""
+    def __init__(self):
+        super(ConflictError, self).__init__("Resource version on the server is newer than client's")
+
+
 class AuthError(BaseRedmineError):
     """Invalid authentication details"""
     def __init__(self):
