@@ -305,13 +305,24 @@ class WikiPage(_Resource):
     container_filter = 'wiki_pages'
     container_one = 'wiki_page'
     container_create = 'wiki_page'
+    container_update = 'wiki_page'
     query_filter = '/projects/{project_id}/wiki/index.json'
     query_one = '/projects/{project_id}/wiki/{0}.json'
     query_create = '/projects/{project_id}/wiki/{title}.json'
+    query_update = '/projects/{project_id}/wiki/{0}.json'
     query_delete = '/projects/{project_id}/wiki/{0}.json'
 
     def refresh(self):
         return super(WikiPage, self).refresh(project_id=self.manager.params.get('project_id', 0))
+
+    def save(self):
+        self.attributes['version'] = self.attributes.get('version', 0) + 1
+
+        try:
+            return super(WikiPage, self).save()
+        except BaseRedmineError as exception:
+            self.attributes['version'] -= 1
+            raise exception
 
     @property
     def internal_id(self):
