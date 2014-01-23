@@ -12,6 +12,7 @@ class TestRedmine(unittest.TestCase):
         self.assertEqual(self.redmine.ver, None)
         self.assertEqual(self.redmine.username, None)
         self.assertEqual(self.redmine.password, None)
+        self.assertEqual(self.redmine.requests, {})
         self.assertEqual(self.redmine.impersonate, None)
         self.assertEqual(self.redmine.date_format, '%Y-%m-%d')
         self.assertEqual(self.redmine.datetime_format, '%Y-%m-%dT%H:%M:%SZ')
@@ -25,7 +26,8 @@ class TestRedmine(unittest.TestCase):
             password='qwerty',
             impersonate='jsmith',
             date_format='format',
-            datetime_format='format'
+            datetime_format='format',
+            requests={'foo': 'bar'},
         )
         self.assertEqual(self.redmine.url, self.url)
         self.assertEqual(self.redmine.key, '123')
@@ -35,6 +37,7 @@ class TestRedmine(unittest.TestCase):
         self.assertEqual(self.redmine.impersonate, 'jsmith')
         self.assertEqual(self.redmine.date_format, 'format')
         self.assertEqual(self.redmine.datetime_format, 'format')
+        self.assertEqual(self.redmine.requests['foo'], 'bar')
 
 
 class TestRedmineRequest(unittest.TestCase):
