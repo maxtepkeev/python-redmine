@@ -106,6 +106,9 @@ option to False:
 
     redmine = Redmine('https://redmine.url', requests={'verify': False})
 
+Full list of available connection options can be found in the Requests
+`documentation <http://docs.python-requests.org/en/latest/api/#requests.request>`_.
+
 .. hint::
 
     Storing settings right in the code is a bad habit. Instead store them in some configuration
