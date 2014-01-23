@@ -94,6 +94,21 @@ object what datetime formatting do you use, e.g. if the string returned is ``31.
 
     redmine = Redmine('http://demo.redmine.org', date_format='%d.%m.%Y', datetime_format='%d.%m.%YT%H:%M:%SZ')
 
+Connection Options
+++++++++++++++++++
+
+Python Redmine uses Requests library for all the http(s) calls to Redmine server. Requests provides
+sensible default connection options, but sometimes you may have a need to change them. For example
+if your Redmine server uses SSL but the certificate is invalid you need to set a Requests's verify
+option to False:
+
+.. code-block:: python
+
+    redmine = Redmine('https://redmine.url', requests={'verify': False})
+
+Full list of available connection options can be found in the Requests
+`documentation <http://docs.python-requests.org/en/latest/api/#requests.request>`_.
+
 .. hint::
 
     Storing settings right in the code is a bad habit. Instead store them in some configuration

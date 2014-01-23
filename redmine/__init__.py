@@ -23,6 +23,7 @@ class Redmine(object):
         self.ver = kwargs.get('version', None)
         self.username = kwargs.get('username', None)
         self.password = kwargs.get('password', None)
+        self.requests = kwargs.get('requests', {})
         self.impersonate = kwargs.get('impersonate', None)
         self.date_format = kwargs.get('date_format', '%Y-%m-%d')
         self.datetime_format = kwargs.get('datetime_format', '%Y-%m-%dT%H:%M:%SZ')
@@ -47,11 +48,11 @@ class Redmine(object):
 
     def request(self, method, url, headers=None, params=None, data=None):
         """Makes requests to Redmine and returns result in json format"""
-        kwargs = {
+        kwargs = dict(self.requests, **{
             'headers': headers or {},
             'params': params or {},
             'data': data or {},
-        }
+        })
 
         if not 'Content-Type' in kwargs['headers'] and method in ('post', 'put'):
             kwargs['data'] = json.dumps(data)

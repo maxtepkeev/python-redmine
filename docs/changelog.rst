@@ -1,13 +1,21 @@
 Changelog
 =========
 
-0.3.1 (2014-0X-XX)
+0.3.2 (2014-0X-XX)
 ------------------
 
 - Added: New exceptions:
 
   * ConflictError
   * ReadonlyAttrError
+
+0.3.1 (2014-01-23)
+------------------
+
+- Added: An ability to pass Requests parameters as a dictionary via requests keyword
+  argument on Redmine initialization, i.e. Redmine('\http://redmine.url', requests={}).
+- Fixed: `Issue #1 <https://github.com/maxtepkeev/python-redmine/issues/1>`_ (unable
+  to connect to Redmine server with invalid ssl certificate).
 
 0.3.0 (2014-01-18)
 ------------------
