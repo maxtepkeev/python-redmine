@@ -215,7 +215,8 @@ class TimeEntry(_Resource):
     container_create = 'time_entry'
     query_all = '/time_entries.json'
     query_one = '/time_entries/{0}.json'
-    query_filter = '/issues/{issue_id}/time_entries.json'
+    # query_filter = '/issues/{issue_id}/time_entries.json'
+    query_filter = '/time_entries.json'
     query_create = '/time_entries.json'
     query_delete = '/time_entries/{0}.json'
 

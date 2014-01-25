@@ -62,7 +62,10 @@ Supported keyword arguments:
 
 Supported filters:
 
-* **spent_on**. Hours spent on what date.
+* **spent_on**. Hours spent on what date. (this could not work in some redmine
+  versions)
+* **from_date**. Limit the TimeEntry from this date 
+* **to_date** . Limit the TimeEntry until this date
 * **project_id**. Get time entries from the project with the given id, where id
   is either project id or project identifier.
 * **user_id**. Get time entries for the given user id
@@ -70,7 +73,7 @@ Supported filters:
 
 .. code-block:: python
 
-    >>> time_entries = redmine.user.filter(offset=10, limit=100, project_id='vacation', hours='>=8')
+    >>> time_entries = redmine.time_entry.filter(offset=10, limit=100, project_id='vacation', hours='>=8')
     >>> time_entries
     <redmine.resultsets.ResourceSet object with TimeEntry resources>
 
