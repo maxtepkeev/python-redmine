@@ -37,7 +37,6 @@ class ResourceManager(object):
     def retrieve(self, **params):
         """A proxy for Redmine object request which does some extra work for resource retrieval"""
         self.params.update(**params)
-
         # Redmine allows us to only return 100 resources per request, so if
         # we want to get all or > 100 resources we need to do some extra work
         if 'limit' in self.params and not 0 < self.params['limit'] <= 100:
