@@ -191,9 +191,11 @@ class Project(_Resource):
     container_all = 'projects'
     container_one = 'project'
     container_create = 'project'
+    container_update = 'project'
     query_all = '/projects.json'
     query_one = '/projects/{0}.json'
     query_create = '/projects.json'
+    query_update = '/projects/{0}.json'
     query_delete = '/projects/{0}.json'
 
     _relations = {
@@ -204,6 +206,7 @@ class Project(_Resource):
         'news': None,
         'issues': None,
     }
+    _readonly = _Resource._readonly + ('identifier',)
 
 
 class Issue(_Resource):
