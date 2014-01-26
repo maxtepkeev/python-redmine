@@ -62,13 +62,12 @@ Supported keyword arguments:
 
 Supported filters:
 
-* **spent_on**. Hours spent on what date. (this could not work in some redmine
-  versions)
-* **from_date**. Limit the TimeEntry from this date 
-* **to_date** . Limit the TimeEntry until this date
+* **spent_on**. Hours spent on what date (for Redmine >= 2.3.0).
+* **from_date**. Limit the TimeEntry from this date.
+* **to_date** . Limit the TimeEntry until this date.
 * **project_id**. Get time entries from the project with the given id, where id
   is either project id or project identifier.
-* **user_id**. Get time entries for the given user id
+* **user_id**. Get time entries for the given user id.
 * **hours**. Get only time entries that are =, >=, <= hours.
 
 .. code-block:: python

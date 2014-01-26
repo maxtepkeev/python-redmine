@@ -37,6 +37,7 @@ class ResourceManager(object):
     def retrieve(self, **params):
         """A proxy for Redmine object request which does some extra work for resource retrieval"""
         self.params.update(**params)
+
         # Redmine allows us to only return 100 resources per request, so if
         # we want to get all or > 100 resources we need to do some extra work
         if 'limit' in self.params and not 0 < self.params['limit'] <= 100:
@@ -92,7 +93,7 @@ class ResourceManager(object):
         except KeyError as exception:
             raise ValidationError('{0} argument is required'.format(exception))
 
-        self.params = params
+        self.params = self.resource_class.translate_params(params)
         self.container = self.resource_class.container_one
         return self.resource_class(self, self.retrieve())
 
@@ -102,7 +103,7 @@ class ResourceManager(object):
             raise ResourceBadMethodError()
 
         self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_all)
-        self.params = params
+        self.params = self.resource_class.translate_params(params)
         self.container = self.resource_class.container_all
         return ResourceSet(self)
 
@@ -118,13 +119,9 @@ class ResourceManager(object):
             self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_filter.format(**filters))
             self.container = self.resource_class.container_filter.format(**filters)
         except KeyError:
-            if self.resource_class.query_all is not None and self.resource_class.container_all is not None:
-                self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_all)
-                self.container = self.resource_class.container_all
-            else:
-                raise ResourceFilterError()
+            raise ResourceFilterError()
 
-        self.params = filters
+        self.params = self.resource_class.translate_params(filters)
         return ResourceSet(self)
 
     def create(self, **fields):

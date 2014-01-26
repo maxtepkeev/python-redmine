@@ -65,10 +65,7 @@ class Redmine(object):
             kwargs['params']['key'] = self.key
         else:
             kwargs['auth'] = (self.username, self.password)
-        if 'from_date' in kwargs['params']:
-            kwargs['params']['from'] = kwargs['params'].pop('from_date')
-        if 'to_date' in kwargs['params']:
-            kwargs['params']['to'] = kwargs['params'].pop('to_date')
+
         response = getattr(requests, method)(url, **kwargs)
 
         if response.status_code in (200, 201):
