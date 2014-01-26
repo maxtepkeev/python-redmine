@@ -145,6 +145,11 @@ class _Resource(object):
         self._changes = {}
         return True
 
+    @classmethod
+    def translate_params(cls, params):
+        """Translates internal param names to the real Redmine param names if needed"""
+        return params
+
     @property
     def url(self):
         """Returns full url to the resource for humans"""
@@ -248,9 +253,19 @@ class TimeEntry(_Resource):
     container_create = 'time_entry'
     query_all = '/time_entries.json'
     query_one = '/time_entries/{0}.json'
-    query_filter = '/issues/{issue_id}/time_entries.json'
+    query_filter = '/time_entries.json'
     query_create = '/time_entries.json'
     query_delete = '/time_entries/{0}.json'
+
+    @classmethod
+    def translate_params(cls, params):
+        if 'from_date' in params:
+            params['from'] = params.pop('from_date')
+
+        if 'to_date' in params:
+            params['to'] = params.pop('to_date')
+
+        return params
 
     def __str__(self):
         return str(self.id)
@@ -461,7 +476,7 @@ class News(_Resource):
     container_all = 'news'
     container_filter = 'news'
     query_all = '/news.json'
-    query_filter = '/projects/{project_id}/news.json'
+    query_filter = '/news.json'
 
 
 class IssueStatus(_Resource):
