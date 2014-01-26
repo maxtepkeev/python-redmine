@@ -3,15 +3,31 @@ Wiki Page
 
 Supported by Redmine starting from version 2.2
 
-Create
-------
+Manager
+-------
 
-Supported keyword arguments:
+All operations on the wiki page resource are provided via it's manager. To get access to it
+you have to call ``redmine.wiki_page`` where ``redmine`` is a configured redmine object.
+See the :doc:`../configuration` about how to configure redmine object.
 
-* **project_id** (required). Create wiki page in the given project id.
-* **title** (required). Title of the wiki page.
-* **text** (required): Text of the wiki page.
-* **comments** (optional). Comments of the wiki page.
+Create methods
+--------------
+
+create
+++++++
+
+.. py:method:: create(**fields)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Creates new wiki page resource with given fields and saves it to the Redmine.
+
+    :param project_id: (required). Id or identifier of wiki page's project.
+    :type project_id: integer or string
+    :param string title: (required). Title of the wiki page.
+    :param string text: (required). Text of the wiki page.
+    :param string comments: (optional). Comments of the wiki page.
+    :return: WikiPage resource object
 
 .. code-block:: python
 
@@ -19,44 +35,77 @@ Supported keyword arguments:
     >>> wiki_page
     <redmine.resources.WikiPage "FooBar">
 
-Read
-----
-
-Methods
-~~~~~~~
-
-Get
+new
 +++
 
-Supported keyword arguments:
+.. py:method:: new()
+    :module: redmine.managers.ResourceManager
+    :noindex:
 
-* **project_id**. Get wiki page from the project with the given id, where id is either
-  project id or project identifier.
-* **version**. Get wiki page of a requested version.
-* **include**. Can be used to fetch associated data in one call. Accepted values (separated by comma):
+    Creates new empty wiki page resource but doesn't save it to the Redmine. This is useful
+    if you want to set some resource fields later based on some condition(s) and only after
+    that save it to the Redmine. Valid attributes are the same as for ``create`` method above.
 
-  - attachments
+    :return: WikiPage resource object
 
 .. code-block:: python
 
-    >>> wiki_page = redmine.wiki_page.get('Photos', project_id='vacation', version=12)
+    >>> wiki_page = redmine.wiki_page.new()
+    >>> wiki_page.project_id = 'vacation'
+    >>> wiki_page.title = 'FooBar'
+    >>> wiki_page.text = 'foo'
+    >>> wiki_page.comments = 'bar'
+    >>> wiki_page.save()
+    True
+
+Read methods
+------------
+
+get
++++
+
+.. py:method:: get(resource_id, **params)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Returns single wiki page resource from the Redmine by it's title.
+
+    :param string resource_id: (required). Title of the wiki page.
+    :param project_id: (required). Id or identifier of wiki page's project.
+    :type project_id: integer or string
+    :param integer version: (optional). Version of the wiki page.
+    :param string include:
+      .. raw:: html
+
+          (optional). Can be used to fetch associated data in one call. Accepted values (separated by comma):
+
+      - attachments
+
+    :return: WikiPage resource object
+
+.. code-block:: python
+
+    >>> wiki_page = redmine.wiki_page.get('Photos', project_id='vacation', version=12, include='attachments')
     >>> wiki_page
     <redmine.resources.WikiPage "Photos">
 
-All
+all
 +++
 
 Not supported by Redmine
 
-Filter
+filter
 ++++++
 
-Supported keyword arguments: None
+.. py:method:: filter(**filters)
+    :module: redmine.managers.ResourceManager
+    :noindex:
 
-Supported filters:
+    Returns wiki page resources that match the given lookup parameters.
 
-* **project_id**. Get wiki pages from the project with the given id, where id is either
-  project id or project identifier.
+    :param project_id: (required). Id or identifier of wiki page's project.
+    :type project_id: integer or string
+    :return: ResourceSet object
 
 .. code-block:: python
 
@@ -75,20 +124,70 @@ Supported filters:
         >>> project.wiki_pages
         <redmine.resultsets.ResourceSet object with WikiPage resources>
 
-Update
-------
+Update methods
+--------------
 
-Not yet supported by Python Redmine
+update
+++++++
 
-Delete
-------
+.. py:method:: update(resource_id, **fields)
+    :module: redmine.managers.ResourceManager
+    :noindex:
 
-Supported keyword arguments:
+    Updates values of given fields of a wiki page resource and saves them to the Redmine.
 
-* **project_id** (required). Delete wiki page from the project with the given id, where id is either
-  project id or project identifier.
+    :param string resource_id: (required). Title of the wiki page.
+    :param project_id: (required). Id or identifier of wiki page's project.
+    :type project_id: integer or string
+    :param string title: (optional). Title of the wiki page.
+    :param string text: (optional). Text of the wiki page.
+    :param string comments: (optional). Comments of the wiki page.
+    :return: True
+
+.. code-block:: python
+
+    >>> redmine.wiki_page.update('Foo', project_id='vacation', title='FooBar', text='foo', comments='bar')
+    True
+
+save
+++++
+
+.. py:method:: save()
+    :module: redmine.resources.WikiPage
+    :noindex:
+
+    Saves the current state of a wiki page resource to the Redmine. Fields that can
+    be changed are the same as for ``update`` method above.
+
+    :return: True
+
+.. code-block:: python
+
+    >>> wiki_page = redmine.wiki_page.get('Foo', project_id='vacation')
+    >>> wiki_page.title = 'Bar'
+    >>> wiki_page.text = 'bar'
+    >>> wiki_page.comments = 'changed foo to bar'
+    >>> wiki_page.save()
+    True
+
+Delete methods
+--------------
+
+delete
+++++++
+
+.. py:method:: delete(resource_id, **params)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Deletes single wiki page resource from the Redmine by it's title.
+
+    :param string resource_id: (required). Title of the wiki page.
+    :param project_id: (required). Id or identifier of wiki page's project.
+    :type project_id: integer or string
+    :return: True
 
 .. code-block:: python
 
     >>> redmine.wiki_page.delete('Foo', project_id=1)
-    >>> True
+    True

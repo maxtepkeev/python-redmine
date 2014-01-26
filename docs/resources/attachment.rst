@@ -3,21 +3,32 @@ Attachment
 
 Supported by Redmine starting from version 1.3
 
-Create
-------
+Manager
+-------
+
+All operations on the attachment resource are provided via it's manager. To get access to it
+you have to call ``redmine.attachment`` where ``redmine`` is a configured redmine object.
+See the :doc:`../configuration` about how to configure redmine object.
+
+Create methods
+--------------
 
 Not supported by Redmine. Some resources support adding attachments via it's create/update methods, e.g. issue.
 
-Read
-----
+Read methods
+------------
 
-Methods
-~~~~~~~
-
-Get
+get
 +++
 
-Supported keyword arguments: None
+.. py:method:: get(resource_id)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Returns single attachment resource from the Redmine by it's id.
+
+    :param integer resource_id: (required). Id of the attachment.
+    :return: Attachment resource object
 
 .. code-block:: python
 
@@ -25,22 +36,22 @@ Supported keyword arguments: None
     >>> attachment
     <redmine.resources.Attachment #76905 "1(a).png">
 
-All
+all
 +++
 
 Not supported by Redmine
 
-Filter
+filter
 ++++++
 
 Not supported by Redmine
 
-Update
-------
+Update methods
+--------------
 
 Not supported by Redmine
 
-Delete
-------
+Delete methods
+--------------
 
 Not supported by Redmine

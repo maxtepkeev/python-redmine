@@ -3,26 +3,36 @@ Custom Field
 
 Supported by Redmine starting from version 2.4
 
-Create
-------
+Manager
+-------
+
+All operations on the custom field resource are provided via it's manager. To get access to
+it you have to call ``redmine.custom_field`` where ``redmine`` is a configured redmine object.
+See the :doc:`../configuration` about how to configure redmine object.
+
+Create methods
+--------------
 
 Not supported by Redmine
 
-Read
-----
+Read methods
+------------
 
-Methods
-~~~~~~~
-
-Get
+get
 +++
 
 Not supported by Redmine
 
-All
+all
 +++
 
-Supported keyword arguments: None
+.. py:method:: all()
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Returns all custom field resources from the Redmine.
+
+    :return: ResourceSet object
 
 .. code-block:: python
 
@@ -30,17 +40,17 @@ Supported keyword arguments: None
     >>> fields
     <redmine.resultsets.ResourceSet object with CustomField resources>
 
-Filter
+filter
 ++++++
 
 Not supported by Redmine
 
-Update
-------
+Update methods
+--------------
 
 Not supported by Redmine
 
-Delete
-------
+Delete methods
+--------------
 
 Not supported by Redmine

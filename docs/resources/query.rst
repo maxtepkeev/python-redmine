@@ -3,29 +3,38 @@ Query
 
 Supported by Redmine starting from version 1.3
 
-Create
-------
+Manager
+-------
+
+All operations on the query resource are provided via it's manager. To get access to
+it you have to call ``redmine.query`` where ``redmine`` is a configured redmine object.
+See the :doc:`../configuration` about how to configure redmine object.
+
+Create methods
+--------------
 
 Not supported by Redmine
 
-Read
-----
+Read methods
+------------
 
-Methods
-~~~~~~~
-
-Get
+get
 +++
 
 Not supported by Redmine
 
-All
+all
 +++
 
-Supported keyword arguments:
+.. py:method:: all(**params)
+    :module: redmine.managers.ResourceManager
+    :noindex:
 
-* **limit**. How much Resource objects to return.
-* **offset**. Starting from what object to return the other objects.
+    Returns all query resources from the Redmine.
+
+    :param integer limit: (optional). How much resources to return.
+    :param integer offset: (optional). Starting from what resource to return the other resources.
+    :return: ResourceSet object
 
 .. code-block:: python
 
@@ -33,17 +42,17 @@ Supported keyword arguments:
     >>> queries
     <redmine.resultsets.ResourceSet object with Query resources>
 
-Filter
+filter
 ++++++
 
 Not supported by Redmine
 
-Update
-------
+Update methods
+--------------
 
 Not supported by Redmine
 
-Delete
-------
+Delete methods
+--------------
 
 Not supported by Redmine

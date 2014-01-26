@@ -3,19 +3,34 @@ Project
 
 Supported by Redmine starting from version 1.0
 
-Create
-------
+Manager
+-------
 
-Supported keyword arguments:
+All operations on the project resource are provided via it's manager. To get access to it
+you have to call ``redmine.project`` where ``redmine`` is a configured redmine object.
+See the :doc:`../configuration` about how to configure redmine object.
 
-* **name** (required). Project name.
-* **identifier** (required). Project identifier.
-* **description** (optional). Project description.
-* **homepage** (optional). Project homepage url.
-* **is_public** (optional). Whether project is public.
-* **parent_id** (optional). Project's parent project id.
-* **inherit_members** (optional). Whether project will inherit parent project's members.
-* **custom_field_values** (optional). Value of custom fields as a dictionary in the form of {id: value}.
+Create methods
+--------------
+
+create
+++++++
+
+.. py:method:: create(**fields)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Creates new project resource with given fields and saves it to the Redmine.
+
+    :param string name: (required). Project name.
+    :param string identifier: (required). Project identifier.
+    :param string description: (optional). Project description.
+    :param string homepage: (optional). Project homepage url.
+    :param boolean is_public: (optional). Whether project is public.
+    :param integer parent_id: (optional). Project's parent project id.
+    :param boolean inherit_members: (optional). Whether project will inherit parent project's members.
+    :param dictionary custom_field_values: (optional). Custom fields in the form of {id: value}.
+    :return: Project resource object
 
 .. code-block:: python
 
@@ -23,55 +38,91 @@ Supported keyword arguments:
     >>> project
     <redmine.resources.Project #123 "Vacation">
 
-Read
-----
+new
++++
 
-Relations
-~~~~~~~~~
+.. py:method:: new()
+    :module: redmine.managers.ResourceManager
+    :noindex:
 
-Project resource object provides you with some relations. Relations are the other
-resource objects wrapped in a ResourceSet which are somehow related to a Project
-resource object. The relations provided by the Project resource object are:
+    Creates new empty project resource but doesn't save it to the Redmine. This is useful if
+    you want to set some resource fields later based on some condition(s) and only after
+    that save it to the Redmine. Valid attributes are the same as for ``create`` method above.
 
-* wiki_pages
-* memberships
-* issue_categories
-* versions
-* news
-* issues
+    :return: Project resource object
 
 .. code-block:: python
 
-    >>> project = redmine.project.get('vacation')
-    >>> project.issues
-    <redmine.resultsets.ResourceSet object with Issue resources>
+    >>> project = redmine.project.new()
+    >>> project.name = 'Vacation'
+    >>> project.identifier = 'vacation'
+    >>> project.description = 'foo'
+    >>> project.is_public = True
+    >>> project.inherit_members = True
+    >>> project.save()
+    True
 
-Methods
-~~~~~~~
+Read methods
+------------
 
-Get
+get
 +++
 
-Supported keyword arguments:
+.. py:method:: get(resource_id, **params)
+    :module: redmine.managers.ResourceManager
+    :noindex:
 
-* **include**. Can be used to fetch associated data in one call. Accepted values (separated by comma):
+    Returns single project resource from the Redmine by it's id or identifier.
 
-  - trackers
-  - issue_categories
+    :param resource_id: (required). Project id or identifier.
+    :type resource_id: integer or string
+    :param string include:
+      .. raw:: html
+
+          (optional). Can be used to fetch associated data in one call. Accepted values (separated by comma):
+
+      - trackers
+      - issue_categories
+
+    :return: Project resource object
 
 .. code-block:: python
 
     >>> project = redmine.project.get('vacation', include='trackers,issue_categories')
-    >>> project.name
-    'Vacation'
+    >>> project
+    <redmine.resources.Project #123 "Vacation">
 
-All
+.. hint::
+
+    Project resource object provides you with some relations. Relations are the other
+    resource objects wrapped in a ResourceSet which are somehow related to a Project
+    resource object. The relations provided by the Project resource object are:
+
+    * wiki_pages
+    * memberships
+    * issue_categories
+    * versions
+    * news
+    * issues
+
+    .. code-block:: python
+
+        >>> project = redmine.project.get('vacation')
+        >>> project.issues
+        <redmine.resultsets.ResourceSet object with Issue resources>
+
+all
 +++
 
-Supported keyword arguments:
+.. py:method:: all(**params)
+    :module: redmine.managers.ResourceManager
+    :noindex:
 
-* **limit**. How much Resource objects to return.
-* **offset**. Starting from what object to return the other objects.
+    Returns all project resources from the Redmine.
+
+    :param integer limit: (optional). How much resources to return.
+    :param integer offset: (optional). Starting from what resource to return the other resources.
+    :return: ResourceSet object
 
 .. code-block:: python
 
@@ -79,22 +130,33 @@ Supported keyword arguments:
     >>> projects
     <redmine.resultsets.ResourceSet object with Project resources>
 
-Filter
+filter
 ++++++
 
 Not supported by Redmine
 
-Update
-------
+Update methods
+--------------
 
 Not yet supported by Python Redmine
 
-Delete
-------
+Delete methods
+--------------
 
-Supported keyword arguments: None
+delete
+++++++
+
+.. py:method:: delete(resource_id)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Deletes single project resource from the Redmine by it's id or identifier.
+
+    :param resource_id: (required). Project id or identifier.
+    :type resource_id: integer or string
+    :return: True
 
 .. code-block:: python
 
     >>> redmine.project.delete(1)
-    >>> True
+    True

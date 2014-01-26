@@ -3,24 +3,42 @@ Issue Relation
 
 Supported by Redmine starting from version 1.3
 
-Create
-------
+Manager
+-------
 
-Supported keyword arguments:
+All operations on the issue relation resource are provided via it's manager. To get
+access to it you have to call ``redmine.issue_relation`` where ``redmine`` is a configured
+redmine object. See the :doc:`../configuration` about how to configure redmine object.
 
-* **issue_id** (required). Creates a relation for the issue of given id.
-* **issue_to_id** (required). Id of the related issue.
-* **relation_type** (required): Type of the relation, available values are:
+Create methods
+--------------
 
-  - relates
-  - duplicates
-  - duplicated
-  - blocks
-  - blocked
-  - precedes
-  - follows
+create
+++++++
 
-* **delay** (optional). Delay in days for a "precedes" or "follows" relation.
+.. py:method:: create(**fields)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Creates new issue relation resource with given fields and saves it to the Redmine.
+
+    :param integer issue_id: (required). Creates a relation for the issue of given id.
+    :param integer issue_to_id: (required). Id of the related issue.
+    :param string relation_type:
+      .. raw:: html
+
+          (required). Type of the relation, available values are:
+
+      - relates
+      - duplicates
+      - duplicated
+      - blocks
+      - blocked
+      - precedes
+      - follows
+
+    :param integer delay: (optional). Delay in days for a "precedes" or "follows" relation.
+    :return: IssueRelation resource object
 
 .. code-block:: python
 
@@ -28,16 +46,43 @@ Supported keyword arguments:
     >>> relation
     <redmine.resources.IssueRelation #667>
 
-Read
-----
-
-Methods
-~~~~~~~
-
-Get
+new
 +++
 
-Supported keyword arguments: None
+.. py:method:: new()
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Creates new empty issue relation resource but doesn't save it to the Redmine. This is useful
+    if you want to set some resource fields later based on some condition(s) and only after
+    that save it to the Redmine. Valid attributes are the same as for ``create`` method above.
+
+    :return: IssueRelation resource object
+
+.. code-block:: python
+
+    >>> relation = redmine.issue_relation.new()
+    >>> relation.issue_id = 12345
+    >>> relation.issue_to_id = 54321
+    >>> relation.relation_type = 'precedes'
+    >>> relation.delay = 5
+    >>> relation.save()
+    True
+
+Read methods
+------------
+
+get
++++
+
+.. py:method:: get(resource_id)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Returns single issue relation resource from the Redmine by it's id.
+
+    :param integer resource_id: (required). Id of the issue relation.
+    :return: IssueRelation resource object
 
 .. code-block:: python
 
@@ -45,22 +90,24 @@ Supported keyword arguments: None
     >>> relation
     <redmine.resources.IssueRelation #606>
 
-All
+all
 +++
 
 Not supported by Redmine
 
-Filter
+filter
 ++++++
 
-Supported keyword arguments:
+.. py:method:: filter(**filters)
+    :module: redmine.managers.ResourceManager
+    :noindex:
 
-* **limit**. How much Resource objects to return.
-* **offset**. Starting from what object to return the other objects.
+    Returns issue relation resources that match the given lookup parameters.
 
-Supported filters:
-
-* **issue_id**. Get relations from the issue with the given issue id.
+    :param integer issue_id: (required). Get relations from the issue with the given id.
+    :param integer limit: (optional). How much resources to return.
+    :param integer offset: (optional). Starting from what resource to return the other resources.
+    :return: ResourceSet object
 
 .. code-block:: python
 
@@ -79,17 +126,27 @@ Supported filters:
         >>> issue.relations
         <redmine.resultsets.ResourceSet object with IssueRelation resources>
 
-Update
-------
+Update methods
+--------------
 
-Not supported by Redmine
+Not yet supported by Python Redmine
 
-Delete
-------
+Delete methods
+--------------
 
-Supported keyword arguments: None
+delete
+++++++
+
+.. py:method:: delete(resource_id)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Deletes single issue relation resource from the Redmine by it's id.
+
+    :param integer resource_id: (required). Issue relation id.
+    :return: True
 
 .. code-block:: python
 
     >>> redmine.issue_relation.delete(1)
-    >>> True
+    True

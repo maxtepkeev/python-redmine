@@ -1,13 +1,27 @@
 Changelog
 =========
 
-0.3.2 (2014-0X-XX)
+0.4.0 (2014-02-XX)
 ------------------
 
 - Added: New exceptions:
 
   * ConflictError
   * ReadonlyAttrError
+
+- Added: Update functionality via update() and save() methods for resources (see docs
+  for details):
+
+  * WikiPage
+  * Project
+
+- Added: Allow to create resources in alternative way via new() method (see docs for
+  details)
+- Added: Allow daterange TimeEntry resource filtering via ``from_date`` and ``to_date``
+  keyword arguments (thanks to `Antoni Aloy <https://github.com/aaloy>`_)
+- Fixed: `Issue #2 <https://github.com/maxtepkeev/python-redmine/issues/2>`_ (limit/offset
+  as keyword arguments were broken)
+- Changed: Documentation for resources rewritten from scratch to be more understandable
 
 0.3.1 (2014-01-23)
 ------------------
@@ -20,7 +34,7 @@ Changelog
 0.3.0 (2014-01-18)
 ------------------
 
-- Added: Delete functionality for resources via delete method (see docs for details):
+- Added: Delete functionality via delete() method for resources (see docs for details):
 
   * User
   * Group
@@ -48,7 +62,7 @@ Changelog
   * ResourceNoFieldsProvidedError
   * ResourceNotFoundError
 
-- Added: Create functionality for resources via create method (see docs for details):
+- Added: Create functionality via create() method for resources (see docs for details):
 
   * User
   * Group

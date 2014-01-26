@@ -3,30 +3,52 @@ Version
 
 Supported by Redmine starting from version 1.3
 
-Create
-------
+Manager
+-------
 
-Supported keyword arguments:
+All operations on the version resource are provided via it's manager. To get access
+to it you have to call ``redmine.version`` where ``redmine`` is a configured redmine
+object. See the :doc:`../configuration` about how to configure redmine object.
 
-* **project_id** (required). The id of the project, where id is either project id or project identifier.
-* **name** (required). Version name.
-* **status** (optional). Status of the version, available values are:
+Create methods
+--------------
 
-  - open (default)
-  - locked
-  - closed
+create
+++++++
 
-* **sharing** (optional). Version sharing in, available values are:
+.. py:method:: create(**fields)
+    :module: redmine.managers.ResourceManager
+    :noindex:
 
-  - none (default)
-  - descendants
-  - hierarchy
-  - tree
-  - system
+    Creates new version resource with given fields and saves it to the Redmine.
 
-* **due_date** (optional). Expiration date.
-* **description** (optional). Version description.
-* **wiki_page_title** (optional). Version wiki page title.
+    :param project_id: (required). Id or identifier of version's project.
+    :type project_id: integer or string
+    :param string name: (required). Version name.
+    :param string status:
+      .. raw:: html
+
+          (optional). Status of the version, available values are:
+
+      - open (default)
+      - locked
+      - closed
+
+    :param string sharing:
+      .. raw:: html
+
+          (optional). Version sharing, available values are:
+
+      - none (default)
+      - descendants
+      - hierarchy
+      - tree
+      - system
+
+    :param string due_date: (optional). Expiration date.
+    :param string description: (optional). Version description.
+    :param string wiki_page_title: (optional). Version wiki page title.
+    :return: Version resource object
 
 .. code-block:: python
 
@@ -34,16 +56,44 @@ Supported keyword arguments:
     >>> version
     <redmine.resources.Version #235 "Vacation">
 
-Read
-----
-
-Methods
-~~~~~~~
-
-Get
+new
 +++
 
-Supported keyword arguments: None
+.. py:method:: new()
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Creates new empty version resource but doesn't save it to the Redmine. This is useful
+    if you want to set some resource fields later based on some condition(s) and only after
+    that save it to the Redmine. Valid attributes are the same as for ``create`` method above.
+
+    :return: Version resource object
+
+.. code-block:: python
+
+    >>> version = redmine.version.new()
+    >>> version.project_id = 'vacation'
+    >>> version.name = 'Vacation'
+    >>> version.status = 'open'
+    >>> version.sharing = 'none'
+    >>> version.due_date='2014-01-30'
+    >>> version.save()
+    True
+
+Read methods
+------------
+
+get
++++
+
+.. py:method:: get(resource_id)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Returns single version resource from the Redmine by it's id.
+
+    :param integer resource_id: (required). Id of the version.
+    :return: Version resource object
 
 .. code-block:: python
 
@@ -51,23 +101,25 @@ Supported keyword arguments: None
     >>> version
     <redmine.resources.Version #1 "Release 1">
 
-All
+all
 +++
 
 Not supported by Redmine
 
-Filter
+filter
 ++++++
 
-Supported keyword arguments:
+.. py:method:: filter(**filters)
+    :module: redmine.managers.ResourceManager
+    :noindex:
 
-* **limit**. How much Resource objects to return.
-* **offset**. Starting from what object to return the other objects.
+    Returns version resources that match the given lookup parameters.
 
-Supported filters:
-
-* **project_id**. Get versions from the project with the given id, where id is either
-  project id or project identifier.
+    :param project_id: (required). Id or identifier of version's project.
+    :type project_id: integer or string
+    :param integer limit: (optional). How much resources to return.
+    :param integer offset: (optional). Starting from what resource to return the other resources.
+    :return: ResourceSet object
 
 .. code-block:: python
 
@@ -86,17 +138,27 @@ Supported filters:
         >>> project.versions
         <redmine.resultsets.ResourceSet object with Version resources>
 
-Update
-------
+Update methods
+--------------
 
 Not yet supported by Python Redmine
 
-Delete
-------
+Delete methods
+--------------
 
-Supported keyword arguments: None
+delete
+++++++
+
+.. py:method:: delete(resource_id)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Deletes single version resource from the Redmine by it's id.
+
+    :param integer resource_id: (required). Version id.
+    :return: True
 
 .. code-block:: python
 
     >>> redmine.version.delete(1)
-    >>> True
+    True

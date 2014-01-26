@@ -3,14 +3,31 @@ Project Membership
 
 Supported by Redmine starting from version 1.4
 
-Create
-------
+Manager
+-------
 
-Supported keyword arguments:
+All operations on the project membership resource are provided via it's manager. To get access to it
+you have to call ``redmine.project_membership`` where ``redmine`` is a configured redmine object.
+See the :doc:`../configuration` about how to configure redmine object.
 
-* **project_id** (required). The id of the project, where id is either project id or project identifier.
-* **user_id** (required). Id of the user to add to the project.
-* **role_ids** (required). List or tuple of role ids to add to the user in this project.
+Create methods
+--------------
+
+create
+++++++
+
+.. py:method:: create(**fields)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Creates new project membership resource with given fields and saves it to the Redmine.
+
+    :param project_id: (required). Id or identifier of the project.
+    :type project_id: integer or string
+    :param integer user_id: (required). Id of the user to add to the project.
+    :param role_ids: (required). Role ids to add to the user in this project.
+    :type role_ids: list or tuple
+    :return: ProjectMembership resource object
 
 .. code-block:: python
 
@@ -18,44 +35,68 @@ Supported keyword arguments:
     >>> membership
     <redmine.resources.ProjectMembership #123>
 
-Read
-----
-
-Methods
-~~~~~~~
-
-Get
+new
 +++
 
-Supported keyword arguments: None
+.. py:method:: new()
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Creates new empty project membershp resource but doesn't save it to the Redmine. This is useful
+    if you want to set some resource fields later based on some condition(s) and only after
+    that save it to the Redmine. Valid attributes are the same as for ``create`` method above.
+
+    :return: ProjectMembership resource object
+
+.. code-block:: python
+
+    >>> membership = redmine.project_membership.new()
+    >>> membership.project_id = 'vacation'
+    >>> membership.user_id = 1
+    >>> membership.role_ids = [1, 2]
+    >>> membership.save()
+    True
+
+Read methods
+------------
+
+get
++++
+
+.. py:method:: get(resource_id)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Returns single project membership resource from the Redmine by it's id.
+
+    :param integer resource_id: (required). Project membership id.
+    :return: ProjectMembership resource object
 
 .. code-block:: python
 
     >>> membership = redmine.project_membership.get(521)
     >>> membership
     <redmine.resources.ProjectMembership #521>
-    >>> dir(membership)
-    ['id', 'project', 'roles', 'user']
-    >>> membership.user.name
-    'John Smith'
 
-All
+all
 +++
 
 Not supported by Redmine
 
-Filter
+filter
 ++++++
 
-Supported keyword arguments:
+.. py:method:: filter(**filters)
+    :module: redmine.managers.ResourceManager
+    :noindex:
 
-* **limit**. How much Resource objects to return.
-* **offset**. Starting from what object to return the other objects.
+    Returns project membership resources that match the given lookup parameters.
 
-Supported filters:
-
-* **project_id**. Get issues from the project with the given id, where id is either
-  project id or project identifier.
+    :param project_id: (required). Id or identifier of the project.
+    :type project_id: integer or string
+    :param integer limit: (optional). How much resources to return.
+    :param integer offset: (optional). Starting from what resource to return the other resources.
+    :return: ResourceSet object
 
 .. code-block:: python
 
@@ -74,17 +115,27 @@ Supported filters:
         >>> project.memberships
         <redmine.resultsets.ResourceSet object with ProjectMembership resources>
 
-Update
-------
+Update methods
+--------------
 
 Not yet supported by Python Redmine
 
-Delete
-------
+Delete methods
+--------------
 
-Supported keyword arguments: None
+delete
+++++++
+
+.. py:method:: delete(resource_id)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Deletes single project membership resource from the Redmine by it's id.
+
+    :param integer resource_id: (required). Project membership id.
+    :return: True
 
 .. code-block:: python
 
     >>> redmine.project_membership.delete(1)
-    >>> True
+    True

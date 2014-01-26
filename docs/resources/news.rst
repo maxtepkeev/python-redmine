@@ -3,29 +3,38 @@ News
 
 Supported by Redmine starting from version 1.1
 
-Create
-------
+Manager
+-------
+
+All operations on the news resource are provided via it's manager. To get access to
+it you have to call ``redmine.news`` where ``redmine`` is a configured redmine object.
+See the :doc:`../configuration` about how to configure redmine object.
+
+Create methods
+--------------
 
 Not supported by Redmine
 
-Read
-----
+Read methods
+------------
 
-Methods
-~~~~~~~
-
-Get
+get
 +++
 
 Not supported by Redmine
 
-All
+all
 +++
 
-Supported keyword arguments:
+.. py:method:: all(**params)
+    :module: redmine.managers.ResourceManager
+    :noindex:
 
-* **limit**. How much Resource objects to return.
-* **offset**. Starting from what object to return the other objects.
+    Returns all news resources from the Redmine.
+
+    :param integer limit: (optional). How much resources to return.
+    :param integer offset: (optional). Starting from what resource to return the other resources.
+    :return: ResourceSet object
 
 .. code-block:: python
 
@@ -33,18 +42,20 @@ Supported keyword arguments:
     >>> news
     <redmine.resultsets.ResourceSet object with News resources>
 
-Filter
+filter
 ++++++
 
-Supported keyword arguments:
+.. py:method:: filter(**filters)
+    :module: redmine.managers.ResourceManager
+    :noindex:
 
-* **limit**. How much Resource objects to return.
-* **offset**. Starting from what object to return the other objects.
+    Returns news resources that match the given lookup parameters.
 
-Supported filters:
-
-* **project_id**. Get issues from the project with the given id, where id is either
-  project id or project identifier.
+    :param project_id: (required). Id or identifier of news project.
+    :type project_id: integer or string
+    :param integer limit: (optional). How much resources to return.
+    :param integer offset: (optional). Starting from what resource to return the other resources.
+    :return: ResourceSet object
 
 .. code-block:: python
 
@@ -62,12 +73,12 @@ Supported filters:
         >>> project.news
         <redmine.resultsets.ResourceSet object with News resources>
 
-Update
-------
+Update methods
+--------------
 
 Not supported by Redmine
 
-Delete
-------
+Delete methods
+--------------
 
 Not supported by Redmine

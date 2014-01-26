@@ -10,15 +10,38 @@ support the requested operation, an exception will be thrown.
 Create
 ------
 
-Resources can be created via ``create`` method. Each resource supports different keyword
-arguments. Unfortunately Redmine doesn't support the creation of some resources via REST
-API. You can read more about it in each resource's documentation.
+Python Redmine provides 2 create operation methods: ``create`` and ``new``. Unfortunately Redmine
+doesn't support the creation of some resources via REST API. You can read more about it in each
+resource's documentation.
+
+create
+++++++
+
+Creates new resource with given fields and saves it to the Redmine.
 
 .. code-block:: python
 
     >>> project = redmine.project.create(name='Vacation', identifier='vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, custom_field_values={2: 'foobar'})
     >>> project
     <redmine.resources.Project #123 "Vacation">
+
+new
++++
+
+Creates new empty resource but doesn't save it to the Redmine. This is useful if you want to
+set some resource fields later based on some condition(s) and only after that save it to the
+Redmine.
+
+.. code-block:: python
+
+    >>> project = redmine.project.new()
+    >>> project.name = 'Vacation'
+    >>> project.identifier = 'vacation'
+    >>> project.description = 'foo'
+    >>> project.is_public = True
+    >>> project.inherit_members = True
+    >>> project.save()
+    True
 
 Read
 ----
@@ -27,14 +50,13 @@ Python Redmine provides 3 read operation methods: ``get``, ``all`` and ``filter`
 of this methods support different keyword arguments depending on the resource used and
 method called. You can read more about it in each resource's documentation.
 
-Get
+get
 +++
 
 Returns requested Resource object either by integer ``id`` or by string ``identifier``:
 
 .. code-block:: python
 
-    >>> redmine = Redmine('http://demo.redmine.org')
     >>> project = redmine.project.get('vacation')
     >>> project.name
     'Vacation'
@@ -69,26 +91,24 @@ Returns requested Resource object either by integer ``id`` or by string ``identi
 
         redmine.project.get('vacation').refresh()
 
-All
+all
 +++
 
 Returns a ResourceSet object that contains all the requested Resource objects:
 
 .. code-block:: python
 
-    >>> redmine = Redmine('http://demo.redmine.org')
     >>> projects = redmine.project.all()
     >>> projects
     <redmine.resultsets.ResourceSet object with Project resources>
 
-Filter
+filter
 ++++++
 
 Returns a ResourceSet object that contains Resource objects filtered by some condition(s):
 
 .. code-block:: python
 
-    >>> redmine = Redmine('http://demo.redmine.org')
     >>> issues = redmine.issue.filter(project_id='vacation')
     >>> issues
     <redmine.resultsets.ResourceSet object with Issue resources>
@@ -143,13 +163,13 @@ Returns a ResourceSet object that contains Resource objects filtered by some con
 
       .. code-block:: python
 
-            length = len(redmine.project.all())
+            len(redmine.project.all())
 
     * **list()**. Force evaluation of a ResourceSet by calling list() on it.
 
       .. code-block:: python
 
-            projects = list(redmine.project.all())
+            list(redmine.project.all())
 
     * **Index**. A ResourceSet is also evaluated when you request some of it's Resources by index.
 
@@ -171,7 +191,7 @@ of some resources via REST API. You can read more about it in each resource's do
 .. code-block:: python
 
     >>> redmine.project.delete(1)
-    >>> True
+    True
 
 .. warning::
 

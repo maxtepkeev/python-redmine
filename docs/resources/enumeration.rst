@@ -3,38 +3,49 @@ Enumeration
 
 Supported by Redmine starting from version 2.2
 
-Create
-------
+Manager
+-------
+
+All operations on the enumeration resource are provided via it's manager. To get access to
+it you have to call ``redmine.enumeration`` where ``redmine`` is a configured redmine object.
+See the :doc:`../configuration` about how to configure redmine object.
+
+Create methods
+--------------
 
 Not supported by Redmine
 
-Read
-----
+Read methods
+------------
 
-Methods
-~~~~~~~
-
-Get
+get
 +++
 
 Not supported by Redmine
 
-All
+all
 +++
 
 Not supported by Redmine
 
-Filter
+filter
 ++++++
 
-Supported keyword arguments: None
+.. py:method:: filter(**filters)
+    :module: redmine.managers.ResourceManager
+    :noindex:
 
-Supported filters:
+    Returns enumeration resources that match the given lookup parameters.
 
-* **resource**. Get enumerations for the requested resource. Available resources are:
+    :param string resource:
+      .. raw:: html
 
-  - issue_priorities
-  - time_entry_activities
+          (required). Get enumerations for the requested resource. Available resources are:
+
+      - issue_priorities
+      - time_entry_activities
+
+    :return: ResourceSet object
 
 .. code-block:: python
 
@@ -42,12 +53,12 @@ Supported filters:
     >>> enumerations
     <redmine.resultsets.ResourceSet object with Enumeration resources>
 
-Update
-------
+Update methods
+--------------
 
 Not supported by Redmine
 
-Delete
-------
+Delete methods
+--------------
 
 Not supported by Redmine
