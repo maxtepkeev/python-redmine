@@ -100,10 +100,16 @@ Returns a ResourceSet object that contains Resource objects filtered by some con
 
     .. code-block:: python
 
-        redmine.project.all()[:135]  # Returns only the first 135 resources
-        redmine.project.all(limit=135)  # Returns only the first 135 resources
+        redmine.project.all()[:135]  # Returns only the first 135 projects
+        redmine.project.all(limit=135)  # Returns only the first 135 projects
         redmine.issue.filter(project_id='vacation')[10:3]  # Returns only 3 issues starting from 10th
         redmine.issue.filter(project_id='vacation', offset=10, limit=3)  # Returns only 3 issues starting from 10th
+
+    Please note, that keyword arguments have a higher priority, e.g.:
+
+    .. code-block:: python
+
+        redmine.project.all(limit=10)[:20]  # Returns 10 projects and not 20
 
 .. hint::
 
