@@ -52,6 +52,33 @@ Most of the time, the API requires authentication. It can be done in 2 different
 The API key can be found on users account page when logged in, on the right-hand pane of
 the default layout.
 
+SSL Cert Verification
++++++++++++++++++++++
+
+You can verify SSL certificates for HTTPS requests, just like a web browser. To check a host's SSL certificate, you can use the ``sslverify`` argument: 
+
+.. code-block:: python
+
+    redmine = Redmine('https://demo.redmine.org', sslverify=True)
+
+It's also possible to ignore verifying the SSL certificate if you set ``sslverify`` to False.
+
+.. code-block:: python
+
+    redmine = Redmine('https://demo.redmine.org', sslverify=False)
+
+By default, sslverify is set to True, Option sslverify only applies to host certs.
+
+You can also specify a local cert to use as client side certificate, as a single file (containing the private key and the certificate) or as a tuple of both file’s path:
+
+.. code-block:: python
+
+    redmine = Redmine('https://demo.redmine.org', sslcert=('/path/server.crt', '/path/key'))
+
+.. code-block:: python
+
+    redmine = Redmine('https://demo.redmine.org', sslcert='/path/server.pem')
+
 Impersonation
 +++++++++++++
 

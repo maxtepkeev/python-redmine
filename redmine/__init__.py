@@ -27,6 +27,8 @@ class Redmine(object):
         self.impersonate = kwargs.get('impersonate', None)
         self.date_format = kwargs.get('date_format', '%Y-%m-%d')
         self.datetime_format = kwargs.get('datetime_format', '%Y-%m-%dT%H:%M:%SZ')
+        self.sslverify = kwargs.get('sslverify', None)
+        self.sslcert = kwargs.get('sslcert', None)
 
     def __getattr__(self, resource):
         """Returns either ResourceSet or Resource object depending on the method used on the ResourceManager"""
@@ -66,6 +68,11 @@ class Redmine(object):
             kwargs['params']['key'] = self.key
         else:
             kwargs['auth'] = (self.username, self.password)
+
+        if self.sslverify is not None:
+            kwargs['verify'] = self.sslverify
+        if self.sslcert is not None:
+            kwargs['cert'] = self.sslcert
 
         response = getattr(requests, method)(url, **kwargs)
 
