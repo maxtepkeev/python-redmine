@@ -21,6 +21,9 @@ Changelog
   keyword arguments (thanks to `Antoni Aloy <https://github.com/aaloy>`_)
 - Fixed: `Issue #2 <https://github.com/maxtepkeev/python-redmine/issues/2>`_ (limit/offset
   as keyword arguments were broken)
+- Fixed: `Issue #5 <https://github.com/maxtepkeev/python-redmine/issues/5>`_ (Version
+  resource ``status`` attribute was converted to IssueStatus resource by mistake) (thanks
+  to `Andrei Avram <https://github.com/andreiavram>`_)
 - Changed: Documentation for resources rewritten from scratch to be more understandable
 
 0.3.1 (2014-01-23)
