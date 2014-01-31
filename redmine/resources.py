@@ -412,7 +412,6 @@ class IssueRelation(_Resource):
             self.id
         )
 
-
 class Version(_Resource):
     redmine_version = '1.3'
     container_filter = 'versions'
@@ -423,6 +422,13 @@ class Version(_Resource):
     query_create = '/projects/{project_id}/versions.json'
     query_delete = '/versions/{0}.json'
 
+    def __getattr__(self, item):
+        """ Manual override for string only 'status' field in Redmine Version object
+        """
+
+        if item == "status":
+            return self.attributes[item]
+        return super(Version, self).__getattr__(item)
 
 class User(_Resource):
     redmine_version = '1.1'
