@@ -428,7 +428,10 @@ class Version(_Resource):
         # will be automatically converted to IssueStatus resource
         # by the parent _Resource object which is not what we want
         if item == 'status':
-            return self.attributes[item]
+            try:
+                return self.attributes[item]
+            except KeyError:
+                raise ResourceAttrError()
 
         return super(Version, self).__getattr__(item)
 
