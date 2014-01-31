@@ -39,7 +39,7 @@ responses = {
         'filter': {'relations': [{'id': 1}, {'id': 2}]},
     },
     'version': {
-        'get': {'version': {'id': 1, 'name': 'Foo'}},
+        'get': {'version': {'id': 1, 'name': 'Foo', 'status': 'foo'}},
         'filter': {'versions': [{'id': 1, 'name': 'Foo'}, {'id': 2, 'name': 'Bar'}]},
     },
     'user': {
@@ -549,6 +549,11 @@ class TestResources(unittest.TestCase):
 
     def test_version_delete(self):
         self.assertEqual(self.redmine.version.delete(1), True)
+
+    def test_version_returns_status_without_conversion(self):
+        self.response.json.return_value = responses['version']['get']
+        version = self.redmine.version.get(1)
+        self.assertEqual(version.status, 'foo')
 
     def test_user_version(self):
         self.assertEqual(self.redmine.user.resource_class.redmine_version, '1.1')
