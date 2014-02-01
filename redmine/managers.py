@@ -78,9 +78,9 @@ class ResourceManager(object):
 
             return results
 
-        data = self.redmine.request('get', self.url, params=self.params)[self.container]
+        data = self.redmine.request('get', self.url, params=self.params)
         self.total_count = data.get('total_count', 0)
-        return data
+        return data[self.container]
 
     def to_resource(self, resource):
         """Converts a single resource dict from Redmine result set to resource object"""
