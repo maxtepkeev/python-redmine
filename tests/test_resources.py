@@ -454,6 +454,14 @@ class TestResources(unittest.TestCase):
     def test_project_membership_delete(self):
         self.assertEqual(self.redmine.project_membership.delete(1), True)
 
+    def test_project_membership_update(self):
+        self.response.json.return_value = responses['project_membership']['get']
+        membership = self.redmine.project_membership.get(1)
+        membership.role_ids = [1, 2]
+        self.assertEqual(membership.save(), True)
+        self.assertEqual(membership.roles[0].id, 1)
+        self.assertEqual(membership.roles[1].id, 2)
+
     def test_project_membership_custom_str(self):
         self.response.json.return_value = responses['project_membership']['get']
         self.assertEqual(str(self.redmine.project_membership.get(1)), '1')

@@ -382,11 +382,21 @@ class ProjectMembership(_Resource):
     redmine_version = '1.4'
     container_filter = 'memberships'
     container_one = 'membership'
+    container_update = 'membership'
     container_create = 'membership'
     query_filter = '/projects/{project_id}/memberships.json'
     query_one = '/memberships/{0}.json'
     query_create = '/projects/{project_id}/memberships.json'
+    query_update = '/memberships/{0}.json'
     query_delete = '/memberships/{0}.json'
+
+    _readonly = _Resource._readonly + ('user', 'roles')
+
+    def __setattr__(self, item, value):
+        super(ProjectMembership, self).__setattr__(item, value)
+
+        if item == 'role_ids':
+            self.attributes['roles'] = [{'id': role_id} for role_id in value]
 
     def __str__(self):
         return str(self.id)

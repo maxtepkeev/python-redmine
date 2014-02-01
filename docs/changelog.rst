@@ -14,6 +14,7 @@ Changelog
 
   * IssueCategory
   * Version
+  * ProjectMembership
   * WikiPage
   * Project
 
