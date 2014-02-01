@@ -103,7 +103,8 @@ class _Resource(object):
             elif item in _RESOURCE_RELATIONS_MAP and self.attributes[item] is None:
                 filters = {'{0}_id'.format(self.__class__.__name__.lower()): self.internal_id}
                 manager = ResourceManager(self.manager.redmine, _RESOURCE_RELATIONS_MAP[item])
-                return manager.filter(**filters)
+                self.attributes[item] = manager.filter(**filters)
+                return self.attributes[item]
 
         try:
             # If the requested item is a date/datetime string

@@ -19,6 +19,8 @@ Changelog
   details)
 - Added: Allow daterange TimeEntry resource filtering via ``from_date`` and ``to_date``
   keyword arguments (thanks to `Antoni Aloy <https://github.com/aaloy>`_)
+- Fixed: Resource relations were requested from Redmine every time instead of caching the
+  result after first request
 - Fixed: `Issue #2 <https://github.com/maxtepkeev/python-redmine/issues/2>`_ (limit/offset
   as keyword arguments were broken)
 - Fixed: `Issue #5 <https://github.com/maxtepkeev/python-redmine/issues/5>`_ (Version
