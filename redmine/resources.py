@@ -119,7 +119,14 @@ class _Resource(object):
         except ValueError:
             return self.attributes[item]
         except KeyError:
-            raise ResourceAttrError()
+            raise_attr_exception = self.manager.redmine.raise_attr_exception
+
+            if isinstance(raise_attr_exception, bool) and raise_attr_exception:
+                raise ResourceAttrError()
+            elif isinstance(raise_attr_exception, (list, tuple)) and self.__class__.__name__ in raise_attr_exception:
+                raise ResourceAttrError()
+
+            return None
 
     def __setattr__(self, item, value):
         """Sets the requested attribute"""

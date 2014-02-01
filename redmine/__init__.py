@@ -27,6 +27,7 @@ class Redmine(object):
         self.impersonate = kwargs.get('impersonate', None)
         self.date_format = kwargs.get('date_format', '%Y-%m-%d')
         self.datetime_format = kwargs.get('datetime_format', '%Y-%m-%dT%H:%M:%SZ')
+        self.raise_attr_exception = kwargs.get('raise_attr_exception', True)
 
     def __getattr__(self, resource):
         """Returns either ResourceSet or Resource object depending on the method used on the ResourceManager"""

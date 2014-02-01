@@ -126,6 +126,16 @@ class TestResources(unittest.TestCase):
             project = self.redmine.project.new()
             project.id = 1
 
+    def test_control_raising_of_resource_attr_exception(self):
+        from redmine.exceptions import ResourceAttrError
+        self.response.json.return_value = responses['project']['get']
+        self.redmine.raise_attr_exception = False
+        self.assertEqual(self.redmine.project.get(1).foo, None)
+        self.redmine.raise_attr_exception = ('Project',)
+        self.assertRaises(ResourceAttrError, lambda: self.redmine.project.get(1).foo)
+        self.redmine.raise_attr_exception = True
+        self.assertRaises(ResourceAttrError, lambda: self.redmine.project.get(1).foo)
+
     def test_saving_new_resource_creates_it(self):
         self.response.status_code = 201
         self.response.json.return_value = responses['project']['get']
