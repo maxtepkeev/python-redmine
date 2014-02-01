@@ -33,6 +33,9 @@ class ResourceSet(object):
 
         return ResourceSet(self.manager, resources)
 
+    def total_count(self):
+        return self.manager.total_count
+
     def __getitem__(self, item):
         """Sets limit and offset or returns a resource by requested index"""
         if isinstance(item, slice):
