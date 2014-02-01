@@ -545,6 +545,12 @@ class TestResources(unittest.TestCase):
     def test_version_delete(self):
         self.assertEqual(self.redmine.version.delete(1), True)
 
+    def test_version_update(self):
+        self.response.json.return_value = responses['version']['get']
+        version = self.redmine.version.get(1)
+        version.name = 'Bar'
+        self.assertEqual(version.save(), True)
+
     def test_version_returns_status_without_conversion(self):
         self.response.json.return_value = {'version': {'id': 1, 'name': 'Foo', 'status': 'foo'}}
         version = self.redmine.version.get(1)

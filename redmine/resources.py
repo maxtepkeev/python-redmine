@@ -436,10 +436,14 @@ class Version(_Resource):
     container_filter = 'versions'
     container_one = 'version'
     container_create = 'version'
+    container_update = 'version'
     query_filter = '/projects/{project_id}/versions.json'
     query_one = '/versions/{0}.json'
     query_create = '/projects/{project_id}/versions.json'
+    query_update = '/versions/{0}.json'
     query_delete = '/versions/{0}.json'
+
+    _readonly = _Resource._readonly + ('project',)
 
     def __getattr__(self, item):
         # We have to return status attribute as it is, otherwise it
