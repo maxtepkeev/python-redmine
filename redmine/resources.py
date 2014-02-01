@@ -135,14 +135,34 @@ class _Resource(object):
         """Reloads resource data from Redmine"""
         return self.manager.get(self.internal_id, **params)
 
+    def pre_create(self):
+        """Tasks that should be done before creating the resource"""
+        pass
+
+    def post_create(self):
+        """Tasks that should be done after creating the resource"""
+        pass
+
+    def pre_update(self):
+        """Tasks that should be done before updating the resource"""
+        pass
+
+    def post_update(self):
+        """Tasks that should be done after updating the resource"""
+        pass
+
     def save(self):
         """Creates or updates a resource"""
         if any(item in self.attributes and item not in self._relations for item in self._readonly):
+            self.pre_update()
             self.manager.update(self.internal_id, **self._changes)
             self.attributes['updated_on'] = datetime.utcnow().strftime(self.manager.redmine.datetime_format)
+            self.post_update()
         else:
+            self.pre_create()
             for item, value in self.manager.create(**self._changes):
                 self.attributes[item] = value
+            self.post_create()
 
         self._changes = {}
         return True
