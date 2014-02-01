@@ -117,7 +117,8 @@ class _Resource(object):
         except ValueError:
             return self.attributes[item]
         except KeyError:
-            raise ResourceAttrError()
+            # raise ResourceAttrError()
+            return None
 
     def __setattr__(self, item, value):
         """Sets the requested attribute"""
