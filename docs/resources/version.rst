@@ -150,7 +150,7 @@ update
 
     Updates values of given fields of a version resource and saves them to the Redmine.
 
-    :param string resource_id: (required). Version id.
+    :param integer resource_id: (required). Version id.
     :param string name: (optional). Version name.
     :param string status:
       .. raw:: html

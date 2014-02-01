@@ -126,7 +126,7 @@ update
 
     Updates values of given fields of an issue category resource and saves them to the Redmine.
 
-    :param string resource_id: (required). Issue category id.
+    :param integer resource_id: (required). Issue category id.
     :param string name: (optional). Issue category name.
     :param integer assigned_to_id: (optional). The id of the user assigned to the
       category (new issues with this category will be assigned by default to this user).
