@@ -381,7 +381,7 @@ class TestResources(unittest.TestCase):
 
     def test_wiki_page_get(self):
         self.response.json.return_value = responses['wiki_page']['get']
-        wiki_page = self.redmine.wiki_page.get('title', project_id=1)
+        wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
         self.assertEqual(wiki_page.title, 'Foo')
 
     def test_wiki_page_filter(self):
@@ -399,17 +399,12 @@ class TestResources(unittest.TestCase):
     def test_wiki_page_delete(self):
         self.assertEqual(self.redmine.wiki_page.delete('Foo', project_id=1), True)
 
-    def test_wiki_page_saving_increments_version(self):
-        from redmine.exceptions import BaseRedmineError
-        self.response.status_code = 201
+    def test_wiki_page_update(self):
         self.response.json.return_value = responses['wiki_page']['get']
-        wiki_page = self.redmine.wiki_page.new()
-        wiki_page.title = 'Foo'
-        self.assertRaises(BaseRedmineError, lambda: wiki_page.save())
-        self.assertEqual(wiki_page.version, 0)
-        wiki_page.project_id = 1
+        wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
+        wiki_page.text = 'Foo'
         self.assertEqual(wiki_page.save(), True)
-        self.assertEqual(wiki_page.version, 1)
+        self.assertEqual(wiki_page.version, 2)
 
     def test_wiki_page_refresh_by_title(self):
         self.response.json.return_value = responses['wiki_page']['get']

@@ -1,7 +1,7 @@
 from datetime import datetime
 from redmine.utilities import to_string
 from redmine.managers import ResourceManager
-from redmine.exceptions import BaseRedmineError, ResourceAttrError, ReadonlyAttrError
+from redmine.exceptions import ResourceAttrError, ReadonlyAttrError
 
 # Resources which when accessed from some other
 # resource should become a ResourceSet object
@@ -352,17 +352,13 @@ class WikiPage(_Resource):
     query_update = '/projects/{project_id}/wiki/{0}.json'
     query_delete = '/projects/{project_id}/wiki/{0}.json'
 
+    _readonly = _Resource._readonly + ('version',)
+
     def refresh(self):
         return super(WikiPage, self).refresh(project_id=self.manager.params.get('project_id', 0))
 
-    def save(self):
+    def post_update(self):
         self.attributes['version'] = self.attributes.get('version', 0) + 1
-
-        try:
-            return super(WikiPage, self).save()
-        except BaseRedmineError as exception:
-            self.attributes['version'] -= 1
-            raise exception
 
     @property
     def internal_id(self):
