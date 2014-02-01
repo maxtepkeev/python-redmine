@@ -69,7 +69,7 @@ class _Resource(object):
 
     _changes = {}
     _relations = {}
-    _readonly = ('id', 'created_on', 'updated_on', 'author')
+    _readonly = ('id', 'created_on', 'updated_on', 'author', 'project')
     __length_hint__ = None  # fixes Python 2.6 list() call on resource object
 
     def __init__(self, manager, attributes):
@@ -442,8 +442,6 @@ class Version(_Resource):
     query_create = '/projects/{project_id}/versions.json'
     query_update = '/versions/{0}.json'
     query_delete = '/versions/{0}.json'
-
-    _readonly = _Resource._readonly + ('project',)
 
     def __getattr__(self, item):
         # We have to return status attribute as it is, otherwise it
