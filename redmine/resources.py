@@ -77,6 +77,7 @@ class _Resource(object):
         self.manager = manager
         self.attributes = self._relations.copy()
         self.attributes.update(attributes)
+        self._readonly += tuple(self._relations.keys())
 
     def __getitem__(self, item):
         """Provides a dictionary like access to resource attributes"""
@@ -136,7 +137,7 @@ class _Resource(object):
 
     def save(self):
         """Creates or updates a resource"""
-        if any(item in self.attributes for item in self._readonly):
+        if any(item in self.attributes and item not in self._relations for item in self._readonly):
             self.manager.update(self.internal_id, **self._changes)
             self.attributes['updated_on'] = datetime.utcnow().strftime(self.manager.redmine.datetime_format)
         else:
