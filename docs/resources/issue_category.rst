@@ -117,7 +117,45 @@ filter
 Update methods
 --------------
 
-Not yet supported by Python Redmine
+update
+++++++
+
+.. py:method:: update(resource_id, **fields)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Updates values of given fields of an issue category resource and saves them to the Redmine.
+
+    :param string resource_id: (required). Issue category id.
+    :param string name: (optional). Issue category name.
+    :param integer assigned_to_id: (optional). The id of the user assigned to the
+      category (new issues with this category will be assigned by default to this user).
+    :return: True
+
+.. code-block:: python
+
+    >>> redmine.issue_category.update(1, name='woohoo', assigned_to_id=13)
+    True
+
+save
+++++
+
+.. py:method:: save()
+    :module: redmine.resources.IssueCategory
+    :noindex:
+
+    Saves the current state of an issue category resource to the Redmine. Fields that
+    can be changed are the same as for ``update`` method above.
+
+    :return: True
+
+.. code-block:: python
+
+    >>> category = redmine.issue_category.get(1)
+    >>> category.name = 'woohoo'
+    >>> category.assigned_to_id = 13
+    >>> category.save()
+    True
 
 Delete methods
 --------------

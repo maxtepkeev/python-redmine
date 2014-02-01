@@ -488,6 +488,12 @@ class TestResources(unittest.TestCase):
     def test_issue_category_delete(self):
         self.assertEqual(self.redmine.issue_category.delete(1), True)
 
+    def test_issue_category_update(self):
+        self.response.json.return_value = responses['issue_category']['get']
+        category = self.redmine.issue_category.get(1)
+        category.name = 'Bar'
+        self.assertEqual(category.save(), True)
+
     def test_issue_relation_version(self):
         self.assertEqual(self.redmine.issue_relation.resource_class.redmine_version, '1.3')
 
