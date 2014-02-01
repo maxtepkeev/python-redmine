@@ -17,9 +17,9 @@ Changelog
   * WikiPage
   * Project
 
-- Added: Introduced ``pre_create()``, ``post_create()``, ``pre_update()``, ``post_update()``
-  resource object methods which can be used to execute tasks that should be done
-  before/after creating/updating the resource through ``save()`` method
+- Added: ``pre_create()``, ``post_create()``, ``pre_update()``, ``post_update()`` resource
+  object methods which can be used to execute tasks that should be done before/after
+  creating/updating the resource through ``save()`` method
 - Added: Allow to create resources in alternative way via ``new()`` method (see docs for
   details)
 - Added: Allow daterange TimeEntry resource filtering via ``from_date`` and ``to_date``
