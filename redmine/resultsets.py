@@ -1,5 +1,5 @@
 import itertools
-from redmine.exceptions import ResourceSetIndexError, ResourceSetFilterParamError
+from redmine.exceptions import ResourceSetIndexError, ResourceSetFilterParamError, ResultSetNotEvaluatedError
 
 
 class ResourceSet(object):
@@ -32,6 +32,13 @@ class ResourceSet(object):
                 resources.append(resource)
 
         return ResourceSet(self.manager, resources)
+
+    @property
+    def total_count(self):
+        """ Raises an exception if the count is not set (count is only set at set evaluation time """
+        if self.manager.total_count == -1:
+            raise ResultSetNotEvaluatedError()
+        return self.manager.total_count
 
     def __getitem__(self, item):
         """Sets limit and offset or returns a resource by requested index"""
