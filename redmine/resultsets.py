@@ -35,13 +35,10 @@ class ResourceSet(object):
 
     @property
     def total_count(self):
-        """ Returns the total number of resources in this set, as reported by the Redmine JSON
-        response. This number is set ONLY if the query has been evaluated, otherwise it will 
-        return -1 """
-        try:
-            return self.manager.total_count
-        else:
-            return -1
+        """ Raises an exception if the count is not set (count is only set at set evaluation time """
+        if self.manager.total_count == -1:
+            raise RedmineResultSetNotEvaluated()
+        return self.manager.total_count
 
     def __getitem__(self, item):
         """Sets limit and offset or returns a resource by requested index"""
