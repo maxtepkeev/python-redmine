@@ -110,8 +110,9 @@ class ResourceVersionMismatchError(VersionMismatchError):
     """Resource isn't supported on specified Redmine version"""
     def __init__(self):
         super(ResourceVersionMismatchError, self).__init__('Resource')
-        
-class ResultSetNotEvaluatedError(BaseRedmineError):
-    """ ResultSet hasn't been yet evaluated and cannot yield a total_count """
+
+
+class ResultSetTotalCountError(BaseRedmineError):
+    """ResultSet hasn't been yet evaluated and cannot yield a total_count"""
     def __init__(self):
-        super(ResultSetNotEvaluatedError, self).__init__("Can't get total_count before evaluation")
+        super(ResultSetTotalCountError, self).__init__('Total count is unknown before evaluation')

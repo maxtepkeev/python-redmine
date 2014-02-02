@@ -45,6 +45,8 @@ all
 
     Returns all role resources from the Redmine.
 
+    :param integer limit: (optional). How much resources to return.
+    :param integer offset: (optional). Starting from what resource to return the other resources.
     :return: ResourceSet object
 
 .. code-block:: python

@@ -133,7 +133,7 @@ Returns a ResourceSet object that contains Resource objects filtered by some con
 
 .. hint::
 
-    ResourceSet object provides 2 helper methods ``get`` and ``filter``:
+    ResourceSet object provides 2 helper methods ``get()`` and ``filter()``:
 
     * **get**. Returns a single resource from the ResourceSet by integer id.
 
@@ -146,6 +146,27 @@ Returns a ResourceSet object that contains Resource objects filtered by some con
       .. code-block:: python
 
             redmine.project.all().filter((30404, 30405, 30406, 30407))
+
+    ResourceSet object also provides some attributes:
+
+    * **limit**. What limit value was used to retrieve this ResourceSet.
+
+      .. code-block:: python
+
+            redmine.project.all().limit
+
+    * **offset**. What offset value was used to retrieve this ResourceSet.
+
+      .. code-block:: python
+
+            redmine.project.all().offset
+
+    * **total_count**. How much resources of current resource type there are available in
+      Redmine.
+
+      .. code-block:: python
+
+            redmine.project.all().total_count
 
 .. note::
 

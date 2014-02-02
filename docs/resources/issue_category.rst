@@ -95,6 +95,8 @@ filter
     :param project_id: (required). Get issue categories from the project with the
       given id, where id is either project id or project identifier.
     :type project_id: integer or string
+    :param integer limit: (optional). How much resources to return.
+    :param integer offset: (optional). Starting from what resource to return the other resources.
     :return: ResourceSet object
 
 .. code-block:: python

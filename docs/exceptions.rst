@@ -60,3 +60,6 @@ is the list of all exceptions that Python Redmine can throw:
 
 ``ResourceVersionMismatchError``
     Resource isn't supported on specified Redmine version
+
+``ResultSetTotalCountError``
+    ResultSet hasn't been yet evaluated and cannot yield a total_count

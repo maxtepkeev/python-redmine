@@ -8,6 +8,7 @@ Changelog
 
   * ConflictError
   * ReadonlyAttrError
+  * ResultSetTotalCountError
 
 - Added: Update functionality via ``update()`` and ``save()`` methods for resources (see
   docs for details):
@@ -18,6 +19,23 @@ Changelog
   * WikiPage
   * Project
 
+- Added: Limit/offset support via ``all()`` and ``filter()`` methods for resources that
+  doesn't support that feature via Redmine:
+
+  * IssueRelation
+  * Version
+  * WikiPage
+  * IssueStatus
+  * Tracker
+  * Enumeration
+  * IssueCategory
+  * Role
+  * Group
+  * CustomField
+
+- Added: ``total_count`` attribute to ResourceSet object which holds the total number
+  of resources for the current resource type available in Redmine (thanks to
+  `Andrei Avram <https://github.com/andreiavram>`_)
 - Added: An ability to return ``None`` instead of raising a ``ResourceAttrError`` for all
   or selected resource objects via ``raise_attr_exception`` kwarg on Redmine object (see
   docs for details or `Issue #6 <https://github.com/maxtepkeev/python-redmine/issues/6>`_

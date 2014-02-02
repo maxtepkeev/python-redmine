@@ -1,11 +1,16 @@
 import itertools
-from redmine.exceptions import ResourceSetIndexError, ResourceSetFilterParamError, ResultSetNotEvaluatedError
+from redmine.exceptions import (
+    ResourceSetIndexError,
+    ResourceSetFilterParamError,
+    ResultSetTotalCountError
+)
 
 
 class ResourceSet(object):
     """Represents a set of Redmine resources"""
     limit = 0
     offset = 0
+    _total_count = -1
 
     def __init__(self, manager, resources=None):
         """Accepts manager instance object, optionally can be prefilled with an iterable of resources"""
@@ -35,10 +40,14 @@ class ResourceSet(object):
 
     @property
     def total_count(self):
-        """ Raises an exception if the count is not set (count is only set at set evaluation time """
-        if self.manager.total_count == -1:
-            raise ResultSetNotEvaluatedError()
-        return self.manager.total_count
+        """Returns total count of available resources, this is known only after ResourceSet evaluation"""
+        if self._total_count == -1:
+            if self.resources is None:
+                raise ResultSetTotalCountError()
+            else:
+                self._total_count = len(self)
+
+        return self._total_count
 
     def __getitem__(self, item):
         """Sets limit and offset or returns a resource by requested index"""
@@ -58,7 +67,7 @@ class ResourceSet(object):
     def __iter__(self):
         """Returns requested resources in a lazy fashion"""
         if self.resources is None:
-            self.resources = self.manager.retrieve(
+            self.resources, self._total_count = self.manager.retrieve(
                 limit=self.manager.params.get('limit', self.limit),
                 offset=self.manager.params.get('offset', self.offset)
             )

@@ -24,22 +24,46 @@ class TestResultSet(unittest.TestCase):
             '<redmine.resultsets.ResourceSet object with Project resources>'
         )
 
+    def test_offset_limit_all(self):
+        self.response.json.return_value = dict(response, total_count=3, limit=0, offset=0)
+        projects = self.redmine.project.all()
+        self.assertEqual(projects.limit, 0)
+        self.assertEqual(projects.offset, 0)
+        self.assertEqual(projects[0].id, 1)
+        self.assertEqual(projects[1].id, 2)
+        self.assertEqual(projects[2].id, 3)
+
     def test_offset_limit(self):
-        self.response.json.return_value = {'projects': response['projects'][1:3]}
+        response_with_limit_offset = {'total_count': 2, 'limit': 3, 'offset': 1, 'projects': response['projects'][1:3]}
+        self.response.json.return_value = response_with_limit_offset
         projects = self.redmine.project.all()[1:3]
         self.assertEqual(projects.limit, 3)
         self.assertEqual(projects.offset, 1)
         self.assertEqual(projects[0].id, 2)
         self.assertEqual(projects[1].id, 3)
 
-    def test_limit_more_than_100(self):
-        self.response.json.return_value = response
-        projects = self.redmine.project.all()[:200]
-        self.assertEqual(projects.limit, 200)
-        self.assertEqual(projects.offset, 0)
-        self.assertEqual(projects[0].id, 1)
-        self.assertEqual(projects[1].id, 2)
-        self.assertEqual(projects[2].id, 3)
+    def test_offset_limit_mimic(self):
+        projects = self.redmine.project.all()[1:3]
+        self.assertEqual(projects.limit, 3)
+        self.assertEqual(projects.offset, 1)
+        self.assertEqual(projects[0].id, 2)
+        self.assertEqual(projects[1].id, 3)
+
+    def test_total_count(self):
+        self.response.json.return_value = dict(response, total_count=3, limit=0, offset=0)
+        projects = self.redmine.project.all()
+        len(projects)
+        self.assertEqual(projects.total_count, 3)
+
+    def test_total_count_mimic(self):
+        response_with_custom_fields = {'project': dict(response['projects'][0], custom_fields=[{'id': 1, 'value': 0}])}
+        self.response.json.return_value = response_with_custom_fields
+        project = self.redmine.project.get('foo')
+        self.assertEqual(project.custom_fields.total_count, 1)
+
+    def test_total_count_raise_exception_if_not_evaluated(self):
+        from redmine.exceptions import ResultSetTotalCountError
+        self.assertRaises(ResultSetTotalCountError, lambda: self.redmine.project.all().total_count)
 
     def test_resultset_is_empty(self):
         self.response.json.return_value = None

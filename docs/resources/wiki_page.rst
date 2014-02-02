@@ -105,6 +105,8 @@ filter
 
     :param project_id: (required). Id or identifier of wiki page's project.
     :type project_id: integer or string
+    :param integer limit: (optional). How much resources to return.
+    :param integer offset: (optional). Starting from what resource to return the other resources.
     :return: ResourceSet object
 
 .. code-block:: python

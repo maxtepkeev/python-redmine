@@ -33,57 +33,57 @@ class ResourceManager(object):
 
         self.redmine = redmine
         self.resource_class = resource_class
-        self.total_count = -1
 
     def retrieve(self, **params):
         """A proxy for Redmine object request which does some extra work for resource retrieval"""
         self.params.update(**params)
 
-        # Redmine allows us to only return 100 resources per request, so if
-        # we want to get all or > 100 resources we need to do some extra work
-        if 'limit' in self.params and not 0 < self.params['limit'] <= 100:
-            results = []
-            self.params['offset'] = self.params.get('offset', 0)
+        results = []
+        total_count = 0
+        limit = self.params.get('limit', 0)
+        offset = self.params.get('offset', 0)
 
-            # we want to get all resources
-            if self.params['limit'] == 0:
-                self.params['limit'] = 100
+        if limit == 0:
+            limit = 100
 
-                while True:
-                    response = self.redmine.request('get', self.url, params=self.params)
-                    
-                    if response is None:
+        while True:
+            response = self.redmine.request('get', self.url, params=dict(self.params, limit=limit, offset=offset))
+
+            if response is None:
+                break
+
+            # A single resource was requested via get()
+            if isinstance(response[self.container], dict):
+                results = response[self.container]
+                total_count = 1
+                break
+
+            # Resource supports limit/offset on Redmine level
+            if all(param in response for param in ('total_count', 'limit', 'offset')):
+                total_count = response['total_count']
+                results.extend(response[self.container])
+
+                # We want to get all resources
+                if self.params.get('limit', 0) == 0:
+                    offset += limit
+
+                    if total_count <= offset:
                         break
-                    
-                    if self.total_count == -1:
-                        self.total_count = response.get('total_count', 0)
+                # We want to get only some resources
+                else:
+                    limit -= 100
+                    offset += 100
 
-                    results.extend(response[self.container])
-                    self.params['offset'] += self.params['limit']
-
-                    if response.get('total_count', 0) <= self.params['offset']:
+                    if limit < 0:
                         break
-            # we want to get > 100 resources
+            # We have to mimic limit/offset if a resource
+            # doesn't support this feature on Redmine level
             else:
-                while self.params['limit'] > 0:
-                    response = self.redmine.request('get', self.url, params=self.params)
-                    
-                    if response is None:
-                        break
-                    
-                    if self.total_count == -1:
-                        self.total_count = response.get('total_count', 0)
+                total_count = len(response[self.container])
+                results = response[self.container][offset:limit + offset]
+                break
 
-                    results.extend(response[self.container])
-                    self.params['limit'] -= 100
-                    self.params['offset'] += 100
-
-            return results
-
-        data = self.redmine.request('get', self.url, params=self.params)
-        if self.total_count == -1:
-            self.total_count = data.get('total_count', 0)
-        return data[self.container]
+        return results, total_count
 
     def to_resource(self, resource):
         """Converts a single resource dict from Redmine result set to resource object"""
@@ -109,7 +109,7 @@ class ResourceManager(object):
 
         self.params = self.resource_class.translate_params(params)
         self.container = self.resource_class.container_one
-        return self.resource_class(self, self.retrieve())
+        return self.resource_class(self, self.retrieve()[0])
 
     def all(self, **params):
         """Returns a ResourceSet object with all Resource objects"""
