@@ -33,7 +33,7 @@ class ResourceManager(object):
 
         self.redmine = redmine
         self.resource_class = resource_class
-        self.total_count = 0
+        self.total_count = -1
 
     def retrieve(self, **params):
         """A proxy for Redmine object request which does some extra work for resource retrieval"""
@@ -55,7 +55,8 @@ class ResourceManager(object):
                     if response is None:
                         break
                     
-                    self.total_count = response.get('total_count', 0)
+                    if self.total_count == -1:
+                        self.total_count = response.get('total_count', 0)
 
                     results.extend(response[self.container])
                     self.params['offset'] += self.params['limit']
@@ -70,7 +71,8 @@ class ResourceManager(object):
                     if response is None:
                         break
                     
-                    self.total_count = response.get('total_count', 0)
+                    if self.total_count == -1:
+                        self.total_count = response.get('total_count', 0)
 
                     results.extend(response[self.container])
                     self.params['limit'] -= 100
@@ -79,7 +81,8 @@ class ResourceManager(object):
             return results
 
         data = self.redmine.request('get', self.url, params=self.params)
-        self.total_count = data.get('total_count', 0)
+        if self.total_count == -1:
+            self.total_count = data.get('total_count', 0)
         return data[self.container]
 
     def to_resource(self, resource):
