@@ -89,6 +89,21 @@ get
     >>> wiki_page
     <redmine.resources.WikiPage "Photos">
 
+.. hint::
+
+    WikiPage resource object provides you with on demand includes. On demand includes are the
+    other resource objects wrapped in a ResourceSet which are associated with a WikiPage
+    resource object. Keep in mind that on demand includes are retrieved in a separate request,
+    that means that if the speed is important it is recommended to use ``get`` method with a
+    ``include`` keyword argument. The on demand includes provided by the WikiPage resource object
+    are the same as in the ``get`` method above:
+
+    .. code-block:: python
+
+        >>> wiki_page = redmine.wiki_page.get(524)
+        >>> wiki_page.attachments
+        <redmine.resultsets.ResourceSet object with Attachment resources>
+
 all
 +++
 

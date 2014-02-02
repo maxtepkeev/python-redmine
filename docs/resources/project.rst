@@ -94,6 +94,21 @@ get
 
 .. hint::
 
+    Project resource object provides you with on demand includes. On demand includes are the
+    other resource objects wrapped in a ResourceSet which are associated with a Project
+    resource object. Keep in mind that on demand includes are retrieved in a separate request,
+    that means that if the speed is important it is recommended to use ``get`` method with a
+    ``include`` keyword argument. The on demand includes provided by the Project resource object
+    are the same as in the ``get`` method above:
+
+    .. code-block:: python
+
+        >>> project = redmine.project.get('vacation')
+        >>> project.trackers
+        <redmine.resultsets.ResourceSet object with Tracker resources>
+
+.. hint::
+
     Project resource object provides you with some relations. Relations are the other
     resource objects wrapped in a ResourceSet which are somehow related to a Project
     resource object. The relations provided by the Project resource object are:

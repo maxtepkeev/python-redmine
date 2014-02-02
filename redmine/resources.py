@@ -68,16 +68,18 @@ class _Resource(object):
     query_delete = None
 
     _changes = {}
-    _relations = {}
+    _includes = ()
+    _relations = ()
     _readonly = ('id', 'created_on', 'updated_on', 'author', 'project')
     __length_hint__ = None  # fixes Python 2.6 list() call on resource object
 
     def __init__(self, manager, attributes):
         """Accepts manager instance object and resource attributes dict"""
         self.manager = manager
-        self.attributes = self._relations.copy()
+        self.attributes = dict((include, None) for include in self._includes)
+        self.attributes.update(dict((relation, None) for relation in self._relations))
         self.attributes.update(attributes)
-        self._readonly += tuple(self._relations.keys())
+        self._readonly += self._relations + self._includes
 
     def __getitem__(self, item):
         """Provides a dictionary like access to resource attributes"""
@@ -100,12 +102,17 @@ class _Resource(object):
                 manager = ResourceManager(self.manager.redmine, _RESOURCE_SET_MAP[item])
                 return manager.to_resource_set(self.attributes[item])
 
-            # If item should be requested from Redmine, let's do it
-            elif item in _RESOURCE_RELATIONS_MAP and self.attributes[item] is None:
+            # If item is a relation and should be requested from Redmine, let's do it
+            elif item in self._relations and self.attributes[item] is None:
                 filters = {'{0}_id'.format(self.__class__.__name__.lower()): self.internal_id}
                 manager = ResourceManager(self.manager.redmine, _RESOURCE_RELATIONS_MAP[item])
                 self.attributes[item] = manager.filter(**filters)
                 return self.attributes[item]
+
+            # If item is an include and should be requested from Redmine, let's do it
+            elif item in self._includes and self.attributes[item] is None:
+                self.attributes[item] = self.refresh(include=item).attributes[item]
+                return getattr(self, item)
 
         try:
             # If the requested item is a date/datetime string
@@ -160,7 +167,7 @@ class _Resource(object):
 
     def save(self):
         """Creates or updates a resource"""
-        if any(item in self.attributes and item not in self._relations for item in self._readonly):
+        if any(item in self.attributes and item not in (self._relations + self._includes) for item in self._readonly):
             self.pre_update()
             self.manager.update(self.internal_id, **self._changes)
             self.attributes['updated_on'] = datetime.utcnow().strftime(self.manager.redmine.datetime_format)
@@ -227,14 +234,8 @@ class Project(_Resource):
     query_update = '/projects/{0}.json'
     query_delete = '/projects/{0}.json'
 
-    _relations = {
-        'wiki_pages': None,
-        'memberships': None,
-        'issue_categories': None,
-        'versions': None,
-        'news': None,
-        'issues': None,
-    }
+    _includes = ('trackers', 'issue_categories')
+    _relations = ('wiki_pages', 'memberships', 'issue_categories', 'versions', 'news', 'issues')
     _readonly = _Resource._readonly + ('identifier',)
 
 
@@ -250,10 +251,8 @@ class Issue(_Resource):
     query_create = '/projects/{project_id}/issues.json'
     query_delete = '/issues/{0}.json'
 
-    _relations = {
-        'relations': None,
-        'time_entries': None,
-    }
+    _includes = ('children', 'attachments', 'relations', 'changesets', 'journals', 'watchers')
+    _relations = ('relations', 'time_entries')
 
     def __str__(self):
         try:
@@ -359,10 +358,11 @@ class WikiPage(_Resource):
     query_update = '/projects/{project_id}/wiki/{0}.json'
     query_delete = '/projects/{project_id}/wiki/{0}.json'
 
+    _includes = ('attachments',)
     _readonly = _Resource._readonly + ('version',)
 
-    def refresh(self):
-        return super(WikiPage, self).refresh(project_id=self.manager.params.get('project_id', 0))
+    def refresh(self, **params):
+        return super(WikiPage, self).refresh(**dict(params, project_id=self.manager.params.get('project_id', 0)))
 
     def post_update(self):
         self.attributes['version'] = self.attributes.get('version', 0) + 1
@@ -487,6 +487,8 @@ class User(_Resource):
     query_create = '/users.json'
     query_delete = '/users/{0}.json'
 
+    _includes = ('memberships', 'groups')
+
     def __str__(self):
         try:
             return super(User, self).__str__()
@@ -515,6 +517,8 @@ class Group(_Resource):
     query_one = '/groups/{0}.json'
     query_create = '/groups.json'
     query_delete = '/groups/{0}.json'
+
+    _includes = ('memberships', 'users')
 
 
 class Role(_Resource):

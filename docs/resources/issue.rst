@@ -119,6 +119,21 @@ get
 
 .. hint::
 
+    Issue resource object provides you with on demand includes. On demand includes are the
+    other resource objects wrapped in a ResourceSet which are associated with an Issue
+    resource object. Keep in mind that on demand includes are retrieved in a separate request,
+    that means that if the speed is important it is recommended to use ``get`` method with a
+    ``include`` keyword argument. The on demand includes provided by the Issue resource object
+    are the same as in the ``get`` method above:
+
+    .. code-block:: python
+
+        >>> issue = redmine.issue.get(34441)
+        >>> issue.journals
+        <redmine.resultsets.ResourceSet object with IssueJournal resources>
+
+.. hint::
+
     Issue resource object provides you with some relations. Relations are the other
     resource objects wrapped in a ResourceSet which are somehow related to an Issue
     resource object. The relations provided by the Issue resource object are:

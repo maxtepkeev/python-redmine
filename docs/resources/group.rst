@@ -83,6 +83,21 @@ get
     >>> group
     <redmine.resources.Group #524 "DESIGN">
 
+.. hint::
+
+    Group resource object provides you with on demand includes. On demand includes are the
+    other resource objects wrapped in a ResourceSet which are associated with a Group
+    resource object. Keep in mind that on demand includes are retrieved in a separate request,
+    that means that if the speed is important it is recommended to use ``get`` method with a
+    ``include`` keyword argument. The on demand includes provided by the Group resource object
+    are the same as in the ``get`` method above:
+
+    .. code-block:: python
+
+        >>> group = redmine.group.get(524)
+        >>> group.users
+        <redmine.resultsets.ResourceSet object with User resources>
+
 all
 +++
 

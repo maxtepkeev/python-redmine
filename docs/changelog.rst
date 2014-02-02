@@ -33,6 +33,9 @@ Changelog
   * Group
   * CustomField
 
+- Added: On demand includes, e.g. in addition to ``redmine.group.get(1, include='users')``
+  users for a group can also be retrieved on demand via ``group.users`` if include wasn't set
+  (see each resource docs for details)
 - Added: ``total_count`` attribute to ResourceSet object which holds the total number
   of resources for the current resource type available in Redmine (thanks to
   `Andrei Avram <https://github.com/andreiavram>`_)

@@ -241,6 +241,17 @@ class TestResources(unittest.TestCase):
         self.assertIsInstance(project.news, ResourceSet)
         self.assertIsInstance(project.issues, ResourceSet)
 
+    def test_project_includes(self):
+        response_includes = responses['project']['get']
+        self.response.json.return_value = response_includes
+        project = self.redmine.project.get(1)
+        response_includes['project'].update(responses['issue_category']['filter'])
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(project.issue_categories, ResourceSet)
+        response_includes['project'].update(responses['tracker']['all'])
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(project.trackers, ResourceSet)
+
     def test_issue_version(self):
         self.assertEqual(self.redmine.issue.resource_class.redmine_version, '1.0')
 
@@ -281,6 +292,26 @@ class TestResources(unittest.TestCase):
         issue = self.redmine.issue.get(1)
         self.assertIsInstance(issue.relations, ResourceSet)
         self.assertIsInstance(issue.time_entries, ResourceSet)
+
+    def test_issue_includes(self):
+        response_includes = responses['issue']['get']
+        self.response.json.return_value = response_includes
+        issue = self.redmine.issue.get(1)
+        response_includes['issue']['children'] = responses['issue']['all']['issues']
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(issue.children, ResourceSet)
+        response_includes['issue']['attachments'] = responses['attachment']['get']
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(issue.attachments, ResourceSet)
+        response_includes['issue']['relations'] = responses['issue_relation']['get']['relation']
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(issue.relations, ResourceSet)
+        response_includes['issue']['journals'] = [{'id': 1}, {'id': 2}]
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(issue.journals, ResourceSet)
+        response_includes['issue']['watchers'] = responses['user']['all']['users']
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(issue.watchers, ResourceSet)
 
     def test_issue_custom_repr(self):
         self.response.json.return_value = responses['issue']['get']
@@ -440,6 +471,14 @@ class TestResources(unittest.TestCase):
     def test_wiki_page_custom_repr(self):
         self.response.json.return_value = responses['wiki_page']['get']
         self.assertEqual(repr(self.redmine.wiki_page.get('Foo', project_id=1)), '<redmine.resources.WikiPage "Foo">')
+
+    def test_wiki_page_includes(self):
+        response_includes = responses['wiki_page']['get']
+        self.response.json.return_value = response_includes
+        wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
+        response_includes['wiki_page']['attachments'] = responses['attachment']['get']['attachment']
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(wiki_page.attachments, ResourceSet)
 
     def test_project_membership_version(self):
         self.assertEqual(self.redmine.project_membership.resource_class.redmine_version, '1.4')
@@ -629,6 +668,17 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = responses['user']['get']
         self.assertEqual(repr(self.redmine.user.get(1)), '<redmine.resources.User #1 "John Smith">')
 
+    def test_user_includes(self):
+        response_includes = responses['user']['get']
+        self.response.json.return_value = response_includes
+        user = self.redmine.user.get(1)
+        response_includes['user']['memberships'] = responses['project_membership']['filter']['memberships']
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(user.memberships, ResourceSet)
+        response_includes['user']['groups'] = responses['group']['all']['groups']
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(user.groups, ResourceSet)
+
     def test_group_version(self):
         self.assertEqual(self.redmine.group.resource_class.redmine_version, '2.1')
 
@@ -654,6 +704,17 @@ class TestResources(unittest.TestCase):
 
     def test_group_delete(self):
         self.assertEqual(self.redmine.group.delete(1), True)
+
+    def test_group_includes(self):
+        response_includes = responses['group']['get']
+        self.response.json.return_value = response_includes
+        group = self.redmine.group.get(1)
+        response_includes['group']['memberships'] = responses['project_membership']['filter']['memberships']
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(group.memberships, ResourceSet)
+        response_includes['group']['users'] = responses['user']['all']['users']
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(group.users, ResourceSet)
 
     def test_role_version(self):
         self.assertEqual(self.redmine.role.resource_class.redmine_version, '1.4')
