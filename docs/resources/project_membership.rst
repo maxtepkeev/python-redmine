@@ -118,7 +118,43 @@ filter
 Update methods
 --------------
 
-Not yet supported by Python Redmine
+update
+++++++
+
+.. py:method:: update(resource_id, **fields)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Updates values of given fields of a project membership resource and saves them to the Redmine.
+
+    :param integer resource_id: (required). Project membership id.
+    :param role_ids: (required). Role ids to add to the user in this project.
+    :type role_ids: list or tuple
+    :return: True
+
+.. code-block:: python
+
+    >>> redmine.project_membership.update(1, role_ids=[1, 2])
+    True
+
+save
+++++
+
+.. py:method:: save()
+    :module: redmine.resources.ProjectMembership
+    :noindex:
+
+    Saves the current state of a project membership resource to the Redmine. Fields that can
+    be changed are the same as for ``update`` method above.
+
+    :return: True
+
+.. code-block:: python
+
+    >>> membership = redmine.project_membership.get(1)
+    >>> membership.role_ids = [1, 2]
+    >>> membership.save()
+    True
 
 Delete methods
 --------------

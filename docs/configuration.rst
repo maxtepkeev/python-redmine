@@ -94,6 +94,25 @@ object what datetime formatting do you use, e.g. if the string returned is ``31.
 
     redmine = Redmine('http://demo.redmine.org', date_format='%d.%m.%Y', datetime_format='%d.%m.%YT%H:%M:%SZ')
 
+Exception Control
++++++++++++++++++
+
+If a requested attribute on a resource object doesn't exist, Python Redmine will raise an
+exception by default. Sometimes this may not be the desired behaviour. Python Redmine provides
+a way to control this type of exception.
+
+You can completely turn it OFF for all resources:
+
+.. code-block:: python
+
+    redmine = Redmine('https://redmine.url', raise_attr_exception=False)
+
+Or you can turn it ON only for some resources via a list or tuple of resource class names:
+
+.. code-block:: python
+
+    redmine = Redmine('https://redmine.url', raise_attr_exception=('Project', 'Issue', 'WikiPage'))
+
 Connection Options
 ++++++++++++++++++
 

@@ -141,7 +141,70 @@ filter
 Update methods
 --------------
 
-Not yet supported by Python Redmine
+update
+++++++
+
+.. py:method:: update(resource_id, **fields)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Updates values of given fields of a version resource and saves them to the Redmine.
+
+    :param integer resource_id: (required). Version id.
+    :param string name: (optional). Version name.
+    :param string status:
+      .. raw:: html
+
+          (optional). Status of the version, available values are:
+
+      - open (default)
+      - locked
+      - closed
+
+    :param string sharing:
+      .. raw:: html
+
+          (optional). Version sharing, available values are:
+
+      - none (default)
+      - descendants
+      - hierarchy
+      - tree
+      - system
+
+    :param string due_date: (optional). Expiration date.
+    :param string description: (optional). Version description.
+    :param string wiki_page_title: (optional). Version wiki page title.
+    :return: True
+
+.. code-block:: python
+
+    >>> redmine.version.update(1, name='Vacation', status='open', sharing='none', due_date='2014-01-30', description='my vacation', wiki_page_title='Vacation')
+    True
+
+save
+++++
+
+.. py:method:: save()
+    :module: redmine.resources.Version
+    :noindex:
+
+    Saves the current state of a version resource to the Redmine. Fields that can
+    be changed are the same as for ``update`` method above.
+
+    :return: True
+
+.. code-block:: python
+
+    >>> version = redmine.version.get(1)
+    >>> version.name = 'Vacation'
+    >>> version.status = 'open'
+    >>> version.sharing = 'none'
+    >>> version.due_date = '2014-01-30'
+    >>> version.description = 'my vacation'
+    >>> version.wiki_page_title = 'Vacation'
+    >>> version.save()
+    True
 
 Delete methods
 --------------

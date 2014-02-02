@@ -1,7 +1,7 @@
 from datetime import datetime
 from redmine.utilities import to_string
 from redmine.managers import ResourceManager
-from redmine.exceptions import BaseRedmineError, ResourceAttrError, ReadonlyAttrError
+from redmine.exceptions import ResourceAttrError, ReadonlyAttrError
 
 # Resources which when accessed from some other
 # resource should become a ResourceSet object
@@ -69,7 +69,7 @@ class _Resource(object):
 
     _changes = {}
     _relations = {}
-    _readonly = ('id', 'created_on', 'updated_on', 'author')
+    _readonly = ('id', 'created_on', 'updated_on', 'author', 'project')
     __length_hint__ = None  # fixes Python 2.6 list() call on resource object
 
     def __init__(self, manager, attributes):
@@ -77,6 +77,7 @@ class _Resource(object):
         self.manager = manager
         self.attributes = self._relations.copy()
         self.attributes.update(attributes)
+        self._readonly += tuple(self._relations.keys())
 
     def __getitem__(self, item):
         """Provides a dictionary like access to resource attributes"""
@@ -103,7 +104,8 @@ class _Resource(object):
             elif item in _RESOURCE_RELATIONS_MAP and self.attributes[item] is None:
                 filters = {'{0}_id'.format(self.__class__.__name__.lower()): self.internal_id}
                 manager = ResourceManager(self.manager.redmine, _RESOURCE_RELATIONS_MAP[item])
-                return manager.filter(**filters)
+                self.attributes[item] = manager.filter(**filters)
+                return self.attributes[item]
 
         try:
             # If the requested item is a date/datetime string
@@ -117,7 +119,13 @@ class _Resource(object):
         except ValueError:
             return self.attributes[item]
         except KeyError:
-            # raise ResourceAttrError()
+            raise_attr_exception = self.manager.redmine.raise_attr_exception
+
+            if isinstance(raise_attr_exception, bool) and raise_attr_exception:
+                raise ResourceAttrError()
+            elif isinstance(raise_attr_exception, (list, tuple)) and self.__class__.__name__ in raise_attr_exception:
+                raise ResourceAttrError()
+
             return None
 
     def __setattr__(self, item, value):
@@ -134,14 +142,34 @@ class _Resource(object):
         """Reloads resource data from Redmine"""
         return self.manager.get(self.internal_id, **params)
 
+    def pre_create(self):
+        """Tasks that should be done before creating the resource"""
+        pass
+
+    def post_create(self):
+        """Tasks that should be done after creating the resource"""
+        pass
+
+    def pre_update(self):
+        """Tasks that should be done before updating the resource"""
+        pass
+
+    def post_update(self):
+        """Tasks that should be done after updating the resource"""
+        pass
+
     def save(self):
         """Creates or updates a resource"""
-        if any(item in self.attributes for item in self._readonly):
+        if any(item in self.attributes and item not in self._relations for item in self._readonly):
+            self.pre_update()
             self.manager.update(self.internal_id, **self._changes)
             self.attributes['updated_on'] = datetime.utcnow().strftime(self.manager.redmine.datetime_format)
+            self.post_update()
         else:
+            self.pre_create()
             for item, value in self.manager.create(**self._changes):
                 self.attributes[item] = value
+            self.post_create()
 
         self._changes = {}
         return True
@@ -331,17 +359,13 @@ class WikiPage(_Resource):
     query_update = '/projects/{project_id}/wiki/{0}.json'
     query_delete = '/projects/{project_id}/wiki/{0}.json'
 
+    _readonly = _Resource._readonly + ('version',)
+
     def refresh(self):
         return super(WikiPage, self).refresh(project_id=self.manager.params.get('project_id', 0))
 
-    def save(self):
+    def post_update(self):
         self.attributes['version'] = self.attributes.get('version', 0) + 1
-
-        try:
-            return super(WikiPage, self).save()
-        except BaseRedmineError as exception:
-            self.attributes['version'] -= 1
-            raise exception
 
     @property
     def internal_id(self):
@@ -365,11 +389,21 @@ class ProjectMembership(_Resource):
     redmine_version = '1.4'
     container_filter = 'memberships'
     container_one = 'membership'
+    container_update = 'membership'
     container_create = 'membership'
     query_filter = '/projects/{project_id}/memberships.json'
     query_one = '/memberships/{0}.json'
     query_create = '/projects/{project_id}/memberships.json'
+    query_update = '/memberships/{0}.json'
     query_delete = '/memberships/{0}.json'
+
+    _readonly = _Resource._readonly + ('user', 'roles')
+
+    def __setattr__(self, item, value):
+        super(ProjectMembership, self).__setattr__(item, value)
+
+        if item == 'role_ids':
+            self.attributes['roles'] = [{'id': role_id} for role_id in value]
 
     def __str__(self):
         return str(self.id)
@@ -386,10 +420,12 @@ class IssueCategory(_Resource):
     redmine_version = '1.3'
     container_filter = 'issue_categories'
     container_one = 'issue_category'
+    container_update = 'issue_category'
     container_create = 'issue_category'
     query_filter = '/projects/{project_id}/issue_categories.json'
     query_one = '/issue_categories/{0}.json'
     query_create = '/projects/{project_id}/issue_categories.json'
+    query_update = '/issue_categories/{0}.json'
     query_delete = '/issue_categories/{0}.json'
 
 
@@ -413,23 +449,31 @@ class IssueRelation(_Resource):
             self.id
         )
 
+
 class Version(_Resource):
     redmine_version = '1.3'
     container_filter = 'versions'
     container_one = 'version'
     container_create = 'version'
+    container_update = 'version'
     query_filter = '/projects/{project_id}/versions.json'
     query_one = '/versions/{0}.json'
     query_create = '/projects/{project_id}/versions.json'
+    query_update = '/versions/{0}.json'
     query_delete = '/versions/{0}.json'
 
     def __getattr__(self, item):
-        """ Manual override for string only 'status' field in Redmine Version object
-        """
+        # We have to return status attribute as it is, otherwise it
+        # will be automatically converted to IssueStatus resource
+        # by the parent _Resource object which is not what we want
+        if item == 'status':
+            try:
+                return self.attributes[item]
+            except KeyError:
+                raise ResourceAttrError()
 
-        if item == "status":
-            return self.attributes[item]
         return super(Version, self).__getattr__(item)
+
 
 class User(_Resource):
     redmine_version = '1.1'

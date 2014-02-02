@@ -126,6 +126,16 @@ class TestResources(unittest.TestCase):
             project = self.redmine.project.new()
             project.id = 1
 
+    def test_control_raising_of_resource_attr_exception(self):
+        from redmine.exceptions import ResourceAttrError
+        self.response.json.return_value = responses['project']['get']
+        self.redmine.raise_attr_exception = False
+        self.assertEqual(self.redmine.project.get(1).foo, None)
+        self.redmine.raise_attr_exception = ('Project',)
+        self.assertRaises(ResourceAttrError, lambda: self.redmine.project.get(1).foo)
+        self.redmine.raise_attr_exception = True
+        self.assertRaises(ResourceAttrError, lambda: self.redmine.project.get(1).foo)
+
     def test_saving_new_resource_creates_it(self):
         self.response.status_code = 201
         self.response.json.return_value = responses['project']['get']
@@ -381,7 +391,7 @@ class TestResources(unittest.TestCase):
 
     def test_wiki_page_get(self):
         self.response.json.return_value = responses['wiki_page']['get']
-        wiki_page = self.redmine.wiki_page.get('title', project_id=1)
+        wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
         self.assertEqual(wiki_page.title, 'Foo')
 
     def test_wiki_page_filter(self):
@@ -399,17 +409,12 @@ class TestResources(unittest.TestCase):
     def test_wiki_page_delete(self):
         self.assertEqual(self.redmine.wiki_page.delete('Foo', project_id=1), True)
 
-    def test_wiki_page_saving_increments_version(self):
-        from redmine.exceptions import BaseRedmineError
-        self.response.status_code = 201
+    def test_wiki_page_update(self):
         self.response.json.return_value = responses['wiki_page']['get']
-        wiki_page = self.redmine.wiki_page.new()
-        wiki_page.title = 'Foo'
-        self.assertRaises(BaseRedmineError, lambda: wiki_page.save())
-        self.assertEqual(wiki_page.version, 0)
-        wiki_page.project_id = 1
+        wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
+        wiki_page.text = 'Foo'
         self.assertEqual(wiki_page.save(), True)
-        self.assertEqual(wiki_page.version, 1)
+        self.assertEqual(wiki_page.version, 2)
 
     def test_wiki_page_refresh_by_title(self):
         self.response.json.return_value = responses['wiki_page']['get']
@@ -459,6 +464,14 @@ class TestResources(unittest.TestCase):
     def test_project_membership_delete(self):
         self.assertEqual(self.redmine.project_membership.delete(1), True)
 
+    def test_project_membership_update(self):
+        self.response.json.return_value = responses['project_membership']['get']
+        membership = self.redmine.project_membership.get(1)
+        membership.role_ids = [1, 2]
+        self.assertEqual(membership.save(), True)
+        self.assertEqual(membership.roles[0].id, 1)
+        self.assertEqual(membership.roles[1].id, 2)
+
     def test_project_membership_custom_str(self):
         self.response.json.return_value = responses['project_membership']['get']
         self.assertEqual(str(self.redmine.project_membership.get(1)), '1')
@@ -492,6 +505,12 @@ class TestResources(unittest.TestCase):
 
     def test_issue_category_delete(self):
         self.assertEqual(self.redmine.issue_category.delete(1), True)
+
+    def test_issue_category_update(self):
+        self.response.json.return_value = responses['issue_category']['get']
+        category = self.redmine.issue_category.get(1)
+        category.name = 'Bar'
+        self.assertEqual(category.save(), True)
 
     def test_issue_relation_version(self):
         self.assertEqual(self.redmine.issue_relation.resource_class.redmine_version, '1.3')
@@ -549,6 +568,23 @@ class TestResources(unittest.TestCase):
 
     def test_version_delete(self):
         self.assertEqual(self.redmine.version.delete(1), True)
+
+    def test_version_update(self):
+        self.response.json.return_value = responses['version']['get']
+        version = self.redmine.version.get(1)
+        version.name = 'Bar'
+        self.assertEqual(version.save(), True)
+
+    def test_version_returns_status_without_conversion(self):
+        self.response.json.return_value = {'version': {'id': 1, 'name': 'Foo', 'status': 'foo'}}
+        version = self.redmine.version.get(1)
+        self.assertEqual(version.status, 'foo')
+
+    def test_version_raises_resource_attr_error_if_attr_not_found(self):
+        from redmine.exceptions import ResourceAttrError
+        self.response.json.return_value = responses['version']['get']
+        version = self.redmine.version.get(1)
+        self.assertRaises(ResourceAttrError, lambda: version.status)
 
     def test_user_version(self):
         self.assertEqual(self.redmine.user.resource_class.redmine_version, '1.1')

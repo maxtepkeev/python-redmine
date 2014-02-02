@@ -16,6 +16,7 @@ class TestRedmine(unittest.TestCase):
         self.assertEqual(self.redmine.impersonate, None)
         self.assertEqual(self.redmine.date_format, '%Y-%m-%d')
         self.assertEqual(self.redmine.datetime_format, '%Y-%m-%dT%H:%M:%SZ')
+        self.assertEqual(self.redmine.raise_attr_exception, True)
 
     def test_set_attributes_through_kwargs(self):
         self.redmine = Redmine(
@@ -28,6 +29,7 @@ class TestRedmine(unittest.TestCase):
             date_format='format',
             datetime_format='format',
             requests={'foo': 'bar'},
+            raise_attr_exception=False,
         )
         self.assertEqual(self.redmine.url, self.url)
         self.assertEqual(self.redmine.key, '123')
@@ -38,6 +40,7 @@ class TestRedmine(unittest.TestCase):
         self.assertEqual(self.redmine.date_format, 'format')
         self.assertEqual(self.redmine.datetime_format, 'format')
         self.assertEqual(self.redmine.requests['foo'], 'bar')
+        self.assertEqual(self.redmine.raise_attr_exception, False)
 
 
 class TestRedmineRequest(unittest.TestCase):
