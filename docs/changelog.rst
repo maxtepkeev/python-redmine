@@ -41,7 +41,7 @@ Changelog
   `Andrei Avram <https://github.com/andreiavram>`_)
 - Added: An ability to return ``None`` instead of raising a ``ResourceAttrError`` for all
   or selected resource objects via ``raise_attr_exception`` kwarg on Redmine object (see
-  docs for details or `Issue #6 <https://github.com/maxtepkeev/python-redmine/issues/6>`_
+  docs for details or `Issue #6 <https://github.com/maxtepkeev/python-redmine/issues/6>`_)
 - Added: ``pre_create()``, ``post_create()``, ``pre_update()``, ``post_update()`` resource
   object methods which can be used to execute tasks that should be done before/after
   creating/updating the resource through ``save()`` method
