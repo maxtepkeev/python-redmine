@@ -15,6 +15,7 @@ Changelog
 
   * IssueCategory
   * Version
+  * TimeEntry
   * ProjectMembership
   * WikiPage
   * Project

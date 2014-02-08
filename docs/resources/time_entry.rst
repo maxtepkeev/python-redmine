@@ -141,7 +141,49 @@ filter
 Update methods
 --------------
 
-Not yet supported by Python Redmine
+update
+++++++
+
+.. py:method:: update(resource_id, **fields)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Updates values of given fields of a time entry resource and saves them to the Redmine.
+
+    :param integer issue_id or project_id: (optional). The issue id or project id to log time on.
+    :param integer hours: (optional). The number of spent hours.
+    :param string spent_on: (optional). The date the time was spent.
+    :param integer activity_id: (optional). The id of the time activity.
+    :param string comments: (optional). Short description for the entry (255 characters max).
+    :return: True
+
+.. code-block:: python
+
+    >>> redmine.time_entry.update(1, issue_id=123, spent_on='2014-01-14', hours=3, activity_id=10, comments='hello')
+    True
+
+save
+++++
+
+.. py:method:: save()
+    :module: redmine.resources.TimeEntry
+    :noindex:
+
+    Saves the current state of a time entry resource to the Redmine. Fields that
+    can be changed are the same as for ``update`` method above.
+
+    :return: True
+
+.. code-block:: python
+
+    >>> time_entry = redmine.time_entry.get(1)
+    >>> time_entry.issue_id = 123
+    >>> time_entry.spent_on = '2014-01-14'
+    >>> time_entry.hours = 3
+    >>> time_entry.activity_id = 10
+    >>> time_entry.comments = 'hello'
+    >>> time_entry.save()
+    True
 
 Delete methods
 --------------

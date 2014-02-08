@@ -382,6 +382,15 @@ class TestResources(unittest.TestCase):
     def test_time_entry_delete(self):
         self.assertEqual(self.redmine.time_entry.delete(1), True)
 
+    def test_time_entry_update(self):
+        response = {'time_entry': {'hours': 2, 'id': 1, 'issue': {'id': 1}, 'activity': {'id': 1}}}
+        self.response.json.return_value = response
+        time_entry = self.redmine.time_entry.get(1)
+        time_entry.hours = 3
+        time_entry.issue_id = 2
+        time_entry.activity_id = 2
+        self.assertEqual(time_entry.save(), True)
+
     def test_time_entry_translate_params(self):
         manager = self.redmine.time_entry
         manager.filter(from_date='2013-12-30', to_date='2013-12-31')

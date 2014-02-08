@@ -71,7 +71,7 @@ class _Resource(object):
     _changes = {}
     _includes = ()
     _relations = ()
-    _readonly = ('id', 'created_on', 'updated_on', 'author', 'project')
+    _readonly = ('id', 'created_on', 'updated_on', 'author', 'user', 'project', 'issue')
     __length_hint__ = None  # fixes Python 2.6 list() call on resource object
 
     def __init__(self, manager, attributes):
@@ -292,10 +292,12 @@ class TimeEntry(_Resource):
     container_one = 'time_entry'
     container_filter = 'time_entries'
     container_create = 'time_entry'
+    container_update = 'time_entry'
     query_all = '/time_entries.json'
     query_one = '/time_entries/{0}.json'
     query_filter = '/time_entries.json'
     query_create = '/time_entries.json'
+    query_update = '/time_entries/{0}.json'
     query_delete = '/time_entries/{0}.json'
 
     @classmethod
@@ -307,6 +309,14 @@ class TimeEntry(_Resource):
             params['to'] = params.pop('to_date')
 
         return params
+
+    def __setattr__(self, item, value):
+        super(TimeEntry, self).__setattr__(item, value)
+
+        if item == 'issue_id':
+            self.attributes['issue'] = {'id': value}
+        elif item == 'activity_id':
+            self.attributes['activity'] = {'id': value}
 
     def __str__(self):
         return str(self.id)
