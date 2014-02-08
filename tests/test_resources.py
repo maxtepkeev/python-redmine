@@ -704,6 +704,13 @@ class TestResources(unittest.TestCase):
     def test_user_delete(self):
         self.assertEqual(self.redmine.user.delete(1), True)
 
+    def test_user_update(self):
+        self.response.json.return_value = responses['user']['get']
+        user = self.redmine.user.get(1)
+        user.lastname = 'Foo'
+        user.firstname = 'Bar'
+        self.assertEqual(user.save(), True)
+
     def test_user_custom_str(self):
         self.response.json.return_value = responses['user']['get']
         self.assertEqual(str(self.redmine.user.get(1)), 'John Smith')

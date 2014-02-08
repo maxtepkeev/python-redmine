@@ -531,13 +531,16 @@ class User(_Resource):
     container_one = 'user'
     container_filter = 'users'
     container_create = 'user'
+    container_update = 'user'
     query_all = '/users.json'
     query_one = '/users/{0}.json'
     query_filter = '/users.json'
     query_create = '/users.json'
+    query_update = '/users/{0}.json'
     query_delete = '/users/{0}.json'
 
     _includes = ('memberships', 'groups')
+    _readonly = _Resource._readonly + ('api_key', 'last_login_on', 'custom_fields')
 
     def __str__(self):
         try:

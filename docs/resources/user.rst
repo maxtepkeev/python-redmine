@@ -160,7 +160,51 @@ filter
 Update methods
 --------------
 
-Not yet supported by Python Redmine
+update
+++++++
+
+.. py:method:: update(resource_id, **fields)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Updates values of given fields of a user resource and saves them to the Redmine.
+
+    :param string login: (optiona). User login.
+    :param string password: (optional). User password.
+    :param string firstname: (optional). User name.
+    :param string lastname: (optional). User surname.
+    :param string mail: (optional). User email.
+    :param integer auth_source_id: (optional). Authentication mode id.
+    :return: True
+
+.. code-block:: python
+
+    >>> redmine.user.update(1, login='jsmith', password='qwerty', firstname='John', lastname='Smith', mail='john@smith.com', auth_source_id=1)
+    True
+
+save
+++++
+
+.. py:method:: save()
+    :module: redmine.resources.User
+    :noindex:
+
+    Saves the current state of a user resource to the Redmine. Fields that
+    can be changed are the same as for ``update`` method above.
+
+    :return: True
+
+.. code-block:: python
+
+    >>> user = redmine.user.get(1)
+    >>> user.login = 'jsmith'
+    >>> user.password = 'qwerty'
+    >>> user.firstname = 'John'
+    >>> user.lastname = 'Smith'
+    >>> user.mail = 'john@smith.com'
+    >>> user.auth_source_id = 1
+    >>> user.save()
+    True
 
 Delete methods
 --------------
