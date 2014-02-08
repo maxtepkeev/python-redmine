@@ -116,3 +116,9 @@ class ResultSetTotalCountError(BaseRedmineError):
     """ResultSet hasn't been yet evaluated and cannot yield a total_count"""
     def __init__(self):
         super(ResultSetTotalCountError, self).__init__('Total count is unknown before evaluation')
+
+
+class CustomFieldValueError(BaseRedmineError):
+    """Custom fields should be passed as a dictionary in the form of {id: value}"""
+    def __init__(self):
+        super(CustomFieldValueError, self).__init__('Custom field values should be a dict in the form of {id: value}')
