@@ -51,7 +51,7 @@ _RESOURCE_RELATIONS_MAP = {
 
 # Resource attributes which when set should
 # also set another resource id to its value
-_RESOURCE_ATTR_ID_ASSIGN_MAP = {
+_RESOURCE_SINGLE_ATTR_ID_MAP = {
     'parent_id': 'parent',
     'project_id': 'project',
     'tracker_id': 'tracker',
@@ -62,6 +62,13 @@ _RESOURCE_ATTR_ID_ASSIGN_MAP = {
     'parent_issue_id': 'parent',
     'issue_id': 'issue',
     'activity_id': 'activity',
+}
+
+# Resource attributes which when set should
+# also set another resource ids to their value
+_RESOURCE_MULTIPLE_ATTR_ID_MAP = {
+    'user_ids': 'users',
+    'role_ids': 'roles',
 }
 
 
@@ -175,8 +182,10 @@ class _Resource(object):
             self._changes[item] = value
             self.attributes[item] = value
 
-            if item in _RESOURCE_ATTR_ID_ASSIGN_MAP:
-                self.attributes[_RESOURCE_ATTR_ID_ASSIGN_MAP[item]] = {'id': value}
+            if item in _RESOURCE_SINGLE_ATTR_ID_MAP:
+                self.attributes[_RESOURCE_SINGLE_ATTR_ID_MAP[item]] = {'id': value}
+            elif item in _RESOURCE_MULTIPLE_ATTR_ID_MAP:
+                self.attributes[_RESOURCE_MULTIPLE_ATTR_ID_MAP[item]] = [{'id': member_id} for member_id in value]
 
     def refresh(self, **params):
         """Reloads resource data from Redmine"""
@@ -448,12 +457,6 @@ class ProjectMembership(_Resource):
     query_delete = '/memberships/{0}.json'
 
     _readonly = _Resource._readonly + ('user', 'roles')
-
-    def __setattr__(self, item, value):
-        super(ProjectMembership, self).__setattr__(item, value)
-
-        if item == 'role_ids':
-            self.attributes['roles'] = [{'id': role_id} for role_id in value]
 
     def __str__(self):
         return str(self.id)
