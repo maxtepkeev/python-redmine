@@ -65,9 +65,6 @@ Returns requested Resource object either by integer ``id`` or by string ``identi
     'Vacation'
     >>> project['name']  # You can access Resource attributes this way too
     'Vacation'
-    >>> project = redmine.project.get(30404)
-    >>> project.name
-    'Vacation'
 
 .. note::
 

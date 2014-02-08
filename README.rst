@@ -42,6 +42,14 @@ a simple but powerful Pythonic API inspired by a well-known `Django ORM
     >>> project.issues[0].time_entries
     <redmine.resultsets.ResourceSet object with TimeEntry resources>
 
+Features
+--------
+
+* Supports 100% of Redmine API features
+* Supports Python 2.6 - 3.3
+* Extensively documented
+* Provides ORM-style Pythonic API
+
 Dependencies
 ------------
 
