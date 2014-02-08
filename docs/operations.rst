@@ -21,7 +21,7 @@ Creates new resource with given fields and saves it to the Redmine.
 
 .. code-block:: python
 
-    >>> project = redmine.project.create(name='Vacation', identifier='vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, custom_field_values={2: 'foobar'})
+    >>> project = redmine.project.create(name='Vacation', identifier='vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
     >>> project
     <redmine.resources.Project #123 "Vacation">
 
@@ -38,8 +38,11 @@ Redmine.
     >>> project.name = 'Vacation'
     >>> project.identifier = 'vacation'
     >>> project.description = 'foo'
+    >>> project.homepage = 'http://foo.bar'
     >>> project.is_public = True
+    >>> project.parent_id = 345
     >>> project.inherit_members = True
+    >>> project.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
     >>> project.save()
     True
 
@@ -201,7 +204,37 @@ Returns a ResourceSet object that contains Resource objects filtered by some con
 Update
 ------
 
-Not yet supported by Python Redmine
+Python Redmine provides 2 update operation methods: ``update`` and ``save``. Unfortunately Redmine
+doesn't support updates on some resources via REST API. You can read more about it in each
+resource's documentation.
+
+update
+++++++
+
+Updates a resource with given fields and saves it to the Redmine.
+
+.. code-block:: python
+
+    >>> redmine.project.update(1, name='Vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
+    True
+
+save
+++++
+
+Saves the current state of a resource to the Redmine.
+
+.. code-block:: python
+
+    >>> project = redmine.project.get(1)
+    >>> project.name = 'Vacation'
+    >>> project.description = 'foo'
+    >>> project.homepage = 'http://foo.bar'
+    >>> project.is_public = True
+    >>> project.parent_id = 345
+    >>> project.inherit_members = True
+    >>> project.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
+    >>> project.save()
+    True
 
 Delete
 ------
