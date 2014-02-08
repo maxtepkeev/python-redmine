@@ -619,12 +619,6 @@ class TestResources(unittest.TestCase):
         version = self.redmine.version.get(1)
         self.assertEqual(version.status, 'foo')
 
-    def test_version_raises_resource_attr_error_if_attr_not_found(self):
-        from redmine.exceptions import ResourceAttrError
-        self.response.json.return_value = responses['version']['get']
-        version = self.redmine.version.get(1)
-        self.assertRaises(ResourceAttrError, lambda: version.status)
-
     def test_user_version(self):
         self.assertEqual(self.redmine.user.resource_class.redmine_version, '1.1')
 
