@@ -61,6 +61,7 @@ Changelog
 - Fixed: `Issue #5 <https://github.com/maxtepkeev/python-redmine/issues/5>`_ (Version
   resource ``status`` attribute was converted to IssueStatus resource by mistake) (thanks
   to `Andrei Avram <https://github.com/andreiavram>`_)
+- Fixed: A lot of small fixes and enhancements here and there
 
 0.3.1 (2014-01-23)
 ------------------
