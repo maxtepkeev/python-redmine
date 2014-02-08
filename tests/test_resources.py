@@ -305,6 +305,16 @@ class TestResources(unittest.TestCase):
     def test_issue_delete(self):
         self.assertEqual(self.redmine.issue.delete(1), True)
 
+    def test_issue_update(self):
+        response = {'issue': {'name': 'Foo', 'id': 1, 'custom_fields': [{'id': 1, 'value': 'foo'}]}}
+        self.response.json.return_value = response
+        issue = self.redmine.issue.get(1)
+        issue.subject = 'Foo'
+        issue.description = 'foobar'
+        issue.custom_fields = [{'id': 1, 'value': 'bar'}]
+        self.assertEqual(issue.save(), True)
+        self.assertEqual(issue.custom_fields[0].value, 'bar')
+
     def test_issue_relations(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
@@ -364,6 +374,12 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = response
         issue = self.redmine.issue.get(1)
         self.assertIsInstance(issue.version, Version)
+
+    def test_issue_version_can_be_set_via_version_attribute(self):
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        issue.version_id = 1
+        self.assertEqual(issue.fixed_version.id, 1)
 
     def test_time_entry_version(self):
         self.assertEqual(self.redmine.time_entry.resource_class.redmine_version, '1.1')

@@ -232,7 +232,80 @@ filter
 Update methods
 --------------
 
-Not yet supported by Python Redmine
+update
+++++++
+
+.. py:method:: update(resource_id, **fields)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Updates values of given fields of an issue resource and saves them to the Redmine.
+
+    :param integer project_id: (optional). Issue project id.
+    :param string subject: (optional). Issue subject.
+    :param integer tracker_id: (optional). Issue tracker id.
+    :param string description: (optional). Issue description.
+    :param integer status_id: (optional). Issue status id.
+    :param integer priority_id: (optional). Issue priority id.
+    :param integer category_id: (optional). Issue category id.
+    :param integer fixed_version_id: (optional). Issue version id.
+    :param boolean is_private: (optional). Whether issue is private.
+    :param integer assigned_to_id: (optional). Issue will be assigned to this user id.
+    :param integer parent_issue_id: (optional). Parent issue id.
+    :param string start_date: (optional). Issue start date.
+    :param string due_date: (optional). Issue end date.
+    :param integer estimated_hours: (optional). Issue estimated hours.
+    :param integer done_ratio: (optional). Issue done ratio.
+    :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
+    :param uploads:
+      .. raw:: html
+
+          (optional). Uploads in the form of [{'': ''}, ...], accepted keys are:
+
+      - path (required). Absolute path to the file that should be uploaded.
+      - filename (optional). Name of the file after upload.
+      - description (optional). Description of the file.
+      - content_type (optional). Content type of the file.
+
+    :type uploads: list or tuple
+    :return: True
+
+.. code-block:: python
+
+    >>> redmine.issue.update(1, project_id=1, subject='Vacation', tracker_id=8, description='foo', status_id=3, priority_id=7, assigned_to_id=123, parent_issue_id=345, start_date='2014-01-01', due_date='2014-02-01', estimated_hours=4, done_ratio=40, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}], uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}])
+    True
+
+save
+++++
+
+.. py:method:: save()
+    :module: redmine.resources.Issue
+    :noindex:
+
+    Saves the current state of an issue resource to the Redmine. Fields that
+    can be changed are the same as for ``update`` method above.
+
+    :return: True
+
+.. code-block:: python
+
+    >>> issue = redmine.issue.get(1)
+    >>> issue.project_id = 1
+    >>> issue.subject = 'Vacation'
+    >>> issue.tracker_id = 8
+    >>> issue.description = 'foo'
+    >>> issue.status_id = 3
+    >>> issue.priority_id = 7
+    >>> issue.assigned_to_id = 123
+    >>> issue.parent_issue_id = 345
+    >>> issue.start_date = '2014-01-01'
+    >>> issue.due_date = '2014-02-01'
+    >>> issue.estimated_hours = 4
+    >>> issue.done_ratio = 40
+    >>> issue.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
+    >>> issue.uploads = [{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
+    >>> issue.save()
+    True
 
 Delete methods
 --------------

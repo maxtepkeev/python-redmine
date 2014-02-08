@@ -20,6 +20,7 @@ Changelog
   * ProjectMembership
   * WikiPage
   * Project
+  * Issue
 
 - Added: Limit/offset support via ``all()`` and ``filter()`` methods for resources that
   doesn't support that feature via Redmine:

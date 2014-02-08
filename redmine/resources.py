@@ -278,23 +278,29 @@ class Issue(_Resource):
     container_one = 'issue'
     container_filter = 'issues'
     container_create = 'issue'
+    container_update = 'issue'
     query_all = '/issues.json'
     query_one = '/issues/{0}.json'
     query_filter = '/issues.json'
     query_create = '/projects/{project_id}/issues.json'
+    query_update = '/issues/{0}.json'
     query_delete = '/issues/{0}.json'
 
     _includes = ('children', 'attachments', 'relations', 'changesets', 'journals', 'watchers')
     _relations = ('relations', 'time_entries')
+    _readonly = _Resource._readonly + ('spent_hours',)
 
     def __getattr__(self, item):
-        # Redmine is very inconsistent about resources attribute
-        # names, so let's add the ability to retrieve version
-        # attribute by it's logical name to make more people happy
         if item == 'version':
             return super(Issue, self).__getattr__('fixed_version')
 
         return super(Issue, self).__getattr__(item)
+
+    def __setattr__(self, item, value):
+        if item == 'version_id':
+            return super(Issue, self).__setattr__('fixed_version_id', value)
+
+        return super(Issue, self).__setattr__(item, value)
 
     def __str__(self):
         try:
