@@ -29,12 +29,12 @@ create
     :param boolean is_public: (optional). Whether project is public.
     :param integer parent_id: (optional). Project's parent project id.
     :param boolean inherit_members: (optional). Whether project will inherit parent project's members.
-    :param dictionary custom_field_values: (optional). Custom fields in the form of {id: value}.
+    :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
     :return: Project resource object
 
 .. code-block:: python
 
-    >>> project = redmine.project.create(name='Vacation', identifier='vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, custom_field_values={2: 'foobar'})
+    >>> project = redmine.project.create(name='Vacation', identifier='vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
     >>> project
     <redmine.resources.Project #123 "Vacation">
 
@@ -57,8 +57,11 @@ new
     >>> project.name = 'Vacation'
     >>> project.identifier = 'vacation'
     >>> project.description = 'foo'
+    >>> project.homepage = 'http://foo.bar'
     >>> project.is_public = True
+    >>> project.parent_id = 345
     >>> project.inherit_members = True
+    >>> project.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
     >>> project.save()
     True
 
@@ -168,12 +171,12 @@ update
     :param boolean is_public: (optional). Whether project is public.
     :param integer parent_id: (optional). Project's parent project id.
     :param boolean inherit_members: (optional). Whether project will inherit parent project's members.
-    :param dictionary custom_field_values: (optional). Custom fields in the form of {id: value}.
+    :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
     :return: True
 
 .. code-block:: python
 
-    >>> redmine.project.update(1, name='Vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, custom_field_values={2: 'foobar'})
+    >>> redmine.project.update(1, name='Vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
     True
 
 save
@@ -197,7 +200,7 @@ save
     >>> project.is_public = True
     >>> project.parent_id = 345
     >>> project.inherit_members = True
-    >>> project.custom_field_values = {2: 'foobar'}
+    >>> project.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
     >>> project.save()
     True
 

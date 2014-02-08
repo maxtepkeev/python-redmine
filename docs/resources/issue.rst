@@ -40,7 +40,7 @@ create
     :param string due_date: (optional). Issue end date.
     :param integer estimated_hours: (optional). Issue estimated hours.
     :param integer done_ratio: (optional). Issue done ratio.
-    :param dictionary custom_fields: (optional). Custom fields in the form of {id: value}.
+    :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
     :param uploads:
       .. raw:: html
 
@@ -56,7 +56,7 @@ create
 
 .. code-block:: python
 
-    >>> issue = redmine.issue.create(project_id='vacation', subject='Vacation', tracker_id=8, description='foo', status_id=3, priority_id=7, assigned_to_id=123, watcher_user_ids=[123], parent_issue_id=345, start_date='2014-01-01', due_date='2014-02-01', estimated_hours=4, done_ratio=40, uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}])
+    >>> issue = redmine.issue.create(project_id='vacation', subject='Vacation', tracker_id=8, description='foo', status_id=3, priority_id=7, assigned_to_id=123, watcher_user_ids=[123], parent_issue_id=345, start_date='2014-01-01', due_date='2014-02-01', estimated_hours=4, done_ratio=40, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}], uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}])
     >>> issue
     <redmine.resources.Issue #123 "Vacation">
 
@@ -81,6 +81,16 @@ new
     >>> issue.tracker_id = 8
     >>> issue.description = 'foo'
     >>> issue.status_id = 3
+    >>> issue.priority_id = 7
+    >>> issue.assigned_to_id = 123
+    >>> issue.watcher_user_ids = [123]
+    >>> issue.parent_issue_id = 345
+    >>> issue.start_date = '2014-01-01'
+    >>> issue.due_date = '2014-02-01'
+    >>> issue.estimated_hours = 4
+    >>> issue.done_ratio = 40
+    >>> issue.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
+    >>> issue.uploads = [{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
     >>> issue.save()
     True
 
