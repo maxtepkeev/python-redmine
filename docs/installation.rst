@@ -44,3 +44,9 @@ Once you have the sources, you can install it into your site-packages:
 .. code-block:: bash
 
     $ python setup.py install
+
+You can also install latest stable development version via `pip <http://www.pip-installer.org>`_:
+
+.. code-block:: bash
+
+    $ pip install git+https://github.com/maxtepkeev/python-redmine.git@master
