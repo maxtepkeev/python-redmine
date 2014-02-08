@@ -204,6 +204,14 @@ class TestResources(unittest.TestCase):
         self.assertIn(('name', 'Foo'), project)
         self.assertIn(('id', 1), project)
 
+    def test_setting_custom_field_raises_exception_if_not_list_of_dicts(self):
+        from redmine.exceptions import CustomFieldValueError
+        response = {'project': {'name': 'Foo', 'id': 1, 'custom_fields': [{'id': 1}]}}
+        self.response.json.return_value = response
+        project = self.redmine.project.get(1)
+        with self.assertRaises(CustomFieldValueError):
+            project.custom_fields = 'foo'
+
     def test_project_version(self):
         self.assertEqual(self.redmine.project.resource_class.redmine_version, '1.0')
 
@@ -237,16 +245,9 @@ class TestResources(unittest.TestCase):
         project = self.redmine.project.get(1)
         project.homepage = 'http://foo.bar'
         project.parent_id = 3
-        project.custom_field_values = {1: 'bar'}
+        project.custom_fields = [{'id': 1, 'value': 'bar'}]
         self.assertEqual(project.save(), True)
         self.assertEqual(project.custom_fields[0].value, 'bar')
-
-    def test_project_custom_field_raises_exception_if_not_dict(self):
-        from redmine.exceptions import CustomFieldValueError
-        self.response.json.return_value = responses['project']['get']
-        project = self.redmine.project.get(1)
-        with self.assertRaises(CustomFieldValueError):
-            project.custom_field_values = (1, 'foo')
 
     def test_project_relations(self):
         self.response.json.return_value = responses['project']['get']

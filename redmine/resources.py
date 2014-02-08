@@ -49,6 +49,21 @@ _RESOURCE_RELATIONS_MAP = {
     'issues': 'Issue',
 }
 
+# Resource attributes which when set should
+# also set another resource id to its value
+_RESOURCE_ATTR_ID_ASSIGN_MAP = {
+    'parent_id': 'parent',
+    'project_id': 'project',
+    'tracker_id': 'tracker',
+    'priority_id': 'priority',
+    'assigned_to_id': 'assigned_to',
+    'category_id': 'category',
+    'fixed_version_id': 'fixed_version',
+    'parent_issue_id': 'parent',
+    'issue_id': 'issue',
+    'activity_id': 'activity',
+}
+
 
 class _Resource(object):
     """Implementation of Redmine resource"""
@@ -142,9 +157,26 @@ class _Resource(object):
             super(_Resource, self).__setattr__(item, value)
         elif item in self._readonly:
             raise ReadonlyAttrError()
+        elif item == 'custom_fields':
+            for org_index, org_field in enumerate(self.attributes.setdefault('custom_fields', [])):
+                if 'value' not in org_field:
+                    self.attributes['custom_fields'][org_index]['value'] = '0'
+
+                try:
+                    for new_index, new_field in enumerate(value):
+                        if org_field['id'] == new_field['id']:
+                            self.attributes['custom_fields'][org_index]['value'] = value.pop(new_index)['value']
+                except (TypeError, KeyError):
+                    raise CustomFieldValueError()
+
+            self.attributes['custom_fields'].extend(value)
+            self._changes[item] = self.attributes['custom_fields']
         else:
             self._changes[item] = value
             self.attributes[item] = value
+
+            if item in _RESOURCE_ATTR_ID_ASSIGN_MAP:
+                self.attributes[_RESOURCE_ATTR_ID_ASSIGN_MAP[item]] = {'id': value}
 
     def refresh(self, **params):
         """Reloads resource data from Redmine"""
@@ -239,25 +271,6 @@ class Project(_Resource):
     _relations = ('wiki_pages', 'memberships', 'issue_categories', 'versions', 'news', 'issues')
     _readonly = _Resource._readonly + ('identifier',)
 
-    def __setattr__(self, item, value):
-        if item == 'parent_id':
-            self.attributes['parent'] = {'id': value}
-        elif item == 'custom_field_values':
-            if not isinstance(value, dict):
-                raise CustomFieldValueError()
-
-            custom_field_values = value.copy()
-            self.attributes.setdefault('custom_fields', [])
-
-            for index, field in enumerate(self.attributes['custom_fields']):
-                if field['id'] in custom_field_values:
-                    self.attributes['custom_fields'][index]['value'] = custom_field_values[field['id']]
-                    del custom_field_values[field['id']]
-
-            self.attributes['custom_fields'].extend([{'id': k, 'value': v} for k, v in custom_field_values.items()])
-
-        super(Project, self).__setattr__(item, value)
-
 
 class Issue(_Resource):
     redmine_version = '1.0'
@@ -328,14 +341,6 @@ class TimeEntry(_Resource):
             params['to'] = params.pop('to_date')
 
         return params
-
-    def __setattr__(self, item, value):
-        super(TimeEntry, self).__setattr__(item, value)
-
-        if item == 'issue_id':
-            self.attributes['issue'] = {'id': value}
-        elif item == 'activity_id':
-            self.attributes['activity'] = {'id': value}
 
     def __str__(self):
         return str(self.id)
