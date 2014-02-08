@@ -153,7 +153,53 @@ Not supported by Redmine
 Update methods
 --------------
 
-Not yet supported by Python Redmine
+update
+++++++
+
+.. py:method:: update(resource_id, **fields)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Updates values of given fields of a project resource and saves them to the Redmine.
+
+    :param string name: (optional). Project name.
+    :param string description: (optional). Project description.
+    :param string homepage: (optional). Project homepage url.
+    :param boolean is_public: (optional). Whether project is public.
+    :param integer parent_id: (optional). Project's parent project id.
+    :param boolean inherit_members: (optional). Whether project will inherit parent project's members.
+    :param dictionary custom_field_values: (optional). Custom fields in the form of {id: value}.
+    :return: True
+
+.. code-block:: python
+
+    >>> redmine.project.update(1, name='Vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, custom_field_values={2: 'foobar'})
+    True
+
+save
+++++
+
+.. py:method:: save()
+    :module: redmine.resources.Project
+    :noindex:
+
+    Saves the current state of a project resource to the Redmine. Fields that
+    can be changed are the same as for ``update`` method above.
+
+    :return: True
+
+.. code-block:: python
+
+    >>> project = redmine.project.get(1)
+    >>> project.name = 'Vacation'
+    >>> project.description = 'foo'
+    >>> project.homepage = 'http://foo.bar'
+    >>> project.is_public = True
+    >>> project.parent_id = 345
+    >>> project.inherit_members = True
+    >>> project.custom_field_values = {2: 'foobar'}
+    >>> project.save()
+    True
 
 Delete methods
 --------------

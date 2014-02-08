@@ -1,7 +1,7 @@
 from datetime import datetime
 from redmine.utilities import to_string
 from redmine.managers import ResourceManager
-from redmine.exceptions import ResourceAttrError, ReadonlyAttrError
+from redmine.exceptions import ResourceAttrError, ReadonlyAttrError, CustomFieldValueError
 
 # Resources which when accessed from some other
 # resource should become a ResourceSet object
@@ -238,6 +238,25 @@ class Project(_Resource):
     _includes = ('trackers', 'issue_categories')
     _relations = ('wiki_pages', 'memberships', 'issue_categories', 'versions', 'news', 'issues')
     _readonly = _Resource._readonly + ('identifier',)
+
+    def __setattr__(self, item, value):
+        if item == 'parent_id':
+            self.attributes['parent'] = {'id': value}
+        elif item == 'custom_field_values':
+            if not isinstance(value, dict):
+                raise CustomFieldValueError()
+
+            custom_field_values = value.copy()
+            self.attributes.setdefault('custom_fields', [])
+
+            for index, field in enumerate(self.attributes['custom_fields']):
+                if field['id'] in custom_field_values:
+                    self.attributes['custom_fields'][index]['value'] = custom_field_values[field['id']]
+                    del custom_field_values[field['id']]
+
+            self.attributes['custom_fields'].extend([{'id': k, 'value': v} for k, v in custom_field_values.items()])
+
+        super(Project, self).__setattr__(item, value)
 
 
 class Issue(_Resource):

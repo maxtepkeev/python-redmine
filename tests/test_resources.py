@@ -231,6 +231,23 @@ class TestResources(unittest.TestCase):
     def test_project_delete(self):
         self.assertEqual(self.redmine.project.delete(1), True)
 
+    def test_project_update(self):
+        response = {'project': {'name': 'Foo', 'id': 1, 'custom_fields': [{'id': 1, 'value': 'foo'}]}}
+        self.response.json.return_value = response
+        project = self.redmine.project.get(1)
+        project.homepage = 'http://foo.bar'
+        project.parent_id = 3
+        project.custom_field_values = {1: 'bar'}
+        self.assertEqual(project.save(), True)
+        self.assertEqual(project.custom_fields[0].value, 'bar')
+
+    def test_project_custom_field_raises_exception_if_not_dict(self):
+        from redmine.exceptions import CustomFieldValueError
+        self.response.json.return_value = responses['project']['get']
+        project = self.redmine.project.get(1)
+        with self.assertRaises(CustomFieldValueError):
+            project.custom_field_values = (1, 'foo')
+
     def test_project_relations(self):
         self.response.json.return_value = responses['project']['get']
         project = self.redmine.project.get(1)
