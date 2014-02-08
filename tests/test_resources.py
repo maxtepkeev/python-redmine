@@ -340,6 +340,13 @@ class TestResources(unittest.TestCase):
         self.assertEqual(str(issue.journals[0]), '1')
         self.assertEqual(repr(issue.journals[0]), '<redmine.resources.IssueJournal #1>')
 
+    def test_issue_version_can_be_retrieved_via_version_attribute(self):
+        from redmine.resources import Version
+        response = {'issue': {'subject': 'Foo', 'id': 1, 'fixed_version': {'id': 1, 'name': 'Foo'}}}
+        self.response.json.return_value = response
+        issue = self.redmine.issue.get(1)
+        self.assertIsInstance(issue.version, Version)
+
     def test_time_entry_version(self):
         self.assertEqual(self.redmine.time_entry.resource_class.redmine_version, '1.1')
 

@@ -33,6 +33,7 @@ _RESOURCE_MAP = {
     'priority': 'Enumeration',
     'activity': 'Enumeration',
     'category': 'IssueCategory',
+    'fixed_version': 'Version',
 }
 
 # Resources which when access from some other
@@ -253,6 +254,15 @@ class Issue(_Resource):
 
     _includes = ('children', 'attachments', 'relations', 'changesets', 'journals', 'watchers')
     _relations = ('relations', 'time_entries')
+
+    def __getattr__(self, item):
+        # Redmine is very inconsistent about resources attribute
+        # names, so let's add the ability to retrieve version
+        # attribute by it's logical name to make more people happy
+        if item == 'version':
+            return super(Issue, self).__getattr__('fixed_version')
+
+        return super(Issue, self).__getattr__(item)
 
     def __str__(self):
         try:

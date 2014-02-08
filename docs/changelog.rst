@@ -49,7 +49,11 @@ Changelog
   details)
 - Added: Allow daterange TimeEntry resource filtering via ``from_date`` and ``to_date``
   keyword arguments (thanks to `Antoni Aloy <https://github.com/aaloy>`_)
+- Added: An ability to retrieve Issue version via ``version`` attribute in addition to
+  ``fixed_version`` to be more obvious
 - Changed: Documentation for resources rewritten from scratch to be more understandable
+- Fixed: Issue's ``fixed_version`` attribute was retrieved as dict instead of Version resource
+  object
 - Fixed: Resource relations were requested from Redmine every time instead of caching the
   result after first request
 - Fixed: `Issue #2 <https://github.com/maxtepkeev/python-redmine/issues/2>`_ (limit/offset
