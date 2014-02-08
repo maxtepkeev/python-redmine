@@ -165,6 +165,7 @@ update
 
     Updates values of given fields of a project resource and saves them to the Redmine.
 
+    :param integer resource_id: (required). Project id.
     :param string name: (optional). Project name.
     :param string description: (optional). Project description.
     :param string homepage: (optional). Project homepage url.

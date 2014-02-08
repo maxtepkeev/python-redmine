@@ -169,7 +169,8 @@ update
 
     Updates values of given fields of a user resource and saves them to the Redmine.
 
-    :param string login: (optiona). User login.
+    :param integer resource_id: (required). User id.
+    :param string login: (optional). User login.
     :param string password: (optional). User password.
     :param string firstname: (optional). User name.
     :param string lastname: (optional). User surname.

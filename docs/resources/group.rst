@@ -134,6 +134,7 @@ update
 
     Updates values of given fields of a group resource and saves them to the Redmine.
 
+    :param integer resource_id: (required). Group id.
     :param string name: (optional). Group name.
     :param user_ids: (optional). Ids of users who will be members of a group.
     :type user_ids: list or tuple

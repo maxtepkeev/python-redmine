@@ -150,6 +150,7 @@ update
 
     Updates values of given fields of a time entry resource and saves them to the Redmine.
 
+    :param integer resource_id: (required). Time entry id.
     :param integer issue_id or project_id: (optional). The issue id or project id to log time on.
     :param integer hours: (optional). The number of spent hours.
     :param string spent_on: (optional). The date the time was spent.

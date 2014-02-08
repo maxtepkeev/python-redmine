@@ -241,6 +241,7 @@ update
 
     Updates values of given fields of an issue resource and saves them to the Redmine.
 
+    :param integer resource_id: (required). Issue id.
     :param integer project_id: (optional). Issue project id.
     :param string subject: (optional). Issue subject.
     :param integer tracker_id: (optional). Issue tracker id.
