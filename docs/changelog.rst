@@ -54,6 +54,7 @@ Changelog
 - Added: An ability to retrieve Issue version via ``version`` attribute in addition to
   ``fixed_version`` to be more obvious
 - Changed: Documentation for resources rewritten from scratch to be more understandable
+- Fixed: Saving custom fields to Redmine didn't work in some situations
 - Fixed: Issue's ``fixed_version`` attribute was retrieved as dict instead of Version resource
   object
 - Fixed: Resource relations were requested from Redmine every time instead of caching the
