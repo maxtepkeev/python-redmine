@@ -121,4 +121,6 @@ class ResultSetTotalCountError(BaseRedmineError):
 class CustomFieldValueError(BaseRedmineError):
     """Custom fields should be passed as a list of dictionaries"""
     def __init__(self):
-        super(CustomFieldValueError, self).__init__('Custom fields should be passed as a list of dictionaries')
+        super(CustomFieldValueError, self).__init__(
+            "Custom fields should be passed as a list of dictionaries in the form of [{'id': 1, 'value': 'foo'}]"
+        )
