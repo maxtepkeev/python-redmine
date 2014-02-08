@@ -65,4 +65,4 @@ is the list of all exceptions that Python Redmine can throw:
     ResultSet hasn't been yet evaluated and cannot yield a total_count
 
 ``CustomFieldValueError``
-    Custom fields should be passed as a list of dicts
+    Custom fields should be passed as a list of dictionaries
