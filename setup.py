@@ -3,14 +3,14 @@ from setuptools import setup
 
 setup(
     name='python-redmine',
-    version='0.3.1',
+    version='0.4.0',
     packages=['redmine'],
     url='https://github.com/maxtepkeev/python-redmine',
     license=open('LICENSE').read(),
     author='Max Tepkeev',
     author_email='tepkeev@gmail.com',
     description='Library for communicating with a Redmine project management application',
-    long_description=open('README.rst').read(),
+    long_description=open('README.rst').read() + '\n\n' + open('docs/changelog.rst').read(),
     keywords='redmine',
     install_requires=['requests >= 2.1.0'],
     zip_safe=False,
