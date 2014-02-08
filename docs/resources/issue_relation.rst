@@ -129,7 +129,7 @@ filter
 Update methods
 --------------
 
-Not yet supported by Python Redmine
+Not supported by Redmine
 
 Delete methods
 --------------
