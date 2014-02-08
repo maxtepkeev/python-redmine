@@ -563,9 +563,11 @@ class Group(_Resource):
     container_all = 'groups'
     container_one = 'group'
     container_create = 'group'
+    container_update = 'group'
     query_all = '/groups.json'
     query_one = '/groups/{0}.json'
     query_create = '/groups.json'
+    query_update = '/groups/{0}.json'
     query_delete = '/groups/{0}.json'
 
     _includes = ('memberships', 'users')

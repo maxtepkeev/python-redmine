@@ -749,6 +749,12 @@ class TestResources(unittest.TestCase):
     def test_group_delete(self):
         self.assertEqual(self.redmine.group.delete(1), True)
 
+    def test_group_update(self):
+        self.response.json.return_value = responses['group']['get']
+        group = self.redmine.group.get(1)
+        group.name = 'Bar'
+        self.assertEqual(group.save(), True)
+
     def test_group_includes(self):
         response_includes = responses['group']['get']
         self.response.json.return_value = response_includes

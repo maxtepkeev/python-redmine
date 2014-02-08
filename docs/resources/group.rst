@@ -23,7 +23,7 @@ create
     Creates new group resource with given fields and saves it to the Redmine.
 
     :param string name: (required). Group name.
-    :param user_ids: (optional). Ids of users to add to a group.
+    :param user_ids: (optional). Ids of users who will be members of a group.
     :type user_ids: list or tuple
     :return: Group resource object
 
@@ -125,7 +125,44 @@ Not supported by Redmine
 Update methods
 --------------
 
-Not yet supported by Python Redmine
+update
+++++++
+
+.. py:method:: update(resource_id, **fields)
+    :module: redmine.managers.ResourceManager
+    :noindex:
+
+    Updates values of given fields of a group resource and saves them to the Redmine.
+
+    :param string name: (optional). Group name.
+    :param user_ids: (optional). Ids of users who will be members of a group.
+    :type user_ids: list or tuple
+    :return: True
+
+.. code-block:: python
+
+    >>> redmine.group.update(1, name='Developers', user_ids=[13, 15, 25])
+    True
+
+save
+++++
+
+.. py:method:: save()
+    :module: redmine.resources.Group
+    :noindex:
+
+    Saves the current state of a group resource to the Redmine. Fields that
+    can be changed are the same as for ``update`` method above.
+
+    :return: True
+
+.. code-block:: python
+
+    >>> group = redmine.group.get(1)
+    >>> group.name = 'Developers'
+    >>> group.user_ids = [13, 15, 25]
+    >>> group.save()
+    True
 
 Delete methods
 --------------

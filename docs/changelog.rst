@@ -14,6 +14,7 @@ Changelog
 - Added: Update functionality via ``update()`` and ``save()`` methods for resources (see
   docs for details):
 
+  * Group
   * IssueCategory
   * Version
   * TimeEntry
