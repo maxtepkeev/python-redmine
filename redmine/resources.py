@@ -618,9 +618,11 @@ class Group(_Resource):
             url = '{0}/groups/{1}/users/{2}.json'.format(self._redmine.url, self._group_id, user_id)
             return self._redmine.request('delete', url)
 
-    def __init__(self, *args, **kwargs):
-        super(Group, self).__init__(*args, **kwargs)
-        self.__dict__['user'] = Group.User(self)
+    def __getattr__(self, item):
+        if item == 'user':
+            return Group.User(self)
+
+        return super(Group, self).__getattr__(item)
 
 
 class Role(_Resource):
