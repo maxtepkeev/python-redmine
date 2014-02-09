@@ -72,7 +72,7 @@ class Redmine(object):
         response = getattr(requests, method)(url, **kwargs)
 
         if response.status_code in (200, 201):
-            if response.status_code == 200 and method in ('put', 'delete'):
+            if not response.content:
                 return True
             return response.json()
         elif response.status_code == 401:

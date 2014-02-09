@@ -237,6 +237,7 @@ class TestResources(unittest.TestCase):
         self.assertEqual(project.name, 'Foo')
 
     def test_project_delete(self):
+        self.response.content = ''
         self.assertEqual(self.redmine.project.delete(1), True)
 
     def test_project_update(self):
@@ -303,6 +304,7 @@ class TestResources(unittest.TestCase):
         self.assertEqual(issue.subject, 'Foo')
 
     def test_issue_delete(self):
+        self.response.content = ''
         self.assertEqual(self.redmine.issue.delete(1), True)
 
     def test_issue_update(self):
@@ -414,6 +416,7 @@ class TestResources(unittest.TestCase):
         self.assertEqual(time_entry.hours, 2)
 
     def test_time_entry_delete(self):
+        self.response.content = ''
         self.assertEqual(self.redmine.time_entry.delete(1), True)
 
     def test_time_entry_update(self):
@@ -488,6 +491,7 @@ class TestResources(unittest.TestCase):
         self.assertEqual(wiki_page.title, 'Foo')
 
     def test_wiki_page_delete(self):
+        self.response.content = ''
         self.assertEqual(self.redmine.wiki_page.delete('Foo', project_id=1), True)
 
     def test_wiki_page_update(self):
@@ -551,6 +555,7 @@ class TestResources(unittest.TestCase):
         self.assertEqual(membership.id, 1)
 
     def test_project_membership_delete(self):
+        self.response.content = ''
         self.assertEqual(self.redmine.project_membership.delete(1), True)
 
     def test_project_membership_update(self):
@@ -593,6 +598,7 @@ class TestResources(unittest.TestCase):
         self.assertEqual(category.name, 'Foo')
 
     def test_issue_category_delete(self):
+        self.response.content = ''
         self.assertEqual(self.redmine.issue_category.delete(1), True)
 
     def test_issue_category_update(self):
@@ -622,6 +628,7 @@ class TestResources(unittest.TestCase):
         self.assertEqual(relation.id, 1)
 
     def test_issue_relation_delete(self):
+        self.response.content = ''
         self.assertEqual(self.redmine.issue_relation.delete(1), True)
 
     def test_issue_relation_custom_str(self):
@@ -656,6 +663,7 @@ class TestResources(unittest.TestCase):
         self.assertEqual(version.name, 'Foo')
 
     def test_version_delete(self):
+        self.response.content = ''
         self.assertEqual(self.redmine.version.delete(1), True)
 
     def test_version_update(self):
@@ -702,6 +710,7 @@ class TestResources(unittest.TestCase):
         self.assertEqual(user.lastname, 'Smith')
 
     def test_user_delete(self):
+        self.response.content = ''
         self.assertEqual(self.redmine.user.delete(1), True)
 
     def test_user_update(self):
@@ -754,6 +763,7 @@ class TestResources(unittest.TestCase):
         self.assertEqual(group.name, 'Foo')
 
     def test_group_delete(self):
+        self.response.content = ''
         self.assertEqual(self.redmine.group.delete(1), True)
 
     def test_group_update(self):

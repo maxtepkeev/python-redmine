@@ -151,7 +151,7 @@ class TestResourceManager(unittest.TestCase):
 
     @mock.patch('requests.put')
     def test_update_resource(self, mock_put):
-        mock_put.return_value = mock.Mock(status_code=200)
+        mock_put.return_value = mock.Mock(status_code=200, content='')
         manager = self.redmine.wiki_page
         manager.params['project_id'] = 1
         self.assertEqual(manager.update('Foo', title='Bar'), True)
@@ -159,7 +159,7 @@ class TestResourceManager(unittest.TestCase):
 
     @mock.patch('requests.delete')
     def test_delete_resource(self, mock_delete):
-        mock_delete.return_value = mock.Mock(status_code=200)
+        mock_delete.return_value = mock.Mock(status_code=200, content='')
         self.assertEqual(self.redmine.group.delete(1), True)
 
     def test_resource_get_method_unsupported_exception(self):
