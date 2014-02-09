@@ -10,7 +10,7 @@ setup(
     author='Max Tepkeev',
     author_email='tepkeev@gmail.com',
     description='Library for communicating with a Redmine project management application',
-    long_description=open('README.rst').read() + '\n\n' + open('docs/changelog.rst').read(),
+    long_description=open('README.rst').read() + '\n\n' + open('CHANGELOG.rst').read(),
     keywords='redmine',
     install_requires=['requests >= 2.1.0'],
     zip_safe=False,
