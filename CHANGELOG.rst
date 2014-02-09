@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.5.0 (2014-02-XX)
+0.5.0 (2014-02-09)
 ++++++++++++++++++
 
 - Added: An ability to create custom resources which allow to easily redefine the behaviour
