@@ -343,6 +343,14 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = response_includes
         self.assertIsInstance(issue.watchers, ResourceSet)
 
+    def test_issue_add_watcher_raises_exception_if_wrong_version(self):
+        from redmine.exceptions import ResourceVersionMismatchError
+        self.response.json.return_value = responses['issue']['get']
+        self.redmine.ver = '2.2.0'
+        issue = self.redmine.issue.get(1)
+        self.response.content = ''
+        self.assertRaises(ResourceVersionMismatchError, lambda: issue.watcher.add(1))
+
     def test_issue_add_watcher(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)

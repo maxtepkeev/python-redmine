@@ -1,7 +1,13 @@
 from datetime import datetime
+from distutils.version import LooseVersion
 from redmine.utilities import to_string
 from redmine.managers import ResourceManager
-from redmine.exceptions import ResourceAttrError, ReadonlyAttrError, CustomFieldValueError
+from redmine.exceptions import (
+    ResourceAttrError,
+    ReadonlyAttrError,
+    CustomFieldValueError,
+    ResourceVersionMismatchError
+)
 
 # Resources which when accessed from some other
 # resource should become a ResourceSet object
@@ -305,6 +311,9 @@ class Issue(_Resource):
             self._redmine = issue.manager.redmine
             self._issue_id = issue.internal_id
 
+            if self._redmine.ver is not None and LooseVersion(str(self._redmine.ver)) < LooseVersion('2.3'):
+                raise ResourceVersionMismatchError()
+
         def add(self, user_id):
             """Adds user to issue watchers list"""
             url = '{0}/issues/{1}/watchers.json'.format(self._redmine.url, self._issue_id)
@@ -315,13 +324,11 @@ class Issue(_Resource):
             url = '{0}/issues/{1}/watchers/{2}.json'.format(self._redmine.url, self._issue_id, user_id)
             return self._redmine.request('delete', url)
 
-    def __init__(self, *args, **kwargs):
-        super(Issue, self).__init__(*args, **kwargs)
-        self.__dict__['watcher'] = Issue.Watcher(self)
-
     def __getattr__(self, item):
         if item == 'version':
             return super(Issue, self).__getattr__('fixed_version')
+        elif item == 'watcher':
+            return Issue.Watcher(self)
 
         return super(Issue, self).__getattr__(item)
 
