@@ -1,7 +1,6 @@
 TODO
 ====
 
-- Add/remove watchers to/from issue
 - Add/remove users to/from group
 - Introduce adapters to different frameworks
 - Some API features for some resources are only available starting from specific Redmine version,

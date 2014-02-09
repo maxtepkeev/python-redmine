@@ -160,7 +160,7 @@ class _Resource(object):
 
     def __setattr__(self, item, value):
         """Sets the requested attribute"""
-        if item in self.__class__.__base__.__dict__:
+        if item in super(_Resource, self).__dir__():
             super(_Resource, self).__setattr__(item, value)
         elif item in self._readonly:
             raise ReadonlyAttrError()
@@ -298,6 +298,26 @@ class Issue(_Resource):
     _includes = ('children', 'attachments', 'relations', 'changesets', 'journals', 'watchers')
     _relations = ('relations', 'time_entries')
     _readonly = _Resource._readonly + ('spent_hours',)
+
+    class Watcher:
+        """An issue watcher implementation"""
+        def __init__(self, issue):
+            self._redmine = issue.manager.redmine
+            self._issue_id = issue.internal_id
+
+        def add(self, user_id):
+            """Adds user to issue watchers list"""
+            url = '{0}/issues/{1}/watchers.json'.format(self._redmine.url, self._issue_id)
+            return self._redmine.request('post', url, data={'user_id': user_id})
+
+        def remove(self, user_id):
+            """Removes user from issue watchers list"""
+            url = '{0}/issues/{1}/watchers/{2}.json'.format(self._redmine.url, self._issue_id, user_id)
+            return self._redmine.request('delete', url)
+
+    def __init__(self, *args, **kwargs):
+        super(Issue, self).__init__(*args, **kwargs)
+        self.__dict__['watcher'] = Issue.Watcher(self)
 
     def __getattr__(self, item):
         if item == 'version':

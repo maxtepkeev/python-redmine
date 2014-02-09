@@ -343,6 +343,18 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = response_includes
         self.assertIsInstance(issue.watchers, ResourceSet)
 
+    def test_issue_add_watcher(self):
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        self.response.content = ''
+        self.assertEqual(issue.watcher.add(1), True)
+
+    def test_issue_remove_watcher(self):
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        self.response.content = ''
+        self.assertEqual(issue.watcher.remove(1), True)
+
     def test_issue_custom_repr(self):
         self.response.json.return_value = responses['issue']['get']
         self.assertEqual(repr(self.redmine.issue.get(1)), '<redmine.resources.Issue #1 "Foo">')

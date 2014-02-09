@@ -6,6 +6,7 @@ Changelog
 
 - Added: An ability to create custom resources which allow to easily redefine the behaviour
   of existing resources (see docs for details)
+- Added: An ability to add/remove watcher to/from issue (see docs for details)
 
 0.4.0 (2014-02-08)
 ++++++++++++++++++

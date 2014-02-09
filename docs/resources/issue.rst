@@ -327,3 +327,44 @@ delete
 
     >>> redmine.issue.delete(1)
     True
+
+Watchers
+--------
+
+Python Redmine provides 2 methods to work with issue watchers: ``add`` and ``remove``.
+
+add
++++
+
+.. py:method:: add(user_id)
+    :module: redmine.resources.Issue.Watcher
+    :noindex:
+
+    Adds a user to issue watchers list by it's id.
+
+    :param integer user_id: (required). User id.
+    :return: True
+
+.. code-block:: python
+
+    >>> issue = redmine.issue.get(1)
+    >>> issue.watcher.add(1)
+    True
+
+remove
+++++++
+
+.. py:method:: remove(user_id)
+    :module: redmine.resources.Issue.Watcher
+    :noindex:
+
+    Removes a user from issue watchers list by it's id.
+
+    :param integer user_id: (required). User id.
+    :return: True
+
+.. code-block:: python
+
+    >>> issue = redmine.issue.get(1)
+    >>> issue.watcher.remove(1)
+    True
