@@ -184,3 +184,44 @@ delete
 
     >>> redmine.group.delete(1)
     True
+
+Users
+-----
+
+Python Redmine provides 2 methods to work with group users: ``add`` and ``remove``.
+
+add
++++
+
+.. py:method:: add(user_id)
+    :module: redmine.resources.Group.User
+    :noindex:
+
+    Adds a user to a group by it's id.
+
+    :param integer user_id: (required). User id.
+    :return: True
+
+.. code-block:: python
+
+    >>> group = redmine.group.get(1)
+    >>> group.user.add(1)
+    True
+
+remove
+++++++
+
+.. py:method:: remove(user_id)
+    :module: redmine.resources.Group.User
+    :noindex:
+
+    Removes a user from a group by it's id.
+
+    :param integer user_id: (required). User id.
+    :return: True
+
+.. code-block:: python
+
+    >>> group = redmine.group.get(1)
+    >>> group.user.remove(1)
+    True

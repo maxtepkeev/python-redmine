@@ -795,6 +795,18 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = response_includes
         self.assertIsInstance(group.users, ResourceSet)
 
+    def test_group_add_user(self):
+        self.response.json.return_value = responses['group']['get']
+        group = self.redmine.group.get(1)
+        self.response.content = ''
+        self.assertEqual(group.user.add(1), True)
+
+    def test_group_remove_user(self):
+        self.response.json.return_value = responses['group']['get']
+        group = self.redmine.group.get(1)
+        self.response.content = ''
+        self.assertEqual(group.user.remove(1), True)
+
     def test_role_version(self):
         self.assertEqual(self.redmine.role.resource_class.redmine_version, '1.4')
 

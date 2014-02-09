@@ -595,6 +595,26 @@ class Group(_Resource):
 
     _includes = ('memberships', 'users')
 
+    class User:
+        """A group user implementation"""
+        def __init__(self, group):
+            self._redmine = group.manager.redmine
+            self._group_id = group.internal_id
+
+        def add(self, user_id):
+            """Adds user to a group"""
+            url = '{0}/groups/{1}/users.json'.format(self._redmine.url, self._group_id)
+            return self._redmine.request('post', url, data={'user_id': user_id})
+
+        def remove(self, user_id):
+            """Removes user from a group"""
+            url = '{0}/groups/{1}/users/{2}.json'.format(self._redmine.url, self._group_id, user_id)
+            return self._redmine.request('delete', url)
+
+    def __init__(self, *args, **kwargs):
+        super(Group, self).__init__(*args, **kwargs)
+        self.__dict__['user'] = Group.User(self)
+
 
 class Role(_Resource):
     redmine_version = '1.4'
