@@ -166,7 +166,7 @@ class _Resource(object):
 
     def __setattr__(self, item, value):
         """Sets the requested attribute"""
-        if item in super(_Resource, self).__dir__():
+        if item in self.__class__.__base__.__dict__:
             super(_Resource, self).__setattr__(item, value)
         elif item in self._readonly:
             raise ReadonlyAttrError()
