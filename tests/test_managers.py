@@ -1,7 +1,12 @@
 from tests import unittest, mock, Redmine, URL
 from redmine.managers import ResourceManager
+from redmine.resources import Project
 from redmine.resultsets import ResourceSet
 from redmine.exceptions import ResourceBadMethodError, ValidationError
+
+
+class FooResource(Project):
+    pass
 
 
 class TestResourceManager(unittest.TestCase):
@@ -65,6 +70,10 @@ class TestResourceManager(unittest.TestCase):
 
     def test_supports_custom_field_resource(self):
         self.assertIsInstance(self.redmine.custom_field, ResourceManager)
+
+    def test_supports_custom_resources(self):
+        self.redmine.custom_resource_paths = (__name__,)
+        self.assertIsInstance(self.redmine.foo_resource, ResourceManager)
 
     def test_not_supported_resource_exception(self):
         from redmine.exceptions import ResourceError

@@ -21,11 +21,18 @@ class ResourceManager(object):
 
     def __init__(self, redmine, resource_name):
         """Accepts redmine instance object and tries to import the needed resource by resource name"""
+        resource_class = None
         resource_name = ''.join(word[0].upper() + word[1:] for word in resource_name.split('_'))
+        resource_paths = tuple((redmine.custom_resource_paths or ())) + ('redmine.resources',)
 
-        try:
-            resource_class = getattr(__import__('redmine.resources', fromlist=[resource_name]), resource_name)
-        except AttributeError:
+        for path in resource_paths:
+            try:
+                resource_class = getattr(__import__(path, fromlist=[resource_name]), resource_name)
+                break
+            except (ImportError, AttributeError):
+                continue
+
+        if resource_class is None:
             raise ResourceError()
 
         if redmine.ver is not None and LooseVersion(str(redmine.ver)) < LooseVersion(resource_class.redmine_version):

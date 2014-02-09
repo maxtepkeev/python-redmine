@@ -54,6 +54,7 @@ Table of contents
     configuration
     operations
     resources/index
+    advanced/index
     exceptions
     license
     changelog

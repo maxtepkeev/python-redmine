@@ -93,7 +93,7 @@ class _Resource(object):
     _changes = {}
     _includes = ()
     _relations = ()
-    _readonly = ('id', 'created_on', 'updated_on', 'author', 'user', 'project', 'issue')
+    _readonly = ('id', 'created_on', 'updated_on', 'author', 'user', 'project', 'issue')  #: Read-only attributes
     __length_hint__ = None  # fixes Python 2.6 list() call on resource object
 
     def __init__(self, manager, attributes):
