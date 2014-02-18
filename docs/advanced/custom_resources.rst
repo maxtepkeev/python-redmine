@@ -83,6 +83,6 @@ directly unless you want to add support for a new resource which Python Redmine 
 Below you will find methods and attributes which can be redefined in your custom resource:
 
 .. autoclass:: redmine.resources._Resource
-    :members: _readonly, __init__, __getattr__, __setattr__, refresh, pre_create, post_create, pre_update, post_update, save, translate_params
+    :members: __init__, __getattr__, __setattr__, refresh, pre_create, post_create, pre_update, post_update, save, translate_params
     :undoc-members:
     :private-members:
