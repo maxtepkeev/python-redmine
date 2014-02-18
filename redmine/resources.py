@@ -155,14 +155,7 @@ class _Resource(object):
         except ValueError:
             return self.attributes[item]
         except KeyError:
-            raise_attr_exception = self.manager.redmine.raise_attr_exception
-
-            if isinstance(raise_attr_exception, bool) and raise_attr_exception:
-                raise ResourceAttrError()
-            elif isinstance(raise_attr_exception, (list, tuple)) and self.__class__.__name__ in raise_attr_exception:
-                raise ResourceAttrError()
-
-            return None
+            return self.action_if_attribute_absent()
 
     def __setattr__(self, item, value):
         """Sets the requested attribute"""
@@ -243,6 +236,17 @@ class _Resource(object):
     def internal_id(self):
         """Returns identifier of the resource for usage in internals of the library"""
         return self.id
+
+    def action_if_attribute_absent(self):
+        """Whether we should raise an exception in case of attribute absence or just return None"""
+        raise_attr_exception = self.manager.redmine.raise_attr_exception
+
+        if isinstance(raise_attr_exception, bool) and raise_attr_exception:
+            raise ResourceAttrError()
+        elif isinstance(raise_attr_exception, (list, tuple)) and self.__class__.__name__ in raise_attr_exception:
+            raise ResourceAttrError()
+
+        return None
 
     def __dir__(self):
         """We need to show only real Redmine resource attributes on dir() call"""
