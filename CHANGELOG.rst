@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+0.5.1 (2014-02-XX)
+++++++++++++++++++
+
+- Fixed: User resource ``status`` attribute was converted to IssueStatus resource by mistake
+
 0.5.0 (2014-02-09)
 ++++++++++++++++++
 

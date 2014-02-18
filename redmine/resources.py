@@ -573,6 +573,18 @@ class User(_Resource):
     _includes = ('memberships', 'groups')
     _readonly = _Resource._readonly + ('api_key', 'last_login_on', 'custom_fields')
 
+    def __getattr__(self, item):
+        # We have to return status attribute as it is, otherwise it
+        # will be automatically converted to IssueStatus resource
+        # by the parent _Resource object which is not what we want
+        if item == 'status':
+            try:
+                return self.attributes[item]
+            except KeyError:
+                return self.action_if_attribute_absent()
+
+        return super(User, self).__getattr__(item)
+
     def __str__(self):
         try:
             return super(User, self).__str__()
