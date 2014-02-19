@@ -128,3 +128,10 @@ class TestRedmineRequest(unittest.TestCase):
 
     def test_none_response(self):
         self.assertEqual(self.redmine.request('get', self.url), None)
+
+    def test_auth(self):
+        self.redmine.username = 'john'
+        self.redmine.password = 'qwerty'
+        self.response.status_code = 200
+        self.response.json.return_value = {'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1}}
+        self.assertEqual(self.redmine.auth().firstname, 'John')

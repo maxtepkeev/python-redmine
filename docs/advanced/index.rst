@@ -5,3 +5,4 @@ Advanced Usage
     :maxdepth: 1
 
     custom_resources
+    external_auth
