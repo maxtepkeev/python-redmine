@@ -172,6 +172,8 @@ Returns a ResourceSet object that contains Resource objects filtered by some con
 
       .. versionadded:: 0.4.0
 
+      |
+
       .. code-block:: python
 
             redmine.project.all().total_count
