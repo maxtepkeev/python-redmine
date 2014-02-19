@@ -8,6 +8,8 @@ Changelog
   valid auth credentials, can be used for user authentication on external resource based on
   Redmine user database (see `docs <http://python-redmine.readthedocs.org/advanced/
   external_auth.html>`__ for details)
+- Fixed: ``JSONDecodeError`` was raised in some Redmine versions during some create/update
+  operations (thanks to `0x55aa <https://github.com/0x55aa>`__)
 - Fixed: User resource ``status`` attribute was converted to IssueStatus resource by mistake
 
 0.5.0 (2014-02-09)
