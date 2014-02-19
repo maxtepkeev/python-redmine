@@ -99,6 +99,7 @@ get
 
     .. versionadded:: 0.4.0
 
+
     Project resource object provides you with on demand includes. On demand includes are the
     other resource objects wrapped in a ResourceSet which are associated with a Project
     resource object. Keep in mind that on demand includes are retrieved in a separate request,
