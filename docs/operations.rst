@@ -10,6 +10,8 @@ support the requested operation, an exception will be thrown.
 Create
 ------
 
+.. versionadded:: 0.2.0
+
 Python Redmine provides 2 create operation methods: ``create`` and ``new``. Unfortunately Redmine
 doesn't support the creation of some resources via REST API. You can read more about it in each
 resource's documentation.
@@ -27,6 +29,8 @@ Creates new resource with given fields and saves it to the Redmine.
 
 new
 +++
+
+.. versionadded:: 0.4.0
 
 Creates new empty resource but doesn't save it to the Redmine. This is useful if you want to
 set some resource fields later based on some condition(s) and only after that save it to the
@@ -48,6 +52,8 @@ Redmine.
 
 Read
 ----
+
+.. versionadded:: 0.1.0
 
 Python Redmine provides 3 read operation methods: ``get``, ``all`` and ``filter``. Each
 of this methods support different keyword arguments depending on the resource used and
@@ -164,6 +170,8 @@ Returns a ResourceSet object that contains Resource objects filtered by some con
     * **total_count**. How much resources of current resource type there are available in
       Redmine.
 
+      .. versionadded:: 0.4.0
+
       .. code-block:: python
 
             redmine.project.all().total_count
@@ -201,6 +209,8 @@ Returns a ResourceSet object that contains Resource objects filtered by some con
 Update
 ------
 
+.. versionadded:: 0.4.0
+
 Python Redmine provides 2 update operation methods: ``update`` and ``save``. Unfortunately Redmine
 doesn't support updates on some resources via REST API. You can read more about it in each
 resource's documentation.
@@ -235,6 +245,8 @@ Saves the current state of a resource to the Redmine.
 
 Delete
 ------
+
+.. versionadded:: 0.3.0
 
 Resources can be deleted via ``delete`` method. Unfortunately Redmine doesn't support the deletion
 of some resources via REST API. You can read more about it in each resource's documentation.

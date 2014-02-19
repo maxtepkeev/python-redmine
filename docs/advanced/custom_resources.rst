@@ -1,6 +1,8 @@
 Custom Resources
 ================
 
+.. versionadded:: 0.5.0
+
 Sometimes there is a need to redefine a resource behaviour to achieve the needed goal. Python
 Redmine provides a feature for such a case called custom resources. Basically this is just a
 normal class inheritance made especially for Python Redmine.

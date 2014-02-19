@@ -97,6 +97,8 @@ object what datetime formatting do you use, e.g. if the string returned is ``31.
 Exception Control
 +++++++++++++++++
 
+.. versionadded:: 0.4.0
+
 If a requested attribute on a resource object doesn't exist, Python Redmine will raise an
 exception by default. Sometimes this may not be the desired behaviour. Python Redmine provides
 a way to control this type of exception.
@@ -115,6 +117,8 @@ Or you can turn it ON only for some resources via a list or tuple of resource cl
 
 Connection Options
 ++++++++++++++++++
+
+.. versionadded:: 0.3.1
 
 Python Redmine uses Requests library for all the http(s) calls to Redmine server. Requests provides
 sensible default connection options, but sometimes you may have a need to change them. For example
