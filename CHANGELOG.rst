@@ -7,16 +7,19 @@ Changelog
 - Added: ``Redmine.auth()`` shortcut for the case if we just want to check if user provided
   valid auth credentials, can be used for user authentication on external resource based on
   Redmine user database (see `docs <http://python-redmine.readthedocs.org/advanced/
-  external_auth.html>`_ for details)
+  external_auth.html>`__ for details)
 - Fixed: User resource ``status`` attribute was converted to IssueStatus resource by mistake
 
 0.5.0 (2014-02-09)
 ++++++++++++++++++
 
 - Added: An ability to create custom resources which allow to easily redefine the behaviour
-  of existing resources (see docs for details)
-- Added: An ability to add/remove watcher to/from issue (see docs for details)
-- Added: An ability to add/remove users to/from group (see docs for details)
+  of existing resources (see `docs <http://python-redmine.readthedocs.org/advanced/
+  custom_resources.html>`__ for details)
+- Added: An ability to add/remove watcher to/from issue (see `docs
+  <http://python-redmine.readthedocs.org/resources/issue.html#watchers>`__ for details)
+- Added: An ability to add/remove users to/from group (see `docs
+  <http://python-redmine.readthedocs.org/resources/group.html#users>`__ for details)
 
 0.4.0 (2014-02-08)
 ++++++++++++++++++
@@ -29,7 +32,7 @@ Changelog
   * CustomFieldValueError
 
 - Added: Update functionality via ``update()`` and ``save()`` methods for resources (see
-  docs for details):
+  `docs <http://python-redmine.readthedocs.org/operations.html#update>`__ for details):
 
   * User
   * Group
@@ -57,20 +60,21 @@ Changelog
 
 - Added: On demand includes, e.g. in addition to ``redmine.group.get(1, include='users')``
   users for a group can also be retrieved on demand via ``group.users`` if include wasn't set
-  (see each resource docs for details)
+  (see `docs <http://python-redmine.readthedocs.org/resources/index.html>`__ for details)
 - Added: ``total_count`` attribute to ResourceSet object which holds the total number
   of resources for the current resource type available in Redmine (thanks to
-  `Andrei Avram <https://github.com/andreiavram>`_)
+  `Andrei Avram <https://github.com/andreiavram>`__)
 - Added: An ability to return ``None`` instead of raising a ``ResourceAttrError`` for all
   or selected resource objects via ``raise_attr_exception`` kwarg on Redmine object (see
-  docs for details or `Issue #6 <https://github.com/maxtepkeev/python-redmine/issues/6>`_)
+  `docs <http://python-redmine.readthedocs.org/configuration.html#exception-control>`__ for
+  details or `Issue #6 <https://github.com/maxtepkeev/python-redmine/issues/6>`__)
 - Added: ``pre_create()``, ``post_create()``, ``pre_update()``, ``post_update()`` resource
   object methods which can be used to execute tasks that should be done before/after
   creating/updating the resource through ``save()`` method
-- Added: Allow to create resources in alternative way via ``new()`` method (see docs for
-  details)
+- Added: Allow to create resources in alternative way via ``new()`` method (see `docs
+  <http://python-redmine.readthedocs.org/operations.html#new>`__ for details)
 - Added: Allow daterange TimeEntry resource filtering via ``from_date`` and ``to_date``
-  keyword arguments (thanks to `Antoni Aloy <https://github.com/aaloy>`_)
+  keyword arguments (thanks to `Antoni Aloy <https://github.com/aaloy>`__)
 - Added: An ability to retrieve Issue version via ``version`` attribute in addition to
   ``fixed_version`` to be more obvious
 - Changed: Documentation for resources rewritten from scratch to be more understandable
@@ -79,11 +83,11 @@ Changelog
   object
 - Fixed: Resource relations were requested from Redmine every time instead of caching the
   result after first request
-- Fixed: `Issue #2 <https://github.com/maxtepkeev/python-redmine/issues/2>`_ (limit/offset
+- Fixed: `Issue #2 <https://github.com/maxtepkeev/python-redmine/issues/2>`__ (limit/offset
   as keyword arguments were broken)
-- Fixed: `Issue #5 <https://github.com/maxtepkeev/python-redmine/issues/5>`_ (Version
+- Fixed: `Issue #5 <https://github.com/maxtepkeev/python-redmine/issues/5>`__ (Version
   resource ``status`` attribute was converted to IssueStatus resource by mistake) (thanks
-  to `Andrei Avram <https://github.com/andreiavram>`_)
+  to `Andrei Avram <https://github.com/andreiavram>`__)
 - Fixed: A lot of small fixes, enhancements and refactoring here and there
 
 0.3.1 (2014-01-23)
@@ -91,13 +95,14 @@ Changelog
 
 - Added: An ability to pass Requests parameters as a dictionary via ``requests`` keyword
   argument on Redmine initialization, i.e. Redmine('\http://redmine.url', requests={}).
-- Fixed: `Issue #1 <https://github.com/maxtepkeev/python-redmine/issues/1>`_ (unable
+- Fixed: `Issue #1 <https://github.com/maxtepkeev/python-redmine/issues/1>`__ (unable
   to connect to Redmine server with invalid ssl certificate).
 
 0.3.0 (2014-01-18)
 ++++++++++++++++++
 
-- Added: Delete functionality via ``delete()`` method for resources (see docs for details):
+- Added: Delete functionality via ``delete()`` method for resources (see `docs
+  <http://python-redmine.readthedocs.org/operations.html#delete>`__ for details):
 
   * User
   * Group
@@ -125,7 +130,8 @@ Changelog
   * ResourceNoFieldsProvidedError
   * ResourceNotFoundError
 
-- Added: Create functionality via ``create()`` method for resources (see docs for details):
+- Added: Create functionality via ``create()`` method for resources (see `docs
+  <http://python-redmine.readthedocs.org/operations.html#create>`__ for details):
 
   * User
   * Group
