@@ -1,7 +1,7 @@
 External Authentication
 =======================
 
-.. versionadded:: 0.5.1
+.. versionadded:: 0.6.0
 
 It is possible to use Python Redmine as a provider for external authentication based on the
 Redmine user database, e.g. imagine you are making a website and you want to only authenticate

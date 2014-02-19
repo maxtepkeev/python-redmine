@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.5.1 (2014-02-XX)
+0.6.0 (2014-02-19)
 ++++++++++++++++++
 
 - Added: ``Redmine.auth()`` shortcut for the case if we just want to check if user provided
