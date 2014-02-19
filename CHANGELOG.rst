@@ -4,6 +4,10 @@ Changelog
 0.5.1 (2014-02-XX)
 ++++++++++++++++++
 
+- Added: ``Redmine.auth()`` shortcut for the case if we just want to check if user provided
+  valid auth credentials, can be used for user authentication on external resource based on
+  Redmine user database (see `docs <http://python-redmine.readthedocs.org/advanced/
+  external_auth.html>`_ for details)
 - Fixed: User resource ``status`` attribute was converted to IssueStatus resource by mistake
 
 0.5.0 (2014-02-09)

@@ -48,6 +48,10 @@ class Redmine(object):
 
         return response['upload']['token']
 
+    def auth(self):
+        """Shortcut for the case if we just want to check if user provided valid auth credentials"""
+        return self.user.get('current')
+
     def request(self, method, url, headers=None, params=None, data=None):
         """Makes requests to Redmine and returns result in json format"""
         kwargs = dict(self.requests, **{
