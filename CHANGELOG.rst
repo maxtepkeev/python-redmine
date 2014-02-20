@@ -1,6 +1,13 @@
 Changelog
 ---------
 
+0.6.1 (2014-02-XX)
+++++++++++++++++++
+
+- Fixed: `Issue #10 <https://github.com/maxtepkeev/python-redmine/issues/10>`__ (Python
+  Redmine was incorrectly raising ``ResourceAttrError`` while creating some resources via
+  new() method)
+
 0.6.0 (2014-02-19)
 ++++++++++++++++++
 

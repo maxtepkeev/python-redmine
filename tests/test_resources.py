@@ -515,7 +515,8 @@ class TestResources(unittest.TestCase):
         self.assertEqual(self.redmine.wiki_page.delete('Foo', project_id=1), True)
 
     def test_wiki_page_update(self):
-        self.response.json.return_value = responses['wiki_page']['get']
+        response = {'wiki_page': {'title': 'Foo', 'version': 1, 'created_on': '2012-06-27T12:48:15Z'}}
+        self.response.json.return_value = response
         wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
         wiki_page.text = 'Foo'
         self.assertEqual(wiki_page.save(), True)

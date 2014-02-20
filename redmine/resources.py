@@ -99,7 +99,7 @@ class _Resource(object):
     _changes = {}
     _includes = ()
     _relations = ()
-    _readonly = ('id', 'created_on', 'updated_on', 'author', 'user', 'project', 'issue')  #: Read-only attributes
+    _readonly = ('id', 'created_on', 'updated_on', 'author', 'user', 'project', 'issue')
     __length_hint__ = None  # fixes Python 2.6 list() call on resource object
 
     def __init__(self, manager, attributes):
@@ -208,7 +208,7 @@ class _Resource(object):
 
     def save(self):
         """Creates or updates a resource"""
-        if any(item in self.attributes and item not in (self._relations + self._includes) for item in self._readonly):
+        if 'id' in self.attributes or 'created_on' in self.attributes:
             self.pre_update()
             self.manager.update(self.internal_id, **self._changes)
             self.attributes['updated_on'] = datetime.utcnow().strftime(self.manager.redmine.datetime_format)
