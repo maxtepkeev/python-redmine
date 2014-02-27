@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.6.1 (2014-02-XX)
+0.6.1 (2014-02-27)
 ++++++++++++++++++
 
 - Fixed: `Issue #10 <https://github.com/maxtepkeev/python-redmine/issues/10>`__ (Python
