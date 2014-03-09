@@ -3,7 +3,7 @@ from string import Formatter
 
 
 def to_string(string):
-    """Converts unicode to utf-8 if on Python 2, leaves as it is if on Python 3"""
+    """Converts unicode to utf-8 if on Python 2, leaves as is if on Python 3"""
     return string.encode('utf-8') if sys.version_info[0] < 3 else string
 
 
