@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+0.7.0 (2014-03-XX)
+++++++++++++++++++
+
+- Added: WikiPage resource now automatically requests all of it's available attributes from
+  Redmine in case if some of them are not available in an existent resource object
+
 0.6.2 (2014-03-09)
 ++++++++++++++++++
 

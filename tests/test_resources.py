@@ -529,11 +529,17 @@ class TestResources(unittest.TestCase):
 
     def test_wiki_page_refresh_by_title(self):
         self.response.json.return_value = responses['wiki_page']['get']
-        wiki_page = self.redmine.wiki_page.get('title', project_id=1)
+        wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
         self.assertEqual(wiki_page.title, 'Foo')
         self.response.json.return_value = {'wiki_page': {'title': 'Bar'}}
         wiki_page = wiki_page.refresh()
         self.assertEqual(wiki_page.title, 'Bar')
+
+    def test_wiki_page_refreshes_itself_if_text_attribute_not_exists(self):
+        self.response.json.return_value = responses['wiki_page']['get']
+        wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
+        self.response.json.return_value = {'wiki_page': {'title': 'Foo', 'text': 'foo'}}
+        self.assertEqual(wiki_page.text, 'foo')
 
     def test_wiki_page_supports_internal_id(self):
         self.response.json.return_value = responses['wiki_page']['get']

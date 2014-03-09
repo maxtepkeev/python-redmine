@@ -467,6 +467,17 @@ class WikiPage(_Resource):
     def internal_id(self):
         return self.title
 
+    def __getattr__(self, item):
+        # If a text attribute of a resource is missing, we should
+        # refresh a resource automatically for user's convenience
+        try:
+            return super(WikiPage, self).__getattr__(item)
+        except ResourceAttrError:
+            if 'text' not in self.attributes:
+                self.attributes = self.refresh().attributes
+
+            return super(WikiPage, self).__getattr__(item)
+
     def __int__(self):
         return self.version
 
