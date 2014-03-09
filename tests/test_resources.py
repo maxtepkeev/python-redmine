@@ -271,6 +271,11 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = response_includes
         self.assertIsInstance(project.trackers, ResourceSet)
 
+    def test_project_returns_status_without_conversion(self):
+        self.response.json.return_value = {'project': {'name': 'Foo', 'id': 1, 'status': 1}}
+        project = self.redmine.project.get(1)
+        self.assertEqual(project.status, 1)
+
     def test_issue_version(self):
         self.assertEqual(self.redmine.issue.resource_class.redmine_version, '1.0')
 
@@ -761,12 +766,9 @@ class TestResources(unittest.TestCase):
         self.assertIsInstance(user.groups, ResourceSet)
 
     def test_user_returns_status_without_conversion(self):
-        from redmine.exceptions import ResourceAttrError
         self.response.json.return_value = {'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1, 'status': 1}}
         user = self.redmine.user.get(1)
         self.assertEqual(user.status, 1)
-        self.response.json.return_value = responses['user']['get']
-        self.assertRaises(ResourceAttrError, lambda: self.redmine.user.get(1).status)
 
     def test_group_version(self):
         self.assertEqual(self.redmine.group.resource_class.redmine_version, '2.1')

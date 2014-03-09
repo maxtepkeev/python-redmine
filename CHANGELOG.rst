@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+0.6.2 (2014-03-09)
+++++++++++++++++++
+
+- Fixed: Project resource ``status`` attribute was converted to IssueStatus resource by mistake
+
 0.6.1 (2014-02-27)
 ++++++++++++++++++
 

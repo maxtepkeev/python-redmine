@@ -99,6 +99,7 @@ class _Resource(object):
     _changes = {}
     _includes = ()
     _relations = ()
+    _unconvertible = ()
     _readonly = ('id', 'created_on', 'updated_on', 'author', 'user', 'project', 'issue')
     __length_hint__ = None  # fixes Python 2.6 list() call on resource object
 
@@ -121,8 +122,12 @@ class _Resource(object):
     def __getattr__(self, item):
         """Returns the requested attribute and makes a conversion if needed"""
         if item in self.attributes:
+            # If item shouldn't be converted let's return it as it is
+            if item in self._unconvertible:
+                return self.attributes[item]
+
             # If item should be a Resource object, let's convert it
-            if item in _RESOURCE_MAP:
+            elif item in _RESOURCE_MAP:
                 manager = ResourceManager(self.manager.redmine, _RESOURCE_MAP[item])
                 return manager.to_resource(self.attributes[item])
 
@@ -288,6 +293,7 @@ class Project(_Resource):
 
     _includes = ('trackers', 'issue_categories')
     _relations = ('wiki_pages', 'memberships', 'issue_categories', 'versions', 'news', 'issues')
+    _unconvertible = ('status',)
     _readonly = _Resource._readonly + ('identifier',)
 
 
@@ -546,14 +552,7 @@ class Version(_Resource):
     query_update = '/versions/{0}.json'
     query_delete = '/versions/{0}.json'
 
-    def __getattr__(self, item):
-        # We have to return status attribute as it is, otherwise it
-        # will be automatically converted to IssueStatus resource
-        # by the parent _Resource object which is not what we want
-        if item == 'status':
-            return self.attributes[item]
-
-        return super(Version, self).__getattr__(item)
+    _unconvertible = ('status',)
 
 
 class User(_Resource):
@@ -571,19 +570,8 @@ class User(_Resource):
     query_delete = '/users/{0}.json'
 
     _includes = ('memberships', 'groups')
+    _unconvertible = ('status',)
     _readonly = _Resource._readonly + ('api_key', 'last_login_on', 'custom_fields')
-
-    def __getattr__(self, item):
-        # We have to return status attribute as it is, otherwise it
-        # will be automatically converted to IssueStatus resource
-        # by the parent _Resource object which is not what we want
-        if item == 'status':
-            try:
-                return self.attributes[item]
-            except KeyError:
-                return self.action_if_attribute_absent()
-
-        return super(User, self).__getattr__(item)
 
     def __str__(self):
         try:
