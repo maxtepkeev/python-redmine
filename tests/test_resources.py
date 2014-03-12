@@ -284,6 +284,12 @@ class TestResources(unittest.TestCase):
         project = self.redmine.project.get(1)
         self.assertEqual(project.status, 1)
 
+    def test_project_is_new(self):
+        project = self.redmine.project.new()
+        self.assertEqual(int(project), 0)
+        self.assertEqual(str(project), '')
+        self.assertEqual(repr(project), '<redmine.resources.Project #0 "">')
+
     def test_issue_version(self):
         self.assertEqual(self.redmine.issue.resource_class.redmine_version, '1.0')
 
@@ -416,6 +422,12 @@ class TestResources(unittest.TestCase):
         issue.version_id = 1
         self.assertEqual(issue.fixed_version.id, 1)
 
+    def test_issue_is_new(self):
+        issue = self.redmine.issue.new()
+        self.assertEqual(int(issue), 0)
+        self.assertEqual(str(issue), '')
+        self.assertEqual(repr(issue), '<redmine.resources.Issue #0 "">')
+
     def test_time_entry_version(self):
         self.assertEqual(self.redmine.time_entry.resource_class.redmine_version, '1.1')
 
@@ -474,6 +486,12 @@ class TestResources(unittest.TestCase):
     def test_time_entry_custom_repr(self):
         self.response.json.return_value = responses['time_entry']['get']
         self.assertEqual(repr(self.redmine.time_entry.get(1)), '<redmine.resources.TimeEntry #1>')
+
+    def test_time_entry_is_new(self):
+        time_entry = self.redmine.time_entry.new()
+        self.assertEqual(int(time_entry), 0)
+        self.assertEqual(str(time_entry), '0')
+        self.assertEqual(repr(time_entry), '<redmine.resources.TimeEntry #0>')
 
     def test_enumeration_version(self):
         self.assertEqual(self.redmine.enumeration.resource_class.redmine_version, '2.2')
@@ -544,7 +562,7 @@ class TestResources(unittest.TestCase):
         self.assertEqual(wiki_page.title, 'Bar')
 
     def test_wiki_page_refreshes_itself_if_text_attribute_not_exists(self):
-        self.response.json.return_value = responses['wiki_page']['get']
+        self.response.json.return_value = {'wiki_page': {'title': 'Foo', 'created_on': '2012-06-27T12:48:15Z'}}
         wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
         self.response.json.return_value = {'wiki_page': {'title': 'Foo', 'text': 'foo'}}
         self.assertEqual(wiki_page.text, 'foo')
@@ -573,6 +591,12 @@ class TestResources(unittest.TestCase):
         response_includes['wiki_page']['attachments'] = responses['attachment']['get']['attachment']
         self.response.json.return_value = response_includes
         self.assertIsInstance(wiki_page.attachments, ResourceSet)
+
+    def test_wiki_page_is_new(self):
+        wiki_page = self.redmine.wiki_page.new()
+        self.assertEqual(int(wiki_page), 0)
+        self.assertEqual(str(wiki_page), '')
+        self.assertEqual(repr(wiki_page), '<redmine.resources.WikiPage "">')
 
     def test_project_membership_version(self):
         self.assertEqual(self.redmine.project_membership.resource_class.redmine_version, '1.4')
@@ -614,6 +638,12 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = responses['project_membership']['get']
         self.assertEqual(repr(self.redmine.project_membership.get(1)), '<redmine.resources.ProjectMembership #1>')
 
+    def test_project_membership_is_new(self):
+        membership = self.redmine.project_membership.new()
+        self.assertEqual(int(membership), 0)
+        self.assertEqual(str(membership), '0')
+        self.assertEqual(repr(membership), '<redmine.resources.ProjectMembership #0>')
+
     def test_issue_category_version(self):
         self.assertEqual(self.redmine.issue_category.resource_class.redmine_version, '1.3')
 
@@ -647,6 +677,12 @@ class TestResources(unittest.TestCase):
         category.name = 'Bar'
         self.assertEqual(category.save(), True)
 
+    def test_issue_category_is_new(self):
+        category = self.redmine.issue_category.new()
+        self.assertEqual(int(category), 0)
+        self.assertEqual(str(category), '')
+        self.assertEqual(repr(category), '<redmine.resources.IssueCategory #0 "">')
+
     def test_issue_relation_version(self):
         self.assertEqual(self.redmine.issue_relation.resource_class.redmine_version, '1.3')
 
@@ -678,6 +714,12 @@ class TestResources(unittest.TestCase):
     def test_issue_relation_custom_repr(self):
         self.response.json.return_value = responses['issue_relation']['get']
         self.assertEqual(repr(self.redmine.issue_relation.get(1)), '<redmine.resources.IssueRelation #1>')
+
+    def test_issue_relation_is_new(self):
+        relation = self.redmine.issue_relation.new()
+        self.assertEqual(int(relation), 0)
+        self.assertEqual(str(relation), '0')
+        self.assertEqual(repr(relation), '<redmine.resources.IssueRelation #0>')
 
     def test_version_version(self):
         self.assertEqual(self.redmine.version.resource_class.redmine_version, '1.3')
@@ -716,6 +758,12 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = {'version': {'id': 1, 'name': 'Foo', 'status': 'foo'}}
         version = self.redmine.version.get(1)
         self.assertEqual(version.status, 'foo')
+
+    def test_version_is_new(self):
+        version = self.redmine.version.new()
+        self.assertEqual(int(version), 0)
+        self.assertEqual(str(version), '')
+        self.assertEqual(repr(version), '<redmine.resources.Version #0 "">')
 
     def test_user_version(self):
         self.assertEqual(self.redmine.user.resource_class.redmine_version, '1.1')
@@ -784,6 +832,12 @@ class TestResources(unittest.TestCase):
         user = self.redmine.user.get(1)
         self.assertEqual(user.status, 1)
 
+    def test_user_is_new(self):
+        user = self.redmine.user.new()
+        self.assertEqual(int(user), 0)
+        self.assertEqual(str(user), '')
+        self.assertEqual(repr(user), '<redmine.resources.User #0 "">')
+
     def test_group_version(self):
         self.assertEqual(self.redmine.group.resource_class.redmine_version, '2.1')
 
@@ -839,6 +893,12 @@ class TestResources(unittest.TestCase):
         group = self.redmine.group.get(1)
         self.response.content = ''
         self.assertEqual(group.user.remove(1), True)
+
+    def test_group_is_new(self):
+        group = self.redmine.group.new()
+        self.assertEqual(int(group), 0)
+        self.assertEqual(str(group), '')
+        self.assertEqual(repr(group), '<redmine.resources.Group #0 "">')
 
     def test_role_version(self):
         self.assertEqual(self.redmine.role.resource_class.redmine_version, '1.4')

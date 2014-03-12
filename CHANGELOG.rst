@@ -9,6 +9,9 @@ Changelog
 - Added: Support for setting date/datetime resource attributes using date/datetime Python objects
 - Added: Support for using date/datetime Python objects in all ResourceManager methods, i.e.
   ``new()``, ``create()``, ``update()``, ``delete()``, ``get()``, ``all()``, ``filter()``
+- Fixed: `Issue #14 <https://github.com/maxtepkeev/python-redmine/issues/14>`__ (Python Redmine
+  was incorrectly raising ``ResourceAttrError`` when trying to call ``repr()``, ``str()`` and
+  ``int()`` on resources, created via ``new()`` method
 
 0.6.2 (2014-03-09)
 ++++++++++++++++++

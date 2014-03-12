@@ -160,6 +160,11 @@ class _Resource(object):
         except ValueError:
             return self.attributes[item]
         except KeyError:
+            if self.is_new():
+                if item in ('id', 'version'):
+                    return 0
+                return ''
+
             return self._action_if_attribute_absent()
 
     def __setattr__(self, item, value):
@@ -214,7 +219,7 @@ class _Resource(object):
 
     def save(self):
         """Creates or updates a resource"""
-        if 'id' in self.attributes or 'created_on' in self.attributes:
+        if not self.is_new():
             self.pre_update()
             self.manager.update(self.internal_id, **self._changes)
             self.attributes['updated_on'] = datetime.utcnow().strftime(self.manager.redmine.datetime_format)
@@ -242,6 +247,10 @@ class _Resource(object):
     def internal_id(self):
         """Returns identifier of the resource for usage in internals of the library"""
         return self.id
+
+    def is_new(self):
+        """Checks if resource was just created and not yet saved to Redmine or it is existent resource"""
+        return False if 'id' in self.attributes or 'created_on' in self.attributes else True
 
     def _action_if_attribute_absent(self):
         """Whether we should raise an exception in case of attribute absence or just return None"""
