@@ -183,6 +183,7 @@ class _Resource(object):
             self.attributes['custom_fields'].extend(value)
             self._changes[item] = self.attributes['custom_fields']
         else:
+            value = self.manager.prepare_params({item: value})[item]
             self._changes[item] = value
             self.attributes[item] = value
 

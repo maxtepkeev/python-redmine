@@ -45,7 +45,8 @@ create
       - tree
       - system
 
-    :param string due_date: (optional). Expiration date.
+    :param due_date: (optional). Expiration date.
+    :type due_date: string or date object
     :param string description: (optional). Version description.
     :param string wiki_page_title: (optional). Version wiki page title.
     :return: Version resource object
@@ -76,7 +77,7 @@ new
     >>> version.name = 'Vacation'
     >>> version.status = 'open'
     >>> version.sharing = 'none'
-    >>> version.due_date='2014-01-30'
+    >>> version.due_date = date(2014, 1, 30)
     >>> version.save()
     True
 
@@ -172,7 +173,8 @@ update
       - tree
       - system
 
-    :param string due_date: (optional). Expiration date.
+    :param due_date: (optional). Expiration date.
+    :type due_date: string or date object
     :param string description: (optional). Version description.
     :param string wiki_page_title: (optional). Version wiki page title.
     :return: True
@@ -200,7 +202,7 @@ save
     >>> version.name = 'Vacation'
     >>> version.status = 'open'
     >>> version.sharing = 'none'
-    >>> version.due_date = '2014-01-30'
+    >>> version.due_date = date(2014, 1, 30)
     >>> version.description = 'my vacation'
     >>> version.wiki_page_title = 'Vacation'
     >>> version.save()

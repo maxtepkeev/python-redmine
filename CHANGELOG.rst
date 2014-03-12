@@ -6,6 +6,9 @@ Changelog
 
 - Added: WikiPage resource now automatically requests all of it's available attributes from
   Redmine in case if some of them are not available in an existent resource object
+- Added: Support for setting date/datetime resource attributes using date/datetime Python objects
+- Added: Support for using date/datetime Python objects in all ResourceManager methods, i.e.
+  ``new()``, ``create()``, ``update()``, ``delete()``, ``get()``, ``all()``, ``filter()``
 
 0.6.2 (2014-03-09)
 ++++++++++++++++++

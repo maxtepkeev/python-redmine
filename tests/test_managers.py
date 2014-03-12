@@ -120,8 +120,14 @@ class TestResourceManager(unittest.TestCase):
     def test_get_filtered_resources(self):
         self.assertIsInstance(self.redmine.issue.filter(project_id='foo'), ResourceSet)
 
-    def test_try_to_get_all_resources_if_filtering_fails(self):
-        self.assertIsInstance(self.redmine.time_entry.filter(bad_filter='foo'), ResourceSet)
+    def test_prepare_params(self):
+        from datetime import date, datetime
+        time_entries = self.redmine.time_entry.filter(from_date=date(2014, 3, 9), to_date=date(2014, 3, 10))
+        self.assertEqual(time_entries.manager.params['from'], '2014-03-09')
+        self.assertEqual(time_entries.manager.params['to'], '2014-03-10')
+        time_entries = self.redmine.time_entry.filter(from_date=datetime(2014, 3, 9), to_date=datetime(2014, 3, 10))
+        self.assertEqual(time_entries.manager.params['from'], '2014-03-09T00:00:00Z')
+        self.assertEqual(time_entries.manager.params['to'], '2014-03-10T00:00:00Z')
 
     @mock.patch('requests.post')
     def test_create_resource(self, mock_post):

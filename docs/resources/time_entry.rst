@@ -24,7 +24,8 @@ create
 
     :param integer issue_id or project_id: (required). The issue id or project id to log time on.
     :param integer hours: (required). The number of spent hours.
-    :param string spent_on: (optional). The date the time was spent (current date if not set).
+    :param spent_on: (optional). The date the time was spent (current date if not set).
+    :type spent_on: string or date object
     :param integer activity_id: (optional). The id of the time activity. This parameter is required unless
       a default activity is defined in Redmine.
     :param string comments: (optional). Short description for the entry (255 characters max).
@@ -53,12 +54,13 @@ new
 
     >>> time_entry = redmine.time_entry.new()
     >>> time_entry.issue_id = 123
-    >>> time_entry.spent_on = '2014-01-14'
+    >>> time_entry.spent_on = date(2014, 1, 14)
     >>> time_entry.hours = 3
     >>> time_entry.activity_id = 10
     >>> time_entry.comments = 'hello'
     >>> time_entry.save()
     True
+
 
 Read methods
 ------------
@@ -113,9 +115,12 @@ filter
     :type project_id: integer or string
     :param integer issue_id: (optional). Get time entries from the issue with the given id.
     :param integer user_id: (optional). Get time entries for the user with the given id.
-    :param string spent_on: (optional). Date when hours was spent (for Redmine >= 2.3.0).
-    :param string from_date: (optional). Limit time entries from this date (new in version 0.4.0).
-    :param string to_date: (optional). Limit time entries until this date (new in version 0.4.0).
+    :param spent_on: (optional). Date when hours was spent (for Redmine >= 2.3.0).
+    :type spent_on: string or date object
+    :param from_date: (optional). Limit time entries from this date (new in version 0.4.0).
+    :type from_date: string or date object
+    :param to_date: (optional). Limit time entries until this date (new in version 0.4.0).
+    :type to_date: string or date object
     :param string hours: (optional). Get only time entries that are =, >=, <= hours.
     :param integer limit: (optional). How much resources to return.
     :param integer offset: (optional). Starting from what resource to return the other resources.
@@ -153,7 +158,8 @@ update
     :param integer resource_id: (required). Time entry id.
     :param integer issue_id or project_id: (optional). The issue id or project id to log time on.
     :param integer hours: (optional). The number of spent hours.
-    :param string spent_on: (optional). The date the time was spent.
+    :param spent_on: (optional). The date the time was spent.
+    :type spent_on: string or date object
     :param integer activity_id: (optional). The id of the time activity.
     :param string comments: (optional). Short description for the entry (255 characters max).
     :return: True
@@ -179,7 +185,7 @@ save
 
     >>> time_entry = redmine.time_entry.get(1)
     >>> time_entry.issue_id = 123
-    >>> time_entry.spent_on = '2014-01-14'
+    >>> time_entry.spent_on = date(2014, 1, 14)
     >>> time_entry.hours = 3
     >>> time_entry.activity_id = 10
     >>> time_entry.comments = 'hello'

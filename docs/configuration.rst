@@ -84,7 +84,16 @@ objects:
 
 .. code-block:: python
 
+    '2013-12-31'           -> datetime.date(2013, 12, 31)
     '2013-12-31T13:27:47Z' -> datetime.datetime(2013, 12, 31, 13, 27, 47)
+
+Starting from Python Redmine 0.7.0 the conversion also works backwards, i.e. you can use Python's
+date/datetime objects when setting resource attributes or in ResourceManager methods, e.g. ``filter()``:
+
+.. code-block:: python
+
+    datetime.date(2013, 12, 31)                 -> '2013-12-31'
+    datetime.datetime(2013, 12, 31, 13, 27, 47) -> '2013-12-31T13:27:47Z'
 
 If the conversion doesn't work for you and you receive strings instead of objects, you have a
 different datetime formatting than default. To make the conversion work you have to tell Redmine

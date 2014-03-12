@@ -1,3 +1,4 @@
+import datetime
 from distutils.version import LooseVersion
 from redmine.resultsets import ResourceSet
 from redmine.utilities import MemorizeFormatter
@@ -114,7 +115,7 @@ class ResourceManager(object):
         except KeyError as exception:
             raise ValidationError('{0} argument is required'.format(exception))
 
-        self.params = self.resource_class.translate_params(params)
+        self.params = self.prepare_params(params)
         self.container = self.resource_class.container_one
         return self.resource_class(self, self.retrieve()[0])
 
@@ -124,7 +125,7 @@ class ResourceManager(object):
             raise ResourceBadMethodError()
 
         self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_all)
-        self.params = self.resource_class.translate_params(params)
+        self.params = self.prepare_params(params)
         self.container = self.resource_class.container_all
         return ResourceSet(self)
 
@@ -142,7 +143,7 @@ class ResourceManager(object):
         except KeyError:
             raise ResourceFilterError()
 
-        self.params = self.resource_class.translate_params(filters)
+        self.params = self.prepare_params(filters)
         return ResourceSet(self)
 
     def create(self, **fields):
@@ -165,7 +166,7 @@ class ResourceManager(object):
             raise ValidationError('{0} field is required'.format(exception))
 
         self.container = self.resource_class.container_one
-        data = {self.resource_class.container_create: formatter.unused_kwargs}
+        data = {self.resource_class.container_create: self.prepare_params(formatter.unused_kwargs)}
 
         # Almost all resources are created via POST method, but some
         # resources are created via PUT, so we should check for this
@@ -208,7 +209,7 @@ class ResourceManager(object):
                 raise ValidationError('{0} argument is required'.format(exception))
 
         url = '{0}{1}'.format(self.redmine.url, query_update)
-        data = {self.resource_class.container_update: formatter.unused_kwargs}
+        data = {self.resource_class.container_update: self.prepare_params(formatter.unused_kwargs)}
         return self.redmine.request('put', url, data=data)
 
     def delete(self, resource_id, **params):
@@ -221,4 +222,16 @@ class ResourceManager(object):
         except KeyError as exception:
             raise ValidationError('{0} argument is required'.format(exception))
 
-        return self.redmine.request('delete', url, params=params)
+        return self.redmine.request('delete', url, params=self.prepare_params(params))
+
+    def prepare_params(self, params):
+        """Prepares params so Redmine could understand them correctly"""
+        for name, value in params.items():
+            type_ = type(value)
+
+            if type_ is datetime.date:
+                params[name] = value.strftime(self.redmine.date_format)
+            elif type_ is datetime.datetime:
+                params[name] = value.strftime(self.redmine.datetime_format)
+
+        return self.resource_class.translate_params(params)

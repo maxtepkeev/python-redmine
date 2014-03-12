@@ -36,8 +36,10 @@ create
     :param watcher_user_ids: (optional). User ids who will be watching this issue.
     :type watcher_user_ids: list or tuple
     :param integer parent_issue_id: (optional). Parent issue id.
-    :param string start_date: (optional). Issue start date.
-    :param string due_date: (optional). Issue end date.
+    :param start_date: (optional). Issue start date.
+    :type start_date: string or date object
+    :param due_date: (optional). Issue end date.
+    :type due_date: string or date object
     :param integer estimated_hours: (optional). Issue estimated hours.
     :param integer done_ratio: (optional). Issue done ratio.
     :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
@@ -85,8 +87,8 @@ new
     >>> issue.assigned_to_id = 123
     >>> issue.watcher_user_ids = [123]
     >>> issue.parent_issue_id = 345
-    >>> issue.start_date = '2014-01-01'
-    >>> issue.due_date = '2014-02-01'
+    >>> issue.start_date = date(2014, 1, 1)
+    >>> issue.due_date = date(2014, 2, 1)
     >>> issue.estimated_hours = 4
     >>> issue.done_ratio = 40
     >>> issue.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
@@ -257,8 +259,10 @@ update
     :param boolean is_private: (optional). Whether issue is private.
     :param integer assigned_to_id: (optional). Issue will be assigned to this user id.
     :param integer parent_issue_id: (optional). Parent issue id.
-    :param string start_date: (optional). Issue start date.
-    :param string due_date: (optional). Issue end date.
+    :param start_date: (optional). Issue start date.
+    :type start_date: string or date object
+    :param due_date: (optional). Issue end date.
+    :type due_date: string or date object
     :param integer estimated_hours: (optional). Issue estimated hours.
     :param integer done_ratio: (optional). Issue done ratio.
     :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
@@ -303,8 +307,8 @@ save
     >>> issue.priority_id = 7
     >>> issue.assigned_to_id = 123
     >>> issue.parent_issue_id = 345
-    >>> issue.start_date = '2014-01-01'
-    >>> issue.due_date = '2014-02-01'
+    >>> issue.start_date = date(2014, 1, 1)
+    >>> issue.due_date = date(2014, 2, 1)
     >>> issue.estimated_hours = 4
     >>> issue.done_ratio = 40
     >>> issue.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
