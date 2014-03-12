@@ -1,9 +1,10 @@
 from setuptools import setup
 
+exec(open('redmine/version.py').read())
 
 setup(
     name='python-redmine',
-    version='0.6.2',
+    version=__version__,
     packages=['redmine'],
     url='https://github.com/maxtepkeev/python-redmine',
     license=open('LICENSE').read(),

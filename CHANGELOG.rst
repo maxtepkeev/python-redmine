@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.7.0 (2014-03-XX)
+0.7.0 (2014-03-12)
 ++++++++++++++++++
 
 - Added: WikiPage resource now automatically requests all of it's available attributes from
