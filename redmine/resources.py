@@ -160,7 +160,7 @@ class _Resource(object):
         except ValueError:
             return self.attributes[item]
         except KeyError:
-            return self.action_if_attribute_absent()
+            return self._action_if_attribute_absent()
 
     def __setattr__(self, item, value):
         """Sets the requested attribute"""
@@ -243,7 +243,7 @@ class _Resource(object):
         """Returns identifier of the resource for usage in internals of the library"""
         return self.id
 
-    def action_if_attribute_absent(self):
+    def _action_if_attribute_absent(self):
         """Whether we should raise an exception in case of attribute absence or just return None"""
         raise_attr_exception = self.manager.redmine.raise_attr_exception
 
