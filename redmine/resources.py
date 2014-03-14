@@ -96,7 +96,6 @@ class _Resource(object):
     query_update = None
     query_delete = None
 
-    _changes = {}
     _includes = ()
     _relations = ()
     _unconvertible = ()
@@ -110,6 +109,7 @@ class _Resource(object):
         self.attributes.update(dict((relation, None) for relation in self._relations))
         self.attributes.update(attributes)
         self._readonly += self._relations + self._includes
+        self._changes = {}
 
     def __getitem__(self, item):
         """Provides a dictionary like access to resource attributes"""
@@ -169,7 +169,7 @@ class _Resource(object):
 
     def __setattr__(self, item, value):
         """Sets the requested attribute"""
-        if item in self.__class__.__base__.__dict__:
+        if item in self.__class__.__base__.__dict__ or item.startswith('_'):
             super(_Resource, self).__setattr__(item, value)
         elif item in self._readonly:
             raise ReadonlyAttrError()
