@@ -1,6 +1,13 @@
 Changelog
 ---------
 
+0.7.1 (2014-03-14)
+++++++++++++++++++
+
+- Fixed: `Issue #16 <https://github.com/maxtepkeev/python-redmine/issues/16>`__ (When a resource
+  was created via a ``new()`` method, the next resource created after that inherited all the
+  attribute values of the previous resource)
+
 0.7.0 (2014-03-12)
 ++++++++++++++++++
 
