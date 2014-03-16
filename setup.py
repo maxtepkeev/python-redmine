@@ -13,7 +13,7 @@ setup(
     description='Library for communicating with a Redmine project management application',
     long_description=open('README.rst').read() + '\n\n' + open('CHANGELOG.rst').read(),
     keywords='redmine',
-    install_requires=['requests >= 2.1.0'],
+    install_requires=['requests >= 2.1.0', 'version'],
     zip_safe=False,
     classifiers=[
         'Development Status :: 4 - Beta',
