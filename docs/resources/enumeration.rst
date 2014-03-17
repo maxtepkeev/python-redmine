@@ -44,6 +44,7 @@ filter
 
       - issue_priorities
       - time_entry_activities
+      - document_categories
 
     :param integer limit: (optional). How much resources to return.
     :param integer offset: (optional). Starting from what resource to return the other resources.
