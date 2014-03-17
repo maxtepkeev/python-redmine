@@ -240,8 +240,14 @@ class _Resource(object):
 
     @property
     def url(self):
-        """Returns full url to the resource for humans"""
-        return self.manager.url.replace('.json', '')
+        """Returns full url to the resource for humans if there is one"""
+        if self.query_one is not None:
+            return '{0}{1}'.format(
+                self.manager.redmine.url,
+                self.query_one.format(self.internal_id).replace('.json', '')
+            )
+        else:
+            return None
 
     @property
     def internal_id(self):
@@ -420,6 +426,10 @@ class Enumeration(_Resource):
     container_filter = '{resource}'
     query_filter = '/enumerations/{resource}.json'
 
+    @property
+    def url(self):
+        return '{0}/enumerations/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
+
 
 class Attachment(_Resource):
     redmine_version = '1.3'
@@ -472,6 +482,16 @@ class WikiPage(_Resource):
 
     def post_update(self):
         self.attributes['version'] = self.attributes.get('version', 0) + 1
+
+    @property
+    def url(self):
+        return '{0}{1}'.format(
+            self.manager.redmine.url,
+            self.query_one.format(
+                self.internal_id,
+                project_id=self.manager.params.get('project_id', 0)
+            ).replace('.json', '')
+        )
 
     @property
     def internal_id(self):
@@ -665,11 +685,27 @@ class News(_Resource):
     query_all = '/news.json'
     query_filter = '/news.json'
 
+    @property
+    def url(self):
+        return '{0}/news/{1}'.format(self.manager.redmine.url, self.internal_id)
+
+    def __repr__(self):
+        return '<{0}.{1} #{2} "{3}">'.format(
+            self.__class__.__module__,
+            self.__class__.__name__,
+            self.id,
+            to_string(self.title)
+        )
+
 
 class IssueStatus(_Resource):
     redmine_version = '1.3'
     container_all = 'issue_statuses'
     query_all = '/issue_statuses.json'
+
+    @property
+    def url(self):
+        return '{0}/issue_statuses/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
 
 
 class Tracker(_Resource):
@@ -677,17 +713,33 @@ class Tracker(_Resource):
     container_all = 'trackers'
     query_all = '/trackers.json'
 
+    @property
+    def url(self):
+        return '{0}/trackers/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
+
 
 class Query(_Resource):
     redmine_version = '1.3'
     container_all = 'queries'
     query_all = '/queries.json'
 
+    @property
+    def url(self):
+        return '{0}/projects/{1}/issues?query_id={2}'.format(
+            self.manager.redmine.url,
+            self.attributes.get('project_id', 0),
+            self.internal_id
+        )
+
 
 class CustomField(_Resource):
     redmine_version = '2.4'
     container_all = 'custom_fields'
     query_all = '/custom_fields.json'
+
+    @property
+    def url(self):
+        return '{0}/custom_fields/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
 
     def __getattr__(self, item):
         # If custom field was created after the creation of the resource,

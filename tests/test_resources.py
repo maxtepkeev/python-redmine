@@ -290,6 +290,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(str(project), '')
         self.assertEqual(repr(project), '<redmine.resources.Project #0 "">')
 
+    def test_project_url(self):
+        self.response.json.return_value = responses['project']['get']
+        self.assertEqual(self.redmine.project.get(1).url, '{0}/projects/1'.format(self.url))
+
     def test_issue_version(self):
         self.assertEqual(self.redmine.issue.resource_class.redmine_version, '1.0')
 
@@ -409,6 +413,12 @@ class TestResources(unittest.TestCase):
         self.assertEqual(str(issue.journals[0]), '1')
         self.assertEqual(repr(issue.journals[0]), '<redmine.resources.IssueJournal #1>')
 
+    def test_issue_journals_url(self):
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        issue.attributes['journals'] = [{'id': 1}]
+        self.assertEqual(issue.journals[0].url, None)
+
     def test_issue_version_can_be_retrieved_via_version_attribute(self):
         from redmine.resources import Version
         response = {'issue': {'subject': 'Foo', 'id': 1, 'fixed_version': {'id': 1, 'name': 'Foo'}}}
@@ -427,6 +437,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(int(issue), 0)
         self.assertEqual(str(issue), '')
         self.assertEqual(repr(issue), '<redmine.resources.Issue #0 "">')
+
+    def test_issue_url(self):
+        self.response.json.return_value = responses['issue']['get']
+        self.assertEqual(self.redmine.issue.get(1).url, '{0}/issues/1'.format(self.url))
 
     def test_time_entry_version(self):
         self.assertEqual(self.redmine.time_entry.resource_class.redmine_version, '1.1')
@@ -493,6 +507,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(str(time_entry), '0')
         self.assertEqual(repr(time_entry), '<redmine.resources.TimeEntry #0>')
 
+    def test_time_entry_url(self):
+        self.response.json.return_value = responses['time_entry']['get']
+        self.assertEqual(self.redmine.time_entry.get(1).url, '{0}/time_entries/1'.format(self.url))
+
     def test_enumeration_version(self):
         self.assertEqual(self.redmine.enumeration.resource_class.redmine_version, '2.2')
 
@@ -503,6 +521,13 @@ class TestResources(unittest.TestCase):
         self.assertEqual(enumerations[0].name, 'Foo')
         self.assertEqual(enumerations[1].id, 2)
         self.assertEqual(enumerations[1].name, 'Bar')
+
+    def test_enumeration_url(self):
+        self.response.json.return_value = responses['enumeration']['filter']
+        self.assertEqual(
+            self.redmine.enumeration.filter(resource='time_entry_activities')[0].url,
+            '{0}/enumerations/1/edit'.format(self.url)
+        )
 
     def test_attachment_version(self):
         self.assertEqual(self.redmine.attachment.resource_class.redmine_version, '1.3')
@@ -520,6 +545,10 @@ class TestResources(unittest.TestCase):
     def test_attachment_custom_repr(self):
         self.response.json.return_value = responses['attachment']['get']
         self.assertEqual(repr(self.redmine.attachment.get(1)), '<redmine.resources.Attachment #1 "foo.jpg">')
+
+    def test_attachment_url(self):
+        self.response.json.return_value = responses['attachment']['get']
+        self.assertEqual(self.redmine.attachment.get(1).url, '{0}/attachments/1'.format(self.url))
 
     def test_wiki_page_version(self):
         self.assertEqual(self.redmine.wiki_page.resource_class.redmine_version, '2.2')
@@ -598,6 +627,13 @@ class TestResources(unittest.TestCase):
         self.assertEqual(str(wiki_page), '')
         self.assertEqual(repr(wiki_page), '<redmine.resources.WikiPage "">')
 
+    def test_wiki_page_url(self):
+        self.response.json.return_value = responses['wiki_page']['get']
+        self.assertEqual(
+            self.redmine.wiki_page.get('Foo', project_id='Foo').url,
+            '{0}/projects/Foo/wiki/Foo'.format(self.url)
+        )
+
     def test_project_membership_version(self):
         self.assertEqual(self.redmine.project_membership.resource_class.redmine_version, '1.4')
 
@@ -644,6 +680,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(str(membership), '0')
         self.assertEqual(repr(membership), '<redmine.resources.ProjectMembership #0>')
 
+    def test_project_membership_url(self):
+        self.response.json.return_value = responses['project_membership']['get']
+        self.assertEqual(self.redmine.project_membership.get(1).url, '{0}/memberships/1'.format(self.url))
+
     def test_issue_category_version(self):
         self.assertEqual(self.redmine.issue_category.resource_class.redmine_version, '1.3')
 
@@ -683,6 +723,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(str(category), '')
         self.assertEqual(repr(category), '<redmine.resources.IssueCategory #0 "">')
 
+    def test_issue_category_url(self):
+        self.response.json.return_value = responses['issue_category']['get']
+        self.assertEqual(self.redmine.issue_category.get(1).url, '{0}/issue_categories/1'.format(self.url))
+
     def test_issue_relation_version(self):
         self.assertEqual(self.redmine.issue_relation.resource_class.redmine_version, '1.3')
 
@@ -720,6 +764,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(int(relation), 0)
         self.assertEqual(str(relation), '0')
         self.assertEqual(repr(relation), '<redmine.resources.IssueRelation #0>')
+
+    def test_issue_relation_url(self):
+        self.response.json.return_value = responses['issue_relation']['get']
+        self.assertEqual(self.redmine.issue_relation.get(1).url, '{0}/relations/1'.format(self.url))
 
     def test_version_version(self):
         self.assertEqual(self.redmine.version.resource_class.redmine_version, '1.3')
@@ -764,6 +812,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(int(version), 0)
         self.assertEqual(str(version), '')
         self.assertEqual(repr(version), '<redmine.resources.Version #0 "">')
+
+    def test_version_url(self):
+        self.response.json.return_value = responses['version']['get']
+        self.assertEqual(self.redmine.version.get(1).url, '{0}/versions/1'.format(self.url))
 
     def test_user_version(self):
         self.assertEqual(self.redmine.user.resource_class.redmine_version, '1.1')
@@ -838,6 +890,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(str(user), '')
         self.assertEqual(repr(user), '<redmine.resources.User #0 "">')
 
+    def test_user_url(self):
+        self.response.json.return_value = responses['user']['get']
+        self.assertEqual(self.redmine.user.get(1).url, '{0}/users/1'.format(self.url))
+
     def test_group_version(self):
         self.assertEqual(self.redmine.group.resource_class.redmine_version, '2.1')
 
@@ -900,6 +956,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(str(group), '')
         self.assertEqual(repr(group), '<redmine.resources.Group #0 "">')
 
+    def test_group_url(self):
+        self.response.json.return_value = responses['group']['get']
+        self.assertEqual(self.redmine.group.get(1).url, '{0}/groups/1'.format(self.url))
+
     def test_role_version(self):
         self.assertEqual(self.redmine.role.resource_class.redmine_version, '1.4')
 
@@ -916,6 +976,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(roles[0].name, 'Foo')
         self.assertEqual(roles[1].id, 2)
         self.assertEqual(roles[1].name, 'Bar')
+
+    def test_role_url(self):
+        self.response.json.return_value = responses['role']['get']
+        self.assertEqual(self.redmine.role.get(1).url, '{0}/roles/1'.format(self.url))
 
     def test_news_version(self):
         self.assertEqual(self.redmine.news.resource_class.redmine_version, '1.1')
@@ -936,6 +1000,14 @@ class TestResources(unittest.TestCase):
         self.assertEqual(news[1].id, 2)
         self.assertEqual(news[1].title, 'Bar')
 
+    def test_news_url(self):
+        self.response.json.return_value = responses['news']['filter']
+        self.assertEqual(self.redmine.news.filter(project_id=1)[0].url, '{0}/news/1'.format(self.url))
+
+    def test_news_repr(self):
+        self.response.json.return_value = responses['news']['filter']
+        self.assertEqual(repr(self.redmine.news.filter(project_id=1)[0]), '<redmine.resources.News #1 "Foo">')
+
     def test_issue_status_version(self):
         self.assertEqual(self.redmine.issue_status.resource_class.redmine_version, '1.3')
 
@@ -946,6 +1018,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(statuses[0].name, 'Foo')
         self.assertEqual(statuses[1].id, 2)
         self.assertEqual(statuses[1].name, 'Bar')
+
+    def test_issue_status_url(self):
+        self.response.json.return_value = responses['issue_status']['all']
+        self.assertEqual(self.redmine.issue_status.all()[0].url, '{0}/issue_statuses/1/edit'.format(self.url))
 
     def test_tracker_version(self):
         self.assertEqual(self.redmine.tracker.resource_class.redmine_version, '1.3')
@@ -958,6 +1034,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(trackers[1].id, 2)
         self.assertEqual(trackers[1].name, 'Bar')
 
+    def test_tracker_url(self):
+        self.response.json.return_value = responses['tracker']['all']
+        self.assertEqual(self.redmine.tracker.all()[0].url, '{0}/trackers/1/edit'.format(self.url))
+
     def test_query_version(self):
         self.assertEqual(self.redmine.query.resource_class.redmine_version, '1.3')
 
@@ -968,6 +1048,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(queries[0].name, 'Foo')
         self.assertEqual(queries[1].id, 2)
         self.assertEqual(queries[1].name, 'Bar')
+
+    def test_query_url(self):
+        self.response.json.return_value = responses['query']['all']
+        self.assertEqual(self.redmine.query.all()[0].url, '{0}/projects/0/issues?query_id=1'.format(self.url))
 
     def test_custom_field_version(self):
         self.assertEqual(self.redmine.custom_field.resource_class.redmine_version, '2.4')
@@ -986,3 +1070,7 @@ class TestResources(unittest.TestCase):
         self.assertEqual(fields[0].id, 1)
         self.assertEqual(fields[0].name, 'Foo')
         self.assertEqual(fields[0].value, 0)
+
+    def test_custom_field_url(self):
+        self.response.json.return_value = responses['custom_field']['all']
+        self.assertEqual(self.redmine.custom_field.all()[0].url, '{0}/custom_fields/1/edit'.format(self.url))
