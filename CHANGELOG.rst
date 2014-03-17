@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+0.7.2 (2014-03-17)
+++++++++++++++++++
+
+- Fixed: `Issue #19 <https://github.com/maxtepkeev/python-redmine/issues/19>`__ (Resources
+  obtained via ``filter()`` and ``all()`` methods have incomplete url attribute)
+- Fixed: Redmine server url with forward slash could cause errors in rare cases
+- Fixed: Python Redmine was incorrectly raising ``ResourceAttrError`` when trying to call
+  ``repr()`` on a News resource
+
 0.7.1 (2014-03-14)
 ++++++++++++++++++
 
