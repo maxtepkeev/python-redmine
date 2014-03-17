@@ -7,6 +7,13 @@ Dependencies
 Python Redmine relies heavily on great `Requests <http://docs.python-requests.org>`_
 library by Kenneth Reitz for all the http(s) calls.
 
+Conflicts
+---------
+
+Python Redmine can't be used together with `PyRedmine <https://pypi.python.org/pypi/pyredmine>`_
+because they both use same module name, i.e. ``redmine`` which causes unexpected behaviour for
+both packages. That means that you have to uninstall PyRedmine before installing Python Redmine.
+
 PyPI
 ----
 
