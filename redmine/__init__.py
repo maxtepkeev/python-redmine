@@ -19,7 +19,7 @@ from redmine.exceptions import (
 class Redmine(object):
     """An entry point for all requests"""
     def __init__(self, url, **kwargs):
-        self.url = url
+        self.url = url.rstrip('/')
         self.key = kwargs.get('key', None)
         self.ver = kwargs.get('version', None)
         self.username = kwargs.get('username', None)
