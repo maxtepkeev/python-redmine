@@ -163,6 +163,18 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(manager.update('Foo', title='Bar'), True)
         del manager.params['project_id']
 
+    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    @mock.patch('requests.put')
+    @mock.patch('requests.post')
+    def test_update_resource_with_uploads(self, mock_post, mock_put):
+        mock_put.return_value = mock.Mock(status_code=200, content='')
+        mock_post.return_value = response = mock.Mock(status_code=201)
+        response.json.return_value = {'upload': {'token': '123456'}}
+        manager = self.redmine.issue
+        manager.params['subject'] = 'Foo'
+        self.assertEqual(manager.update(1, subject='Bar', uploads=[{'path': 'foo'}]), True)
+        del manager.params['subject']
+
     @mock.patch('requests.delete')
     def test_delete_resource(self, mock_delete):
         mock_delete.return_value = mock.Mock(status_code=200, content='')

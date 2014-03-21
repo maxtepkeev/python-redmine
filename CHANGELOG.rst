@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+0.7.3 (2014-03-XX)
+++++++++++++++++++
+
+- Fixed: `Issue #23 <https://github.com/maxtepkeev/python-redmine/issues/23>`__ (File uploads
+  via ``update()`` method didn't work
+
 0.7.2 (2014-03-17)
 ++++++++++++++++++
 
