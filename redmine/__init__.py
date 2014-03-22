@@ -3,7 +3,7 @@ import requests
 from distutils.version import LooseVersion
 from redmine.version import __version__
 from redmine.managers import ResourceManager
-from redmine.utilities import to_string
+from redmine.utilities import to_string, json_response
 from redmine.exceptions import (
     AuthError,
     ConflictError,
@@ -79,7 +79,7 @@ class Redmine(object):
         if response.status_code in (200, 201):
             if not response.content.strip():
                 return True
-            return response.json()
+            return json_response(response.json)
         elif response.status_code == 401:
             raise AuthError()
         elif response.status_code == 404:
@@ -89,7 +89,7 @@ class Redmine(object):
         elif response.status_code == 412 and self.impersonate is not None:
             raise ImpersonateError()
         elif response.status_code == 422:
-            raise ValidationError(to_string(', '.join(response.json()['errors'])))
+            raise ValidationError(to_string(', '.join(json_response(response.json)['errors'])))
         elif response.status_code == 500:
             raise ServerError()
 

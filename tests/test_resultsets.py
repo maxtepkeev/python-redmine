@@ -1,4 +1,4 @@
-from tests import unittest, mock, Redmine, URL
+from tests import unittest, mock, json_response, Redmine, URL
 
 response = {
     'projects': [
@@ -13,7 +13,7 @@ class TestResultSet(unittest.TestCase):
     def setUp(self):
         self.url = URL
         self.redmine = Redmine(self.url)
-        self.response = mock.Mock(**{'status_code': 200, 'json.return_value': response})
+        self.response = mock.Mock(status_code=200, json=json_response(response))
         patcher = mock.patch('requests.get', return_value=self.response)
         patcher.start()
         self.addCleanup(patcher.stop)
@@ -25,7 +25,7 @@ class TestResultSet(unittest.TestCase):
         )
 
     def test_offset_limit_all(self):
-        self.response.json.return_value = dict(response, total_count=3, limit=0, offset=0)
+        self.response.json = json_response(dict(response, total_count=3, limit=0, offset=0))
         projects = self.redmine.project.all()
         self.assertEqual(projects.limit, 0)
         self.assertEqual(projects.offset, 0)
@@ -35,7 +35,7 @@ class TestResultSet(unittest.TestCase):
 
     def test_offset_limit(self):
         response_with_limit_offset = {'total_count': 2, 'limit': 3, 'offset': 1, 'projects': response['projects'][1:3]}
-        self.response.json.return_value = response_with_limit_offset
+        self.response.json = json_response(response_with_limit_offset)
         projects = self.redmine.project.all()[1:3]
         self.assertEqual(projects.limit, 3)
         self.assertEqual(projects.offset, 1)
@@ -50,14 +50,14 @@ class TestResultSet(unittest.TestCase):
         self.assertEqual(projects[1].id, 3)
 
     def test_total_count(self):
-        self.response.json.return_value = dict(response, total_count=3, limit=0, offset=0)
+        self.response.json = json_response(dict(response, total_count=3, limit=0, offset=0))
         projects = self.redmine.project.all()
         len(projects)
         self.assertEqual(projects.total_count, 3)
 
     def test_total_count_mimic(self):
         response_with_custom_fields = {'project': dict(response['projects'][0], custom_fields=[{'id': 1, 'value': 0}])}
-        self.response.json.return_value = response_with_custom_fields
+        self.response.json = json_response(response_with_custom_fields)
         project = self.redmine.project.get('foo')
         self.assertEqual(project.custom_fields.total_count, 1)
 
@@ -66,13 +66,13 @@ class TestResultSet(unittest.TestCase):
         self.assertRaises(ResultSetTotalCountError, lambda: self.redmine.project.all().total_count)
 
     def test_resultset_is_empty(self):
-        self.response.json.return_value = None
+        self.response.json = json_response(None)
         projects = self.redmine.project.all()
         self.assertEqual(len(projects), 0)
         self.assertEqual(list(projects), [])
 
     def test_sliced_resultset_is_empty(self):
-        self.response.json.return_value = None
+        self.response.json = json_response(None)
         projects = self.redmine.project.all()[:200]
         self.assertEqual(len(projects), 0)
         self.assertEqual(list(projects), [])

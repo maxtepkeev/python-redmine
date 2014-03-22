@@ -4,6 +4,9 @@ Changelog
 0.7.3 (2014-03-XX)
 ++++++++++++++++++
 
+- Fixed: `Issue #20 <https://github.com/maxtepkeev/python-redmine/issues/20>`__ (Lowered
+  Requests version requirements. Python Redmine now requires Requests starting from 0.12.1
+  instead of 2.1.0 in previous versions
 - Fixed: `Issue #23 <https://github.com/maxtepkeev/python-redmine/issues/23>`__ (File uploads
   via ``update()`` method didn't work
 

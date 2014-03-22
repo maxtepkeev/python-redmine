@@ -1,4 +1,4 @@
-from tests import unittest, mock, Redmine, URL
+from tests import unittest, mock, json_response, Redmine, URL
 
 
 class TestRedmine(unittest.TestCase):
@@ -65,13 +65,13 @@ class TestRedmineRequest(unittest.TestCase):
         self.redmine.username = 'john'
         self.redmine.password = 'qwerty'
         self.response.status_code = 200
-        self.response.json.return_value = {'success': True}
+        self.response.json = json_response({'success': True})
         self.assertEqual(self.redmine.request('get', self.url)['success'], True)
 
     def test_successful_response_via_api_key(self):
         self.redmine.key = '123'
         self.response.status_code = 200
-        self.response.json.return_value = {'success': True}
+        self.response.json = json_response({'success': True})
         self.assertEqual(self.redmine.request('get', self.url)['success'], True)
 
     def test_successful_response_via_put_method(self):
@@ -82,7 +82,7 @@ class TestRedmineRequest(unittest.TestCase):
     @mock.patch('redmine.open', mock.mock_open(), create=True)
     def test_successful_file_upload(self):
         self.response.status_code = 201
-        self.response.json.return_value = {'upload': {'token': '123456'}}
+        self.response.json = json_response({'upload': {'token': '123456'}})
         self.assertEqual(self.redmine.upload('foo'), '123456')
 
     def test_file_upload_no_file_exception(self):
@@ -118,7 +118,7 @@ class TestRedmineRequest(unittest.TestCase):
     def test_validation_error_exception(self):
         from redmine.exceptions import ValidationError
         self.response.status_code = 422
-        self.response.json.return_value = {'errors': ['foo', 'bar']}
+        self.response.json = json_response({'errors': ['foo', 'bar']})
         self.assertRaises(ValidationError, lambda: self.redmine.request('post', self.url))
 
     def test_not_found_error_exception(self):
@@ -133,5 +133,5 @@ class TestRedmineRequest(unittest.TestCase):
         self.redmine.username = 'john'
         self.redmine.password = 'qwerty'
         self.response.status_code = 200
-        self.response.json.return_value = {'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1}}
+        self.response.json = json_response({'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1}})
         self.assertEqual(self.redmine.auth().firstname, 'John')

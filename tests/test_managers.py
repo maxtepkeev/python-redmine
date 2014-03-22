@@ -1,4 +1,4 @@
-from tests import unittest, mock, Redmine, URL
+from tests import unittest, mock, json_response, Redmine, URL
 from redmine.managers import ResourceManager
 from redmine.resources import Project
 from redmine.resultsets import ResourceSet
@@ -108,7 +108,7 @@ class TestResourceManager(unittest.TestCase):
     @mock.patch('requests.get')
     def test_get_single_resource(self, mock_get):
         mock_get.return_value = response = mock.Mock(status_code=200)
-        response.json.return_value = {'project': {'name': 'Foo', 'identifier': 'foo', 'id': 1}}
+        response.json = json_response({'project': {'name': 'Foo', 'identifier': 'foo', 'id': 1}})
         project = self.redmine.project.get('foo')
         self.assertEqual(project.name, 'Foo')
         self.assertEqual(project.identifier, 'foo')
@@ -132,7 +132,7 @@ class TestResourceManager(unittest.TestCase):
     @mock.patch('requests.post')
     def test_create_resource(self, mock_post):
         mock_post.return_value = response = mock.Mock(status_code=201)
-        response.json.return_value = {'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1}}
+        response.json = json_response({'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1}})
         user = self.redmine.user.create(firstname='John', lastname='Smith')
         self.assertEqual(user.firstname, 'John')
         self.assertEqual(user.lastname, 'Smith')
@@ -141,10 +141,10 @@ class TestResourceManager(unittest.TestCase):
     @mock.patch('requests.post')
     def test_create_resource_with_uploads(self, mock_post):
         mock_post.return_value = response = mock.Mock(status_code=201)
-        response.json.return_value = {
+        response.json = json_response({
             'upload': {'token': '123456'},
             'issue': {'subject': 'Foo', 'project_id': 1, 'id': 1}
-        }
+        })
         issue = self.redmine.issue.create(project_id=1, subject='Foo', uploads=[{'path': 'foo'}])
         self.assertEqual(issue.project_id, 1)
         self.assertEqual(issue.subject, 'Foo')
@@ -169,7 +169,7 @@ class TestResourceManager(unittest.TestCase):
     def test_update_resource_with_uploads(self, mock_post, mock_put):
         mock_put.return_value = mock.Mock(status_code=200, content='')
         mock_post.return_value = response = mock.Mock(status_code=201)
-        response.json.return_value = {'upload': {'token': '123456'}}
+        response.json = json_response({'upload': {'token': '123456'}})
         manager = self.redmine.issue
         manager.params['subject'] = 'Foo'
         self.assertEqual(manager.update(1, subject='Bar', uploads=[{'path': 'foo'}]), True)
