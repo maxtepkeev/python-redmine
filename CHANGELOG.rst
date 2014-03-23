@@ -4,6 +4,7 @@ Changelog
 0.7.3 (2014-03-XX)
 ++++++++++++++++++
 
+- Changed: _Resource.attributes renamed to _Resource._attributes
 - Fixed: `Issue #20 <https://github.com/maxtepkeev/python-redmine/issues/20>`__ (Lowered
   Requests version requirements. Python Redmine now requires Requests starting from 0.12.1
   instead of 2.1.0 in previous versions)

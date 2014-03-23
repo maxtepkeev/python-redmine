@@ -81,7 +81,6 @@ _RESOURCE_MULTIPLE_ATTR_ID_MAP = {
 class _Resource(object):
     """Implementation of Redmine resource"""
     manager = None
-    attributes = {}
 
     redmine_version = None
     container_all = None
@@ -105,9 +104,9 @@ class _Resource(object):
     def __init__(self, manager, attributes):
         """Accepts manager instance object and resource attributes dict"""
         self.manager = manager
-        self.attributes = dict((include, None) for include in self._includes)
-        self.attributes.update(dict((relation, None) for relation in self._relations))
-        self.attributes.update(attributes)
+        self._attributes = dict((include, None) for include in self._includes)
+        self._attributes.update(dict((relation, None) for relation in self._relations))
+        self._attributes.update(attributes)
         self._readonly += self._relations + self._includes
         self._changes = {}
 
@@ -121,44 +120,44 @@ class _Resource(object):
 
     def __getattr__(self, item):
         """Returns the requested attribute and makes a conversion if needed"""
-        if item in self.attributes:
+        if item in self._attributes:
             # If item shouldn't be converted let's return it as it is
             if item in self._unconvertible:
-                return self.attributes[item]
+                return self._attributes[item]
 
             # If item should be a Resource object, let's convert it
             elif item in _RESOURCE_MAP:
                 manager = ResourceManager(self.manager.redmine, _RESOURCE_MAP[item])
-                return manager.to_resource(self.attributes[item])
+                return manager.to_resource(self._attributes[item])
 
             # If item should be a ResourceSet object, let's convert it
-            elif item in _RESOURCE_SET_MAP and self.attributes[item] is not None:
+            elif item in _RESOURCE_SET_MAP and self._attributes[item] is not None:
                 manager = ResourceManager(self.manager.redmine, _RESOURCE_SET_MAP[item])
-                return manager.to_resource_set(self.attributes[item])
+                return manager.to_resource_set(self._attributes[item])
 
             # If item is a relation and should be requested from Redmine, let's do it
-            elif item in self._relations and self.attributes[item] is None:
+            elif item in self._relations and self._attributes[item] is None:
                 filters = {'{0}_id'.format(self.__class__.__name__.lower()): self.internal_id}
                 manager = ResourceManager(self.manager.redmine, _RESOURCE_RELATIONS_MAP[item])
-                self.attributes[item] = manager.filter(**filters)
-                return self.attributes[item]
+                self._attributes[item] = manager.filter(**filters)
+                return self._attributes[item]
 
             # If item is an include and should be requested from Redmine, let's do it
-            elif item in self._includes and self.attributes[item] is None:
-                self.attributes[item] = self.refresh(include=item).attributes[item]
+            elif item in self._includes and self._attributes[item] is None:
+                self._attributes[item] = self.refresh(include=item)._attributes[item]
                 return getattr(self, item)
 
         try:
             # If the requested item is a date/datetime string
             # we need to convert it to the appropriate object
-            possible_dt = str(self.attributes[item])
+            possible_dt = str(self._attributes[item])
 
             try:
                 return datetime.strptime(possible_dt, self.manager.redmine.datetime_format)
             except ValueError:
                 return datetime.strptime(possible_dt, self.manager.redmine.date_format).date()
         except ValueError:
-            return self.attributes[item]
+            return self._attributes[item]
         except KeyError:
             if self.is_new():
                 if item in ('id', 'version'):
@@ -174,28 +173,28 @@ class _Resource(object):
         elif item in self._readonly:
             raise ReadonlyAttrError()
         elif item == 'custom_fields':
-            for org_index, org_field in enumerate(self.attributes.setdefault('custom_fields', [])):
+            for org_index, org_field in enumerate(self._attributes.setdefault('custom_fields', [])):
                 if 'value' not in org_field:
-                    self.attributes['custom_fields'][org_index]['value'] = '0'
+                    self._attributes['custom_fields'][org_index]['value'] = '0'
 
                 try:
                     for new_index, new_field in enumerate(value):
                         if org_field['id'] == new_field['id']:
-                            self.attributes['custom_fields'][org_index]['value'] = value.pop(new_index)['value']
+                            self._attributes['custom_fields'][org_index]['value'] = value.pop(new_index)['value']
                 except (TypeError, KeyError):
                     raise CustomFieldValueError()
 
-            self.attributes['custom_fields'].extend(value)
-            self._changes[item] = self.attributes['custom_fields']
+            self._attributes['custom_fields'].extend(value)
+            self._changes[item] = self._attributes['custom_fields']
         else:
             value = self.manager.prepare_params({item: value})[item]
             self._changes[item] = value
-            self.attributes[item] = value
+            self._attributes[item] = value
 
             if item in _RESOURCE_SINGLE_ATTR_ID_MAP:
-                self.attributes[_RESOURCE_SINGLE_ATTR_ID_MAP[item]] = {'id': value}
+                self._attributes[_RESOURCE_SINGLE_ATTR_ID_MAP[item]] = {'id': value}
             elif item in _RESOURCE_MULTIPLE_ATTR_ID_MAP:
-                self.attributes[_RESOURCE_MULTIPLE_ATTR_ID_MAP[item]] = [{'id': member_id} for member_id in value]
+                self._attributes[_RESOURCE_MULTIPLE_ATTR_ID_MAP[item]] = [{'id': member_id} for member_id in value]
 
     def refresh(self, **params):
         """Reloads resource data from Redmine"""
@@ -222,12 +221,12 @@ class _Resource(object):
         if not self.is_new():
             self.pre_update()
             self.manager.update(self.internal_id, **self._changes)
-            self.attributes['updated_on'] = datetime.utcnow().strftime(self.manager.redmine.datetime_format)
+            self._attributes['updated_on'] = datetime.utcnow().strftime(self.manager.redmine.datetime_format)
             self.post_update()
         else:
             self.pre_create()
             for item, value in self.manager.create(**self._changes):
-                self.attributes[item] = value
+                self._attributes[item] = value
             self.post_create()
 
         self._changes = {}
@@ -256,7 +255,7 @@ class _Resource(object):
 
     def is_new(self):
         """Checks if resource was just created and not yet saved to Redmine or it is existent resource"""
-        return False if 'id' in self.attributes or 'created_on' in self.attributes else True
+        return False if 'id' in self._attributes or 'created_on' in self._attributes else True
 
     def _action_if_attribute_absent(self):
         """Whether we should raise an exception in case of attribute absence or just return None"""
@@ -271,11 +270,11 @@ class _Resource(object):
 
     def __dir__(self):
         """We need to show only real Redmine resource attributes on dir() call"""
-        return list(self.attributes.keys())
+        return list(self._attributes.keys())
 
     def __iter__(self):
         """Provides a way to iterate through resource attributes and its values"""
-        return iter(self.attributes.items())
+        return iter(self._attributes.items())
 
     def __int__(self):
         """Integer representation of the Redmine resource object"""
@@ -481,7 +480,7 @@ class WikiPage(_Resource):
         return super(WikiPage, self).refresh(**dict(params, project_id=self.manager.params.get('project_id', 0)))
 
     def post_update(self):
-        self.attributes['version'] = self.attributes.get('version', 0) + 1
+        self._attributes['version'] = self._attributes.get('version', 0) + 1
 
     @property
     def url(self):
@@ -503,8 +502,8 @@ class WikiPage(_Resource):
         try:
             return super(WikiPage, self).__getattr__(item)
         except ResourceAttrError:
-            if 'text' not in self.attributes:
-                self.attributes = self.refresh().attributes
+            if 'text' not in self._attributes:
+                self._attributes = self.refresh()._attributes
 
             return super(WikiPage, self).__getattr__(item)
 
@@ -727,7 +726,7 @@ class Query(_Resource):
     def url(self):
         return '{0}/projects/{1}/issues?query_id={2}'.format(
             self.manager.redmine.url,
-            self.attributes.get('project_id', 0),
+            self._attributes.get('project_id', 0),
             self.internal_id
         )
 
@@ -746,7 +745,7 @@ class CustomField(_Resource):
         # i.e. project, and it's not used in the resource, there will be
         # no value attribute defined, that is why we need to return 0 or
         # we'll get an exception
-        if item == 'value' and not item in self.attributes:
+        if item == 'value' and not item in self._attributes:
             return 0
 
         return super(CustomField, self).__getattr__(item)

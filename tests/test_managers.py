@@ -153,7 +153,7 @@ class TestResourceManager(unittest.TestCase):
         project = self.redmine.project.new()
         defaults = dict((include, None) for include in project._includes)
         defaults.update(dict((relation, None) for relation in project._relations))
-        self.assertEqual(project.attributes, defaults)
+        self.assertEqual(project._attributes, defaults)
 
     @mock.patch('requests.put')
     def test_update_resource(self, mock_put):

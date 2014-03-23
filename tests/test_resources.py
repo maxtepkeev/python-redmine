@@ -117,9 +117,9 @@ class TestResources(unittest.TestCase):
         from datetime import date, datetime
         issue = self.redmine.issue.new()
         issue.start_date = date(2014, 3, 9)
-        self.assertEqual(issue.attributes['start_date'], '2014-03-09')
+        self.assertEqual(issue._attributes['start_date'], '2014-03-09')
         issue.start_date = datetime(2014, 3, 9, 20, 2, 2)
-        self.assertEqual(issue.attributes['start_date'], '2014-03-09T20:02:02Z')
+        self.assertEqual(issue._attributes['start_date'], '2014-03-09T20:02:02Z')
 
     def test_supports_setting_of_attributes_via_dict(self):
         project = self.redmine.project.new()
@@ -186,13 +186,13 @@ class TestResources(unittest.TestCase):
     def test_resource_dict_is_converted_to_resource_object(self):
         self.response.json = json_response(responses['issue']['get'])
         issue = self.redmine.issue.get(1)
-        issue.attributes['author'] = {'id': 1, 'name': 'John Smith'}
+        issue._attributes['author'] = {'id': 1, 'name': 'John Smith'}
         self.assertEqual(repr(issue.author), '<redmine.resources.User #1 "John Smith">')
 
     def test_resource_list_of_dicts_is_converted_to_resource_set(self):
         self.response.json = json_response(responses['issue']['get'])
         issue = self.redmine.issue.get(1)
-        issue.attributes['custom_fields'] = [{'id': 1, 'name': 'Foo'}, {'id': 2, 'name': 'Bar'}]
+        issue._attributes['custom_fields'] = [{'id': 1, 'name': 'Foo'}, {'id': 2, 'name': 'Bar'}]
         self.assertEqual(
             repr(issue.custom_fields),
             '<redmine.resultsets.ResourceSet object with CustomField resources>'
@@ -394,7 +394,7 @@ class TestResources(unittest.TestCase):
     def test_issue_custom_repr_without_subject(self):
         self.response.json = json_response(responses['issue']['get'])
         issue = self.redmine.issue.get(1)
-        del issue['attributes']['subject']
+        del issue['_attributes']['subject']
         self.assertEqual(repr(issue), '<redmine.resources.Issue #1>')
 
     def test_issue_custom_str(self):
@@ -404,20 +404,20 @@ class TestResources(unittest.TestCase):
     def test_issue_custom_str_without_subject(self):
         self.response.json = json_response(responses['issue']['get'])
         issue = self.redmine.issue.get(1)
-        del issue['attributes']['subject']
+        del issue['_attributes']['subject']
         self.assertEqual(str(issue), '1')
 
     def test_issue_journals(self):
         self.response.json = json_response(responses['issue']['get'])
         issue = self.redmine.issue.get(1)
-        issue.attributes['journals'] = [{'id': 1}]
+        issue._attributes['journals'] = [{'id': 1}]
         self.assertEqual(str(issue.journals[0]), '1')
         self.assertEqual(repr(issue.journals[0]), '<redmine.resources.IssueJournal #1>')
 
     def test_issue_journals_url(self):
         self.response.json = json_response(responses['issue']['get'])
         issue = self.redmine.issue.get(1)
-        issue.attributes['journals'] = [{'id': 1}]
+        issue._attributes['journals'] = [{'id': 1}]
         self.assertEqual(issue.journals[0].url, None)
 
     def test_issue_version_can_be_retrieved_via_version_attribute(self):
