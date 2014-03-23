@@ -6,9 +6,9 @@ Changelog
 
 - Fixed: `Issue #20 <https://github.com/maxtepkeev/python-redmine/issues/20>`__ (Lowered
   Requests version requirements. Python Redmine now requires Requests starting from 0.12.1
-  instead of 2.1.0 in previous versions
+  instead of 2.1.0 in previous versions)
 - Fixed: `Issue #23 <https://github.com/maxtepkeev/python-redmine/issues/23>`__ (File uploads
-  via ``update()`` method didn't work
+  via ``update()`` method didn't work)
 
 0.7.2 (2014-03-17)
 ++++++++++++++++++
@@ -36,7 +36,7 @@ Changelog
   ``new()``, ``create()``, ``update()``, ``delete()``, ``get()``, ``all()``, ``filter()``
 - Fixed: `Issue #14 <https://github.com/maxtepkeev/python-redmine/issues/14>`__ (Python Redmine
   was incorrectly raising ``ResourceAttrError`` when trying to call ``repr()``, ``str()`` and
-  ``int()`` on resources, created via ``new()`` method
+  ``int()`` on resources, created via ``new()`` method)
 
 0.6.2 (2014-03-09)
 ++++++++++++++++++
