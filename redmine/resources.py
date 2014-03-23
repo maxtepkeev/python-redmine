@@ -80,8 +80,6 @@ _RESOURCE_MULTIPLE_ATTR_ID_MAP = {
 
 class _Resource(object):
     """Implementation of Redmine resource"""
-    manager = None
-
     redmine_version = None
     container_all = None
     container_one = None
@@ -98,6 +96,7 @@ class _Resource(object):
     _includes = ()
     _relations = ()
     _unconvertible = ()
+    _members = ('manager',)
     _readonly = ('id', 'created_on', 'updated_on', 'author', 'user', 'project', 'issue')
     __length_hint__ = None  # fixes Python 2.6 list() call on resource object
 
@@ -168,7 +167,7 @@ class _Resource(object):
 
     def __setattr__(self, item, value):
         """Sets the requested attribute"""
-        if item in self.__class__.__base__.__dict__ or item.startswith('_'):
+        if item in self._members or item.startswith('_'):
             super(_Resource, self).__setattr__(item, value)
         elif item in self._readonly:
             raise ReadonlyAttrError()

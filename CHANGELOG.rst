@@ -4,6 +4,9 @@ Changelog
 0.7.3 (2014-03-XX)
 ++++++++++++++++++
 
+- Added: Introduced new ``_Resource._members`` class variable where all instance variables
+  which are not started with underscore should be listed. This will resolve recursion issues
+  in custom resources because of how ``__setattr__`` works in Python
 - Changed: _Resource.attributes renamed to _Resource._attributes
 - Fixed: `Issue #20 <https://github.com/maxtepkeev/python-redmine/issues/20>`__ (Lowered
   Requests version requirements. Python Redmine now requires Requests starting from 0.12.1
