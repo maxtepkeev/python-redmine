@@ -41,7 +41,7 @@ class Redmine(object):
             raise VersionMismatchError('File upload')
 
         try:
-            with open(filepath) as stream:
+            with open(filepath, 'rb') as stream:
                 url = '{0}{1}'.format(self.url, '/uploads.json')
                 response = self.request('post', url, data=stream, headers={'Content-Type': 'application/octet-stream'})
         except IOError:
