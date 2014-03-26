@@ -4,6 +4,9 @@ Changelog
 0.7.3 (2014-03-XX)
 ++++++++++++++++++
 
+- Added: Introduced the detection of conflicting packages, i.e. if a conflicting package is
+  found (PyRedmineWS at this time is the only one), the installation procedure will be aborted
+  and a warning message will be shown with the detailed description of the problem
 - Added: Introduced new ``_Resource._members`` class attribute where all instance attributes
   which are not started with underscore should be listed. This will resolve recursion issues
   in custom resources because of how ``__setattr__`` works in Python

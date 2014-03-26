@@ -1,4 +1,27 @@
+import sys
 from setuptools import setup
+from pkg_resources import get_distribution, DistributionNotFound
+
+try:
+    get_distribution('pyredmine')
+    sys.stdout.write('''
+{delimiter}
+                  INSTALLATION ABORTED
+
+PyRedmineWS library was found on this system. Unfortunately
+Python Redmine and PyRedmineWS can't work together because
+they both use the same package name, i.e. redmine. There is
+no need to use PyRedmineWS because it's development seems
+to be discontinued and Python Redmine provides a lot more
+features than PyRedmineWS. In order to complete the install
+process, please uninstall PyRedmineWS first and rerun the
+installation procedure for Python Redmine afterwards
+{delimiter}
+
+'''.format(delimiter='=' * 60))
+    sys.exit(0)
+except DistributionNotFound:
+    pass
 
 exec(open('redmine/version.py').read())
 
