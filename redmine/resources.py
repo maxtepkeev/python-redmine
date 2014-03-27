@@ -406,7 +406,7 @@ class TimeEntry(_Resource):
         if 'to_date' in params:
             params['to'] = params.pop('to_date')
 
-        return params
+        return super(TimeEntry, cls).translate_params(params)
 
     def __str__(self):
         return str(self.id)
