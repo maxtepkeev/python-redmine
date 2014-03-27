@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.7.3 (2014-03-XX)
+0.8.0 (2014-03-27)
 ++++++++++++++++++
 
 - Added: Introduced the detection of conflicting packages, i.e. if a conflicting package is
