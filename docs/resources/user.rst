@@ -92,11 +92,13 @@ get
 
 .. hint::
 
-    You can easily get the details of the current user with:
+    You can easily get the details of the user whose credentials were used to access the API:
 
     .. code-block:: python
 
         >>> user = redmine.user.get('current')
+        >>> user
+        <redmine.resources.User #17 "John Smith">
 
 .. hint::
 
