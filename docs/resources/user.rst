@@ -92,6 +92,14 @@ get
 
 .. hint::
 
+    You can easily get the details of the current user with:
+
+    .. code-block:: python
+
+        >>> user = redmine.user.get('current')
+
+.. hint::
+
     .. versionadded:: 0.4.0
 
     |
