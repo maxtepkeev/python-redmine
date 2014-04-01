@@ -212,7 +212,8 @@ filter
 
     :type status_id: integer or string
     :param integer assigned_to_id: (optional). Get issues which are assigned to the given user id.
-      To get the issues assigned to the user whose credentials were used to access the API pass ``me``.
+      To get the issues assigned to the user whose credentials were used to access the API pass ``me``
+      as a string.
     :param string cf_x: (optional). Get issues with the given value for custom field with an ID of x.
     :param string sort: (optional). Column to sort with. Append :desc to invert the order.
     :param integer limit: (optional). How much resources to return.
