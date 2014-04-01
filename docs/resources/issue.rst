@@ -192,7 +192,7 @@ filter
 
     Returns issue resources that match the given lookup parameters.
 
-    :param project_id: (required). Id or identifier of issue's project.
+    :param project_id: (optional). Id or identifier of issue's project.
     :type project_id: integer or string
     :param subproject_id: (optional). Get issues from the subproject with the
       given id. You can use project_id=X, subproject_id=!* to get only the issues of
@@ -212,6 +212,7 @@ filter
 
     :type status_id: integer or string
     :param integer assigned_to_id: (optional). Get issues which are assigned to the given user id.
+      To get the issues assigned to the user whose credentials were used to access the API pass ``me``.
     :param string cf_x: (optional). Get issues with the given value for custom field with an ID of x.
     :param string sort: (optional). Column to sort with. Append :desc to invert the order.
     :param integer limit: (optional). How much resources to return.
