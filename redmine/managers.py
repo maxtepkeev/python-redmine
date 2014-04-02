@@ -57,9 +57,6 @@ class ResourceManager(object):
         while True:
             response = self.redmine.request('get', self.url, params=dict(self.params, limit=limit, offset=offset))
 
-            if response is None:
-                break
-
             # A single resource was requested via get()
             if isinstance(response[self.container], dict):
                 results = response[self.container]

@@ -28,6 +28,9 @@ is the list of all exceptions that Python Redmine can throw:
 ``ServerError``
     Redmine internal error
 
+``UnknownError``
+    Redmine returned unknown error
+
 ``RequestEntityTooLargeError``
     Size of the request exceeds the capacity limit on the server
 

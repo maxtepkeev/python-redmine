@@ -66,13 +66,13 @@ class TestResultSet(unittest.TestCase):
         self.assertRaises(ResultSetTotalCountError, lambda: self.redmine.project.all().total_count)
 
     def test_resultset_is_empty(self):
-        self.response.json = json_response(None)
+        self.response.json = json_response({'limit': 100, 'projects': [], 'total_count': 0, 'offset': 0})
         projects = self.redmine.project.all()
         self.assertEqual(len(projects), 0)
         self.assertEqual(list(projects), [])
 
     def test_sliced_resultset_is_empty(self):
-        self.response.json = json_response(None)
+        self.response.json = json_response({'limit': 100, 'projects': [], 'total_count': 0, 'offset': 0})
         projects = self.redmine.project.all()[:200]
         self.assertEqual(len(projects), 0)
         self.assertEqual(list(projects), [])

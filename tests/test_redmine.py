@@ -131,8 +131,10 @@ class TestRedmineRequest(unittest.TestCase):
         self.response.status_code = 404
         self.assertRaises(ResourceNotFoundError, lambda: self.redmine.request('get', self.url))
 
-    def test_none_response(self):
-        self.assertEqual(self.redmine.request('get', self.url), None)
+    def test_unknown_error_exception(self):
+        from redmine.exceptions import UnknownError
+        self.response.status_code = 888
+        self.assertRaises(UnknownError, lambda: self.redmine.request('get', self.url))
 
     def test_auth(self):
         self.redmine.username = 'john'

@@ -54,6 +54,12 @@ class RequestEntityTooLargeError(BaseRedmineError):
         )
 
 
+class UnknownError(BaseRedmineError):
+    """Redmine returned unknown error"""
+    def __init__(self, code):
+        super(UnknownError, self).__init__("Redmine returned unknown error with the code {0}".format(code))
+
+
 class ValidationError(BaseRedmineError):
     """Redmine validation error"""
     def __init__(self, error):

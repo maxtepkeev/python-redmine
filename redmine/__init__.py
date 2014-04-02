@@ -13,7 +13,8 @@ from redmine.exceptions import (
     NoFileError,
     VersionMismatchError,
     ResourceNotFoundError,
-    RequestEntityTooLargeError
+    RequestEntityTooLargeError,
+    UnknownError
 )
 
 
@@ -96,4 +97,4 @@ class Redmine(object):
         elif response.status_code == 500:
             raise ServerError()
 
-        return None
+        raise UnknownError(response.status_code)

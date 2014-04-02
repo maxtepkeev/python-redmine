@@ -4,7 +4,11 @@ Changelog
 0.8.1 (2014-04-XX)
 ++++++++++++++++++
 
-- Added: ``RequestEntityTooLargeError`` exception
+- Added: New exceptions:
+
+  * RequestEntityTooLargeError
+  * UnknownError
+
 - Fixed: `Issue #27 <https://github.com/maxtepkeev/python-redmine/issues/27>`__ (Project and
   Issue resources ``parent`` attribute was returned as a dict instead of being converted to
   Resource object)
