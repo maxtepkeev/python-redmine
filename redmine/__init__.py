@@ -12,7 +12,8 @@ from redmine.exceptions import (
     ValidationError,
     NoFileError,
     VersionMismatchError,
-    ResourceNotFoundError
+    ResourceNotFoundError,
+    RequestEntityTooLargeError
 )
 
 
@@ -88,6 +89,8 @@ class Redmine(object):
             raise ConflictError
         elif response.status_code == 412 and self.impersonate is not None:
             raise ImpersonateError()
+        elif response.status_code == 413:
+            raise RequestEntityTooLargeError()
         elif response.status_code == 422:
             raise ValidationError(to_string(', '.join(json_response(response.json)['errors'])))
         elif response.status_code == 500:

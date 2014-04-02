@@ -115,6 +115,11 @@ class TestRedmineRequest(unittest.TestCase):
         self.response.status_code = 500
         self.assertRaises(ServerError, lambda: self.redmine.request('post', self.url))
 
+    def test_request_entity_too_large_error_exception(self):
+        from redmine.exceptions import RequestEntityTooLargeError
+        self.response.status_code = 413
+        self.assertRaises(RequestEntityTooLargeError, lambda: self.redmine.request('post', self.url))
+
     def test_validation_error_exception(self):
         from redmine.exceptions import ValidationError
         self.response.status_code = 422

@@ -46,6 +46,14 @@ class ServerError(BaseRedmineError):
         super(ServerError, self).__init__('Redmine returned internal error, perhaps you are doing something wrong')
 
 
+class RequestEntityTooLargeError(BaseRedmineError):
+    """Size of the request exceeds the capacity limit on the server"""
+    def __init__(self):
+        super(RequestEntityTooLargeError, self).__init__(
+            "The requested resource doesn't allow POST requests or the size of the request exceeds the capacity limit"
+        )
+
+
 class ValidationError(BaseRedmineError):
     """Redmine validation error"""
     def __init__(self, error):
