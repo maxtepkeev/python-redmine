@@ -310,6 +310,12 @@ class Project(_Resource):
     _unconvertible = ('status',)
     _readonly = _Resource._readonly + ('identifier',)
 
+    def __getattr__(self, item):
+        if item == 'parent' and item in self._attributes:
+            return ResourceManager(self.manager.redmine, 'Project').to_resource(self._attributes[item])
+
+        return super(Project, self).__getattr__(item)
+
 
 class Issue(_Resource):
     redmine_version = '1.0'
@@ -353,6 +359,8 @@ class Issue(_Resource):
             return super(Issue, self).__getattr__('fixed_version')
         elif item == 'watcher':
             return Issue.Watcher(self)
+        elif item == 'parent' and item in self._attributes:
+            return ResourceManager(self.manager.redmine, 'Issue').to_resource(self._attributes[item])
 
         return super(Issue, self).__getattr__(item)
 

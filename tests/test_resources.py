@@ -294,6 +294,13 @@ class TestResources(unittest.TestCase):
         self.response.json = json_response(responses['project']['get'])
         self.assertEqual(self.redmine.project.get(1).url, '{0}/projects/1'.format(self.url))
 
+    def test_project_parent_converts_to_resource(self):
+        from redmine.resources import Project
+        self.response.json = json_response({'project': {'name': 'Foo', 'id': 1, 'parent': {'id': 2}}})
+        parent = self.redmine.project.get(1).parent
+        self.assertIsInstance(parent, Project)
+        self.assertEqual(parent.id, 2)
+
     def test_issue_version(self):
         self.assertEqual(self.redmine.issue.resource_class.redmine_version, '1.0')
 
@@ -443,6 +450,13 @@ class TestResources(unittest.TestCase):
     def test_issue_url(self):
         self.response.json = json_response(responses['issue']['get'])
         self.assertEqual(self.redmine.issue.get(1).url, '{0}/issues/1'.format(self.url))
+
+    def test_issue_parent_converts_to_resource(self):
+        from redmine.resources import Issue
+        self.response.json = json_response({'issue': {'subject': 'Foo', 'id': 1, 'parent': {'id': 2}}})
+        parent = self.redmine.issue.get(1).parent
+        self.assertIsInstance(parent, Issue)
+        self.assertEqual(parent.id, 2)
 
     def test_time_entry_version(self):
         self.assertEqual(self.redmine.time_entry.resource_class.redmine_version, '1.1')
