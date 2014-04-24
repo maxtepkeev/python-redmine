@@ -65,6 +65,7 @@ Table of contents
     operations
     resources/index
     advanced/index
+    FAQ <faq>
     exceptions
     license
     changelog
