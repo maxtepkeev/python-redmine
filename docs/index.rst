@@ -1,17 +1,20 @@
 Python Redmine
 ==============
 
-.. image:: https://badge.fury.io/py/python-redmine.png
+.. image:: https://badge.fury.io/py/python-redmine.svg
     :target: http://badge.fury.io/py/python-redmine
 
-.. image:: https://pypip.in/d/python-redmine/badge.png
+.. image:: https://pypip.in/d/python-redmine/badge.svg
     :target: https://crate.io/packages/python-redmine
 
-.. image:: https://travis-ci.org/maxtepkeev/python-redmine.png?branch=master
+.. image:: https://travis-ci.org/maxtepkeev/python-redmine.svg?branch=master
     :target: https://travis-ci.org/maxtepkeev/python-redmine
 
-.. image:: https://coveralls.io/repos/maxtepkeev/python-redmine/badge.png?branch=master
+.. image:: http://img.shields.io/coveralls/maxtepkeev/python-redmine/master.svg
     :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
+
+.. image:: http://img.shields.io/gittip/maxtepkeev.svg
+    :target: https://www.gittip.com/maxtepkeev
 
 |
 
