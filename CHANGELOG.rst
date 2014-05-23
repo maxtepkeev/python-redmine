@@ -4,6 +4,9 @@ Changelog
 0.8.2 (2014-06-XX)
 ++++++++++++++++++
 
+- Added: ResourceSet's ``get`` method now supports a ``default`` argument which is returned
+  when a requested Resource can't be found in a ResourceSet and defaults to None, previously
+  this was hardcoded to None
 - Added: It is now possible to use ``getattr()`` with default value without raising a
   ``ResourceAttrError`` when calling non-existent resource attribute, see `Issue #30
   <https://github.com/maxtepkeev/python-redmine/issues/30>`__ for details (thanks to

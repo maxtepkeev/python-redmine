@@ -17,13 +17,13 @@ class ResourceSet(object):
         self.manager = manager
         self.resources = resources
 
-    def get(self, resource_id):
+    def get(self, resource_id, default=None):
         """Returns a single item from a ResourceSet by resource id"""
         for resource in self:
             if int(resource_id) == resource.id:
                 return resource
 
-        return None
+        return default
 
     def filter(self, resource_ids):
         """Returns a ResourceSet with requested resource ids"""
