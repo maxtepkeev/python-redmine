@@ -145,7 +145,7 @@ Returns a ResourceSet object that contains Resource objects filtered by some con
 
       .. code-block:: python
 
-            redmine.project.all().get(30404)
+            redmine.project.all().get(30404, None)  # Returns None if a Resource is not found
 
     * **filter**. Returns a ResourceSet with requested resource ids.
 
