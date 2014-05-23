@@ -102,7 +102,7 @@ class ResourceNoFieldsProvidedError(BaseRedmineError):
         super(ResourceNoFieldsProvidedError, self).__init__('Resource needs some fields to be set to be created/updated')
 
 
-class ResourceAttrError(BaseRedmineError):
+class ResourceAttrError(BaseRedmineError, AttributeError):
     """Resource doesn't have the requested attribute"""
     def __init__(self):
         super(ResourceAttrError, self).__init__("Resource doesn't have the requested attribute")
