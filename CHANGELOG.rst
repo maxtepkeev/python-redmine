@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+0.8.2 (2014-06-XX)
+++++++++++++++++++
+
+- Added: It is now possible to use ``getattr()`` with default value without raising a
+  ``ResourceAttrError`` when calling non-existent resource attribute, see `Issue #30
+  <https://github.com/maxtepkeev/python-redmine/issues/30>`__ for details (thanks to
+  `hsum <https://github.com/hsum>`__)
+
 0.8.1 (2014-04-02)
 ++++++++++++++++++
 
