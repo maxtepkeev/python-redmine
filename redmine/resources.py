@@ -143,7 +143,7 @@ class _Resource(object):
 
             # If item is an include and should be requested from Redmine, let's do it
             elif item in self._includes and self._attributes[item] is None:
-                self._attributes[item] = self.refresh(include=item)._attributes[item]
+                self._attributes[item] = self.refresh(include=item)._attributes[item] or []
                 return getattr(self, item)
 
         try:

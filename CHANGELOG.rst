@@ -11,6 +11,8 @@ Changelog
   ``ResourceAttrError`` when calling non-existent resource attribute, see `Issue #30
   <https://github.com/maxtepkeev/python-redmine/issues/30>`__ for details (thanks to
   `hsum <https://github.com/hsum>`__)
+- Fixed: `Issue #31 <https://github.com/maxtepkeev/python-redmine/issues/31>`__ (Unlimited
+  recursion was possible in some situations when on demand includes were used)
 
 0.8.1 (2014-04-02)
 ++++++++++++++++++
