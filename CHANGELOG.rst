@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.8.2 (2014-06-XX)
+0.8.2 (2014-05-27)
 ++++++++++++++++++
 
 - Added: ResourceSet's ``get`` method now supports a ``default`` keyword argument which is
