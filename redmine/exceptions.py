@@ -17,7 +17,7 @@ class NoFileError(BaseRedmineError):
 
 
 class ResourceNotFoundError(BaseRedmineError):
-    """Resource not found"""
+    """Requested resource doesn't exist"""
     def __init__(self):
         super(ResourceNotFoundError, self).__init__("Requested resource doesn't exist")
 
@@ -61,7 +61,7 @@ class UnknownError(BaseRedmineError):
 
 
 class ValidationError(BaseRedmineError):
-    """Redmine validation error"""
+    """Redmine validation errors occured on create/update resource"""
     def __init__(self, error):
         super(ValidationError, self).__init__(error)
 
