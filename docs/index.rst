@@ -58,7 +58,7 @@ a simple but powerful Pythonic API inspired by a well-known `Django ORM
     <redmine.resultsets.ResourceSet object with TimeEntry resources>
 
 Table of contents
-=================
+-----------------
 
 .. toctree::
     :maxdepth: 2
