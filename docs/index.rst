@@ -13,9 +13,6 @@ Python Redmine
 .. image:: http://img.shields.io/coveralls/maxtepkeev/python-redmine/master.svg
     :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
 
-.. image:: http://img.shields.io/gittip/maxtepkeev.svg
-    :target: https://www.gittip.com/maxtepkeev
-
 |
 
 Python Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`_
@@ -56,6 +53,32 @@ a simple but powerful Pythonic API inspired by a well-known `Django ORM
 
     >>> project.issues[0].time_entries
     <redmine.resultsets.ResourceSet object with TimeEntry resources>
+
+Features
+--------
+
+* Supports 100% of Redmine API features
+* Supports Python 2.6 - 3.4
+* Extensively documented
+* Provides ORM-style Pythonic API
+
+Contacts and Support
+--------------------
+
+I will be glad to get your feedback, `pull requests <https://github.com/maxtepkeev/python-redmine/pulls>`_,
+`issues <https://github.com/maxtepkeev/python-redmine/issues>`_, whatever. Feel free to contact me for any
+questions.
+
+Donations
+---------
+
+If you like this project and want to support it, please `GITTIP <https://www.gittip.com/maxtepkeev/>`_
+it's author.
+
+Copyright and License
+---------------------
+
+Python Redmine is licensed under Apache 2.0 license. Check the :doc:`license` for details.
 
 Table of contents
 -----------------

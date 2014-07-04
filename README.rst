@@ -13,9 +13,6 @@ Python Redmine
 .. image:: https://img.shields.io/coveralls/maxtepkeev/python-redmine/master.svg
     :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
 
-.. image:: https://img.shields.io/gittip/maxtepkeev.svg
-    :target: https://www.gittip.com/maxtepkeev
-
 Python Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`_
 project management application. Redmine exposes some of it's data via `REST API
 <http://www.redmine.org/projects/redmine/wiki/Rest_api>`_ for which Python Redmine provides
@@ -89,10 +86,12 @@ Documentation
 
 Documentation is available at http://python-redmine.readthedocs.org.
 
-Contact and Support
--------------------
+Contacts and Support
+--------------------
 
-I will be glad to get your feedback, pull requests, issues, whatever. Feel free to contact me for any questions.
+I will be glad to get your feedback, `pull requests <https://github.com/maxtepkeev/python-redmine/pulls>`_,
+`issues <https://github.com/maxtepkeev/python-redmine/issues>`_, whatever. Feel free to contact me for any
+questions.
 
 Donations
 ---------
