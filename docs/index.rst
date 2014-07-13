@@ -2,7 +2,7 @@ Python Redmine
 ==============
 
 .. image:: https://badge.fury.io/py/python-redmine.svg
-    :target: http://badge.fury.io/py/python-redmine
+    :target: https://badge.fury.io/py/python-redmine
 
 .. image:: https://pypip.in/d/python-redmine/badge.svg
     :target: https://crate.io/packages/python-redmine
@@ -10,7 +10,7 @@ Python Redmine
 .. image:: https://travis-ci.org/maxtepkeev/python-redmine.svg?branch=master
     :target: https://travis-ci.org/maxtepkeev/python-redmine
 
-.. image:: http://img.shields.io/coveralls/maxtepkeev/python-redmine/master.svg
+.. image:: https://img.shields.io/coveralls/maxtepkeev/python-redmine/master.svg
     :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
 
 |
