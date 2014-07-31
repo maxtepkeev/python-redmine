@@ -618,7 +618,7 @@ class User(_Resource):
 
     _includes = ('memberships', 'groups')
     _unconvertible = ('status',)
-    _readonly = _Resource._readonly + ('api_key', 'last_login_on', 'custom_fields')
+    _readonly = _Resource._readonly + ('api_key', 'last_login_on')
 
     def __str__(self):
         try:

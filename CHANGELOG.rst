@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+0.8.3 (2014-08-XX)
+++++++++++++++++++
+
+- Fixed: `Issue #39 <https://github.com/maxtepkeev/python-redmine/issues/39>`__ (It was
+  impossible to save custom_fields in User resource via ``new()`` method)
+
 0.8.2 (2014-05-27)
 ++++++++++++++++++
 
