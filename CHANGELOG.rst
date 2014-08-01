@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.8.3 (2014-08-XX)
+0.8.3 (2014-08-01)
 ++++++++++++++++++
 
 - Fixed: `Issue #39 <https://github.com/maxtepkeev/python-redmine/issues/39>`__ (It was
