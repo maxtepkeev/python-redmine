@@ -39,7 +39,7 @@ setup(
     install_requires=['requests >= 0.12.1'],
     zip_safe=False,
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: Apache Software License',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities',
