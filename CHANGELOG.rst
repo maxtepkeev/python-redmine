@@ -10,7 +10,7 @@ Changelog
 0.8.2 (2014-05-27)
 ++++++++++++++++++
 
-- Added: ResourceSet's ``get`` method now supports a ``default`` keyword argument which is
+- Added: ResourceSet's ``get()`` method now supports a ``default`` keyword argument which is
   returned when a requested Resource can't be found in a ResourceSet and defaults to ``None``,
   previously this was hardcoded to ``None``
 - Added: It is now possible to use ``getattr()`` with default value without raising a
@@ -40,7 +40,7 @@ Changelog
   and a warning message will be shown with the detailed description of the problem
 - Added: Introduced new ``_Resource._members`` class attribute where all instance attributes
   which are not started with underscore should be listed. This will resolve recursion issues
-  in custom resources because of how ``__setattr__`` works in Python
+  in custom resources because of how ``__setattr__()`` works in Python
 - Changed: ``_Resource.attributes`` renamed to ``_Resource._attributes``
 - Fixed: Python Redmine was unable to upload any binary files
 - Fixed: `Issue #20 <https://github.com/maxtepkeev/python-redmine/issues/20>`__ (Lowered
