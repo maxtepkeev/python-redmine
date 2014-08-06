@@ -254,6 +254,7 @@ update
     :param string subject: (optional). Issue subject.
     :param integer tracker_id: (optional). Issue tracker id.
     :param string description: (optional). Issue description.
+    :param string notes: (optional). Issue journal note.
     :param integer status_id: (optional). Issue status id.
     :param integer priority_id: (optional). Issue priority id.
     :param integer category_id: (optional). Issue category id.
@@ -283,7 +284,7 @@ update
 
 .. code-block:: python
 
-    >>> redmine.issue.update(1, project_id=1, subject='Vacation', tracker_id=8, description='foo', status_id=3, priority_id=7, assigned_to_id=123, parent_issue_id=345, start_date='2014-01-01', due_date='2014-02-01', estimated_hours=4, done_ratio=40, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}], uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}])
+    >>> redmine.issue.update(1, project_id=1, subject='Vacation', tracker_id=8, description='foo', notes='A journal note', status_id=3, priority_id=7, assigned_to_id=123, parent_issue_id=345, start_date='2014-01-01', due_date='2014-02-01', estimated_hours=4, done_ratio=40, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}], uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}])
     True
 
 save
@@ -305,6 +306,7 @@ save
     >>> issue.subject = 'Vacation'
     >>> issue.tracker_id = 8
     >>> issue.description = 'foo'
+    >>> issue.notes = 'A journal note'
     >>> issue.status_id = 3
     >>> issue.priority_id = 7
     >>> issue.assigned_to_id = 123
