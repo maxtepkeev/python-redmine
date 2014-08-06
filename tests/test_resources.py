@@ -128,11 +128,18 @@ class TestResources(unittest.TestCase):
         self.assertEqual(project.name, 'Foo')
         self.assertEqual(project.description, 'Bar')
 
-    def test_setting_readonly_attrs_raises_exception(self):
+    def test_setting_create_readonly_attrs_raises_exception(self):
         from redmine.exceptions import ReadonlyAttrError
         with self.assertRaises(ReadonlyAttrError):
             project = self.redmine.project.new()
             project.id = 1
+
+    def test_setting_update_readonly_attrs_raises_exception(self):
+        from redmine.exceptions import ReadonlyAttrError
+        with self.assertRaises(ReadonlyAttrError):
+            self.response.json = json_response(responses['project']['get'])
+            project = self.redmine.project.get(1)
+            project.identifier = 1
 
     def test_control_raising_of_resource_attr_exception(self):
         from redmine.exceptions import ResourceAttrError

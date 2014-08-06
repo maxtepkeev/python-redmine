@@ -97,7 +97,8 @@ class _Resource(object):
     _relations = ()
     _unconvertible = ()
     _members = ('manager',)
-    _readonly = ('id', 'created_on', 'updated_on', 'author', 'user', 'project', 'issue')
+    _create_readonly = ('id', 'created_on', 'updated_on', 'author', 'user', 'project', 'issue')
+    _update_readonly = _create_readonly
     __length_hint__ = None  # fixes Python 2.6 list() call on resource object
 
     def __init__(self, manager, attributes):
@@ -106,7 +107,8 @@ class _Resource(object):
         self._attributes = dict((include, None) for include in self._includes)
         self._attributes.update(dict((relation, None) for relation in self._relations))
         self._attributes.update(attributes)
-        self._readonly += self._relations + self._includes
+        self._create_readonly += self._relations + self._includes
+        self._update_readonly += self._relations + self._includes
         self._changes = {}
 
     def __getitem__(self, item):
@@ -169,7 +171,9 @@ class _Resource(object):
         """Sets the requested attribute"""
         if item in self._members or item.startswith('_'):
             super(_Resource, self).__setattr__(item, value)
-        elif item in self._readonly:
+        elif item in self._create_readonly and self.is_new():
+            raise ReadonlyAttrError()
+        elif item in self._update_readonly and not self.is_new():
             raise ReadonlyAttrError()
         elif item == 'custom_fields':
             for org_index, org_field in enumerate(self._attributes.setdefault('custom_fields', [])):
@@ -308,7 +312,7 @@ class Project(_Resource):
     _includes = ('trackers', 'issue_categories')
     _relations = ('wiki_pages', 'memberships', 'issue_categories', 'versions', 'news', 'issues')
     _unconvertible = ('status',)
-    _readonly = _Resource._readonly + ('identifier',)
+    _update_readonly = _Resource._update_readonly + ('identifier',)
 
     def __getattr__(self, item):
         if item == 'parent' and item in self._attributes:
@@ -333,7 +337,8 @@ class Issue(_Resource):
 
     _includes = ('children', 'attachments', 'relations', 'changesets', 'journals', 'watchers')
     _relations = ('relations', 'time_entries')
-    _readonly = _Resource._readonly + ('spent_hours',)
+    _create_readonly = _Resource._create_readonly + ('spent_hours',)
+    _update_readonly = _create_readonly
 
     class Watcher:
         """An issue watcher implementation"""
@@ -481,7 +486,8 @@ class WikiPage(_Resource):
     query_delete = '/projects/{project_id}/wiki/{0}.json'
 
     _includes = ('attachments',)
-    _readonly = _Resource._readonly + ('version',)
+    _create_readonly = _Resource._create_readonly + ('version',)
+    _update_readonly = _create_readonly
 
     def refresh(self, **params):
         return super(WikiPage, self).refresh(**dict(params, project_id=self.manager.params.get('project_id', 0)))
@@ -540,7 +546,8 @@ class ProjectMembership(_Resource):
     query_update = '/memberships/{0}.json'
     query_delete = '/memberships/{0}.json'
 
-    _readonly = _Resource._readonly + ('user', 'roles')
+    _create_readonly = _Resource._create_readonly + ('user', 'roles')
+    _update_readonly = _create_readonly
 
     def __str__(self):
         return str(self.id)
@@ -618,7 +625,8 @@ class User(_Resource):
 
     _includes = ('memberships', 'groups')
     _unconvertible = ('status',)
-    _readonly = _Resource._readonly + ('api_key', 'last_login_on')
+    _create_readonly = _Resource._create_readonly + ('api_key', 'last_login_on')
+    _update_readonly = _create_readonly
 
     def __str__(self):
         try:

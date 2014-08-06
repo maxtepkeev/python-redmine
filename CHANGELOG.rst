@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+0.8.4 (2014-08-XX)
+++++++++++++++++++
+
+- Fixed: `Issue #42 <https://github.com/maxtepkeev/python-redmine/issues/42>`__ (It was
+  impossible to create a Project resource via ``new()`` method)
+
 0.8.3 (2014-08-01)
 ++++++++++++++++++
 
