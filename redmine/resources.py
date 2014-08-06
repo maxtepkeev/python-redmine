@@ -448,15 +448,25 @@ class Attachment(_Resource):
     query_one = '/attachments/{0}.json'
 
     def __str__(self):
-        return to_string(self.filename)
+        try:
+            return to_string(self.filename)
+        except ResourceAttrError:
+            return str(self.id)
 
     def __repr__(self):
-        return '<{0}.{1} #{2} "{3}">'.format(
-            self.__class__.__module__,
-            self.__class__.__name__,
-            self.id,
-            to_string(self.filename)
-        )
+        try:
+            return '<{0}.{1} #{2} "{3}">'.format(
+                self.__class__.__module__,
+                self.__class__.__name__,
+                self.id,
+                to_string(self.filename)
+            )
+        except ResourceAttrError:
+            return '<{0}.{1} #{2}>'.format(
+                self.__class__.__module__,
+                self.__class__.__name__,
+                self.id
+            )
 
 
 class IssueJournal(_Resource):

@@ -566,9 +566,21 @@ class TestResources(unittest.TestCase):
         self.response.json = json_response(responses['attachment']['get'])
         self.assertEqual(str(self.redmine.attachment.get(1)), 'foo.jpg')
 
+    def test_attachment_custom_str_without_filename(self):
+        self.response.json = json_response(responses['attachment']['get'])
+        attachment = self.redmine.attachment.get(1)
+        del attachment['_attributes']['filename']
+        self.assertEqual(str(attachment), '1')
+
     def test_attachment_custom_repr(self):
         self.response.json = json_response(responses['attachment']['get'])
         self.assertEqual(repr(self.redmine.attachment.get(1)), '<redmine.resources.Attachment #1 "foo.jpg">')
+
+    def test_attachment_custom_repr_without_subject(self):
+        self.response.json = json_response(responses['attachment']['get'])
+        attachment = self.redmine.attachment.get(1)
+        del attachment['_attributes']['filename']
+        self.assertEqual(repr(attachment), '<redmine.resources.Attachment #1>')
 
     def test_attachment_url(self):
         self.response.json = json_response(responses['attachment']['get'])
