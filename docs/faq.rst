@@ -14,3 +14,10 @@ causes the create/update/delete operations to fail.
 
 The detailed explanation about why this happens is available `here <https://github.com/kennethreitz/requests/
 issues/1704>`__.
+
+Can I use python-redmine with ChiliProject fork
+-----------------------------------------------
+
+Yes, you can. But keep in mind that ChiliProject is not actively developed and some features in REST API are
+missing, not all filters will work, etc. Several problems are described in issues `#37 <https://github.com/
+maxtepkeev/python-redmine/issues/37>`_ and `#38 <https://github.com/maxtepkeev/python-redmine/issues/38>`_.
