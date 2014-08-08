@@ -1,9 +1,10 @@
 Changelog
 ---------
 
-0.8.4 (2014-08-XX)
+0.8.4 (2014-08-08)
 ++++++++++++++++++
 
+- Added: Support for anonymous Attachment resource (i.e. attachment with ``id`` attr only)
 - Fixed: `Issue #42 <https://github.com/maxtepkeev/python-redmine/issues/42>`__ (It was
   impossible to create a Project resource via ``new()`` method)
 
