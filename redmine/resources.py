@@ -517,7 +517,7 @@ class WikiPage(_Resource):
 
     @property
     def internal_id(self):
-        return self.title
+        return to_string(self.title)
 
     def __getattr__(self, item):
         # If a text attribute of a resource is missing, we should
@@ -534,13 +534,13 @@ class WikiPage(_Resource):
         return self.version
 
     def __str__(self):
-        return to_string(self.title)
+        return self.internal_id
 
     def __repr__(self):
         return '<{0}.{1} "{2}">'.format(
             self.__class__.__module__,
             self.__class__.__name__,
-            to_string(self.title)
+            self.internal_id
         )
 
 
