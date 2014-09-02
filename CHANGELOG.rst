@@ -5,7 +5,7 @@ Changelog
 ++++++++++++++++++
 
 - Fixed: `Issue #46 <https://github.com/maxtepkeev/python-redmine/issues/46>`__
-  (A UnicodeEncodeError was raised in Python 2.x while trying to access a url property of
+  (A UnicodeEncodeError was raised in Python 2.x while trying to access a ``url`` property of
   a WikiPage resource if it contained non-ascii characters)
 
 0.8.4 (2014-08-08)
