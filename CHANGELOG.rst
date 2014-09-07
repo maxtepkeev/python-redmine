@@ -4,6 +4,8 @@ Changelog
 0.8.5 (2014-09-XX)
 ++++++++++++++++++
 
+- Fixed: It was impossible to set a custom field of date/datetime type using date/datetime
+  Python objects
 - Fixed: `Issue #46 <https://github.com/maxtepkeev/python-redmine/issues/46>`__
   (A UnicodeEncodeError was raised in Python 2.x while trying to access a ``url`` property of
   a WikiPage resource if it contained non-ascii characters)

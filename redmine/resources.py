@@ -183,7 +183,8 @@ class _Resource(object):
                 try:
                     for new_index, new_field in enumerate(value):
                         if org_field['id'] == new_field['id']:
-                            self._attributes['custom_fields'][org_index]['value'] = value.pop(new_index)['value']
+                            self._attributes['custom_fields'][org_index]['value'] = self.manager.prepare_params(
+                                value.pop(new_index))['value']
                 except (TypeError, KeyError):
                     raise CustomFieldValueError()
 
