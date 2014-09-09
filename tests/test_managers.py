@@ -232,3 +232,17 @@ class TestResourceManager(unittest.TestCase):
         mock_post.return_value = mock.Mock(status_code=404)
         mock_put.return_value = mock.Mock(status_code=200)
         self.assertRaises(ValidationError, lambda: self.redmine.user.create(firstname='John', lastname='Smith'))
+
+    @mock.patch('requests.get')
+    def test_reraises_not_found_exception(self, mock_get):
+        from redmine.exceptions import ResourceNotFoundError
+        mock_get.return_value = mock.Mock(status_code=404)
+        self.assertRaises(ResourceNotFoundError, lambda: self.redmine.project.get('non-existent-project'))
+
+    @mock.patch('requests.get')
+    def test_resource_requirements_exception(self, mock_get):
+        from redmine.exceptions import ResourceRequirementsError
+        FooResource.requirements = ('foo plugin', 'bar plugin')
+        mock_get.return_value = mock.Mock(status_code=404)
+        self.redmine.custom_resource_paths = (__name__,)
+        self.assertRaises(ResourceRequirementsError, lambda: self.redmine.foo_resource.get(1))

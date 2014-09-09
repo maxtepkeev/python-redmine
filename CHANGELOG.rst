@@ -4,6 +4,12 @@ Changelog
 0.8.5 (2014-09-XX)
 ++++++++++++++++++
 
+- Added: Introduced new ``_Resource.requirements`` class attribute where all Redmine plugins
+  required by resource should be listed
+- Added: New exceptions:
+
+  * ResourceRequirementsError
+
 - Fixed: It was impossible to set a custom field of date/datetime type using date/datetime
   Python objects
 - Fixed: `Issue #46 <https://github.com/maxtepkeev/python-redmine/issues/46>`__

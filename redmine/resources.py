@@ -81,6 +81,7 @@ _RESOURCE_MULTIPLE_ATTR_ID_MAP = {
 class _Resource(object):
     """Implementation of Redmine resource"""
     redmine_version = None
+    requirements = ()
     container_all = None
     container_one = None
     container_filter = None

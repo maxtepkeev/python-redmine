@@ -10,7 +10,8 @@ from redmine.exceptions import (
     ResourceNoFieldsProvidedError,
     ResourceVersionMismatchError,
     ResourceNotFoundError,
-    ValidationError
+    ValidationError,
+    ResourceRequirementsError
 )
 
 
@@ -55,7 +56,16 @@ class ResourceManager(object):
             limit = 100
 
         while True:
-            response = self.redmine.request('get', self.url, params=dict(self.params, limit=limit, offset=offset))
+            try:
+                response = self.redmine.request('get', self.url, params=dict(self.params, limit=limit, offset=offset))
+            except ResourceNotFoundError:
+                # This is the only place we're checking for ResourceRequirementsError
+                # because for some POST/PUT/DELETE requests Redmine may also return 404
+                # status code instead of 405 which can lead us to improper decisions
+                if self.resource_class.requirements:
+                    raise ResourceRequirementsError(self.resource_class.requirements)
+
+                raise ResourceNotFoundError
 
             # A single resource was requested via get()
             if isinstance(response[self.container], dict):

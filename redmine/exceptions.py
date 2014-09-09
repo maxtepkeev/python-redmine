@@ -99,7 +99,9 @@ class ResourceNoFiltersProvidedError(BaseRedmineError):
 class ResourceNoFieldsProvidedError(BaseRedmineError):
     """No field(s) provided"""
     def __init__(self):
-        super(ResourceNoFieldsProvidedError, self).__init__('Resource needs some fields to be set to be created/updated')
+        super(ResourceNoFieldsProvidedError, self).__init__(
+            'Resource needs some fields to be set to be created/updated'
+        )
 
 
 class ResourceAttrError(BaseRedmineError, AttributeError):
@@ -137,4 +139,12 @@ class CustomFieldValueError(BaseRedmineError):
     def __init__(self):
         super(CustomFieldValueError, self).__init__(
             "Custom fields should be passed as a list of dictionaries in the form of [{'id': 1, 'value': 'foo'}]"
+        )
+
+
+class ResourceRequirementsError(BaseRedmineError):
+    """Resource requires specified Redmine plugin(s) to function"""
+    def __init__(self, requirements):
+        super(ResourceRequirementsError, self).__init__(
+            'The following requirements must be installed for resource to function: {0}'.format(', '.join(requirements))
         )
