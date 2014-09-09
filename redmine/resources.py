@@ -172,9 +172,9 @@ class _Resource(object):
         if item in self._members or item.startswith('_'):
             super(_Resource, self).__setattr__(item, value)
         elif item in self._create_readonly and self.is_new():
-            raise ReadonlyAttrError()
+            raise ReadonlyAttrError
         elif item in self._update_readonly and not self.is_new():
-            raise ReadonlyAttrError()
+            raise ReadonlyAttrError
         elif item == 'custom_fields':
             for org_index, org_field in enumerate(self._attributes.setdefault('custom_fields', [])):
                 if 'value' not in org_field:
@@ -186,7 +186,7 @@ class _Resource(object):
                             self._attributes['custom_fields'][org_index]['value'] = self.manager.prepare_params(
                                 value.pop(new_index))['value']
                 except (TypeError, KeyError):
-                    raise CustomFieldValueError()
+                    raise CustomFieldValueError
 
             self._attributes['custom_fields'].extend(value)
             self._changes[item] = self._attributes['custom_fields']
@@ -266,9 +266,9 @@ class _Resource(object):
         raise_attr_exception = self.manager.redmine.raise_attr_exception
 
         if isinstance(raise_attr_exception, bool) and raise_attr_exception:
-            raise ResourceAttrError()
+            raise ResourceAttrError
         elif isinstance(raise_attr_exception, (list, tuple)) and self.__class__.__name__ in raise_attr_exception:
-            raise ResourceAttrError()
+            raise ResourceAttrError
 
         return None
 
@@ -348,7 +348,7 @@ class Issue(_Resource):
             self._issue_id = issue.internal_id
 
             if self._redmine.ver is not None and LooseVersion(str(self._redmine.ver)) < LooseVersion('2.3'):
-                raise ResourceVersionMismatchError()
+                raise ResourceVersionMismatchError
 
         def add(self, user_id):
             """Adds user to issue watchers list"""
@@ -372,9 +372,9 @@ class Issue(_Resource):
 
     def __setattr__(self, item, value):
         if item == 'version_id':
-            return super(Issue, self).__setattr__('fixed_version_id', value)
-
-        return super(Issue, self).__setattr__(item, value)
+            super(Issue, self).__setattr__('fixed_version_id', value)
+        else:
+            super(Issue, self).__setattr__(item, value)
 
     def __str__(self):
         try:

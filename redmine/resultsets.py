@@ -28,7 +28,7 @@ class ResourceSet(object):
     def filter(self, resource_ids):
         """Returns a ResourceSet with requested resource ids"""
         if not isinstance(resource_ids, (tuple, list)):
-            raise ResourceSetFilterParamError()
+            raise ResourceSetFilterParamError
 
         resources = []
 
@@ -43,7 +43,7 @@ class ResourceSet(object):
         """Returns total count of available resources, this is known only after ResourceSet evaluation"""
         if self._total_count == -1:
             if self.resources is None:
-                raise ResultSetTotalCountError()
+                raise ResultSetTotalCountError
             else:
                 self._total_count = len(self)
 
@@ -60,7 +60,7 @@ class ResourceSet(object):
             try:
                 return next(itertools.islice(self.__iter__(), item, item + 1))
             except StopIteration:
-                raise ResourceSetIndexError()
+                raise ResourceSetIndexError
 
         return self
 

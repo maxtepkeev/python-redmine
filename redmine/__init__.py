@@ -47,7 +47,7 @@ class Redmine(object):
                 url = '{0}{1}'.format(self.url, '/uploads.json')
                 response = self.request('post', url, data=stream, headers={'Content-Type': 'application/octet-stream'})
         except IOError:
-            raise NoFileError()
+            raise NoFileError
 
         return response['upload']['token']
 
@@ -83,18 +83,18 @@ class Redmine(object):
                 return True
             return json_response(response.json)
         elif response.status_code == 401:
-            raise AuthError()
+            raise AuthError
         elif response.status_code == 404:
             raise ResourceNotFoundError
         elif response.status_code == 409:
             raise ConflictError
         elif response.status_code == 412 and self.impersonate is not None:
-            raise ImpersonateError()
+            raise ImpersonateError
         elif response.status_code == 413:
-            raise RequestEntityTooLargeError()
+            raise RequestEntityTooLargeError
         elif response.status_code == 422:
             raise ValidationError(to_string(', '.join(json_response(response.json)['errors'])))
         elif response.status_code == 500:
-            raise ServerError()
+            raise ServerError
 
         raise UnknownError(response.status_code)
