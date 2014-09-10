@@ -148,3 +148,9 @@ class ResourceRequirementsError(BaseRedmineError):
         super(ResourceRequirementsError, self).__init__(
             'The following requirements must be installed for resource to function: {0}'.format(', '.join(requirements))
         )
+
+
+class FileUrlError(BaseRedmineError):
+    """URL provided to download a file can't be parsed"""
+    def __init__(self):
+        super(FileUrlError, self).__init__("URL provided to download a file can't be parsed")

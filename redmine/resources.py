@@ -449,6 +449,9 @@ class Attachment(_Resource):
     container_one = 'attachment'
     query_one = '/attachments/{0}.json'
 
+    def download(self, savepath, filename=None):
+        return self.manager.redmine.download(self.content_url, savepath, filename)
+
     def __str__(self):
         try:
             return to_string(self.filename)

@@ -1,3 +1,4 @@
+import os
 import json
 import requests
 from distutils.version import LooseVersion
@@ -11,6 +12,7 @@ from redmine.exceptions import (
     ServerError,
     ValidationError,
     NoFileError,
+    FileUrlError,
     VersionMismatchError,
     ResourceNotFoundError,
     RequestEntityTooLargeError,
@@ -51,11 +53,36 @@ class Redmine(object):
 
         return response['upload']['token']
 
+    def download(self, url, savepath, filename=None):
+        """Downloads file from Redmine and saves it to savepath"""
+        try:
+            from urlparse import urlsplit
+        except ImportError:
+            from urllib.parse import urlsplit
+
+        if filename is None:
+            filename = urlsplit(url)[2].split('/')[-1]
+
+            if not filename:
+                raise FileUrlError
+
+        self.requests['stream'] = True   # We don't want to load the entire file into memory
+        response = self.request('get', url, raw_response=True)
+        self.requests['stream'] = False  # Return back this setting for all usual requests
+
+        savepath = os.path.join(savepath, filename)
+
+        with open(savepath, 'wb') as f:
+            for chunk in response.iter_content(1024):
+                f.write(chunk)
+
+        return savepath
+
     def auth(self):
         """Shortcut for the case if we just want to check if user provided valid auth credentials"""
         return self.user.get('current')
 
-    def request(self, method, url, headers=None, params=None, data=None):
+    def request(self, method, url, headers=None, params=None, data=None, raw_response=False):
         """Makes requests to Redmine and returns result in json format"""
         kwargs = dict(self.requests, **{
             'headers': headers or {},
@@ -79,9 +106,12 @@ class Redmine(object):
         response = getattr(requests, method)(url, **kwargs)
 
         if response.status_code in (200, 201):
-            if not response.content.strip():
+            if raw_response:
+                return response
+            elif not response.content.strip():
                 return True
-            return json_response(response.json)
+            else:
+                return json_response(response.json)
         elif response.status_code == 401:
             raise AuthError
         elif response.status_code == 404:
