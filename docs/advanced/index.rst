@@ -6,3 +6,4 @@ Advanced Usage
 
     custom_resources
     external_auth
+    working_with_files

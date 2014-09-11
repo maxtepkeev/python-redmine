@@ -4,6 +4,8 @@ Changelog
 0.8.5 (2014-09-XX)
 ++++++++++++++++++
 
+- Added: Introduced support for file downloads (see `docs <http://python-redmine.readthedocs.
+  org/advanced/working_with_files.html>`__ for details)
 - Added: Introduced new ``_Resource.requirements`` class attribute where all Redmine plugins
   required by resource should be listed (preparations to support non-native resources)
 - Added: New exceptions:

@@ -36,6 +36,20 @@ get
     >>> attachment
     <redmine.resources.Attachment #76905 "1(a).png">
 
+.. hint::
+
+    Attachment can be easily downloaded via the provided ``download()`` method which is a proxy
+    to the ``redmine.download()`` method which provides several options to control the saving
+    process (see `docs <http://python-redmine.readthedocs.org/advanced/working_with_files.html#
+    download>`__ for details):
+
+    .. code-block:: python
+
+        >>> attachment = redmine.attachment.get(76905)
+        >>> filepath = attachment.download(savepath='/usr/local/', filename='image.jpg')
+        >>> filepath
+        '/usr/local/image.jpg'
+
 all
 +++
 
