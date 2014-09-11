@@ -38,6 +38,10 @@ get
 
 .. hint::
 
+    .. versionadded:: 0.9.0
+
+    |
+
     Attachment can be easily downloaded via the provided ``download()`` method which is a proxy
     to the ``redmine.download()`` method which provides several options to control the saving
     process (see `docs <http://python-redmine.readthedocs.org/advanced/working_with_files.html#
