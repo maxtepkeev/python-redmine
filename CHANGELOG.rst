@@ -5,7 +5,7 @@ Changelog
 ++++++++++++++++++
 
 - Added: Introduced new ``_Resource.requirements`` class attribute where all Redmine plugins
-  required by resource should be listed
+  required by resource should be listed (preparations to support non-native resources)
 - Added: New exceptions:
 
   * ResourceRequirementsError
