@@ -53,8 +53,18 @@ class Redmine(object):
 
         return response['upload']['token']
 
-    def download(self, url, savepath, filename=None):
-        """Downloads file from Redmine and saves it to savepath"""
+    def download(self, url, savepath=None, filename=None):
+        """Downloads file from Redmine and saves it to savepath or returns it as bytes"""
+        self.requests['stream'] = True   # We don't want to load the entire file into memory
+        response = self.request('get', url, raw_response=True)
+        self.requests['stream'] = False  # Return back this setting for all usual requests
+
+        # If a savepath wasn't provided we return an iter_content method
+        # so a user can call it with the desired parameters for maximum
+        # control and iterate over the response data
+        if savepath is None:
+            return response.iter_content
+
         try:
             from urlparse import urlsplit
         except ImportError:
@@ -65,10 +75,6 @@ class Redmine(object):
 
             if not filename:
                 raise FileUrlError
-
-        self.requests['stream'] = True   # We don't want to load the entire file into memory
-        response = self.request('get', url, raw_response=True)
-        self.requests['stream'] = False  # Return back this setting for all usual requests
 
         savepath = os.path.join(savepath, filename)
 
