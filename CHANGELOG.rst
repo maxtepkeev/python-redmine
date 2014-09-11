@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.8.5 (2014-09-XX)
+0.9.0 (2014-09-11)
 ++++++++++++++++++
 
 - Added: Introduced support for file downloads (see `docs <http://python-redmine.readthedocs.
