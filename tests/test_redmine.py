@@ -85,6 +85,22 @@ class TestRedmineRequest(unittest.TestCase):
         self.response.json = json_response({'upload': {'token': '123456'}})
         self.assertEqual(self.redmine.upload('foo'), '123456')
 
+    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    def test_successful_file_download(self):
+        self.response.status_code = 200
+        self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
+        self.assertEqual(self.redmine.download('http://foo/bar.txt', '/some/path'), '/some/path/bar.txt')
+
+    def test_successful_in_memory_file_download(self):
+        self.response.status_code = 200
+        self.response.iter_content = lambda: (str(num) for num in range(0, 5))
+        self.assertEqual(''.join(self.redmine.download('http://foo/bar.txt')()), '01234')
+
+    def test_file_url_exception(self):
+        from redmine.exceptions import FileUrlError
+        self.response.status_code = 200
+        self.assertRaises(FileUrlError, lambda: self.redmine.download('http://bad_url', '/some/path'))
+
     def test_file_upload_no_file_exception(self):
         from redmine.exceptions import NoFileError
         self.assertRaises(NoFileError, lambda: self.redmine.upload('foo',))

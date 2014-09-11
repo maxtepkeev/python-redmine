@@ -586,6 +586,14 @@ class TestResources(unittest.TestCase):
         self.response.json = json_response(responses['attachment']['get'])
         self.assertEqual(self.redmine.attachment.get(1).url, '{0}/attachments/1'.format(self.url))
 
+    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    def test_attachment_download(self):
+        response = responses['attachment']['get']
+        response['attachment']['content_url'] = 'http://foo/bar.txt'
+        self.response.json = json_response(response)
+        self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
+        self.assertEqual(self.redmine.attachment.get(1).download('/some/path'), '/some/path/bar.txt')
+
     def test_wiki_page_version(self):
         self.assertEqual(self.redmine.wiki_page.resource_class.redmine_version, '2.2')
 
