@@ -113,11 +113,11 @@ class _Resource(object):
         self._changes = {}
 
     def __getitem__(self, item):
-        """Provides a dictionary like access to resource attributes"""
+        """Provides a dictionary-like access to resource attributes"""
         return getattr(self, item)
 
     def __setitem__(self, item, value):
-        """Provides a dictionary like setter for resource attributes"""
+        """Provides a dictionary-like setter for resource attributes"""
         return setattr(self, item, value)
 
     def __getattr__(self, item):
