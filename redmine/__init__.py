@@ -96,7 +96,7 @@ class Redmine(object):
             'data': data or {},
         })
 
-        if not 'Content-Type' in kwargs['headers'] and method in ('post', 'put'):
+        if 'Content-Type' not in kwargs['headers'] and method in ('post', 'put'):
             kwargs['data'] = json.dumps(data)
             kwargs['headers']['Content-Type'] = 'application/json'
 

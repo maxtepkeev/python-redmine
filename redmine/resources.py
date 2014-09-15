@@ -775,7 +775,7 @@ class CustomField(_Resource):
         # i.e. project, and it's not used in the resource, there will be
         # no value attribute defined, that is why we need to return 0 or
         # we'll get an exception
-        if item == 'value' and not item in self._attributes:
+        if item == 'value' and item not in self._attributes:
             return 0
 
         return super(CustomField, self).__getattr__(item)
