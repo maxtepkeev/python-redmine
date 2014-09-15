@@ -42,7 +42,7 @@ _RESOURCE_MAP = {
     'fixed_version': 'Version',
 }
 
-# Resources which when access from some other
+# Resources which when accessed from some other
 # resource should be requested from Redmine
 _RESOURCE_RELATIONS_MAP = {
     'wiki_pages': 'WikiPage',
