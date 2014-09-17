@@ -45,3 +45,8 @@ Resources
         CRM
         <a class="headerlink" href="#crm" title="Permalink to this headline">¶</a>
     </h3>
+
+.. toctree::
+    :maxdepth: 1
+
+    deal_status

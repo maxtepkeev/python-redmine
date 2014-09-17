@@ -1,6 +1,13 @@
 Changelog
 ---------
 
+1.0.0 (2014-10-XX)
+++++++++++++++++++
+
+- Added: Support for the `CRM plugin <http://redminecrm.com/projects/crm/pages/1>`_ resources:
+
+  * `DealStatus <http://python-redmine.readthedocs.org/resources/deal_status.html>`_
+
 0.9.0 (2014-09-11)
 ++++++++++++++++++
 

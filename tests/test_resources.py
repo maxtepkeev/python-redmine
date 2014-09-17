@@ -71,6 +71,9 @@ responses = {
     'custom_field': {
         'all': {'custom_fields': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]},
     },
+    'deal_status': {
+        'all': {'deal_statuses': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]},
+    },
 }
 
 
@@ -1119,3 +1122,21 @@ class TestResources(unittest.TestCase):
     def test_custom_field_url(self):
         self.response.json = json_response(responses['custom_field']['all'])
         self.assertEqual(self.redmine.custom_field.all()[0].url, '{0}/custom_fields/1/edit'.format(self.url))
+
+    def test_deal_status_version(self):
+        self.assertEqual(self.redmine.deal_status.resource_class.redmine_version, '2.3')
+
+    def test_deal_status_requirements(self):
+        self.assertEqual(self.redmine.deal_status.resource_class.requirements, (('CRM plugin', '3.3.0'),))
+
+    def test_deal_status_all(self):
+        self.response.json = json_response(responses['deal_status']['all'])
+        statuses = self.redmine.deal_status.all()
+        self.assertEqual(statuses[0].id, 1)
+        self.assertEqual(statuses[0].name, 'Foo')
+        self.assertEqual(statuses[1].id, 2)
+        self.assertEqual(statuses[1].name, 'Bar')
+
+    def test_deal_status_url(self):
+        self.response.json = json_response(responses['deal_status']['all'])
+        self.assertEqual(self.redmine.deal_status.all()[0].url, '{0}/deal_statuses/1/edit'.format(self.url))

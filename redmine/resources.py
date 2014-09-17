@@ -779,3 +779,14 @@ class CustomField(_Resource):
             return 0
 
         return super(CustomField, self).__getattr__(item)
+
+
+class DealStatus(_Resource):
+    redmine_version = '2.3'
+    requirements = (('CRM plugin', '3.3.0'),)
+    container_all = 'deal_statuses'
+    query_all = '/deal_statuses.json'
+
+    @property
+    def url(self):
+        return '{0}/deal_statuses/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
