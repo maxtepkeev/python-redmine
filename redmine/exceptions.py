@@ -146,7 +146,9 @@ class ResourceRequirementsError(BaseRedmineError):
     """Resource requires specified Redmine plugin(s) to function"""
     def __init__(self, requirements):
         super(ResourceRequirementsError, self).__init__(
-            'The following requirements must be installed for resource to function: {0}'.format(', '.join(requirements))
+            'The following requirements must be installed for resource to function: {0}'.format(
+                ', '.join(req if isinstance(req, str) else ' >= '.join(req) for req in requirements)
+            )
         )
 
 

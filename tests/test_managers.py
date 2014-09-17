@@ -242,7 +242,7 @@ class TestResourceManager(unittest.TestCase):
     @mock.patch('requests.get')
     def test_resource_requirements_exception(self, mock_get):
         from redmine.exceptions import ResourceRequirementsError
-        FooResource.requirements = ('foo plugin', 'bar plugin')
+        FooResource.requirements = ('foo plugin', ('bar plugin', '1.2.3'),)
         mock_get.return_value = mock.Mock(status_code=404)
         self.redmine.custom_resource_paths = (__name__,)
         self.assertRaises(ResourceRequirementsError, lambda: self.redmine.foo_resource.get(1))
