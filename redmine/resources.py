@@ -781,6 +781,17 @@ class CustomField(_Resource):
         return super(CustomField, self).__getattr__(item)
 
 
+class ContactTag(_Resource):
+    redmine_version = '2.3'
+    requirements = (('CRM plugin', '3.3.1'),)
+    container_all = 'tags'
+    query_all = '/contacts_tags.json'
+
+    @property
+    def url(self):
+        return '{0}/contacts_tags/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
+
+
 class DealStatus(_Resource):
     redmine_version = '2.3'
     requirements = (('CRM plugin', '3.3.0'),)

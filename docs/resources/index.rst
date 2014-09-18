@@ -49,5 +49,6 @@ Resources
 .. toctree::
     :maxdepth: 1
 
+    contact_tag
     deal_status
     deal_category

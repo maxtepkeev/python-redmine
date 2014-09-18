@@ -71,6 +71,9 @@ responses = {
     'custom_field': {
         'all': {'custom_fields': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]},
     },
+    'contact_tag': {
+        'all': {'tags': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]},
+    },
     'deal_status': {
         'all': {'deal_statuses': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]},
     },
@@ -1125,6 +1128,24 @@ class TestResources(unittest.TestCase):
     def test_custom_field_url(self):
         self.response.json = json_response(responses['custom_field']['all'])
         self.assertEqual(self.redmine.custom_field.all()[0].url, '{0}/custom_fields/1/edit'.format(self.url))
+
+    def test_contact_tag_version(self):
+        self.assertEqual(self.redmine.contact_tag.resource_class.redmine_version, '2.3')
+
+    def test_contact_tag_requirements(self):
+        self.assertEqual(self.redmine.contact_tag.resource_class.requirements, (('CRM plugin', '3.3.1'),))
+
+    def test_contact_tag_all(self):
+        self.response.json = json_response(responses['contact_tag']['all'])
+        tags = self.redmine.contact_tag.all()
+        self.assertEqual(tags[0].id, 1)
+        self.assertEqual(tags[0].name, 'Foo')
+        self.assertEqual(tags[1].id, 2)
+        self.assertEqual(tags[1].name, 'Bar')
+
+    def test_contact_tag_url(self):
+        self.response.json = json_response(responses['contact_tag']['all'])
+        self.assertEqual(self.redmine.contact_tag.all()[0].url, '{0}/contacts_tags/1/edit'.format(self.url))
 
     def test_deal_status_version(self):
         self.assertEqual(self.redmine.deal_status.resource_class.redmine_version, '2.3')
