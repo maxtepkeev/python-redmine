@@ -50,3 +50,4 @@ Resources
     :maxdepth: 1
 
     deal_status
+    deal_category

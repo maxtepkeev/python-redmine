@@ -790,3 +790,14 @@ class DealStatus(_Resource):
     @property
     def url(self):
         return '{0}/deal_statuses/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
+
+
+class DealCategory(_Resource):
+    redmine_version = '2.3'
+    requirements = (('CRM plugin', '3.3.0'),)
+    container_filter = 'deal_categories'
+    query_filter = '/projects/{project_id}/deal_categories.json'
+
+    @property
+    def url(self):
+        return '{0}/deal_categories/edit?id={1}'.format(self.manager.redmine.url, self.internal_id)

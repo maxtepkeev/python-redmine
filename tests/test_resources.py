@@ -74,6 +74,9 @@ responses = {
     'deal_status': {
         'all': {'deal_statuses': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]},
     },
+    'deal_category': {
+        'filter': {'deal_categories': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]},
+    },
 }
 
 
@@ -1140,3 +1143,24 @@ class TestResources(unittest.TestCase):
     def test_deal_status_url(self):
         self.response.json = json_response(responses['deal_status']['all'])
         self.assertEqual(self.redmine.deal_status.all()[0].url, '{0}/deal_statuses/1/edit'.format(self.url))
+
+    def test_deal_category_version(self):
+        self.assertEqual(self.redmine.deal_category.resource_class.redmine_version, '2.3')
+
+    def test_deal_category_requirements(self):
+        self.assertEqual(self.redmine.deal_category.resource_class.requirements, (('CRM plugin', '3.3.0'),))
+
+    def test_deal_category_filter(self):
+        self.response.json = json_response(responses['deal_category']['filter'])
+        categories = self.redmine.deal_category.filter(project_id=1)
+        self.assertEqual(categories[0].id, 1)
+        self.assertEqual(categories[0].name, 'Foo')
+        self.assertEqual(categories[1].id, 2)
+        self.assertEqual(categories[1].name, 'Bar')
+
+    def test_deal_category_url(self):
+        self.response.json = json_response(responses['deal_category']['filter'])
+        self.assertEqual(
+            self.redmine.deal_category.filter(project_id=1)[0].url,
+            '{0}/deal_categories/edit?id=1'.format(self.url)
+        )
