@@ -792,6 +792,22 @@ class ContactTag(_Resource):
         return '{0}/contacts_tags/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
 
 
+class CrmQuery(_Resource):
+    redmine_version = '2.3'
+    requirements = (('CRM plugin', '3.3.0'),)
+    container_filter = 'queries'
+    query_filter = '/crm_queries.json?object_type={resource}'
+
+    @property
+    def url(self):
+        return '{0}/projects/{1}/{2}s?query_id={3}'.format(
+            self.manager.redmine.url,
+            self._attributes.get('project_id', 0),
+            self.manager.params.get('resource', ''),
+            self.internal_id
+        )
+
+
 class DealStatus(_Resource):
     redmine_version = '2.3'
     requirements = (('CRM plugin', '3.3.0'),)

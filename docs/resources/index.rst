@@ -52,3 +52,4 @@ Resources
     contact_tag
     deal_status
     deal_category
+    crm_query

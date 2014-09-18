@@ -80,6 +80,9 @@ responses = {
     'deal_category': {
         'filter': {'deal_categories': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]},
     },
+    'crm_query': {
+        'filter': {'queries': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]},
+    },
 }
 
 
@@ -1184,4 +1187,25 @@ class TestResources(unittest.TestCase):
         self.assertEqual(
             self.redmine.deal_category.filter(project_id=1)[0].url,
             '{0}/deal_categories/edit?id=1'.format(self.url)
+        )
+
+    def test_crm_query_version(self):
+        self.assertEqual(self.redmine.crm_query.resource_class.redmine_version, '2.3')
+
+    def test_crm_query_requirements(self):
+        self.assertEqual(self.redmine.crm_query.resource_class.requirements, (('CRM plugin', '3.3.0'),))
+
+    def test_crm_query_filter(self):
+        self.response.json = json_response(responses['crm_query']['filter'])
+        queries = self.redmine.crm_query.filter(resource='contact')
+        self.assertEqual(queries[0].id, 1)
+        self.assertEqual(queries[0].name, 'Foo')
+        self.assertEqual(queries[1].id, 2)
+        self.assertEqual(queries[1].name, 'Bar')
+
+    def test_crm_query_url(self):
+        self.response.json = json_response(responses['crm_query']['filter'])
+        self.assertEqual(
+            self.redmine.crm_query.filter(resource='contact')[0].url,
+            '{0}/projects/0/contacts?query_id=1'.format(self.url)
         )
