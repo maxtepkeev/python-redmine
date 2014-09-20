@@ -107,6 +107,7 @@ class _Resource(object):
 
     _includes = ()
     _relations = ()
+    _relations_name = None
     _unconvertible = ()
     _members = ('manager',)
     _create_readonly = ('id', 'created_on', 'updated_on', 'author', 'user', 'project', 'issue')
@@ -122,6 +123,9 @@ class _Resource(object):
         self._create_readonly += self._relations + self._includes
         self._update_readonly += self._relations + self._includes
         self._changes = {}
+
+        if self._relations_name is None:
+            self._relations_name = self.__class__.__name__.lower()
 
     def __getitem__(self, item):
         """Provides a dictionary like access to resource attributes"""
@@ -150,7 +154,7 @@ class _Resource(object):
 
             # If item is a relation and should be requested from Redmine, let's do it
             elif item in self._relations and self._attributes[item] is None:
-                filters = {'{0}_id'.format(self.__class__.__name__.lower()): self.internal_id}
+                filters = {'{0}_id'.format(self._relations_name): self.internal_id}
                 manager = ResourceManager(self.manager.redmine, _RESOURCE_RELATIONS_MAP[item])
                 self._attributes[item] = manager.filter(**filters)
                 return self._attributes[item]
@@ -919,6 +923,9 @@ class CrmQuery(_Resource):
     container_filter = 'queries'
     query_filter = '/crm_queries.json?object_type={resource}'
 
+    _relations = ('contacts', 'deals')
+    _relations_name = 'query'
+
     @property
     def url(self):
         return '{0}/projects/{1}/{2}s?query_id={3}'.format(
@@ -975,6 +982,9 @@ class DealStatus(_Resource):
     requirements = (('CRM plugin', '3.3.0'),)
     container_all = 'deal_statuses'
     query_all = '/deal_statuses.json'
+
+    _relations = ('deals',)
+    _relations_name = 'status'
 
     @property
     def url(self):

@@ -43,6 +43,22 @@ all
     >>> statuses
     <redmine.resultsets.ResourceSet object with DealStatus resources>
 
+.. hint::
+
+    DealStatus resource object provides you with some relations. Relations are the other
+    resource objects wrapped in a ResourceSet which are somehow related to a DealStatus
+    resource object. The relations provided by the DealStatus resource object are:
+
+    * deals
+
+    .. code-block:: python
+
+        >>> statuses = redmine.deal_status.all()
+        >>> statuses[0]
+        <redmine.resources.DealStatus #1 "New">
+        >>> statuses[0].deals
+        <redmine.resultsets.ResourceSet object with Deal resources>
+
 filter
 ++++++
 
