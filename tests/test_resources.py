@@ -83,6 +83,19 @@ responses = {
     'crm_query': {
         'filter': {'queries': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]},
     },
+    'note': {
+        'get': {'note': {'content': 'foobar', 'id': 1}},
+    },
+    'contact': {
+        'get': {'contact': {'first_name': 'Foo', 'last_name': 'Bar', 'id': 1}},
+        'all': {'contacts': [{'first_name': 'Foo', 'id': 1}, {'first_name': 'Bar', 'id': 2}]},
+        'filter': {'contacts': [{'first_name': 'Foo', 'id': 1}, {'first_name': 'Bar', 'id': 2}]},
+    },
+    'deal': {
+        'get': {'deal': {'name': 'Foo', 'id': 1}},
+        'all': {'deals': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]},
+        'filter': {'deals': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]},
+    },
 }
 
 
@@ -348,7 +361,7 @@ class TestResources(unittest.TestCase):
     def test_issue_create(self):
         self.response.status_code = 201
         self.response.json = json_response(responses['issue']['get'])
-        issue = self.redmine.issue.create(project_id='bar', subject='Foo')
+        issue = self.redmine.issue.create(project_id='bar', subject='Foo', version_id=1)
         self.assertEqual(issue.id, 1)
         self.assertEqual(issue.subject, 'Foo')
 
@@ -659,7 +672,6 @@ class TestResources(unittest.TestCase):
 
     def test_wiki_page_custom_int(self):
         self.response.json = json_response(responses['wiki_page']['get'])
-        print(int(self.redmine.wiki_page.get('Foo', project_id=1)))
         self.assertEqual(int(self.redmine.wiki_page.get('Foo', project_id=1)), 1)
 
     def test_wiki_page_custom_str(self):
@@ -1209,3 +1221,226 @@ class TestResources(unittest.TestCase):
             self.redmine.crm_query.filter(resource='contact')[0].url,
             '{0}/projects/0/contacts?query_id=1'.format(self.url)
         )
+
+    def test_note_version(self):
+        self.assertEqual(self.redmine.note.resource_class.redmine_version, '2.1')
+
+    def test_note_requirements(self):
+        self.assertEqual(self.redmine.note.resource_class.requirements, (('CRM plugin', '3.2.4'),))
+
+    def test_note_get(self):
+        self.response.json = json_response(responses['note']['get'])
+        note = self.redmine.note.get(1)
+        self.assertEqual(note.id, 1)
+        self.assertEqual(note.content, 'foobar')
+
+    def test_note_source_to_resource_conversion(self):
+        from redmine.resources import Contact
+        self.response.json = json_response(
+            {'note': {'content': 'foobar', 'id': 1, 'source': {'id': 1, 'name': 'FooBar', 'type': 'Contact'}}}
+        )
+        note = self.redmine.note.get(1)
+        self.assertEqual(note.source.id, 1)
+        self.assertEqual(note.source.name, 'FooBar')
+        self.assertIsInstance(note.source, Contact)
+
+    def test_note_custom_str(self):
+        self.response.json = json_response(responses['note']['get'])
+        self.assertEqual(str(self.redmine.note.get(1)), 'foobar')
+
+    def test_note_custom_repr(self):
+        self.response.json = json_response(responses['note']['get'])
+        self.assertEqual(repr(self.redmine.note.get(1)), '<redmine.resources.Note #1>')
+
+    def test_contact_version(self):
+        self.assertEqual(self.redmine.contact.resource_class.redmine_version, '1.2.1')
+
+    def test_contact_get(self):
+        self.response.json = json_response(responses['contact']['get'])
+        contact = self.redmine.contact.get(1)
+        self.assertEqual(contact.id, 1)
+        self.assertEqual(contact.first_name, 'Foo')
+
+    def test_contact_all(self):
+        self.response.json = json_response(responses['contact']['all'])
+        contacts = self.redmine.contact.all()
+        self.assertEqual(contacts[0].id, 1)
+        self.assertEqual(contacts[0].first_name, 'Foo')
+        self.assertEqual(contacts[1].id, 2)
+        self.assertEqual(contacts[1].first_name, 'Bar')
+
+    def test_contact_filter(self):
+        self.response.json = json_response(responses['contact']['filter'])
+        contacts = self.redmine.contact.filter(project_id=1)
+        self.assertEqual(contacts[0].id, 1)
+        self.assertEqual(contacts[0].first_name, 'Foo')
+        self.assertEqual(contacts[1].id, 2)
+        self.assertEqual(contacts[1].first_name, 'Bar')
+
+    def test_contact_create(self):
+        self.response.status_code = 201
+        self.response.json = json_response(responses['contact']['get'])
+        contact = self.redmine.contact.create(project_id='bar', first_name='Foo')
+        self.assertEqual(contact.id, 1)
+        self.assertEqual(contact.first_name, 'Foo')
+
+    def test_contact_delete(self):
+        self.response.content = ''
+        self.assertEqual(self.redmine.contact.delete(1), True)
+
+    def test_contact_update(self):
+        self.response.json = json_response(
+            {'contact': {'first_name': 'Foo', 'id': 1, 'custom_fields': [{'id': 1, 'value': 'foo'}]}}
+        )
+        contact = self.redmine.contact.get(1)
+        contact.custom_fields = [{'id': 1, 'value': 'bar'}]
+        self.assertEqual(contact.save(), True)
+        self.assertEqual(contact.custom_fields[0].value, 'bar')
+
+    def test_contact_includes(self):
+        response_includes = responses['contact']['get']
+        self.response.json = json_response(response_includes)
+        contact = self.redmine.contact.get(1)
+        response_includes['contact']['notes'] = responses['note']['get']
+        self.response.json = json_response(response_includes)
+        self.assertIsInstance(contact.notes, ResourceSet)
+        response_includes['contact']['contacts'] = responses['contact']['all']['contacts']
+        self.response.json = json_response(response_includes)
+        self.assertIsInstance(contact.contacts, ResourceSet)
+        response_includes['contact']['deals'] = responses['deal']['all']['deals']
+        self.response.json = json_response(response_includes)
+        self.assertIsInstance(contact.deals, ResourceSet)
+        response_includes['contact']['issues'] = responses['issue']['all']['issues']
+        self.response.json = json_response(response_includes)
+        self.assertIsInstance(contact.issues, ResourceSet)
+
+    def test_contact_phones_returns_as_list_of_items(self):
+        self.response.json = json_response({'contact': {'phones': [{'number': '123'}, {'number': '456'}]}})
+        self.assertEqual(self.redmine.contact.get(1).phones, ['123', '456'])
+        self.response.json = json_response({'contact': {'phones': ['123', '456']}})
+        self.assertEqual(self.redmine.contact.get(1).phones, ['123', '456'])
+
+    def test_contact_emails_returns_as_list_of_items(self):
+        self.response.json = json_response({'contact': {'emails': [{'address': 'foo'}, {'address': 'bar'}]}})
+        self.assertEqual(self.redmine.contact.get(1).emails, ['foo', 'bar'])
+        self.response.json = json_response({'contact': {'emails': ['foo', 'bar']}})
+        self.assertEqual(self.redmine.contact.get(1).emails, ['foo', 'bar'])
+
+    def test_contact_avatar_converts_to_resource(self):
+        from redmine.resources import Attachment
+        self.response.json = json_response({'contact': {'first_name': 'Foo', 'id': 1, 'avatar': {'attachment_id': 2}}})
+        avatar = self.redmine.contact.get(1).avatar
+        self.assertIsInstance(avatar, Attachment)
+        self.assertEqual(avatar.id, 2)
+
+    def test_contact_sets_phones_emails_taglist_via_setattr(self):
+        self.response.json = json_response(responses['contact']['get'])
+        contact = self.redmine.contact.get(1)
+        contact.phones = ['123', '456']
+        contact.emails = ['foo@bar', 'bar@foo']
+        contact.tag_list = ['foo', 'bar']
+        self.assertEqual(contact._changes['phone'], '123,456')
+        self.assertEqual(contact._changes['email'], 'foo@bar,bar@foo')
+        self.assertEqual(contact._changes['tag_list'], 'foo,bar')
+
+    def test_contact_custom_repr(self):
+        self.response.json = json_response(responses['contact']['get'])
+        self.assertEqual(repr(self.redmine.contact.get(1)), '<redmine.resources.Contact #1 "Foo Bar">')
+
+    def test_contact_is_company_custom_repr(self):
+        self.response.json = json_response(responses['contact']['get'])
+        contact = self.redmine.contact.get(1)
+        contact['_attributes']['is_company'] = True
+        self.assertEqual(repr(contact), '<redmine.resources.Contact #1 "Foo">')
+
+    def test_contact_custom_str(self):
+        self.response.json = json_response(responses['contact']['get'])
+        self.assertEqual(str(self.redmine.contact.get(1)), 'Foo Bar')
+
+    def test_contact_is_company_custom_str(self):
+        self.response.json = json_response(responses['contact']['get'])
+        contact = self.redmine.contact.get(1)
+        contact['_attributes']['is_company'] = True
+        self.assertEqual(str(contact), 'Foo')
+
+    def test_deal_version(self):
+        self.assertEqual(self.redmine.deal.resource_class.redmine_version, '1.2.1')
+
+    def test_deal_get(self):
+        self.response.json = json_response(responses['deal']['get'])
+        deal = self.redmine.deal.get(1)
+        self.assertEqual(deal.id, 1)
+        self.assertEqual(deal.name, 'Foo')
+
+    def test_deal_all(self):
+        self.response.json = json_response(responses['deal']['all'])
+        deals = self.redmine.deal.all()
+        self.assertEqual(deals[0].id, 1)
+        self.assertEqual(deals[0].name, 'Foo')
+        self.assertEqual(deals[1].id, 2)
+        self.assertEqual(deals[1].name, 'Bar')
+
+    def test_deal_filter(self):
+        self.response.json = json_response(responses['deal']['filter'])
+        deals = self.redmine.deal.filter(project_id=1)
+        self.assertEqual(deals[0].id, 1)
+        self.assertEqual(deals[0].name, 'Foo')
+        self.assertEqual(deals[1].id, 2)
+        self.assertEqual(deals[1].name, 'Bar')
+
+    def test_deal_create(self):
+        self.response.status_code = 201
+        self.response.json = json_response(responses['deal']['get'])
+        deal = self.redmine.deal.create(project_id='bar', name='Foo')
+        self.assertEqual(deal.id, 1)
+        self.assertEqual(deal.name, 'Foo')
+
+    def test_deal_delete(self):
+        self.response.content = ''
+        self.assertEqual(self.redmine.deal.delete(1), True)
+
+    def test_deal_update(self):
+        self.response.json = json_response(
+            {'deal': {'name': 'Foo', 'id': 1, 'custom_fields': [{'id': 1, 'value': 'foo'}]}}
+        )
+        deal = self.redmine.deal.get(1)
+        deal.custom_fields = [{'id': 1, 'value': 'bar'}]
+        self.assertEqual(deal.save(), True)
+        self.assertEqual(deal.custom_fields[0].value, 'bar')
+
+    def test_deal_includes(self):
+        response_includes = responses['deal']['get']
+        self.response.json = json_response(response_includes)
+        deal = self.redmine.deal.get(1)
+        response_includes['deal']['notes'] = responses['note']['get']
+        self.response.json = json_response(response_includes)
+        self.assertIsInstance(deal.notes, ResourceSet)
+
+    def test_deal_category_status_converts_to_resource(self):
+        from redmine.resources import DealCategory, DealStatus
+        self.response.json = json_response({'deal': {'id': 1, 'category': {'id': 2}, 'status': {'id': 3}}})
+        deal = self.redmine.deal.get(1)
+        self.assertIsInstance(deal.category, DealCategory)
+        self.assertEqual(deal.category.id, 2)
+        self.assertIsInstance(deal.status, DealStatus)
+        self.assertEqual(deal.status.id, 3)
+
+    def test_deal_custom_repr(self):
+        self.response.json = json_response(responses['deal']['get'])
+        self.assertEqual(repr(self.redmine.deal.get(1)), '<redmine.resources.Deal #1 "Foo">')
+
+    def test_deal_custom_repr_without_name(self):
+        self.response.json = json_response(responses['deal']['get'])
+        deal = self.redmine.deal.get(1)
+        del deal['_attributes']['name']
+        self.assertEqual(repr(deal), '<redmine.resources.Deal #1>')
+
+    def test_deal_custom_str(self):
+        self.response.json = json_response(responses['deal']['get'])
+        self.assertEqual(str(self.redmine.deal.get(1)), 'Foo')
+
+    def test_deal_custom_str_without_name(self):
+        self.response.json = json_response(responses['deal']['get'])
+        deal = self.redmine.deal.get(1)
+        del deal['_attributes']['name']
+        self.assertEqual(str(deal), '1')

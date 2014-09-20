@@ -6,7 +6,10 @@ Changelog
 
 - Added: Support for the `CRM plugin <http://redminecrm.com/projects/crm/pages/1>`_ resources:
 
+  * `Contact <http://python-redmine.readthedocs.org/resources/contact.html>`_
   * `ContactTag <http://python-redmine.readthedocs.org/resources/contact_tag.html>`_
+  * `Note <http://python-redmine.readthedocs.org/resources/note.html>`_
+  * `Deal <http://python-redmine.readthedocs.org/resources/deal.html>`_
   * `DealStatus <http://python-redmine.readthedocs.org/resources/deal_status.html>`_
   * `DealCategory <http://python-redmine.readthedocs.org/resources/deal_category.html>`_
   * `CrmQuery <http://python-redmine.readthedocs.org/resources/crm_query.html>`_

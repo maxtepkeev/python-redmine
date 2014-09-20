@@ -126,6 +126,10 @@ get
     * versions
     * news
     * issues
+    * deals (available from v1.0.0 and only available if `CRM plugin <http://redminecrm.com/projects/
+      crm/pages/1>`_ is installed)
+    * contacts (available from v1.0.0 and only available if `CRM plugin <http://redminecrm.com/projects/
+      crm/pages/1>`_ is installed)
 
     .. code-block:: python
 

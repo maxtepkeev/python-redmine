@@ -49,7 +49,10 @@ Resources
 .. toctree::
     :maxdepth: 1
 
+    contact
     contact_tag
+    note
+    deal
     deal_status
     deal_category
     crm_query

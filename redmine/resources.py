@@ -24,6 +24,12 @@ _RESOURCE_SET_MAP = {
     'journals': 'IssueJournal',
     'children': 'Issue',
     'roles': 'Role',
+    'issues': 'Issue',
+    'projects': 'Project',
+    'notes': 'Note',
+    'deals': 'Deal',
+    'contacts': 'Contact',
+    'related_contacts': 'Contact',
 }
 
 # Resources which when accessed from some other
@@ -40,6 +46,7 @@ _RESOURCE_MAP = {
     'activity': 'Enumeration',
     'category': 'IssueCategory',
     'fixed_version': 'Version',
+    'contact': 'Contact',
 }
 
 # Resources which when access from some other
@@ -53,6 +60,8 @@ _RESOURCE_RELATIONS_MAP = {
     'relations': 'IssueRelation',
     'time_entries': 'TimeEntry',
     'issues': 'Issue',
+    'contacts': 'Contact',
+    'deals': 'Deal',
 }
 
 # Resource attributes which when set should
@@ -68,6 +77,8 @@ _RESOURCE_SINGLE_ATTR_ID_MAP = {
     'parent_issue_id': 'parent',
     'issue_id': 'issue',
     'activity_id': 'activity',
+    'status_id': 'status',
+    'contact_id': 'contact',
 }
 
 # Resource attributes which when set should
@@ -312,7 +323,7 @@ class Project(_Resource):
     query_delete = '/projects/{0}.json'
 
     _includes = ('trackers', 'issue_categories')
-    _relations = ('wiki_pages', 'memberships', 'issue_categories', 'versions', 'news', 'issues')
+    _relations = ('wiki_pages', 'memberships', 'issue_categories', 'versions', 'news', 'issues', 'contacts', 'deals')
     _unconvertible = ('status',)
     _update_readonly = _Resource._update_readonly + ('identifier',)
 
@@ -339,6 +350,7 @@ class Issue(_Resource):
 
     _includes = ('children', 'attachments', 'relations', 'changesets', 'journals', 'watchers')
     _relations = ('relations', 'time_entries')
+    _unconvertible = ('notes',)
     _create_readonly = _Resource._create_readonly + ('spent_hours',)
     _update_readonly = _create_readonly
 
@@ -360,6 +372,13 @@ class Issue(_Resource):
             """Removes user from issue watchers list"""
             url = '{0}/issues/{1}/watchers/{2}.json'.format(self._redmine.url, self._issue_id, user_id)
             return self._redmine.request('delete', url)
+
+    @classmethod
+    def translate_params(cls, params):
+        if 'version_id' in params:
+            params['fixed_version_id'] = params.pop('version_id')
+
+        return super(Issue, cls).translate_params(params)
 
     def __getattr__(self, item):
         if item == 'version':
@@ -781,6 +800,108 @@ class CustomField(_Resource):
         return super(CustomField, self).__getattr__(item)
 
 
+class Note(_Resource):
+    redmine_version = '2.1'
+    requirements = (('CRM plugin', '3.2.4'),)
+    container_one = 'note'
+    query_one = '/notes/{0}.json'
+
+    def __getattr__(self, item):
+        if item == 'source' and item in self._attributes and self._attributes[item].get('type') in ('Deal', 'Contact'):
+            manager = ResourceManager(self.manager.redmine, self._attributes[item]['type'])
+            return manager.to_resource(self._attributes[item])
+
+        return super(Note, self).__getattr__(item)
+
+    def __str__(self):
+        return self.content
+
+    def __repr__(self):
+        return '<{0}.{1} #{2}>'.format(
+            self.__class__.__module__,
+            self.__class__.__name__,
+            self.id
+        )
+
+
+class Contact(_Resource):
+    redmine_version = '1.2.1'
+    requirements = ('CRM plugin',)
+    container_all = 'contacts'
+    container_one = 'contact'
+    container_filter = 'contacts'
+    container_create = 'contact'
+    container_update = 'contact'
+    query_all = '/contacts.json'
+    query_one = '/contacts/{0}.json'
+    query_filter = '/contacts.json'
+    query_create = '/projects/{project_id}/contacts.json'
+    query_update = '/contacts/{0}.json'
+    query_delete = '/contacts/{0}.json'
+
+    _includes = ('notes', 'contacts', 'deals', 'issues')
+
+    @classmethod
+    def translate_params(cls, params):
+        if 'tag_list' in params:
+            params['tag_list'] = ','.join(params['tag_list'])
+
+        if 'phones' in params:
+            params['phone'] = ','.join(params.pop('phones'))
+
+        if 'emails' in params:
+            params['email'] = ','.join(params.pop('emails'))
+
+        return super(Contact, cls).translate_params(params)
+
+    def __getattr__(self, item):
+        if item == 'phones':
+            return [p.get('number') if isinstance(p, dict) else p for p in self._attributes.get('phones', [])]
+        elif item == 'emails':
+            return [e.get('address') if isinstance(e, dict) else e for e in self._attributes.get('emails', [])]
+        elif item == 'avatar' and item in self._attributes:
+            manager = ResourceManager(self.manager.redmine, 'Attachment')
+            return manager.to_resource({'id': self._attributes[item].get('attachment_id', 0)})
+
+        return super(Contact, self).__getattr__(item)
+
+    def __setattr__(self, item, value):
+        if item in ('phones', 'emails', 'tag_list'):
+            self._attributes[item] = value
+            self._changes.update(self.translate_params({item: value}))
+        else:
+            super(Contact, self).__setattr__(item, value)
+
+    def __str__(self):
+        try:
+            return super(Contact, self).__str__()
+        except ResourceAttrError:
+            if getattr(self, 'is_company', False):
+                return '{0}'.format(to_string(self.first_name))
+            else:
+                return '{0} {1}'.format(to_string(self.first_name), to_string(self.last_name))
+
+    def __repr__(self):
+        try:
+            return super(Contact, self).__repr__()
+        except ResourceAttrError:
+            if getattr(self, 'is_company', False):
+                return '<{0}.{1} #{2} "{3}">'.format(
+                    self.__class__.__module__,
+                    self.__class__.__name__,
+                    self.id,
+                    to_string(self.first_name),
+                )
+            else:
+                return '<{0}.{1} #{2} "{3} {4}">'.format(
+                    self.__class__.__module__,
+                    self.__class__.__name__,
+                    self.id,
+                    to_string(self.first_name),
+                    to_string(self.last_name)
+                )
+
+
 class ContactTag(_Resource):
     redmine_version = '2.3'
     requirements = (('CRM plugin', '3.3.1'),)
@@ -806,6 +927,47 @@ class CrmQuery(_Resource):
             self.manager.params.get('resource', ''),
             self.internal_id
         )
+
+
+class Deal(_Resource):
+    redmine_version = '1.2.1'
+    requirements = ('CRM plugin',)
+    container_all = 'deals'
+    container_one = 'deal'
+    container_filter = 'deals'
+    container_create = 'deal'
+    container_update = 'deal'
+    query_all = '/deals.json'
+    query_one = '/deals/{0}.json'
+    query_filter = '/deals.json'
+    query_create = '/projects/{project_id}/deals.json'
+    query_update = '/deals/{0}.json'
+    query_delete = '/deals/{0}.json'
+
+    _includes = ('notes',)
+
+    def __getattr__(self, item):
+        if item in ('category', 'status') and item in self._attributes:
+            manager = ResourceManager(self.manager.redmine, 'Deal{0}'.format(item.capitalize()))
+            return manager.to_resource(self._attributes[item])
+
+        return super(Deal, self).__getattr__(item)
+
+    def __str__(self):
+        try:
+            return super(Deal, self).__str__()
+        except ResourceAttrError:
+            return str(self.id)
+
+    def __repr__(self):
+        try:
+            return super(Deal, self).__repr__()
+        except ResourceAttrError:
+            return '<{0}.{1} #{2}>'.format(
+                self.__class__.__module__,
+                self.__class__.__name__,
+                self.id
+            )
 
 
 class DealStatus(_Resource):
