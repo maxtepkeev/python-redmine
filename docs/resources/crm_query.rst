@@ -2,7 +2,7 @@ CRM Query
 =========
 
 Supported starting from version 1.0.0 and only available if `CRM plugin <http://redminecrm.com/
-projects/crm/pages/1>`_ of version 3.3.0 and higher is installed.
+projects/crm/pages/1>`_ 3.3.0 and higher is installed.
 
 Manager
 -------
@@ -63,7 +63,6 @@ filter
     resource object. The relations provided by the CrmQuery resource object are:
 
     * deals
-    * contacts
 
     .. code-block:: python
 
@@ -72,12 +71,6 @@ filter
          <redmine.resources.CrmQuery #10 "Deals by category">
         >>> queries[0].deals
         <redmine.resultsets.ResourceSet object with Deal resources>
-
-        >>> queries = redmine.crm_query.filter(resource='contact')
-        >>> queries[0]
-        <redmine.resources.CrmQuery #11 "Contacts with issues">
-        >>> queries[0].contacts
-        <redmine.resultsets.ResourceSet object with Contact resources>
 
 Update methods
 --------------
