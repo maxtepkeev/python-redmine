@@ -22,9 +22,11 @@ Changelog
   * IssueStatus - issues relation
 
 - Added: Introduced ``update()`` and ``delete()`` methods in a ResourceSet object which allow to
-  bulk update or bulk delete all resources in a ResourceSet object
+  bulk update or bulk delete all resources in a ResourceSet object (see `docs <http://python-redmine.
+  readthedocs.org/operations.html#filter>`__ for details)
 - Fixed: It was impossible to use ResourceSet's ``get()`` and ``filter()`` methods with WikiPage
   resource
+- Fixed: Several small fixes and enhancements here and there
 
 0.9.0 (2014-09-11)
 ++++++++++++++++++
