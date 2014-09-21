@@ -411,7 +411,6 @@ class TestResources(unittest.TestCase):
         self.response.json = json_response(responses['issue']['get'])
         self.redmine.ver = '2.2.0'
         issue = self.redmine.issue.get(1)
-        self.response.content = ''
         self.assertRaises(ResourceVersionMismatchError, lambda: issue.watcher.add(1))
 
     def test_issue_add_watcher(self):
@@ -1321,6 +1320,39 @@ class TestResources(unittest.TestCase):
         response_includes['contact']['issues'] = responses['issue']['all']['issues']
         self.response.json = json_response(response_includes)
         self.assertIsInstance(contact.issues, ResourceSet)
+
+    def test_contact_add_project_raises_exception_if_wrong_version(self):
+        from redmine.exceptions import ResourceVersionMismatchError
+        self.response.json = json_response(responses['contact']['get'])
+        self.redmine.ver = '2.2.0'
+        contact = self.redmine.contact.get(1)
+        self.assertRaises(ResourceVersionMismatchError, lambda: contact.project.add(1))
+
+    def test_contact_add_project(self):
+        self.response.json = json_response(responses['contact']['get'])
+        contact = self.redmine.contact.get(1)
+        self.response.content = ''
+        self.assertEqual(contact.project.add(1), True)
+
+    def test_contact_add_project_raises_exception_on_unsupported_version(self):
+        from redmine.exceptions import ResourceRequirementsError
+        self.response.json = json_response(responses['contact']['get'])
+        contact = self.redmine.contact.get(1)
+        self.response.status_code = 404
+        self.assertRaises(ResourceRequirementsError, lambda: contact.project.add(1))
+
+    def test_contact_remove_project(self):
+        self.response.json = json_response(responses['contact']['get'])
+        contact = self.redmine.contact.get(1)
+        self.response.content = ''
+        self.assertEqual(contact.project.remove(1), True)
+
+    def test_contact_remove_project_raises_exception_on_unsupported_version(self):
+        from redmine.exceptions import ResourceRequirementsError
+        self.response.json = json_response(responses['contact']['get'])
+        contact = self.redmine.contact.get(1)
+        self.response.status_code = 404
+        self.assertRaises(ResourceRequirementsError, lambda: contact.project.remove(1))
 
     def test_contact_phones_returns_as_list_of_items(self):
         self.response.json = json_response({'contact': {'phones': [{'number': '123'}, {'number': '456'}]}})

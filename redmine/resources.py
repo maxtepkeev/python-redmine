@@ -6,7 +6,9 @@ from redmine.exceptions import (
     ResourceAttrError,
     ReadonlyAttrError,
     CustomFieldValueError,
-    ResourceVersionMismatchError
+    ResourceVersionMismatchError,
+    ResourceNotFoundError,
+    ResourceRequirementsError
 )
 
 # Resources which when accessed from some other
@@ -873,6 +875,33 @@ class Contact(_Resource):
 
     _includes = ('notes', 'contacts', 'deals', 'issues')
 
+    class Project:
+        """A contact project implementation"""
+        def __init__(self, contact):
+            self._redmine = contact.manager.redmine
+            self._contact_id = contact.internal_id
+
+            if self._redmine.ver is not None and LooseVersion(str(self._redmine.ver)) < LooseVersion('2.3'):
+                raise ResourceVersionMismatchError
+
+        def add(self, project_id):
+            """Adds project to contact's project list"""
+            url = '{0}/contacts/{1}/projects.json'.format(self._redmine.url, self._contact_id)
+
+            try:
+                return self._redmine.request('post', url, data={'project': {'id': project_id}})
+            except ResourceNotFoundError:
+                raise ResourceRequirementsError((('CRM plugin', '3.4.0'),))
+
+        def remove(self, project_id):
+            """Removes project from contact's project list"""
+            url = '{0}/contacts/{1}/projects/{2}.json'.format(self._redmine.url, self._contact_id, project_id)
+
+            try:
+                return self._redmine.request('delete', url)
+            except ResourceNotFoundError:
+                raise ResourceRequirementsError((('CRM plugin', '3.4.0'),))
+
     @classmethod
     def translate_params(cls, params):
         if 'tag_list' in params:
@@ -887,7 +916,9 @@ class Contact(_Resource):
         return super(Contact, cls).translate_params(params)
 
     def __getattr__(self, item):
-        if item == 'phones':
+        if item == 'project':
+            return Contact.Project(self)
+        elif item == 'phones':
             return [p.get('number') if isinstance(p, dict) else p for p in self._attributes.get('phones', [])]
         elif item == 'emails':
             return [e.get('address') if isinstance(e, dict) else e for e in self._attributes.get('emails', [])]

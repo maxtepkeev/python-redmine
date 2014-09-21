@@ -322,3 +322,46 @@ delete
 
     >>> redmine.contact.delete(1)
     True
+
+Projects
+--------
+
+Python Redmine provides 2 methods to work with contact projects: ``add`` and ``remove``.
+
+add
++++
+
+.. py:method:: add(project_id)
+    :module: redmine.resources.Contact.Project
+    :noindex:
+
+    Adds project to contact's project list.
+
+    :param project_id: (required). Id or identifier of a project.
+    :type project_id: integer or string
+    :return: True
+
+.. code-block:: python
+
+    >>> contact = redmine.contact.get(1)
+    >>> contact.project.add('vacation')
+    True
+
+remove
+++++++
+
+.. py:method:: remove(project_id)
+    :module: redmine.resources.Contact.Project
+    :noindex:
+
+    Removes project from contact's project list.
+
+    :param project_id: (required). Id or identifier of a project.
+    :type project_id: integer or string
+    :return: True
+
+.. code-block:: python
+
+    >>> contact = redmine.contact.get(1)
+    >>> contact.project.remove('vacation')
+    True
