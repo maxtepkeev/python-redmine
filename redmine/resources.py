@@ -51,7 +51,7 @@ _RESOURCE_MAP = {
     'contact': 'Contact',
 }
 
-# Resources which when access from some other
+# Resources which when accessed from some other
 # resource should be requested from Redmine
 _RESOURCE_RELATIONS_MAP = {
     'wiki_pages': 'WikiPage',
@@ -131,11 +131,11 @@ class _Resource(object):
             self._relations_name = self.__class__.__name__.lower()
 
     def __getitem__(self, item):
-        """Provides a dictionary like access to resource attributes"""
+        """Provides a dictionary-like access to resource attributes"""
         return getattr(self, item)
 
     def __setitem__(self, item, value):
-        """Provides a dictionary like setter for resource attributes"""
+        """Provides a dictionary-like setter for resource attributes"""
         return setattr(self, item, value)
 
     def __getattr__(self, item):
@@ -828,7 +828,7 @@ class CustomField(_Resource):
         # i.e. project, and it's not used in the resource, there will be
         # no value attribute defined, that is why we need to return 0 or
         # we'll get an exception
-        if item == 'value' and not item in self._attributes:
+        if item == 'value' and item not in self._attributes:
             return 0
 
         return super(CustomField, self).__getattr__(item)

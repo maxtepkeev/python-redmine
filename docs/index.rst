@@ -69,11 +69,16 @@ I will be glad to get your feedback, `pull requests <https://github.com/maxtepke
 `issues <https://github.com/maxtepkeev/python-redmine/issues>`_, whatever. Feel free to contact me for any
 questions.
 
-Donations
----------
+Donations and Sponsorship
+-------------------------
 
-If you like this project and want to support it, please `GITTIP <https://www.gittip.com/maxtepkeev/>`_
-it's author.
+If you like this project and want to support it you have 3 options:
+
+#. Just give this project a star at the top of the `GitHub <https://github.com/maxtepkeev/python-redmine>`_
+   repository. That doesn't cost you anything but makes the `author <https://github.com/maxtepkeev>`_ happier.
+#. You can express your gratitude via `Gratipay <https://gratipay.com/maxtepkeev/>`_.
+#. Become a sponsor. Contact me via ``tepkeev at gmail dot com`` if you are interested in becoming a sponsor
+   and we will discuss the terms and conditions.
 
 Copyright and License
 ---------------------
