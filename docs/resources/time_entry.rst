@@ -134,8 +134,8 @@ filter
 
 .. hint::
 
-    You can also get time entries from an issue resource object directly using
-    ``time_entries`` relation:
+    You can also get time entries from an issue resource object and starting from 1.0.0
+    project and user resource objects directly using ``time_entries`` relation:
 
     .. code-block:: python
 

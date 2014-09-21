@@ -42,6 +42,26 @@ all
     >>> trackers
     <redmine.resultsets.ResourceSet object with Tracker resources>
 
+.. hint::
+
+    .. versionadded:: 1.0.0
+
+    |
+
+    Tracker resource object provides you with some relations. Relations are the other
+    resource objects wrapped in a ResourceSet which are somehow related to a Tracker
+    resource object. The relations provided by the Tracker resource object are:
+
+    * issues
+
+    .. code-block:: python
+
+        >>> trackers = redmine.tracker.all()
+        >>> trackers[0]
+        <redmine.resources.Tracker #1 "FooBar">
+        >>> trackers[0].issues
+        <redmine.resultsets.ResourceSet object with Issue resources>
+
 filter
 ++++++
 

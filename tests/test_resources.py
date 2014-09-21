@@ -937,6 +937,14 @@ class TestResources(unittest.TestCase):
         self.response.json = json_response(responses['user']['get'])
         self.assertEqual(repr(self.redmine.user.get(1)), '<redmine.resources.User #1 "John Smith">')
 
+    def test_user_relations(self):
+        self.response.json = json_response(responses['user']['get'])
+        user = self.redmine.user.get(1)
+        self.assertIsInstance(user.issues, ResourceSet)
+        self.assertIsInstance(user.time_entries, ResourceSet)
+        self.assertIsInstance(user.contacts, ResourceSet)
+        self.assertIsInstance(user.deals, ResourceSet)
+
     def test_user_includes(self):
         response_includes = responses['user']['get']
         self.response.json = json_response(response_includes)

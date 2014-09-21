@@ -14,6 +14,13 @@ Changelog
   * `DealCategory <http://python-redmine.readthedocs.org/resources/deal_category.html>`_
   * `CrmQuery <http://python-redmine.readthedocs.org/resources/crm_query.html>`_
 
+- Added: Introduced new relations for the following resource objects:
+
+  * Project - time_entries, deals, contacts and deal_categories relations
+  * User - issues, time_entries, deals and contacts relations
+  * Tracker - issues relation
+  * IssueStatus - issues relation
+
 0.9.0 (2014-09-11)
 ++++++++++++++++++
 

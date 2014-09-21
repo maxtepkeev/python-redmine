@@ -6,8 +6,8 @@ projects/crm/pages/1>`_ is installed.
 
 .. hint::
 
-    It is highly recommended to use CRM plugin of version 3.3.0 and higher because some bugs
-    and inconsistencies in REST API exists in older versions.
+    It is highly recommended to use CRM plugin 3.3.0 and higher because some bugs and
+    inconsistencies in REST API exists in older versions.
 
 Manager
 -------
@@ -171,7 +171,7 @@ filter
 
 .. hint::
 
-    You can also get deals from a project resource object directly using
+    You can also get deals from a project, user and deal status resource objects directly using
     ``deals`` relation:
 
     .. code-block:: python

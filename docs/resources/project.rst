@@ -126,10 +126,13 @@ get
     * versions
     * news
     * issues
-    * deals (available from v1.0.0 and only available if `CRM plugin <http://redminecrm.com/projects/
+    * time_entries (available from v1.0.0)
+    * deals (available from v1.0.0 and only if `CRM plugin <http://redminecrm.com/projects/
       crm/pages/1>`_ is installed)
-    * contacts (available from v1.0.0 and only available if `CRM plugin <http://redminecrm.com/projects/
+    * contacts (available from v1.0.0 and only if `CRM plugin <http://redminecrm.com/projects/
       crm/pages/1>`_ is installed)
+    * deal_categories (available from v1.0.0 and only if `CRM plugin <http://redminecrm.com/projects/
+      crm/pages/1>`_ 3.3.0 and higher is installed)
 
     .. code-block:: python
 

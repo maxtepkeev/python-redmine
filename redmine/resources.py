@@ -62,6 +62,7 @@ _RESOURCE_RELATIONS_MAP = {
     'issues': 'Issue',
     'contacts': 'Contact',
     'deals': 'Deal',
+    'deal_categories': 'DealCategory',
 }
 
 # Resource attributes which when set should
@@ -327,7 +328,18 @@ class Project(_Resource):
     query_delete = '/projects/{0}.json'
 
     _includes = ('trackers', 'issue_categories')
-    _relations = ('wiki_pages', 'memberships', 'issue_categories', 'versions', 'news', 'issues', 'contacts', 'deals')
+    _relations = (
+        'wiki_pages',
+        'memberships',
+        'issue_categories',
+        'time_entries',
+        'versions',
+        'news',
+        'issues',
+        'contacts',
+        'deals',
+        'deal_categories',
+    )
     _unconvertible = ('status',)
     _update_readonly = _Resource._update_readonly + ('identifier',)
 
@@ -662,9 +674,20 @@ class User(_Resource):
     query_delete = '/users/{0}.json'
 
     _includes = ('memberships', 'groups')
+    _relations = ('issues', 'time_entries', 'contacts', 'deals')
+    _relations_name = 'assigned_to'
     _unconvertible = ('status',)
     _create_readonly = _Resource._create_readonly + ('api_key', 'last_login_on')
     _update_readonly = _create_readonly
+
+    def __getattr__(self, item):
+        if item == 'time_entries':
+            self._relations_name = 'user'
+            value = super(User, self).__getattr__(item)
+            self._relations_name = 'assigned_to'
+            return value
+
+        return super(User, self).__getattr__(item)
 
     def __str__(self):
         try:
@@ -755,6 +778,9 @@ class IssueStatus(_Resource):
     container_all = 'issue_statuses'
     query_all = '/issue_statuses.json'
 
+    _relations = ('issues',)
+    _relations_name = 'status'
+
     @property
     def url(self):
         return '{0}/issue_statuses/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
@@ -764,6 +790,8 @@ class Tracker(_Resource):
     redmine_version = '1.3'
     container_all = 'trackers'
     query_all = '/trackers.json'
+
+    _relations = ('issues',)
 
     @property
     def url(self):
@@ -923,7 +951,7 @@ class CrmQuery(_Resource):
     container_filter = 'queries'
     query_filter = '/crm_queries.json?object_type={resource}'
 
-    _relations = ('contacts', 'deals')
+    _relations = ('deals',)
     _relations_name = 'query'
 
     @property

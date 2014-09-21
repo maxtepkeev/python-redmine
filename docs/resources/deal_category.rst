@@ -2,7 +2,7 @@ Deal Category
 =============
 
 Supported starting from version 1.0.0 and only available if `CRM plugin <http://redminecrm.com/
-projects/crm/pages/1>`_ of version 3.3.0 and higher is installed.
+projects/crm/pages/1>`_ 3.3.0 and higher is installed.
 
 Manager
 -------
@@ -49,6 +49,17 @@ filter
     >>> categories = redmine.deal_category.filter(project_id='vacation')
     >>> categories
     <redmine.resultsets.ResourceSet object with DealCategory resources>
+
+.. hint::
+
+    You can also get deal categories from a project resource object directly using
+    ``deal_categories`` relation:
+
+    .. code-block:: python
+
+        >>> project = redmine.project.get('vacation')
+        >>> project.deal_categories
+        <redmine.resultsets.ResourceSet object with DealCategory resources>
 
 Update methods
 --------------

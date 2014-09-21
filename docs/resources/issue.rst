@@ -228,8 +228,8 @@ filter
 
 .. hint::
 
-    You can also get issues from a project resource object directly using
-    ``issues`` relation:
+    You can also get issues from a project, tracker, issue status or user resource objects directly
+    using ``issues`` relation:
 
     .. code-block:: python
 

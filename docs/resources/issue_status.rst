@@ -42,6 +42,26 @@ all
     >>> statuses
     <redmine.resultsets.ResourceSet object with IssueStatus resources>
 
+.. hint::
+
+    .. versionadded:: 1.0.0
+
+    |
+
+    IssueStatus resource object provides you with some relations. Relations are the other
+    resource objects wrapped in a ResourceSet which are somehow related to an IssueStatus
+    resource object. The relations provided by the IssueStatus resource object are:
+
+    * issues
+
+    .. code-block:: python
+
+        >>> statuses = redmine.issue_status.all()
+        >>> statuses[0]
+        <redmine.resources.IssueStatus #1 "New">
+        >>> statuses[0].issues
+        <redmine.resultsets.ResourceSet object with Issue resources>
+
 filter
 ++++++
 

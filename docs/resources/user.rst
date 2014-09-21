@@ -121,6 +121,27 @@ get
         >>> user.groups
         <redmine.resultsets.ResourceSet object with Group resources>
 
+.. hint::
+
+    .. versionadded:: 1.0.0
+
+    |
+
+    User resource object provides you with some relations. Relations are the other
+    resource objects wrapped in a ResourceSet which are somehow related to a User
+    resource object. The relations provided by the User resource object are:
+
+    * issues
+    * time_entries
+    * deals (only available if `CRM plugin <http://redminecrm.com/projects/crm/pages/1>`_ is installed)
+    * contacts (only available if `CRM plugin <http://redminecrm.com/projects/crm/pages/1>`_ is installed)
+
+    .. code-block:: python
+
+        >>> user = redmine.user.get(17)
+        >>> user.issues
+        <redmine.resultsets.ResourceSet object with Issue resources>
+
 all
 +++
 
@@ -172,6 +193,16 @@ filter
     >>> users = redmine.user.filter(offset=10, limit=100, status=3)
     >>> users
     <redmine.resultsets.ResourceSet object with User resources>
+
+.. hint::
+
+    You can also get users from a group resource object directly using ``users`` on demand includes:
+
+    .. code-block:: python
+
+        >>> group = redmine.group.get(524)
+        >>> group.users
+        <redmine.resultsets.ResourceSet object with User resources>
 
 Update methods
 --------------
