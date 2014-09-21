@@ -21,6 +21,9 @@ Changelog
   * Tracker - issues relation
   * IssueStatus - issues relation
 
+- Fixed: It was impossible to use ResourceSet's ``get()`` and ``filter()`` methods with WikiPage
+  resource
+
 0.9.0 (2014-09-11)
 ++++++++++++++++++
 

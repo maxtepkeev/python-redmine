@@ -20,7 +20,7 @@ class ResourceSet(object):
     def get(self, resource_id, default=None):
         """Returns a single item from a ResourceSet by resource id"""
         for resource in self:
-            if int(resource_id) == resource.id:
+            if resource_id == resource.internal_id:
                 return resource
 
         return default
@@ -33,7 +33,7 @@ class ResourceSet(object):
         resources = []
 
         for resource in self:
-            if resource.id in resource_ids:
+            if resource.internal_id in resource_ids:
                 resources.append(resource)
 
         return ResourceSet(self.manager, resources)
