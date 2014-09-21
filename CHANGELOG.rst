@@ -21,6 +21,8 @@ Changelog
   * Tracker - issues relation
   * IssueStatus - issues relation
 
+- Added: Introduced ``update()`` and ``delete()`` methods in a ResourceSet object which allow to
+  bulk update or bulk delete all resources in a ResourceSet object
 - Fixed: It was impossible to use ResourceSet's ``get()`` and ``filter()`` methods with WikiPage
   resource
 

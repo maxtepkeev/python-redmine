@@ -38,6 +38,25 @@ class ResourceSet(object):
 
         return ResourceSet(self.manager, resources)
 
+    def update(self, **fields):
+        """Updates fields of all resources in a ResourceSet with the given values"""
+        resources = []
+
+        for resource in self:
+            for field, value in fields.items():
+                setattr(resource, field, value)
+                resource.save()
+                resources.append(resource)
+
+        return ResourceSet(self.manager, resources)
+
+    def delete(self):
+        """Deletes all resources in a ResourceSet"""
+        for resource in self:
+            self.manager.delete(resource.internal_id)
+
+        return True
+
     @property
     def total_count(self):
         """Returns total count of available resources, this is known only after ResourceSet evaluation"""

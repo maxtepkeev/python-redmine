@@ -14,9 +14,15 @@ class TestResultSet(unittest.TestCase):
         self.url = URL
         self.redmine = Redmine(self.url)
         self.response = mock.Mock(status_code=200, json=json_response(response))
-        patcher = mock.patch('requests.get', return_value=self.response)
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        patcher_get = mock.patch('requests.get', return_value=self.response)
+        patcher_put = mock.patch('requests.put', return_value=self.response)
+        patcher_delete = mock.patch('requests.delete', return_value=self.response)
+        patcher_get.start()
+        patcher_put.start()
+        patcher_delete.start()
+        self.addCleanup(patcher_get.stop)
+        self.addCleanup(patcher_put.stop)
+        self.addCleanup(patcher_delete.stop)
 
     def test_has_custom_repr(self):
         self.assertEqual(
@@ -101,6 +107,15 @@ class TestResultSet(unittest.TestCase):
         projects = self.redmine.project.all().filter((1, 3))
         self.assertEqual(projects[0].id, 1)
         self.assertEqual(projects[1].id, 3)
+
+    def test_update_method(self):
+        projects = self.redmine.project.all().update(name='FooBar')
+        self.assertEqual(projects[0].name, 'FooBar')
+        self.assertEqual(projects[1].name, 'FooBar')
+        self.assertEqual(projects[2].name, 'FooBar')
+
+    def test_delete_method(self):
+        self.assertEqual(self.redmine.project.all().delete(), True)
 
     def test_filter_param_exception(self):
         from redmine.exceptions import ResourceSetFilterParamError

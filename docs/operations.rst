@@ -139,36 +139,59 @@ Returns a ResourceSet object that contains Resource objects filtered by some con
 
 .. hint::
 
-    ResourceSet object provides 2 helper methods ``get()`` and ``filter()``:
+    ResourceSet object provides 4 helper methods ``get()``, ``filter()``, ``update()`` and
+    ``delete()``:
 
-    * **get**. Returns a single resource from the ResourceSet by integer id.
+    * **get**. Returns a single resource from the ResourceSet by resource id:
 
       .. code-block:: python
 
             redmine.project.all().get(30404, None)  # Returns None if a Resource is not found
 
-    * **filter**. Returns a ResourceSet with requested resource ids.
+    * **filter**. Returns a ResourceSet with requested resource ids:
 
       .. code-block:: python
 
             redmine.project.all().filter((30404, 30405, 30406, 30407))
 
+    * **update**. Updates fields of all resources in a ResourceSet with the given values and returns
+      an updated ResourceSet object, e.g., the following assigns issues of a project *vacation* with
+      ids of *30404* and *30405* to the user with id of *547*:
+
+      .. versionadded:: 1.0.0
+
+      |
+
+      .. code-block:: python
+
+            redmine.project.get('vacation').issues.filter((30404, 30405)).update(assigned_to_id=547)
+
+    * **delete**. Deletes all resources in a ResourceSet, e.g. the following deletes all issues from
+      the *vacation* project:
+
+      .. versionadded:: 1.0.0
+
+      |
+
+      .. code-block:: python
+
+            redmine.project.get('vacation').issues.delete()
+
     ResourceSet object also provides some attributes:
 
-    * **limit**. What limit value was used to retrieve this ResourceSet.
+    * **limit**. What limit value was used to retrieve this ResourceSet:
 
       .. code-block:: python
 
             redmine.project.all().limit
 
-    * **offset**. What offset value was used to retrieve this ResourceSet.
+    * **offset**. What offset value was used to retrieve this ResourceSet:
 
       .. code-block:: python
 
             redmine.project.all().offset
 
-    * **total_count**. How much resources of current resource type there are available in
-      Redmine.
+    * **total_count**. How much resources of current resource type there are available in Redmine:
 
       .. versionadded:: 0.4.0
 
