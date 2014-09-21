@@ -1156,7 +1156,7 @@ class TestResources(unittest.TestCase):
         self.assertEqual(self.redmine.contact_tag.resource_class.redmine_version, '2.3')
 
     def test_contact_tag_requirements(self):
-        self.assertEqual(self.redmine.contact_tag.resource_class.requirements, (('CRM plugin', '3.3.1'),))
+        self.assertEqual(self.redmine.contact_tag.resource_class.requirements, (('CRM plugin', '3.4.0'),))
 
     def test_contact_tag_all(self):
         self.response.json = json_response(responses['contact_tag']['all'])

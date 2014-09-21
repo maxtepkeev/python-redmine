@@ -936,7 +936,7 @@ class Contact(_Resource):
 
 class ContactTag(_Resource):
     redmine_version = '2.3'
-    requirements = (('CRM plugin', '3.3.1'),)
+    requirements = (('CRM plugin', '3.4.0'),)
     container_all = 'tags'
     query_all = '/contacts_tags.json'
 

@@ -2,7 +2,7 @@ Contact Tag
 ===========
 
 Supported starting from version 1.0.0 and only available if `CRM plugin <http://redminecrm.com/
-projects/crm/pages/1>`_ 3.3.1 and higher is installed.
+projects/crm/pages/1>`_ 3.4.0 and higher is installed.
 
 Manager
 -------
