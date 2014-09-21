@@ -87,7 +87,7 @@ responses = {
         'get': {'note': {'content': 'foobar', 'id': 1}},
     },
     'contact': {
-        'get': {'contact': {'first_name': 'Foo', 'last_name': 'Bar', 'id': 1}},
+        'get': {'contact': {'first_name': 'Foo', 'id': 1}},
         'all': {'contacts': [{'first_name': 'Foo', 'id': 1}, {'first_name': 'Bar', 'id': 2}]},
         'filter': {'contacts': [{'first_name': 'Foo', 'id': 1}, {'first_name': 'Bar', 'id': 2}]},
     },
@@ -1353,23 +1353,23 @@ class TestResources(unittest.TestCase):
 
     def test_contact_custom_repr(self):
         self.response.json = json_response(responses['contact']['get'])
-        self.assertEqual(repr(self.redmine.contact.get(1)), '<redmine.resources.Contact #1 "Foo Bar">')
+        self.assertEqual(repr(self.redmine.contact.get(1)), '<redmine.resources.Contact #1 "Foo">')
 
-    def test_contact_is_company_custom_repr(self):
+    def test_contact_with_lastname_custom_repr(self):
         self.response.json = json_response(responses['contact']['get'])
         contact = self.redmine.contact.get(1)
-        contact['_attributes']['is_company'] = True
-        self.assertEqual(repr(contact), '<redmine.resources.Contact #1 "Foo">')
+        contact['_attributes']['last_name'] = 'Bar'
+        self.assertEqual(repr(contact), '<redmine.resources.Contact #1 "Foo Bar">')
 
     def test_contact_custom_str(self):
         self.response.json = json_response(responses['contact']['get'])
-        self.assertEqual(str(self.redmine.contact.get(1)), 'Foo Bar')
+        self.assertEqual(str(self.redmine.contact.get(1)), 'Foo')
 
-    def test_contact_is_company_custom_str(self):
+    def test_contact_with_lastname_custom_str(self):
         self.response.json = json_response(responses['contact']['get'])
         contact = self.redmine.contact.get(1)
-        contact['_attributes']['is_company'] = True
-        self.assertEqual(str(contact), 'Foo')
+        contact['_attributes']['last_name'] = 'Bar'
+        self.assertEqual(str(contact), 'Foo Bar')
 
     def test_deal_version(self):
         self.assertEqual(self.redmine.deal.resource_class.redmine_version, '1.2.1')

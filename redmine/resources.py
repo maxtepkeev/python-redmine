@@ -908,7 +908,7 @@ class Contact(_Resource):
         try:
             return super(Contact, self).__str__()
         except ResourceAttrError:
-            if getattr(self, 'is_company', False):
+            if not getattr(self, 'last_name', False):
                 return '{0}'.format(to_string(self.first_name))
             else:
                 return '{0} {1}'.format(to_string(self.first_name), to_string(self.last_name))
@@ -917,7 +917,7 @@ class Contact(_Resource):
         try:
             return super(Contact, self).__repr__()
         except ResourceAttrError:
-            if getattr(self, 'is_company', False):
+            if not getattr(self, 'last_name', False):
                 return '<{0}.{1} #{2} "{3}">'.format(
                     self.__class__.__module__,
                     self.__class__.__name__,
