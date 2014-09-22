@@ -7,7 +7,7 @@ from redmine.exceptions import (
 
 
 class ResourceSet(object):
-    """Represents a set of Redmine resources"""
+    """Represents a set of Redmine resource objects"""
     limit = 0
     offset = 0
     _total_count = -1
@@ -43,8 +43,8 @@ class ResourceSet(object):
         resources = []
 
         for resource in self:
-            for field, value in fields.items():
-                setattr(resource, field, value)
+            for field in fields:
+                setattr(resource, field, fields[field])
                 resource.save()
                 resources.append(resource)
 
@@ -68,6 +68,13 @@ class ResourceSet(object):
 
         return self._total_count
 
+    def _evaluate(self):
+        """Evaluates current ResourceSet object"""
+        self.resources, self._total_count = self.manager.retrieve(
+            limit=self.manager.params.get('limit', self.limit),
+            offset=self.manager.params.get('offset', self.offset)
+        )
+
     def __getitem__(self, item):
         """Sets limit and offset or returns a resource by requested index"""
         if isinstance(item, slice):
@@ -77,7 +84,7 @@ class ResourceSet(object):
                 self.offset = item.start
         elif isinstance(item, int):
             try:
-                return next(itertools.islice(self.__iter__(), item, item + 1))
+                return next(itertools.islice(self, item, item + 1))
             except StopIteration:
                 raise ResourceSetIndexError
 
@@ -86,16 +93,13 @@ class ResourceSet(object):
     def __iter__(self):
         """Returns requested resources in a lazy fashion"""
         if self.resources is None:
-            self.resources, self._total_count = self.manager.retrieve(
-                limit=self.manager.params.get('limit', self.limit),
-                offset=self.manager.params.get('offset', self.offset)
-            )
+            self._evaluate()
 
-        return iter(self.manager.to_resource(resource) for resource in self.resources)
+        return (self.manager.to_resource(resource) for resource in self.resources)
 
     def __len__(self):
         """Allows len() to be called on an instance object"""
-        return sum(1 for _ in self.__iter__())
+        return sum(1 for _ in self)
 
     def __repr__(self):
         """Official representation of ResourceSet object"""
