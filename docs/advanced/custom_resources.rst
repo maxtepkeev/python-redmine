@@ -31,26 +31,7 @@ resources:
 Existing Resources
 ------------------
 
-Here is the list of existing resource class names that can be inherited from:
-
-* Issue
-* Project
-* ProjectMembership
-* User
-* TimeEntry
-* News
-* IssueRelation
-* Version
-* WikiPage
-* Query
-* Attachment
-* IssueStatus
-* Tracker
-* Enumeration
-* IssueCategory
-* Role
-* Group
-* CustomField
+The list of existing resource class names that can be inherited from is available :doc:`here <../resources/index>`.
 
 Creation
 --------
