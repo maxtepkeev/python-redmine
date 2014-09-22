@@ -7,7 +7,7 @@ from redmine.exceptions import (
 
 
 class ResourceSet(object):
-    """Represents a set of Redmine resource objects"""
+    """Represents a set of Redmine resources as objects"""
     limit = 0
     offset = 0
     _total_count = -1
@@ -45,8 +45,9 @@ class ResourceSet(object):
         for resource in self:
             for field in fields:
                 setattr(resource, field, fields[field])
-                resource.save()
-                resources.append(resource)
+
+            resource.save()
+            resources.append(resource)
 
         return ResourceSet(self.manager, resources)
 
