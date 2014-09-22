@@ -58,6 +58,10 @@ class ResourceSet(object):
 
         return True
 
+    def values(self, *fields):
+        """Returns ValuesResourceSet object which represents Resource as a dictionary"""
+        return ValuesResourceSet(self.manager, resources=self.resources, fields=fields)
+
     @property
     def total_count(self):
         """Returns total count of available resources, this is known only after ResourceSet evaluation"""
@@ -109,3 +113,70 @@ class ResourceSet(object):
             self.__class__.__name__,
             self.manager.resource_class.__name__
         )
+
+
+class ValuesResourceSet(ResourceSet):
+    """Represents a set of Redmine resources as dictionaries"""
+    def __init__(self, manager, resources=None, fields=()):
+        """Accepts optional fields iterable which sets field names each resource will contain"""
+        super(ValuesResourceSet, self).__init__(manager, resources)
+        self.fields = fields
+        self.resource_internal_id = 'title' if self.manager.resource_class.__name__ == 'WikiPage' else 'id'
+
+    def get(self, resource_id, default=None):
+        """Returns a single item from a ValuesResourceSet by resource id"""
+        for resource in self:
+            if int(resource_id) == resource[self.resource_internal_id]:
+                return resource
+
+        return default
+
+    def filter(self, resource_ids):
+        """Returns a ValuesResourceSet with requested resource ids"""
+        if not isinstance(resource_ids, (tuple, list)):
+            raise ResourceSetFilterParamError
+
+        resources = []
+
+        for resource in self:
+            if resource[self.resource_internal_id] in resource_ids:
+                resources.append(resource)
+
+        return ValuesResourceSet(self.manager, resources=resources, fields=self.fields)
+
+    def update(self, **fields):
+        """Updates fields of all resources in a ValuesResourceSet with the given values"""
+        resources = []
+
+        for resource in self:
+            for field in fields:
+                resource[field] = fields[field]
+
+            self.manager.update(resource[self.resource_internal_id], **fields)
+            resources.append(resource)
+
+        return ValuesResourceSet(self.manager, resources=resources, fields=self.fields)
+
+    def delete(self):
+        """Deletes all resources in a ValuesResourceSet"""
+        for resource in self:
+            self.manager.delete(resource[self.resource_internal_id])
+
+        return True
+
+    def __iter__(self):
+        """Returns requested resources in a lazy fashion"""
+        if self.resources is None:
+            self._evaluate()
+
+        for resource in self.resources:
+            if not self.fields:
+                yield resource
+            else:
+                fields = {}
+
+                for field in resource:
+                    if field in self.fields:
+                        fields.update({field: resource[field]})
+
+                yield fields

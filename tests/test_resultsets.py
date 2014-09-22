@@ -117,6 +117,52 @@ class TestResultSet(unittest.TestCase):
     def test_delete_method(self):
         self.assertEqual(self.redmine.project.all().delete(), True)
 
+    def test_values_method(self):
+        from redmine.resultsets import ValuesResourceSet
+        self.assertIsInstance(self.redmine.project.all().values(), ValuesResourceSet)
+
+    def test_values_resourceset_supports_iteration(self):
+        projects = list(self.redmine.project.all().values())
+        self.assertEqual(projects[0]['name'], 'Foo')
+        self.assertEqual(projects[0]['identifier'], 'foo')
+        self.assertEqual(projects[0]['id'], 1)
+        self.assertEqual(projects[1]['name'], 'Bar')
+        self.assertEqual(projects[1]['identifier'], 'bar')
+        self.assertEqual(projects[1]['id'], 2)
+
+    def test_values_resourceset_supports_field_limits(self):
+        projects = list(self.redmine.project.all().values('id'))
+        self.assertEqual(projects[0]['id'], 1)
+        self.assertRaises(KeyError, lambda: projects[0]['name'])
+        self.assertEqual(projects[1]['id'], 2)
+        self.assertRaises(KeyError, lambda: projects[1]['name'])
+
+    def test_values_resourceset_get_method_resource_found(self):
+        projects = self.redmine.project.all().values().get(2)
+        self.assertEqual(projects['id'], 2)
+
+    def test_values_resourceset_get_method_resource_not_found(self):
+        projects = self.redmine.project.all().values().get(6)
+        self.assertEqual(projects, None)
+
+    def test_values_resourceset_filter_method(self):
+        projects = self.redmine.project.all().values().filter((1, 3))
+        self.assertEqual(projects[0]['id'], 1)
+        self.assertEqual(projects[1]['id'], 3)
+
+    def test_values_resourceset_update_method(self):
+        projects = self.redmine.project.all().values().update(name='FooBar')
+        self.assertEqual(projects[0]['name'], 'FooBar')
+        self.assertEqual(projects[1]['name'], 'FooBar')
+        self.assertEqual(projects[2]['name'], 'FooBar')
+
+    def test_values_resourceset_delete_method(self):
+        self.assertEqual(self.redmine.project.all().values().delete(), True)
+
+    def test_values_resourceset_filter_param_exception(self):
+        from redmine.exceptions import ResourceSetFilterParamError
+        self.assertRaises(ResourceSetFilterParamError, lambda: self.redmine.project.all().values().filter(1))
+
     def test_filter_param_exception(self):
         from redmine.exceptions import ResourceSetFilterParamError
         self.assertRaises(ResourceSetFilterParamError, lambda: self.redmine.project.all().filter(1))

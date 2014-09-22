@@ -139,8 +139,8 @@ Returns a ResourceSet object that contains Resource objects filtered by some con
 
 .. hint::
 
-    ResourceSet object provides 4 helper methods ``get()``, ``filter()``, ``update()`` and
-    ``delete()``:
+    ResourceSet object provides 5 helper methods ``get()``, ``filter()``, ``update()``, ``delete()``
+    and ``values()``:
 
     * **get**. Returns a single resource from the ResourceSet by resource id:
 
@@ -176,6 +176,34 @@ Returns a ResourceSet object that contains Resource objects filtered by some con
       .. code-block:: python
 
             redmine.project.get('vacation').issues.delete()
+
+    * **values**. Returns a ValuesResourceSet — a ResourceSet subclass that returns dictionaries when
+      used as an iterable, rather than resource-instance objects. Each of those dictionaries represents
+      a resource, with the keys corresponding to the attribute names of resource objects. This example
+      compares the dictionaries of values() with the normal resource objects:
+
+      .. versionadded:: 1.0.0
+
+      |
+
+      .. code-block:: python
+
+         >>> list(redmine.issue_status.all(limit=1))
+         [<redmine.resources.IssueStatus #1 "New">]
+         >>> list(redmine.issue_status.all(limit=1).values())
+         [{'id': 1, 'is_default': True, 'name': 'New'}]
+
+      The values() method takes optional positional arguments, \*fields, which specify field names to
+      which resource fields should be limited. If you specify the fields, each dictionary will contain
+      only the field keys/values for the fields you specify. If you don’t specify the fields, each
+      dictionary will contain a key and value for every field in the resource:
+
+      .. code-block:: python
+
+         >>> list(redmine.issue_status.all(limit=1).values())
+         [{'id': 1, 'is_default': True, 'name': 'New'}]
+         >>> list(redmine.issue_status.all(limit=1).values('id', 'name'))
+         [{'id': 1, 'name': 'New'}]
 
     ResourceSet object also provides some attributes:
 
