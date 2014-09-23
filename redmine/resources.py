@@ -513,6 +513,7 @@ class Attachment(_Resource):
 
 class IssueJournal(_Resource):
     redmine_version = '1.0'
+    _unconvertible = ('notes',)
 
     def __str__(self):
         return str(self.id)

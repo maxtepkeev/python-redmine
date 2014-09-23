@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+1.0.1 (2014-09-XX)
+++++++++++++++++++
+
+- Fixed: `Issue #50 <https://github.com/maxtepkeev/python-redmine/issues/50>`__ (IssueJournal's
+  ``notes`` attribute was converted to Note resource by mistake, bug was introduced in v1.0.0)
+
 1.0.0 (2014-09-22)
 ++++++++++++++++++
 
