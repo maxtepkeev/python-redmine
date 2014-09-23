@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-1.0.1 (2014-09-XX)
+1.0.1 (2014-09-23)
 ++++++++++++++++++
 
 - Fixed: `Issue #50 <https://github.com/maxtepkeev/python-redmine/issues/50>`__ (IssueJournal's
