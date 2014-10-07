@@ -28,13 +28,15 @@ create
     :param string homepage: (optional). Project homepage url.
     :param boolean is_public: (optional). Whether project is public.
     :param integer parent_id: (optional). Project's parent project id.
-    :param boolean inherit_members: (optional). Whether project will inherit parent project's members.
+    :param boolean inherit_members: (optional). If project inherits parent project's members.
+    :param list tracker_ids: (optional). The ids of trackers for this project.
+    :param list issue_custom_field_ids: (optional). The ids of issue custom fields for this project.
     :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
     :return: Project resource object
 
 .. code-block:: python
 
-    >>> project = redmine.project.create(name='Vacation', identifier='vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
+    >>> project = redmine.project.create(name='Vacation', identifier='vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, tracker_ids=[1, 2], issue_custom_field_ids=[1, 2], custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
     >>> project
     <redmine.resources.Project #123 "Vacation">
 
@@ -61,6 +63,8 @@ new
     >>> project.is_public = True
     >>> project.parent_id = 345
     >>> project.inherit_members = True
+    >>> project.tracker_ids = [1, 2]
+    >>> project.issue_custom_field_ids = [1, 2]
     >>> project.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
     >>> project.save()
     True
@@ -182,13 +186,15 @@ update
     :param string homepage: (optional). Project homepage url.
     :param boolean is_public: (optional). Whether project is public.
     :param integer parent_id: (optional). Project's parent project id.
-    :param boolean inherit_members: (optional). Whether project will inherit parent project's members.
+    :param boolean inherit_members: (optional). If project inherits parent project's members.
+    :param list tracker_ids: (optional). The ids of trackers for this project.
+    :param list issue_custom_field_ids: (optional). The ids of issue custom fields for this project.
     :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
     :return: True
 
 .. code-block:: python
 
-    >>> redmine.project.update(1, name='Vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
+    >>> redmine.project.update(1, name='Vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, tracker_ids=[1, 2], issue_custom_field_ids=[1, 2], custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
     True
 
 save
@@ -212,6 +218,8 @@ save
     >>> project.is_public = True
     >>> project.parent_id = 345
     >>> project.inherit_members = True
+    >>> project.tracker_ids = [1, 2]
+    >>> project.issue_custom_field_ids = [1, 2]
     >>> project.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
     >>> project.save()
     True
