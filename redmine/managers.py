@@ -74,7 +74,7 @@ class ResourceManager(object):
                 break
 
             # Resource supports limit/offset on Redmine level
-            if all(param in response for param in ('total_count', 'limit', 'offset')):
+            if all(response.get(param) is not None for param in ('total_count', 'limit', 'offset')):
                 total_count = response['total_count']
                 results.extend(response[self.container])
 
