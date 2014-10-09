@@ -139,7 +139,7 @@ class TestRedmineRequest(unittest.TestCase):
     def test_validation_error_exception(self):
         from redmine.exceptions import ValidationError
         self.response.status_code = 422
-        self.response.json = json_response({'errors': ['foo', 'bar']})
+        self.response.json = json_response({'errors': ['foo', 'bar', ['foo', 'bar']]})
         self.assertRaises(ValidationError, lambda: self.redmine.request('post', self.url))
 
     def test_not_found_error_exception(self):

@@ -1,6 +1,13 @@
 Changelog
 ---------
 
+1.0.2 (2014-10-XX)
+++++++++++++++++++
+
+- Fixed: `Issue #55 <https://github.com/maxtepkeev/python-redmine/issues/55>`__ (TypeError was
+  raised during processing validation errors from Redmine when one of the errors was returned as
+  a list)
+
 1.0.1 (2014-09-23)
 ++++++++++++++++++
 
