@@ -129,7 +129,10 @@ class Redmine(object):
         elif response.status_code == 413:
             raise RequestEntityTooLargeError
         elif response.status_code == 422:
-            raise ValidationError(to_string(', '.join(json_response(response.json)['errors'])))
+            errors = json_response(response.json)['errors']
+            if not all([isinstance(e, basestring) for e in errors]):
+                errors = [': '.join(e) for e in errors]
+            raise ValidationError(to_string(', '.join(errors)))
         elif response.status_code == 500:
             raise ServerError
 
