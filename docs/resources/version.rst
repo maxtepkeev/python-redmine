@@ -78,6 +78,8 @@ new
     >>> version.status = 'open'
     >>> version.sharing = 'none'
     >>> version.due_date = date(2014, 1, 30)
+    >>> version.description = 'my vacation'
+    >>> version.wiki_page_title = 'Vacation'
     >>> version.save()
     True
 
