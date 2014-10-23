@@ -115,11 +115,11 @@ filter
     :type project_id: integer or string
     :param integer issue_id: (optional). Get time entries from the issue with the given id.
     :param integer user_id: (optional). Get time entries for the user with the given id.
-    :param spent_on: (optional). Date when hours was spent (for Redmine >= 2.3.0).
+    :param spent_on: (optional). Redmine >= 2.3.0 only. Date when hours was spent.
     :type spent_on: string or date object
-    :param from_date: (optional). Limit time entries from this date (new in version 0.4.0).
+    :param from_date: (optional). New in version 0.4.0. Limit time entries from this date.
     :type from_date: string or date object
-    :param to_date: (optional). Limit time entries until this date (new in version 0.4.0).
+    :param to_date: (optional). New in version 0.4.0. Limit time entries until this date.
     :type to_date: string or date object
     :param string hours: (optional). Get only time entries that are =, >=, <= hours.
     :param integer limit: (optional). How much resources to return.

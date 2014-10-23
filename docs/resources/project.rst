@@ -90,6 +90,7 @@ get
 
       - trackers
       - issue_categories
+      - enabled_modules (Redmine >= 2.6.0 only)
 
     :return: Project resource object
 
@@ -155,6 +156,16 @@ all
 
     :param integer limit: (optional). How much resources to return.
     :param integer offset: (optional). Starting from what resource to return the other resources.
+    :param string include:
+      .. raw:: html
+
+          (optional). Redmine >= 2.6.0 only. Can be used to fetch associated data in one call. Accepted
+          values (separated by comma):
+
+      - trackers
+      - issue_categories
+      - enabled_modules
+
     :return: ResourceSet object
 
 .. code-block:: python
