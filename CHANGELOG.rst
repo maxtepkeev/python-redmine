@@ -8,6 +8,8 @@ Changelog
   raised during processing validation errors from Redmine when one of the errors was returned as
   a list)
 
+- Fixed: `Issue #59 <https://github.com/maxtepkeev/python-redmine/issues/59>`__ (Raise ForbiddenError when a 403 is encountered)
+
 1.0.1 (2014-09-23)
 ++++++++++++++++++
 

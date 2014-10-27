@@ -16,7 +16,8 @@ from redmine.exceptions import (
     VersionMismatchError,
     ResourceNotFoundError,
     RequestEntityTooLargeError,
-    UnknownError
+    UnknownError,
+    ForbiddenError
 )
 
 
@@ -120,6 +121,8 @@ class Redmine(object):
                 return json_response(response.json)
         elif response.status_code == 401:
             raise AuthError
+        elif response.status_code == 403:
+            raise ForbiddenError
         elif response.status_code == 404:
             raise ResourceNotFoundError
         elif response.status_code == 409:
