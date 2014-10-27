@@ -156,3 +156,9 @@ class FileUrlError(BaseRedmineError):
     """URL provided to download a file can't be parsed"""
     def __init__(self):
         super(FileUrlError, self).__init__("URL provided to download a file can't be parsed")
+
+
+class ForbiddenError(BaseRedmineError):
+    """Requested resource is forbidden"""
+    def __init__(self):
+        super(ForbiddenError, self).__init__("Requested resource is forbidden")

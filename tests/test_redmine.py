@@ -120,6 +120,11 @@ class TestRedmineRequest(unittest.TestCase):
         self.response.status_code = 401
         self.assertRaises(AuthError, lambda: self.redmine.request('get', self.url))
 
+    def test_forbidden_error_exception(self):
+        from redmine.exceptions import ForbiddenError
+        self.response.status_code = 403
+        self.assertRaises(ForbiddenError, lambda: self.redmine.request('get', self.url))
+
     def test_impersonate_error_exception(self):
         from redmine.exceptions import ImpersonateError
         self.redmine.impersonate = 'not_exists'
