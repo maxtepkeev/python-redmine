@@ -7,8 +7,8 @@ Changelog
 - Fixed: `Issue #55 <https://github.com/maxtepkeev/python-redmine/issues/55>`__ (TypeError was
   raised during processing validation errors from Redmine when one of the errors was returned as
   a list)
-
-- Fixed: `Issue #59 <https://github.com/maxtepkeev/python-redmine/issues/59>`__ (Raise ForbiddenError when a 403 is encountered)
+- Fixed: `Issue #59 <https://github.com/maxtepkeev/python-redmine/issues/59>`__ (Raise ForbiddenError
+  when a 403 is encountered) (thanks to `Rick Harris <https://github.com/rconradharris>`__)
 
 1.0.1 (2014-09-23)
 ++++++++++++++++++
