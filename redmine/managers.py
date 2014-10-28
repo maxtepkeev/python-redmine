@@ -112,6 +112,13 @@ class ResourceManager(object):
         """Returns new empty resource"""
         return self.to_resource({})
 
+    def get_by_attribute(self, name, value):
+        """Returns an attribute by filtering down all items by name == value"""
+        for item in self.all():
+            if getattr(item, name) == value:
+                return item
+        raise ResourceNotFoundError
+
     def get(self, resource_id, **params):
         """Returns a Resource object directly by resource id (can be either integer id or string identifier)"""
         if self.resource_class.query_one is None or self.resource_class.container_one is None:
