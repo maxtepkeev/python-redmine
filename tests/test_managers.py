@@ -5,7 +5,8 @@ from redmine.resultsets import ResourceSet
 from redmine.exceptions import (
     ResourceBadMethodError,
     ValidationError,
-    ResourceNotFoundError
+    ResourceNotFoundError,
+    ResourceAttrError
 )
 
 
@@ -110,27 +111,38 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(resourceset[1].id, 2)
 
     @mock.patch('requests.get')
-    def test_get_resource_by_attribute_missing_attribute(self, mock_get):
+    def test_get_all_resource_by_attribute_missing_attribute(self, mock_get):
         from test_resources import responses
         mock_get.return_value = response = mock.Mock(status_code=200)
         response.json = json_response(responses['tracker']['all'])
-        self.assertRaises(ResourceAttrError, lambda: self.redmine.tracker.get_by_attribute('missing', 'Foo'))
+        self.assertRaises(ResourceAttrError, lambda: self.redmine.tracker.get_all_by_attribute('missing', 'Foo'))
 
     @mock.patch('requests.get')
-    def test_get_resource_by_attribute(self, mock_get):
-        from test_resources import responses
+    def test_get_all_resource_by_attribute(self, mock_get):
+        trackers = {
+            'trackers':
+                [
+                    {'name': 'Foo', 'id': 1},
+                    {'name': 'Foo', 'id': 2},
+                    {'name': 'Bar', 'id': 3},
+                ]
+        }
         mock_get.return_value = response = mock.Mock(status_code=200)
-        response.json = json_response(responses['tracker']['all'])
-        foo = self.redmine.tracker.get_by_attribute('name', 'Foo')
-        bar = self.redmine.tracker.get_by_attribute('id', 2)
-        self.assertEqual('Foo', foo.name)
-        self.assertEqual('Bar', bar.name)
+        response.json = json_response(trackers)
+        foo = list(self.redmine.tracker.get_all_by_attribute('name', 'Foo'))
+        bar = list(self.redmine.tracker.get_all_by_attribute('id', 3))
+        self.assertEqual('Foo', foo[0].name)
+        self.assertEqual('Foo', foo[1].name)
+        self.assertEqual(1, foo[0].id)
+        self.assertEqual(2, foo[1].id)
+        self.assertEqual('Bar', bar[0].name)
+        self.assertEqual(3, bar[0].id)
 
     @mock.patch('requests.get')
-    def test_get_resource_by_attribute_missing(self, mock_get):
+    def test_get_all_resource_by_attribute_missing(self, mock_get):
         mock_get.return_value = response = mock.Mock(status_code=200)
         response.json = json_response({'trackers': []})
-        self.assertRaises(ResourceNotFoundError, lambda: self.redmine.tracker.get_by_attribute('foo','bar'))
+        self.assertRaises(ResourceNotFoundError, lambda: self.redmine.tracker.get_all_by_attribute('foo','bar'))
 
     @mock.patch('requests.get')
     def test_get_single_resource(self, mock_get):
