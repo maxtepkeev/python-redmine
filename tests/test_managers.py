@@ -112,9 +112,8 @@ class TestResourceManager(unittest.TestCase):
 
     @mock.patch('requests.get')
     def test_get_all_resource_by_attribute_missing_attribute(self, mock_get):
-        from test_resources import responses
         mock_get.return_value = response = mock.Mock(status_code=200)
-        response.json = json_response(responses['tracker']['all'])
+        response.json = json_response({'trackers': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]})
         self.assertRaises(ResourceAttrError, lambda: self.redmine.tracker.get_all_by_attribute('missing', 'Foo'))
 
     @mock.patch('requests.get')
