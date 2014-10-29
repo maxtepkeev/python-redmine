@@ -114,14 +114,7 @@ class ResourceManager(object):
 
     def get_all_by_attribute(self, name, value):
         """Returns an attribute by filtering down all items by name == value"""
-        found = []
-        for item in self.all():
-            if getattr(item, name) == value:
-                found.append(item)
-        if found:
-            return found
-        else:
-            raise ResourceNotFoundError
+        return (item for item in self.all() if getattr(item, name) == value)
 
     def get(self, resource_id, **params):
         """Returns a Resource object directly by resource id (can be either integer id or string identifier)"""

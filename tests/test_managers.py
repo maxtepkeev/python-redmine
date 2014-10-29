@@ -111,13 +111,23 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(resourceset[1].id, 2)
 
     @mock.patch('requests.get')
-    def test_get_all_resource_by_attribute_missing_attribute(self, mock_get):
+    def test_get_all_by_attribute_returns_generator(self, mock_get):
+        import types
+        trackers = {
+            'trackers':
+                [
+                    {'name': 'Foo', 'id': 1},
+                    {'name': 'Foo', 'id': 2},
+                    {'name': 'Bar', 'id': 3},
+                ]
+        }
         mock_get.return_value = response = mock.Mock(status_code=200)
-        response.json = json_response({'trackers': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]})
-        self.assertRaises(ResourceAttrError, lambda: self.redmine.tracker.get_all_by_attribute('missing', 'Foo'))
+        response.json = json_response(trackers)
+        foo = self.redmine.tracker.get_all_by_attribute('name','Foo')
+        self.assertIsInstance(foo, types.GeneratorType)
 
     @mock.patch('requests.get')
-    def test_get_all_resource_by_attribute(self, mock_get):
+    def test_get_all_by_attribute(self, mock_get):
         trackers = {
             'trackers':
                 [
@@ -138,10 +148,10 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(3, bar[0].id)
 
     @mock.patch('requests.get')
-    def test_get_all_resource_by_attribute_missing(self, mock_get):
+    def test_get_all_by_attribute_returns_empty_recordset(self, mock_get):
         mock_get.return_value = response = mock.Mock(status_code=200)
         response.json = json_response({'trackers': []})
-        self.assertRaises(ResourceNotFoundError, lambda: self.redmine.tracker.get_all_by_attribute('foo','bar'))
+        self.assertEqual([], list(self.redmine.tracker.get_all_by_attribute('foo','bar')))
 
     @mock.patch('requests.get')
     def test_get_single_resource(self, mock_get):
