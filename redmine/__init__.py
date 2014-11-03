@@ -38,6 +38,9 @@ class Redmine(object):
 
     def __getattr__(self, resource):
         """Returns either ResourceSet or Resource object depending on the method used on the ResourceManager"""
+        if resource.startswith('_'):
+            raise AttributeError
+
         return ResourceManager(self, resource)
 
     def upload(self, filepath):

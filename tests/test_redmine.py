@@ -163,3 +163,12 @@ class TestRedmineRequest(unittest.TestCase):
         self.response.status_code = 200
         self.response.json = json_response({'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1}})
         self.assertEqual(self.redmine.auth().firstname, 'John')
+
+    def test_getattr_on_under_attribute(self):
+        """
+        Attributes that begin with an underscore should not be treated as a
+        `Resource`. The impetus of this was to make `Redmine` picklable by
+        preventing the `__getstate__` access from being treated a `Resource`.
+        """
+        with self.assertRaises(AttributeError):
+            self.redmine.__getstate__
