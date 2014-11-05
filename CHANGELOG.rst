@@ -9,6 +9,7 @@ Changelog
   a list)
 - Fixed: `Issue #59 <https://github.com/maxtepkeev/python-redmine/issues/59>`__ (Raise ForbiddenError
   when a 403 is encountered) (thanks to `Rick Harris <https://github.com/rconradharris>`__)
+- Fixed: `Issue #64 <https://github.com/maxtepkeev/python-redmine/issues/64>`__ (Make the Redmine class picklable) (thanks to `Rick Harris <https://github.com/rconradharris>`__)
 
 1.0.1 (2014-09-23)
 ++++++++++++++++++
