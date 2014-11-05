@@ -226,6 +226,15 @@ class TestResourceManager(unittest.TestCase):
     def test_delete_validation_exception(self):
         self.assertRaises(ValidationError, lambda: self.redmine.wiki_page.delete('Foo'))
 
+    def test_manager_is_picklable(self):
+        import pickle
+        project = self.redmine.project
+        project.url = 'foo'
+        project.params = {'foo': 'bar'}
+        unpickled_project = pickle.loads(pickle.dumps(project))
+        self.assertEqual(project.url, unpickled_project.url)
+        self.assertEqual(project.params['foo'], unpickled_project.params['foo'])
+
     @mock.patch('requests.put')
     @mock.patch('requests.post')
     def test_create_validation_exception_via_put(self, mock_post, mock_put):

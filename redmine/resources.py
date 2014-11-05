@@ -140,6 +140,9 @@ class _Resource(object):
 
     def __getattr__(self, item):
         """Returns the requested attribute and makes a conversion if needed"""
+        if item.startswith('_'):
+            raise AttributeError
+
         if item in self._attributes:
             # If item shouldn't be converted let's return it as it is
             if item in self._unconvertible:

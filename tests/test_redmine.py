@@ -164,11 +164,10 @@ class TestRedmineRequest(unittest.TestCase):
         self.response.json = json_response({'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1}})
         self.assertEqual(self.redmine.auth().firstname, 'John')
 
-    def test_getattr_on_under_attribute(self):
-        """
-        Attributes that begin with an underscore should not be treated as a
-        `Resource`. The impetus of this was to make `Redmine` picklable by
-        preventing the `__getstate__` access from being treated a `Resource`.
-        """
-        with self.assertRaises(AttributeError):
-            self.redmine.__getstate__
+    def test_redmine_is_picklable(self):
+        import pickle
+        redmine = pickle.loads(pickle.dumps(self.redmine))
+        self.assertEqual(redmine.key, self.redmine.key)
+        self.assertEqual(redmine.username, self.redmine.username)
+        self.assertEqual(redmine.password, self.redmine.password)
+        self.assertEqual(redmine.requests, self.redmine.requests)

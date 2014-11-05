@@ -251,6 +251,14 @@ class TestResources(unittest.TestCase):
         with self.assertRaises(CustomFieldValueError):
             project.custom_fields = 'foo'
 
+    def test_resource_is_picklable(self):
+        import pickle
+        self.response.json = json_response(responses['project']['get'])
+        project = self.redmine.project.get(1)
+        unpickled_project = pickle.loads(pickle.dumps(project))
+        self.assertEqual(project.id, unpickled_project.id)
+        self.assertEqual(project.name, unpickled_project.name)
+
     def test_project_version(self):
         self.assertEqual(self.redmine.project.resource_class.redmine_version, '1.0')
 

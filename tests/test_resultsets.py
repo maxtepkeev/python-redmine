@@ -156,6 +156,14 @@ class TestResultSet(unittest.TestCase):
         self.assertEqual(projects[1]['name'], 'FooBar')
         self.assertEqual(projects[2]['name'], 'FooBar')
 
+    def test_resourceset_is_picklable(self):
+        import pickle
+        projects = self.redmine.project.all()
+        unpickled_projects = pickle.loads(pickle.dumps(projects))
+        self.assertEqual(projects[0]['name'], unpickled_projects[0]['name'])
+        self.assertEqual(projects[1]['name'], unpickled_projects[1]['name'])
+        self.assertEqual(projects[2]['name'], unpickled_projects[2]['name'])
+
     def test_values_resourceset_delete_method(self):
         self.assertEqual(self.redmine.project.all().values().delete(), True)
 
