@@ -11,6 +11,7 @@ Changelog
   when a 403 is encountered) (thanks to `Rick Harris <https://github.com/rconradharris>`__)
 - Fixed: `Issue #64 <https://github.com/maxtepkeev/python-redmine/issues/64>`__ (Redmine and Resource
   classes weren't picklable) (thanks to `Rick Harris <https://github.com/rconradharris>`__)
+- Fixed: A ResourceSet object with a limit=100, actually returned 125 Resource objects
 
 1.0.1 (2014-09-23)
 ++++++++++++++++++

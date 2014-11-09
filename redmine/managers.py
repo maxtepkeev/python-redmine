@@ -89,7 +89,7 @@ class ResourceManager(object):
                     limit -= 100
                     offset += 100
 
-                    if limit < 0:
+                    if limit <= 0:
                         break
             # We have to mimic limit/offset if a resource
             # doesn't support this feature on Redmine level
