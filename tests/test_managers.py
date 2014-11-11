@@ -14,63 +14,6 @@ class TestResourceManager(unittest.TestCase):
         self.url = URL
         self.redmine = Redmine(self.url)
 
-    def test_supports_project_resource(self):
-        self.assertIsInstance(self.redmine.project, ResourceManager)
-
-    def test_supports_issue_resource(self):
-        self.assertIsInstance(self.redmine.issue, ResourceManager)
-
-    def test_supports_time_entry_resource(self):
-        self.assertIsInstance(self.redmine.time_entry, ResourceManager)
-
-    def test_supports_enumeration_resource(self):
-        self.assertIsInstance(self.redmine.enumeration, ResourceManager)
-
-    def test_supports_attachment_resource(self):
-        self.assertIsInstance(self.redmine.attachment, ResourceManager)
-
-    def test_supports_issue_journal_resource(self):
-        self.assertIsInstance(self.redmine.issue_journal, ResourceManager)
-
-    def test_supports_wiki_page_resource(self):
-        self.assertIsInstance(self.redmine.wiki_page, ResourceManager)
-
-    def test_supports_project_membership_resource(self):
-        self.assertIsInstance(self.redmine.project_membership, ResourceManager)
-
-    def test_supports_issue_category_resource(self):
-        self.assertIsInstance(self.redmine.issue_category, ResourceManager)
-
-    def test_supports_issue_relation_resource(self):
-        self.assertIsInstance(self.redmine.issue_relation, ResourceManager)
-
-    def test_supports_version_resource(self):
-        self.assertIsInstance(self.redmine.version, ResourceManager)
-
-    def test_supports_user_resource(self):
-        self.assertIsInstance(self.redmine.user, ResourceManager)
-
-    def test_supports_group_resource(self):
-        self.assertIsInstance(self.redmine.group, ResourceManager)
-
-    def test_supports_role_resource(self):
-        self.assertIsInstance(self.redmine.role, ResourceManager)
-
-    def test_supports_news_resource(self):
-        self.assertIsInstance(self.redmine.news, ResourceManager)
-
-    def test_supports_issue_status_resource(self):
-        self.assertIsInstance(self.redmine.issue_status, ResourceManager)
-
-    def test_supports_tracker_resource(self):
-        self.assertIsInstance(self.redmine.tracker, ResourceManager)
-
-    def test_supports_query_resource(self):
-        self.assertIsInstance(self.redmine.query, ResourceManager)
-
-    def test_supports_custom_field_resource(self):
-        self.assertIsInstance(self.redmine.custom_field, ResourceManager)
-
     def test_supports_custom_resources(self):
         self.redmine.custom_resource_paths = (__name__,)
         self.assertIsInstance(self.redmine.foo_resource, ResourceManager)
