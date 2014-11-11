@@ -42,7 +42,7 @@ new
     :module: redmine.managers.ResourceManager
     :noindex:
 
-    Creates new empty project membershp resource but doesn't save it to the Redmine. This is useful
+    Creates new empty project membership resource but doesn't save it to the Redmine. This is useful
     if you want to set some resource fields later based on some condition(s) and only after
     that save it to the Redmine. Valid attributes are the same as for ``create`` method above.
 
