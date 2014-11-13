@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-1.0.2 (2014-11-XX)
+1.0.2 (2014-11-13)
 ++++++++++++++++++
 
 - Fixed: `Issue #55 <https://github.com/maxtepkeev/python-redmine/issues/55>`__ (TypeError was
