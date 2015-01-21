@@ -326,11 +326,11 @@ class Project(_Resource):
     container_one = 'project'
     container_create = 'project'
     container_update = 'project'
-    query_all = '/projects.json'
-    query_one = '/projects/{0}.json'
-    query_create = '/projects.json'
-    query_update = '/projects/{0}.json'
-    query_delete = '/projects/{0}.json'
+    query_all = u'/projects.json'
+    query_one = u'/projects/{0}.json'
+    query_create = u'/projects.json'
+    query_update = u'/projects/{0}.json'
+    query_delete = u'/projects/{0}.json'
 
     _includes = ('trackers', 'issue_categories')
     _relations = (
@@ -362,12 +362,12 @@ class Issue(_Resource):
     container_filter = 'issues'
     container_create = 'issue'
     container_update = 'issue'
-    query_all = '/issues.json'
-    query_one = '/issues/{0}.json'
-    query_filter = '/issues.json'
-    query_create = '/projects/{project_id}/issues.json'
-    query_update = '/issues/{0}.json'
-    query_delete = '/issues/{0}.json'
+    query_all = u'/issues.json'
+    query_one = u'/issues/{0}.json'
+    query_filter = u'/issues.json'
+    query_create = u'/projects/{project_id}/issues.json'
+    query_update = u'/issues/{0}.json'
+    query_delete = u'/issues/{0}.json'
 
     _includes = ('children', 'attachments', 'relations', 'changesets', 'journals', 'watchers')
     _relations = ('relations', 'time_entries')
@@ -446,12 +446,12 @@ class TimeEntry(_Resource):
     container_filter = 'time_entries'
     container_create = 'time_entry'
     container_update = 'time_entry'
-    query_all = '/time_entries.json'
-    query_one = '/time_entries/{0}.json'
-    query_filter = '/time_entries.json'
-    query_create = '/time_entries.json'
-    query_update = '/time_entries/{0}.json'
-    query_delete = '/time_entries/{0}.json'
+    query_all = u'/time_entries.json'
+    query_one = u'/time_entries/{0}.json'
+    query_filter = u'/time_entries.json'
+    query_create = u'/time_entries.json'
+    query_update = u'/time_entries/{0}.json'
+    query_delete = u'/time_entries/{0}.json'
 
     @classmethod
     def translate_params(cls, params):
@@ -487,7 +487,7 @@ class Enumeration(_Resource):
 class Attachment(_Resource):
     redmine_version = '1.3'
     container_one = 'attachment'
-    query_one = '/attachments/{0}.json'
+    query_one = u'/attachments/{0}.json'
 
     def download(self, savepath=None, filename=None):
         return self.manager.redmine.download(self.content_url, savepath, filename)
@@ -535,11 +535,11 @@ class WikiPage(_Resource):
     container_one = 'wiki_page'
     container_create = 'wiki_page'
     container_update = 'wiki_page'
-    query_filter = '/projects/{project_id}/wiki/index.json'
-    query_one = '/projects/{project_id}/wiki/{0}.json'
-    query_create = '/projects/{project_id}/wiki/{title}.json'
-    query_update = '/projects/{project_id}/wiki/{0}.json'
-    query_delete = '/projects/{project_id}/wiki/{0}.json'
+    query_filter = u'/projects/{project_id}/wiki/index.json'
+    query_one = u'/projects/{project_id}/wiki/{0}.json'
+    query_create = u'/projects/{project_id}/wiki/{title}.json'
+    query_update = u'/projects/{project_id}/wiki/{0}.json'
+    query_delete = u'/projects/{project_id}/wiki/{0}.json'
 
     _includes = ('attachments',)
     _create_readonly = _Resource._create_readonly + ('version',)
@@ -596,11 +596,11 @@ class ProjectMembership(_Resource):
     container_one = 'membership'
     container_update = 'membership'
     container_create = 'membership'
-    query_filter = '/projects/{project_id}/memberships.json'
-    query_one = '/memberships/{0}.json'
-    query_create = '/projects/{project_id}/memberships.json'
-    query_update = '/memberships/{0}.json'
-    query_delete = '/memberships/{0}.json'
+    query_filter = u'/projects/{project_id}/memberships.json'
+    query_one = u'/memberships/{0}.json'
+    query_create = u'/projects/{project_id}/memberships.json'
+    query_update = u'/memberships/{0}.json'
+    query_delete = u'/memberships/{0}.json'
 
     _create_readonly = _Resource._create_readonly + ('user', 'roles')
     _update_readonly = _create_readonly
@@ -622,11 +622,11 @@ class IssueCategory(_Resource):
     container_one = 'issue_category'
     container_update = 'issue_category'
     container_create = 'issue_category'
-    query_filter = '/projects/{project_id}/issue_categories.json'
-    query_one = '/issue_categories/{0}.json'
-    query_create = '/projects/{project_id}/issue_categories.json'
-    query_update = '/issue_categories/{0}.json'
-    query_delete = '/issue_categories/{0}.json'
+    query_filter = u'/projects/{project_id}/issue_categories.json'
+    query_one = u'/issue_categories/{0}.json'
+    query_create = u'/projects/{project_id}/issue_categories.json'
+    query_update = u'/issue_categories/{0}.json'
+    query_delete = u'/issue_categories/{0}.json'
 
 
 class IssueRelation(_Resource):
@@ -634,10 +634,10 @@ class IssueRelation(_Resource):
     container_filter = 'relations'
     container_one = 'relation'
     container_create = 'relation'
-    query_filter = '/issues/{issue_id}/relations.json'
-    query_one = '/relations/{0}.json'
-    query_create = '/issues/{issue_id}/relations.json'
-    query_delete = '/relations/{0}.json'
+    query_filter = u'/issues/{issue_id}/relations.json'
+    query_one = u'/relations/{0}.json'
+    query_create = u'/issues/{issue_id}/relations.json'
+    query_delete = u'/relations/{0}.json'
 
     def __str__(self):
         return str(self.id)
@@ -656,11 +656,11 @@ class Version(_Resource):
     container_one = 'version'
     container_create = 'version'
     container_update = 'version'
-    query_filter = '/projects/{project_id}/versions.json'
-    query_one = '/versions/{0}.json'
-    query_create = '/projects/{project_id}/versions.json'
-    query_update = '/versions/{0}.json'
-    query_delete = '/versions/{0}.json'
+    query_filter = u'/projects/{project_id}/versions.json'
+    query_one = u'/versions/{0}.json'
+    query_create = u'/projects/{project_id}/versions.json'
+    query_update = u'/versions/{0}.json'
+    query_delete = u'/versions/{0}.json'
 
     _unconvertible = ('status',)
 
@@ -672,12 +672,12 @@ class User(_Resource):
     container_filter = 'users'
     container_create = 'user'
     container_update = 'user'
-    query_all = '/users.json'
-    query_one = '/users/{0}.json'
-    query_filter = '/users.json'
-    query_create = '/users.json'
-    query_update = '/users/{0}.json'
-    query_delete = '/users/{0}.json'
+    query_all = u'/users.json'
+    query_one = u'/users/{0}.json'
+    query_filter = u'/users.json'
+    query_create = u'/users.json'
+    query_update = u'/users/{0}.json'
+    query_delete = u'/users/{0}.json'
 
     _includes = ('memberships', 'groups')
     _relations = ('issues', 'time_entries', 'contacts', 'deals')
@@ -720,11 +720,11 @@ class Group(_Resource):
     container_one = 'group'
     container_create = 'group'
     container_update = 'group'
-    query_all = '/groups.json'
-    query_one = '/groups/{0}.json'
-    query_create = '/groups.json'
-    query_update = '/groups/{0}.json'
-    query_delete = '/groups/{0}.json'
+    query_all = u'/groups.json'
+    query_one = u'/groups/{0}.json'
+    query_create = u'/groups.json'
+    query_update = u'/groups/{0}.json'
+    query_delete = u'/groups/{0}.json'
 
     _includes = ('memberships', 'users')
 
@@ -755,16 +755,16 @@ class Role(_Resource):
     redmine_version = '1.4'
     container_all = 'roles'
     container_one = 'role'
-    query_all = '/roles.json'
-    query_one = '/roles/{0}.json'
+    query_all = u'/roles.json'
+    query_one = u'/roles/{0}.json'
 
 
 class News(_Resource):
     redmine_version = '1.1'
     container_all = 'news'
     container_filter = 'news'
-    query_all = '/news.json'
-    query_filter = '/news.json'
+    query_all = u'/news.json'
+    query_filter = u'/news.json'
 
     @property
     def url(self):
@@ -842,7 +842,7 @@ class Note(_Resource):
     redmine_version = '2.1'
     requirements = (('CRM plugin', '3.2.4'),)
     container_one = 'note'
-    query_one = '/notes/{0}.json'
+    query_one = u'/notes/{0}.json'
 
     def __getattr__(self, item):
         if item == 'source' and item in self._attributes and self._attributes[item].get('type') in ('Deal', 'Contact'):
@@ -870,12 +870,12 @@ class Contact(_Resource):
     container_filter = 'contacts'
     container_create = 'contact'
     container_update = 'contact'
-    query_all = '/contacts.json'
-    query_one = '/contacts/{0}.json'
-    query_filter = '/contacts.json'
-    query_create = '/projects/{project_id}/contacts.json'
-    query_update = '/contacts/{0}.json'
-    query_delete = '/contacts/{0}.json'
+    query_all = u'/contacts.json'
+    query_one = u'/contacts/{0}.json'
+    query_filter = u'/contacts.json'
+    query_create = u'/projects/{project_id}/contacts.json'
+    query_update = u'/contacts/{0}.json'
+    query_delete = u'/contacts/{0}.json'
 
     _includes = ('notes', 'contacts', 'deals', 'issues')
 
@@ -1007,12 +1007,12 @@ class Deal(_Resource):
     container_filter = 'deals'
     container_create = 'deal'
     container_update = 'deal'
-    query_all = '/deals.json'
-    query_one = '/deals/{0}.json'
-    query_filter = '/deals.json'
-    query_create = '/projects/{project_id}/deals.json'
-    query_update = '/deals/{0}.json'
-    query_delete = '/deals/{0}.json'
+    query_all = u'/deals.json'
+    query_one = u'/deals/{0}.json'
+    query_filter = u'/deals.json'
+    query_create = u'/projects/{project_id}/deals.json'
+    query_update = u'/deals/{0}.json'
+    query_delete = u'/deals/{0}.json'
 
     _includes = ('notes',)
 
