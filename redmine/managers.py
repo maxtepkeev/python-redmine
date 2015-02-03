@@ -95,7 +95,7 @@ class ResourceManager(object):
             # doesn't support this feature on Redmine level
             else:
                 total_count = len(response[self.container])
-                results = response[self.container][offset:limit + offset]
+                results = response[self.container][offset:None if self.params.get('limit', 0) == 0 else limit + offset]
                 break
 
         return results, total_count

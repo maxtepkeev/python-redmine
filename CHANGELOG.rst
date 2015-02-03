@@ -1,6 +1,13 @@
 Changelog
 ---------
 
+1.0.3 (2015-02-03)
+++++++++++++++++++
+
+- Fixed: `Issue #76 <https://github.com/maxtepkeev/python-redmine/issues/76>`__ (It was impossible
+  to retrieve more than 100 resources for resources which don't support limit/offset natively by
+  Redmine, i.e. this functionality is emulated by Python Redmine, e.g. WikiPage, Groups, Roles etc)
+
 1.0.2 (2014-11-13)
 ++++++++++++++++++
 
