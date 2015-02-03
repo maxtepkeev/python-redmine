@@ -17,7 +17,8 @@ from redmine.exceptions import (
     ResourceNotFoundError,
     RequestEntityTooLargeError,
     UnknownError,
-    ForbiddenError
+    ForbiddenError,
+    JSONDecodeError
 )
 
 
@@ -121,7 +122,10 @@ class Redmine(object):
             elif not response.content.strip():
                 return True
             else:
-                return json_response(response.json)
+                try:
+                    return json_response(response.json)
+                except (ValueError, TypeError):
+                    raise JSONDecodeError
         elif response.status_code == 401:
             raise AuthError
         elif response.status_code == 403:

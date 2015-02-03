@@ -115,6 +115,12 @@ class TestRedmineRequest(unittest.TestCase):
         self.response.status_code = 409
         self.assertRaises(ConflictError, lambda: self.redmine.request('put', self.url))
 
+    def test_json_decode_error_exception(self):
+        from redmine.exceptions import JSONDecodeError
+        self.response.status_code = 200
+        self.response.json = mock.Mock(side_effect=ValueError)
+        self.assertRaises(JSONDecodeError, lambda: self.redmine.request('get', self.url))
+
     def test_auth_error_exception(self):
         from redmine.exceptions import AuthError
         self.response.status_code = 401

@@ -162,3 +162,9 @@ class ForbiddenError(BaseRedmineError):
     """Requested resource is forbidden"""
     def __init__(self):
         super(ForbiddenError, self).__init__("Requested resource is forbidden")
+
+
+class JSONDecodeError(BaseRedmineError):
+    """Unable to decode received JSON"""
+    def __init__(self):
+        super(JSONDecodeError, self).__init__('Unable to decode received JSON, please check your server configuration')
