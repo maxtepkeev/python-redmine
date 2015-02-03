@@ -4,8 +4,8 @@ Python Redmine
 .. image:: https://badge.fury.io/py/python-redmine.svg
     :target: https://badge.fury.io/py/python-redmine
 
-.. image:: https://pypip.in/d/python-redmine/badge.svg
-    :target: https://crate.io/packages/python-redmine
+.. image:: https://pypip.in/download/python-redmine/badge.svg
+    :target: https://pypi.python.org/pypi/python-redmine/
 
 .. image:: https://travis-ci.org/maxtepkeev/python-redmine.svg?branch=master
     :target: https://travis-ci.org/maxtepkeev/python-redmine
