@@ -44,7 +44,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Python Redmine'
-copyright = u'2014, Max Tepkeev'
+copyright = u'2015, Max Tepkeev'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
