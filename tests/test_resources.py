@@ -1155,6 +1155,14 @@ class TestResources(unittest.TestCase):
         self.assertEqual(fields[0].name, 'Foo')
         self.assertEqual(fields[0].value, 0)
 
+    def test_custom_field_returns_single_tracker_instead_of_multiple_trackers(self):
+        self.response.json = json_response({'custom_fields': [
+            {'name': 'Foo', 'id': 1, 'trackers': {'tracker': {'id': 1, 'name': 'Bar'}}}
+        ]})
+        fields = self.redmine.custom_field.all()
+        self.assertEqual(fields[0].trackers[0].id, 1)
+        self.assertEqual(fields[0].trackers[0].name, 'Bar')
+
     def test_custom_field_url(self):
         self.response.json = json_response(responses['custom_field']['all'])
         self.assertEqual(self.redmine.custom_field.all()[0].url, '{0}/custom_fields/1/edit'.format(self.url))

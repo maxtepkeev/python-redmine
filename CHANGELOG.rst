@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+1.0.4 (2015-02-XX)
+++++++++++++++++++
+
+- Fixed: `Issue #78 <https://github.com/maxtepkeev/python-redmine/issues/78>`__ (Redmine <2.5.2
+  returns only single tracker instead of a list of all available trackers when requested from
+  a CustomField resource which caused an Exception in Python Redmine, see `this <http://www.
+  redmine.org/issues/16739>`__ for details)
+
 1.0.3 (2015-02-03)
 ++++++++++++++++++
 

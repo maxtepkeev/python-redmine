@@ -835,6 +835,12 @@ class CustomField(_Resource):
         if item == 'value' and item not in self._attributes:
             return 0
 
+        # Redmine <2.5.2 returns only single tracker instead of a list of
+        # all available trackers, see http://www.redmine.org/issues/16739
+        # for details
+        elif item == 'trackers' and 'tracker' in self._attributes[item]:
+            self._attributes[item] = [self._attributes[item]['tracker']]
+
         return super(CustomField, self).__getattr__(item)
 
 
