@@ -915,9 +915,9 @@ class Contact(_Resource):
     @classmethod
     def translate_params(cls, params):
         if 'tag_list' in params:
-            if type(params['tag_list']) == 'list':
+            if type(params['tag_list']) == list:
                 params['tag_list'] = ','.join(params['tag_list'])
-            elif type(params['tag_list']) == 'str':
+            elif type(params['tag_list']) == str:
                 params['tag_list'] == params['tag_list']
             else:
                 raise ResourceAttrError('Wrong type to update tag_list provided')
