@@ -8,6 +8,7 @@ Changelog
   returns only single tracker instead of a list of all available trackers when requested from
   a CustomField resource which caused an Exception in Python Redmine, see `this <http://www.
   redmine.org/issues/16739>`__ for details)
+- Fixed: `Issue #81 <https://github.com/maxtepkeev/python-redmine/issues/81>` 
 
 1.0.3 (2015-02-03)
 ++++++++++++++++++
