@@ -9,7 +9,8 @@ Changelog
   a CustomField resource which caused an Exception in Python Redmine, see `this <http://www.
   redmine.org/issues/16739>`__ for details)
 - Fixed: `Issue #81 <https://github.com/maxtepkeev/python-redmine/issues/81>`__ (Contact's
-  resource ``tag_list`` attribute was always splitted into single chars)
+  resource ``tag_list`` attribute was always splitted into single chars) (thanks to `Alexander
+  Loechel <https://github.com/loechel>`__)
 
 1.0.3 (2015-02-03)
 ++++++++++++++++++
