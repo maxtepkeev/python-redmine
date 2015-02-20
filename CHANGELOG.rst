@@ -9,6 +9,9 @@ Changelog
   returns only single tracker instead of a list of all available trackers when requested from
   a CustomField resource which caused an Exception in Python Redmine, see `this <http://www.
   redmine.org/issues/16739>`__ for details)
+- Fixed: `Issue #80 <https://github.com/maxtepkeev/python-redmine/issues/80>`__ (If a project
+  is read-only or doesn't have CRM plugin enabled, an attempt to add/remove Contact resource
+  to/from it will lead to improper error message)
 - Fixed: `Issue #81 <https://github.com/maxtepkeev/python-redmine/issues/81>`__ (Contact's
   resource ``tag_list`` attribute was always splitted into single chars) (thanks to `Alexander
   Loechel <https://github.com/loechel>`__)

@@ -1355,12 +1355,14 @@ class TestResources(unittest.TestCase):
         self.response.content = ''
         self.assertEqual(contact.project.add(1), True)
 
-    def test_contact_add_project_raises_exception_on_unsupported_version(self):
-        from redmine.exceptions import ResourceRequirementsError
+    def test_contact_add_project_raises_exceptions_if_bad_project_requested(self):
+        from redmine.exceptions import ValidationError
         self.response.json = json_response(responses['contact']['get'])
         contact = self.redmine.contact.get(1)
+        self.response.status_code = 403
+        self.assertRaises(ValidationError, lambda: contact.project.add(1))
         self.response.status_code = 404
-        self.assertRaises(ResourceRequirementsError, lambda: contact.project.add(1))
+        self.assertRaises(ValidationError, lambda: contact.project.add(1))
 
     def test_contact_remove_project(self):
         self.response.json = json_response(responses['contact']['get'])
@@ -1368,12 +1370,14 @@ class TestResources(unittest.TestCase):
         self.response.content = ''
         self.assertEqual(contact.project.remove(1), True)
 
-    def test_contact_remove_project_raises_exception_on_unsupported_version(self):
-        from redmine.exceptions import ResourceRequirementsError
+    def test_contact_remove_project_raises_exception_if_bad_project_requested(self):
+        from redmine.exceptions import ValidationError
         self.response.json = json_response(responses['contact']['get'])
         contact = self.redmine.contact.get(1)
+        self.response.status_code = 403
+        self.assertRaises(ValidationError, lambda: contact.project.remove(1))
         self.response.status_code = 404
-        self.assertRaises(ResourceRequirementsError, lambda: contact.project.remove(1))
+        self.assertRaises(ValidationError, lambda: contact.project.remove(1))
 
     def test_contact_phones_returns_as_list_of_items(self):
         self.response.json = json_response({'contact': {'phones': [{'number': '123'}, {'number': '456'}]}})

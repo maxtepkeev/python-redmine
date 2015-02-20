@@ -3,6 +3,8 @@ from distutils.version import LooseVersion
 from redmine.utilities import to_string
 from redmine.managers import ResourceManager
 from redmine.exceptions import (
+    ValidationError,
+    ForbiddenError,
     ResourceAttrError,
     ReadonlyAttrError,
     CustomFieldValueError,
@@ -906,7 +908,10 @@ class Contact(_Resource):
             try:
                 return self._redmine.request('post', url, data={'project': {'id': project_id}})
             except ResourceNotFoundError:
-                raise ResourceRequirementsError((('CRM plugin', '3.4.0'),))
+                raise ValidationError("Attempt to add contact to a project that doesn't exist")
+            except ForbiddenError:
+                raise ValidationError(
+                    'Attempt to add contact to a project that either has contacts module disabled or is read-only')
 
         def remove(self, project_id):
             """Removes project from contact's project list"""
@@ -915,7 +920,10 @@ class Contact(_Resource):
             try:
                 return self._redmine.request('delete', url)
             except ResourceNotFoundError:
-                raise ResourceRequirementsError((('CRM plugin', '3.4.0'),))
+                raise ValidationError("Attempt to remove contact from a project that doesn't exist")
+            except ForbiddenError:
+                raise ValidationError(
+                    'Attempt to remove contact from a project that either has contacts module disabled or is read-only')
 
     @classmethod
     def translate_params(cls, params):
