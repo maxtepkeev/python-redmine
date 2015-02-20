@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-1.0.4 (2015-02-XX)
+1.1.0 (2015-02-20)
 ++++++++++++++++++
 
 - Added: PyPy2/3 is now officially supported
