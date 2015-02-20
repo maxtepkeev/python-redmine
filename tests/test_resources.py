@@ -142,9 +142,11 @@ class TestResources(unittest.TestCase):
         from datetime import date, datetime
         issue = self.redmine.issue.new()
         issue.start_date = date(2014, 3, 9)
-        self.assertEqual(issue._attributes['start_date'], '2014-03-09')
+        self.assertEqual(issue._attributes['start_date'], date(2014, 3, 9))
+        self.assertEqual(issue._changes['start_date'], '2014-03-09')
         issue.start_date = datetime(2014, 3, 9, 20, 2, 2)
-        self.assertEqual(issue._attributes['start_date'], '2014-03-09T20:02:02Z')
+        self.assertEqual(issue._attributes['start_date'], datetime(2014, 3, 9, 20, 2, 2))
+        self.assertEqual(issue._changes['start_date'], '2014-03-09T20:02:02Z')
 
     def test_supports_setting_of_attributes_via_dict(self):
         project = self.redmine.project.new()
