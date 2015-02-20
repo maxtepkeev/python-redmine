@@ -32,11 +32,12 @@ create
     :param list tracker_ids: (optional). The ids of trackers for this project.
     :param list issue_custom_field_ids: (optional). The ids of issue custom fields for this project.
     :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
+    :param list enabled_module_names: (optional). The names of enabled modules for this project (Redmine >= 2.6.0 only).
     :return: Project resource object
 
 .. code-block:: python
 
-    >>> project = redmine.project.create(name='Vacation', identifier='vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, tracker_ids=[1, 2], issue_custom_field_ids=[1, 2], custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
+    >>> project = redmine.project.create(name='Vacation', identifier='vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, tracker_ids=[1, 2], issue_custom_field_ids=[1, 2], custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}], enabled_module_names=['calendar', 'documents', 'files', 'gantt'])
     >>> project
     <redmine.resources.Project #123 "Vacation">
 
@@ -66,6 +67,7 @@ new
     >>> project.tracker_ids = [1, 2]
     >>> project.issue_custom_field_ids = [1, 2]
     >>> project.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
+    >>> project.enabled_module_names = ['calendar', 'documents', 'files', 'gantt']
     >>> project.save()
     True
 
@@ -96,7 +98,7 @@ get
 
 .. code-block:: python
 
-    >>> project = redmine.project.get('vacation', include='trackers,issue_categories')
+    >>> project = redmine.project.get('vacation', include='trackers,issue_categories,enabled_modules')
     >>> project
     <redmine.resources.Project #123 "Vacation">
 
@@ -201,11 +203,12 @@ update
     :param list tracker_ids: (optional). The ids of trackers for this project.
     :param list issue_custom_field_ids: (optional). The ids of issue custom fields for this project.
     :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
+    :param list enabled_module_names: (optional). The names of enabled modules for this project (Redmine >= 2.6.0 only).
     :return: True
 
 .. code-block:: python
 
-    >>> redmine.project.update(1, name='Vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, tracker_ids=[1, 2], issue_custom_field_ids=[1, 2], custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
+    >>> redmine.project.update(1, name='Vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, tracker_ids=[1, 2], issue_custom_field_ids=[1, 2], custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}], enabled_module_names=['calendar', 'documents', 'files', 'gantt'])
     True
 
 save
@@ -232,6 +235,7 @@ save
     >>> project.tracker_ids = [1, 2]
     >>> project.issue_custom_field_ids = [1, 2]
     >>> project.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
+    >>> project.enabled_module_names = ['calendar', 'documents', 'files', 'gantt']
     >>> project.save()
     True
 

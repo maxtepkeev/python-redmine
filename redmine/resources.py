@@ -332,7 +332,7 @@ class Project(_Resource):
     query_update = '/projects/{0}.json'
     query_delete = '/projects/{0}.json'
 
-    _includes = ('trackers', 'issue_categories')
+    _includes = ('trackers', 'issue_categories', 'enabled_modules')
     _relations = (
         'wiki_pages',
         'memberships',
@@ -352,7 +352,12 @@ class Project(_Resource):
         if item == 'parent' and item in self._attributes:
             return ResourceManager(self.manager.redmine, 'Project').to_resource(self._attributes[item])
 
-        return super(Project, self).__getattr__(item)
+        value = super(Project, self).__getattr__(item)
+
+        if item == 'enabled_modules':
+            value = [module.get('name') if isinstance(module, dict) else module for module in value]
+
+        return value
 
 
 class Issue(_Resource):

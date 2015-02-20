@@ -320,6 +320,9 @@ class TestResources(unittest.TestCase):
         response_includes['project'].update(responses['tracker']['all'])
         self.response.json = json_response(response_includes)
         self.assertIsInstance(project.trackers, ResourceSet)
+        response_includes['project'].update({'enabled_modules': [{'id': 36, 'name': 'issue_tracking'}]})
+        self.response.json = json_response(response_includes)
+        self.assertEqual(project.enabled_modules, ['issue_tracking'])
 
     def test_project_returns_status_without_conversion(self):
         self.response.json = json_response({'project': {'name': 'Foo', 'id': 1, 'status': 1}})
