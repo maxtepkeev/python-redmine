@@ -4,6 +4,7 @@ Changelog
 1.0.4 (2015-02-XX)
 ++++++++++++++++++
 
+- Added: PyPy2/3 is now officially supported
 - Added: Introduced ``enabled_modules`` on demand include in Project resource
 - Fixed: `Issue #78 <https://github.com/maxtepkeev/python-redmine/issues/78>`__ (Redmine <2.5.2
   returns only single tracker instead of a list of all available trackers when requested from
