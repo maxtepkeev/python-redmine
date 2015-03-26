@@ -112,7 +112,7 @@ class _Resource(object):
     _includes = ()
     _relations = ()
     _relations_name = None
-    _unconvertible = ()
+    _unconvertible = ('name', 'description')
     _members = ('manager',)
     _create_readonly = ('id', 'created_on', 'updated_on', 'author', 'user', 'project', 'issue')
     _update_readonly = _create_readonly
@@ -346,7 +346,7 @@ class Project(_Resource):
         'deals',
         'deal_categories',
     )
-    _unconvertible = ('status',)
+    _unconvertible = _Resource._unconvertible + ('identifier', 'status')
     _update_readonly = _Resource._update_readonly + ('identifier',)
 
     def __getattr__(self, item):
@@ -377,7 +377,7 @@ class Issue(_Resource):
 
     _includes = ('children', 'attachments', 'relations', 'changesets', 'journals', 'watchers')
     _relations = ('relations', 'time_entries')
-    _unconvertible = ('notes',)
+    _unconvertible = _Resource._unconvertible + ('subject', 'notes')
     _create_readonly = _Resource._create_readonly + ('spent_hours',)
     _update_readonly = _create_readonly
 
@@ -548,6 +548,7 @@ class WikiPage(_Resource):
     query_delete = '/projects/{project_id}/wiki/{0}.json'
 
     _includes = ('attachments',)
+    _unconvertible = _Resource._unconvertible + ('title', 'text')
     _create_readonly = _Resource._create_readonly + ('version',)
     _update_readonly = _create_readonly
 
@@ -890,6 +891,7 @@ class Contact(_Resource):
     query_delete = '/contacts/{0}.json'
 
     _includes = ('notes', 'contacts', 'deals', 'issues')
+    _unconvertible = _Resource._unconvertible + ('company', 'skype_name')
 
     class Project:
         """A contact project implementation"""
