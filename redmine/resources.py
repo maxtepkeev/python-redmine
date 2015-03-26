@@ -9,8 +9,7 @@ from redmine.exceptions import (
     ReadonlyAttrError,
     CustomFieldValueError,
     ResourceVersionMismatchError,
-    ResourceNotFoundError,
-    ResourceRequirementsError
+    ResourceNotFoundError
 )
 
 # Resources which when accessed from some other
