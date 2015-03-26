@@ -281,7 +281,7 @@ class _Resource(object):
         return self.id
 
     def is_new(self):
-        """Checks if resource was just created and not yet saved to Redmine or it is existent resource"""
+        """Checks if resource was just created and not yet saved to Redmine or it is an existing resource"""
         return False if 'id' in self._attributes or 'created_on' in self._attributes else True
 
     def _action_if_attribute_absent(self):
