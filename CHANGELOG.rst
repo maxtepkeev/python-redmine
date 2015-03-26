@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-1.1.1 (2015-03-XX)
+1.1.1 (2015-03-26)
 ++++++++++++++++++
 
 - Fixed: `Issue #85 <https://github.com/maxtepkeev/python-redmine/issues/85>`__ (Python Redmine
