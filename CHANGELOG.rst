@@ -5,8 +5,8 @@ Changelog
 ++++++++++++++++++
 
 - Fixed: `Issue #85 <https://github.com/maxtepkeev/python-redmine/issues/85>`__ (Python Redmine
-was trying to convert field to date/datetime even when it shouldn't, i.e. if a field looked like
-YYYY-MM-DD but wasn't actually a date/datetime field, e.g. wiki page title or issue subject)
+  was trying to convert field to date/datetime even when it shouldn't, i.e. if a field looked like
+  YYYY-MM-DD but wasn't actually a date/datetime field, e.g. wiki page title or issue subject)
 
 1.1.0 (2015-02-20)
 ++++++++++++++++++
