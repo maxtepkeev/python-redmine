@@ -4,7 +4,7 @@ from distutils.version import LooseVersion
 from redmine.version import __version__
 from redmine.packages import requests
 from redmine.managers import ResourceManager
-from redmine.utilities import is_string, to_string, json_response
+from redmine.utilities import is_string, to_string
 from redmine.exceptions import (
     AuthError,
     ConflictError,
@@ -123,7 +123,7 @@ class Redmine(object):
                 return True
             else:
                 try:
-                    return json_response(response.json)
+                    return response.json()
                 except (ValueError, TypeError):
                     raise JSONDecodeError
         elif response.status_code == 401:
@@ -139,7 +139,7 @@ class Redmine(object):
         elif response.status_code == 413:
             raise RequestEntityTooLargeError
         elif response.status_code == 422:
-            errors = json_response(response.json)['errors']
+            errors = response.json()['errors']
             raise ValidationError(to_string(', '.join(e if is_string(e) else ': '.join(e) for e in errors)))
         elif response.status_code == 500:
             raise ServerError
