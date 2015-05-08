@@ -1,4 +1,5 @@
 import sys
+
 from setuptools import setup
 from pkg_resources import get_distribution, DistributionNotFound
 
@@ -10,7 +11,7 @@ try:
 
 PyRedmineWS library was found on this system. Unfortunately
 Python Redmine and PyRedmineWS can't work together because
-they both use the same package name, i.e. redmine. There is
+they both use the same package name, i.e. redmine. There's
 no need to use PyRedmineWS because it's development seems
 to be discontinued and Python Redmine provides a lot more
 features than PyRedmineWS. In order to complete the install
