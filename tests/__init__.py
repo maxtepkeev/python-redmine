@@ -10,7 +10,7 @@ except ImportError:
 
 from redmine import Redmine
 from distutils.version import LooseVersion
-from requests import __version__ as requests_version
+from redmine.packages.requests import __version__ as requests_version
 
 URL = 'http://foo.bar'
 

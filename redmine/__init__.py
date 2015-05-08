@@ -1,8 +1,8 @@
 import os
 import json
-import requests
 from distutils.version import LooseVersion
 from redmine.version import __version__
+from redmine.packages import requests
 from redmine.managers import ResourceManager
 from redmine.utilities import is_string, to_string, json_response
 from redmine.exceptions import (
