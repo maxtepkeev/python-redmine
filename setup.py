@@ -35,7 +35,7 @@ setup(
     author_email='tepkeev@gmail.com',
     description='Library for communicating with a Redmine project management application',
     long_description=open('README.rst').read() + '\n\n' + open('CHANGELOG.rst').read(),
-    keywords='redmine',
+    keywords='redmine,redminecrm,easyredmine',
     install_requires=['requests >= 0.12.1'],
     zip_safe=False,
     classifiers=[
