@@ -1,5 +1,6 @@
 import itertools
-from redmine.exceptions import (
+
+from .exceptions import (
     ResourceSetIndexError,
     ResourceSetFilterParamError,
     ResultSetTotalCountError

@@ -1,11 +1,13 @@
 import os
 import json
+
 from distutils.version import LooseVersion
-from redmine.version import __version__
-from redmine.packages import requests
-from redmine.managers import ResourceManager
-from redmine.utilities import is_string, to_string
-from redmine.exceptions import (
+
+from .version import __version__
+from .packages import requests
+from .managers import ResourceManager
+from .utilities import is_string, to_string
+from .exceptions import (
     AuthError,
     ConflictError,
     ImpersonateError,

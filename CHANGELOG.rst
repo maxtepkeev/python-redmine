@@ -5,6 +5,7 @@ Changelog
 ++++++++++++++++++
 
 - Added: `Requests <http://docs.python-requests.org>`_ is now embedded into Python-Redmine
+- Added: Python-Redmine is now embeddable to another libraries
 
 1.1.1 (2015-03-26)
 ++++++++++++++++++

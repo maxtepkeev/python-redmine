@@ -1,5 +1,5 @@
 import sys
-from string import Formatter
+import string
 
 
 def is_string(string):
@@ -12,7 +12,7 @@ def to_string(string):
     return string.encode('utf-8') if sys.version_info[0] < 3 else string
 
 
-class MemorizeFormatter(Formatter):
+class MemorizeFormatter(string.Formatter):
     """Memorizes all arguments, used during string formatting"""
     def __init__(self):
         self.used_kwargs = {}
