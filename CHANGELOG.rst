@@ -72,7 +72,7 @@ Changelog
   * Tracker - issues relation
   * IssueStatus - issues relation
 
-- Added: Introduced a ``values()`` method in a ResourceSet which returns ValuesResourceSet — a
+- Added: Introduced a ``values()`` method in a ResourceSet which returns ValuesResourceSet - a
   ResourceSet subclass that returns dictionaries when used as an iterable, rather than resource-instance
   objects (see `docs <http://python-redmine.readthedocs.org/operations.html#filter>`__ for details)
 - Added: Introduced ``update()`` and ``delete()`` methods in a ResourceSet object which allow to
