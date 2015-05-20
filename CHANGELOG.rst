@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+1.1.2 (2015-05-20)
+++++++++++++++++++
+
+- Fixed: `Issue #90 <https://github.com/maxtepkeev/python-redmine/issues/90>`__ (Python Redmine
+  fails to install on systems with LC_ALL=C) (thanks to `spikergit1 <https://github.com/spikergit1>`__)
+
 1.1.1 (2015-03-26)
 ++++++++++++++++++
 
