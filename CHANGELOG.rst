@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-1.2.0 (2015-07-XX)
+1.2.0 (2015-07-09)
 ++++++++++++++++++
 
 - Added: `wheel <http://wheel.readthedocs.org>`__ support
