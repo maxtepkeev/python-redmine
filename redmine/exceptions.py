@@ -166,5 +166,9 @@ class ForbiddenError(BaseRedmineError):
 
 class JSONDecodeError(BaseRedmineError):
     """Unable to decode received JSON"""
-    def __init__(self):
-        super(JSONDecodeError, self).__init__('Unable to decode received JSON, please check your server configuration')
+    def __init__(self, response):
+        self.response = response
+        super(JSONDecodeError, self).__init__(
+            'Unable to decode received JSON, you can inspect exception\'s '
+            '"response" attribute to find out what the response was'
+        )

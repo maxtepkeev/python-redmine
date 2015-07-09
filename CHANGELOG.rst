@@ -4,6 +4,9 @@ Changelog
 1.2.0 (2015-07-XX)
 ++++++++++++++++++
 
+- Added: `Issue #93 <https://github.com/maxtepkeev/python-redmine/issues/93>`__ (``JSONDecodeError``
+  exception now contains a ``response`` attribute which can be inspected to identify the cause of the
+  exception)
 - Added: `Issue #98 <https://github.com/maxtepkeev/python-redmine/issues/98>`__ (Support for setting
   WikiPage resource parent title and converting parent attribute to Resource object instead of being
   a dict)

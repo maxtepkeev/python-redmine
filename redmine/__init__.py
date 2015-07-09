@@ -125,7 +125,7 @@ class Redmine(object):
                 try:
                     return json_response(response.json)
                 except (ValueError, TypeError):
-                    raise JSONDecodeError
+                    raise JSONDecodeError(response)
         elif response.status_code == 401:
             raise AuthError
         elif response.status_code == 403:
