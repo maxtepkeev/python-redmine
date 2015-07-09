@@ -4,6 +4,7 @@ Changelog
 1.2.0 (2015-07-XX)
 ++++++++++++++++++
 
+- Added: `wheel <http://wheel.readthedocs.org>`__ support
 - Added: `Issue #93 <https://github.com/maxtepkeev/python-redmine/issues/93>`__ (``JSONDecodeError``
   exception now contains a ``response`` attribute which can be inspected to identify the cause of the
   exception)
