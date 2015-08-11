@@ -575,6 +575,11 @@ class WikiPage(_Resource):
         return to_string(self.title)
 
     def __getattr__(self, item):
+        if item == 'parent' and item in self._attributes:
+            manager = ResourceManager(self.manager.redmine, 'WikiPage')
+            manager.params['project_id'] = self.manager.params.get('project_id', 0)
+            return manager.to_resource(self._attributes[item])
+
         # If a text attribute of a resource is missing, we should
         # refresh a resource automatically for user's convenience
         try:

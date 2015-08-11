@@ -710,6 +710,13 @@ class TestResources(unittest.TestCase):
             '{0}/projects/Foo/wiki/Foo'.format(self.url)
         )
 
+    def test_wiki_page_parent_converts_to_resource(self):
+        from redmine.resources import WikiPage
+        self.response.json = json_response({'wiki_page': {'title': 'Foo', 'project_id': 1, 'parent': {'title': 'Bar'}}})
+        parent = self.redmine.wiki_page.get('Foo', project_id=1).parent
+        self.assertIsInstance(parent, WikiPage)
+        self.assertEqual(parent.title, 'Bar')
+
     def test_project_membership_version(self):
         self.assertEqual(self.redmine.project_membership.resource_class.redmine_version, '1.4')
 

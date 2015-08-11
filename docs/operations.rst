@@ -177,7 +177,7 @@ Returns a ResourceSet object that contains Resource objects filtered by some con
 
             redmine.project.get('vacation').issues.delete()
 
-    * **values**. Returns a ValuesResourceSet — a ResourceSet subclass that returns dictionaries when
+    * **values**. Returns a ValuesResourceSet - a ResourceSet subclass that returns dictionaries when
       used as an iterable, rather than resource-instance objects. Each of those dictionaries represents
       a resource, with the keys corresponding to the attribute names of resource objects. This example
       compares the dictionaries of values() with the normal resource objects:
@@ -195,7 +195,7 @@ Returns a ResourceSet object that contains Resource objects filtered by some con
 
       The values() method takes optional positional arguments, \*fields, which specify field names to
       which resource fields should be limited. If you specify the fields, each dictionary will contain
-      only the field keys/values for the fields you specify. If you don’t specify the fields, each
+      only the field keys/values for the fields you specify. If you don't specify the fields, each
       dictionary will contain a key and value for every field in the resource:
 
       .. code-block:: python

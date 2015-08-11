@@ -7,6 +7,23 @@ Changelog
 - Added: `Requests <http://docs.python-requests.org>`_ is now embedded into Python-Redmine
 - Added: Python-Redmine is now embeddable to another libraries
 
+1.2.0 (2015-07-09)
+++++++++++++++++++
+
+- Added: `wheel <http://wheel.readthedocs.org>`__ support
+- Added: `Issue #93 <https://github.com/maxtepkeev/python-redmine/issues/93>`__ (``JSONDecodeError``
+  exception now contains a ``response`` attribute which can be inspected to identify the cause of the
+  exception)
+- Added: `Issue #98 <https://github.com/maxtepkeev/python-redmine/issues/98>`__ (Support for setting
+  WikiPage resource parent title and converting parent attribute to Resource object instead of being
+  a dict)
+
+1.1.2 (2015-05-20)
+++++++++++++++++++
+
+- Fixed: `Issue #90 <https://github.com/maxtepkeev/python-redmine/issues/90>`__ (Python Redmine
+  fails to install on systems with LC_ALL=C) (thanks to `spikergit1 <https://github.com/spikergit1>`__)
+
 1.1.1 (2015-03-26)
 ++++++++++++++++++
 
@@ -78,7 +95,7 @@ Changelog
   * Tracker - issues relation
   * IssueStatus - issues relation
 
-- Added: Introduced a ``values()`` method in a ResourceSet which returns ValuesResourceSet — a
+- Added: Introduced a ``values()`` method in a ResourceSet which returns ValuesResourceSet - a
   ResourceSet subclass that returns dictionaries when used as an iterable, rather than resource-instance
   objects (see `docs <http://python-redmine.readthedocs.org/operations.html#filter>`__ for details)
 - Added: Introduced ``update()`` and ``delete()`` methods in a ResourceSet object which allow to

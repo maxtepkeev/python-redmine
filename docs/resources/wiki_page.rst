@@ -26,12 +26,13 @@ create
     :type project_id: integer or string
     :param string title: (required). Title of the wiki page.
     :param string text: (required). Text of the wiki page.
+    :param string parent_title: (optional). Title of parent wiki page.
     :param string comments: (optional). Comments of the wiki page.
     :return: WikiPage resource object
 
 .. code-block:: python
 
-    >>> wiki_page = redmine.wiki_page.create(project_id='vacation', title='FooBar', text='foo', comments='bar')
+    >>> wiki_page = redmine.wiki_page.create(project_id='vacation', title='FooBar', text='foo', parent_title='Yada', comments='bar')
     >>> wiki_page
     <redmine.resources.WikiPage "FooBar">
 
@@ -54,6 +55,7 @@ new
     >>> wiki_page.project_id = 'vacation'
     >>> wiki_page.title = 'FooBar'
     >>> wiki_page.text = 'foo'
+    >>> wiki_page.parent_title = 'Yada'
     >>> wiki_page.comments = 'bar'
     >>> wiki_page.save()
     True
@@ -162,12 +164,13 @@ update
     :type project_id: integer or string
     :param string title: (optional). Title of the wiki page.
     :param string text: (optional). Text of the wiki page.
+    :param string parent_title: (optional). Title of parent wiki page.
     :param string comments: (optional). Comments of the wiki page.
     :return: True
 
 .. code-block:: python
 
-    >>> redmine.wiki_page.update('Foo', project_id='vacation', title='FooBar', text='foo', comments='bar')
+    >>> redmine.wiki_page.update('Foo', project_id='vacation', title='FooBar', text='foo', parent_title='Yada', comments='bar')
     True
 
 save
@@ -187,6 +190,7 @@ save
     >>> wiki_page = redmine.wiki_page.get('Foo', project_id='vacation')
     >>> wiki_page.title = 'Bar'
     >>> wiki_page.text = 'bar'
+    >>> wiki_page.parent_title = 'Yada'
     >>> wiki_page.comments = 'changed foo to bar'
     >>> wiki_page.save()
     True
