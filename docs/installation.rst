@@ -1,12 +1,6 @@
 Installation
 ============
 
-Dependencies
-------------
-
-Python Redmine relies heavily on great `Requests <http://docs.python-requests.org>`_
-library by Kenneth Reitz for all the http(s) calls.
-
 Conflicts
 ---------
 
@@ -28,13 +22,6 @@ or with `easy_install <https://pypi.python.org/pypi/setuptools>`_:
 .. code-block:: bash
 
     $ easy_install python-redmine
-
-If the PyPI is down, you can also install Python Redmine from one of it's mirrors, e.g. from
-`Crate.IO <http://crate.io>`_:
-
-.. code-block:: bash
-
-    $ pip install -i http://simple.crate.io/ python-redmine
 
 GitHub
 ------
