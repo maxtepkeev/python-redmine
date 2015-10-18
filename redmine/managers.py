@@ -1,8 +1,10 @@
 import datetime
+
 from distutils.version import LooseVersion
-from redmine.resultsets import ResourceSet
-from redmine.utilities import MemorizeFormatter
-from redmine.exceptions import (
+
+from .resultsets import ResourceSet
+from .utilities import MemorizeFormatter
+from .exceptions import (
     ResourceError,
     ResourceBadMethodError,
     ResourceFilterError,

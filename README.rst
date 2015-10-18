@@ -60,12 +60,6 @@ Features
 * Extensively documented
 * Provides ORM-style Pythonic API
 
-Dependencies
-------------
-
-Python Redmine relies heavily on great `Requests <http://docs.python-requests.org>`_
-library by Kenneth Reitz for all the http(s) calls.
-
 Installation
 ------------
 

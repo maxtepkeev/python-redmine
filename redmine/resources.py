@@ -1,8 +1,10 @@
 from datetime import datetime
+
 from distutils.version import LooseVersion
-from redmine.utilities import to_string
-from redmine.managers import ResourceManager
-from redmine.exceptions import (
+
+from .utilities import to_string
+from .managers import ResourceManager
+from .exceptions import (
     ValidationError,
     ForbiddenError,
     ResourceAttrError,

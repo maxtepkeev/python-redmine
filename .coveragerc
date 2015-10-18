@@ -3,5 +3,6 @@ source = redmine
 
 [report]
 omit =
+    */packages/*
     */python?.?/*
     */site-packages/*

@@ -1,5 +1,6 @@
 import sys
-from setuptools import setup
+
+from setuptools import setup, find_packages
 from setuptools.command.test import test
 from pkg_resources import get_distribution, DistributionNotFound
 
@@ -11,7 +12,7 @@ try:
 
 PyRedmineWS library was found on this system. Unfortunately
 Python Redmine and PyRedmineWS can't work together because
-they both use the same package name, i.e. redmine. There is
+they both use the same package name, i.e. redmine. There's
 no need to use PyRedmineWS because it's development seems
 to be discontinued and Python Redmine provides a lot more
 features than PyRedmineWS. In order to complete the install
@@ -44,23 +45,24 @@ tests_require = ['nose', 'coverage']
 
 if sys.version_info[:2] < (3, 3):
     tests_require.append('mock')
-if sys.version_info[:2] == (2, 6):
-    tests_require.append('unittest2')
+    if sys.version_info[:2] == (3, 2):
+        tests_require[1] = 'coverage=="3.7.1"'
+    if sys.version_info[:2] == (2, 6):
+        tests_require.append('unittest2')
 
 exec(open('redmine/version.py').read())
 
 setup(
     name='python-redmine',
     version=globals()['__version__'],
-    packages=['redmine'],
+    packages=find_packages(exclude=('tests',)),
     url='https://github.com/maxtepkeev/python-redmine',
     license=open('LICENSE').read(),
     author='Max Tepkeev',
     author_email='tepkeev@gmail.com',
     description='Library for communicating with a Redmine project management application',
     long_description=open('README.rst').read() + '\n\n' + open('CHANGELOG.rst').read(),
-    keywords='redmine',
-    install_requires=['requests >= 0.12.1'],
+    keywords='redmine,redminecrm,easyredmine',
     tests_require=tests_require,
     cmdclass={'test': NoseTests},
     zip_safe=False,

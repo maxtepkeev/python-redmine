@@ -1,4 +1,4 @@
-from tests import unittest, mock, json_response, Redmine, URL
+from tests import unittest, mock, Redmine, URL
 
 
 class TestRedmine(unittest.TestCase):
@@ -51,9 +51,9 @@ class TestRedmineRequest(unittest.TestCase):
         self.url = URL
         self.redmine = Redmine(self.url)
         self.response = mock.Mock()
-        patcher_get = mock.patch('requests.get', return_value=self.response)
-        patcher_post = mock.patch('requests.post', return_value=self.response)
-        patcher_put = mock.patch('requests.put', return_value=self.response)
+        patcher_get = mock.patch('redmine.packages.requests.get', return_value=self.response)
+        patcher_post = mock.patch('redmine.packages.requests.post', return_value=self.response)
+        patcher_put = mock.patch('redmine.packages.requests.put', return_value=self.response)
         patcher_get.start()
         patcher_post.start()
         patcher_put.start()
@@ -65,13 +65,13 @@ class TestRedmineRequest(unittest.TestCase):
         self.redmine.username = 'john'
         self.redmine.password = 'qwerty'
         self.response.status_code = 200
-        self.response.json = json_response({'success': True})
+        self.response.json.return_value = {'success': True}
         self.assertEqual(self.redmine.request('get', self.url)['success'], True)
 
     def test_successful_response_via_api_key(self):
         self.redmine.key = '123'
         self.response.status_code = 200
-        self.response.json = json_response({'success': True})
+        self.response.json.return_value = {'success': True}
         self.assertEqual(self.redmine.request('get', self.url)['success'], True)
 
     def test_successful_response_via_put_method(self):
@@ -82,7 +82,7 @@ class TestRedmineRequest(unittest.TestCase):
     @mock.patch('redmine.open', mock.mock_open(), create=True)
     def test_successful_file_upload(self):
         self.response.status_code = 201
-        self.response.json = json_response({'upload': {'token': '123456'}})
+        self.response.json.return_value = {'upload': {'token': '123456'}}
         self.assertEqual(self.redmine.upload('foo'), '123456')
 
     @mock.patch('redmine.open', mock.mock_open(), create=True)
@@ -150,7 +150,7 @@ class TestRedmineRequest(unittest.TestCase):
     def test_validation_error_exception(self):
         from redmine.exceptions import ValidationError
         self.response.status_code = 422
-        self.response.json = json_response({'errors': ['foo', 'bar', ['foo', 'bar']]})
+        self.response.json.return_value = {'errors': ['foo', 'bar', ['foo', 'bar']]}
         self.assertRaises(ValidationError, lambda: self.redmine.request('post', self.url))
 
     def test_not_found_error_exception(self):
@@ -167,7 +167,7 @@ class TestRedmineRequest(unittest.TestCase):
         self.redmine.username = 'john'
         self.redmine.password = 'qwerty'
         self.response.status_code = 200
-        self.response.json = json_response({'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1}})
+        self.response.json.return_value = {'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1}}
         self.assertEqual(self.redmine.auth().firstname, 'John')
 
     def test_redmine_is_picklable(self):

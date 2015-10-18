@@ -1,11 +1,18 @@
 Changelog
 ---------
 
+1.4.0 (2015-10-XX)
+++++++++++++++++++
+
+- Added: `Requests <http://docs.python-requests.org>`_ is now embedded into Python-Redmine
+- Added: Python-Redmine is now embeddable to other libraries
+- Fixed: Previous release was broken on PyPI
+
 1.3.0 (2015-10-18)
 ++++++++++++++++++
 
 - Added: `Issue #108 <https://github.com/maxtepkeev/python-redmine/issues/108>`__ (Tests are now
-  built-in into package distributed via PyPI)
+  built-in into source package distributed via PyPI)
 
 1.2.0 (2015-07-09)
 ++++++++++++++++++

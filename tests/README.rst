@@ -6,7 +6,6 @@ To run tests you will need these packages:
 * coverage
 * nose
 * mock
-* requests
 
 For your convenience they are all listed in the ``requirements.txt`` file in this directory.
 If you are running Python 3.3+ ``mock`` already exists in the standard library so you don't
