@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+1.3.0 (2015-10-18)
+++++++++++++++++++
+
+- Added: `Issue #108 <https://github.com/maxtepkeev/python-redmine/issues/108>`__ (Tests are now
+  built-in into package distributed via PyPI)
+
 1.2.0 (2015-07-09)
 ++++++++++++++++++
 

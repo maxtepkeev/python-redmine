@@ -1,5 +1,6 @@
 import sys
 from setuptools import setup
+from setuptools.command.test import test
 from pkg_resources import get_distribution, DistributionNotFound
 
 try:
@@ -23,6 +24,29 @@ installation procedure for Python Redmine afterwards
 except DistributionNotFound:
     pass
 
+try:
+    import multiprocessing  # https://bugs.python.org/issue15881
+except ImportError:
+    pass
+
+
+class NoseTests(test):
+    def finalize_options(self):
+        test.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        import nose
+        nose.run_exit(argv=['nosetests'])
+
+tests_require = ['nose', 'coverage']
+
+if sys.version_info[:2] < (3, 3):
+    tests_require.append('mock')
+if sys.version_info[:2] == (2, 6):
+    tests_require.append('unittest2')
+
 exec(open('redmine/version.py').read())
 
 setup(
@@ -37,6 +61,8 @@ setup(
     long_description=open('README.rst').read() + '\n\n' + open('CHANGELOG.rst').read(),
     keywords='redmine',
     install_requires=['requests >= 0.12.1'],
+    tests_require=tests_require,
+    cmdclass={'test': NoseTests},
     zip_safe=False,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
