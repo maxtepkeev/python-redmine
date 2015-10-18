@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-1.4.0 (2015-10-XX)
+1.4.0 (2015-10-18)
 ++++++++++++++++++
 
 - Added: `Requests <http://docs.python-requests.org>`_ is now embedded into Python-Redmine
