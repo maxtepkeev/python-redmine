@@ -14,9 +14,9 @@ class TestResultSet(unittest.TestCase):
         self.url = URL
         self.redmine = Redmine(self.url)
         self.response = mock.Mock(status_code=200, json=mock.Mock(return_value=response))
-        patcher_get = mock.patch('redmine.packages.requests.get', return_value=self.response)
-        patcher_put = mock.patch('redmine.packages.requests.put', return_value=self.response)
-        patcher_delete = mock.patch('redmine.packages.requests.delete', return_value=self.response)
+        patcher_get = mock.patch('redmine.requests.get', return_value=self.response)
+        patcher_put = mock.patch('redmine.requests.put', return_value=self.response)
+        patcher_delete = mock.patch('redmine.requests.delete', return_value=self.response)
         patcher_get.start()
         patcher_put.start()
         patcher_delete.start()
