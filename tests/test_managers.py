@@ -48,7 +48,7 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(resourceset[1].identifier, 'bar')
         self.assertEqual(resourceset[1].id, 2)
 
-    @mock.patch('redmine.packages.requests.get')
+    @mock.patch('redmine.requests.get')
     def test_get_single_resource(self, mock_get):
         mock_get.return_value = response = mock.Mock(status_code=200)
         response.json.return_value = {'project': {'name': 'Foo', 'identifier': 'foo', 'id': 1}}
@@ -72,7 +72,7 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(time_entries.manager.params['from'], '2014-03-09T00:00:00Z')
         self.assertEqual(time_entries.manager.params['to'], '2014-03-10T00:00:00Z')
 
-    @mock.patch('redmine.packages.requests.post')
+    @mock.patch('redmine.requests.post')
     def test_create_resource(self, mock_post):
         mock_post.return_value = response = mock.Mock(status_code=201)
         response.json.return_value = {'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1}}
@@ -81,7 +81,7 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(user.lastname, 'Smith')
 
     @mock.patch('redmine.open', mock.mock_open(), create=True)
-    @mock.patch('redmine.packages.requests.post')
+    @mock.patch('redmine.requests.post')
     def test_create_resource_with_uploads(self, mock_post):
         mock_post.return_value = response = mock.Mock(status_code=201)
         response.json.return_value = {
@@ -98,7 +98,7 @@ class TestResourceManager(unittest.TestCase):
         defaults.update(dict((relation, None) for relation in project._relations))
         self.assertEqual(project._attributes, defaults)
 
-    @mock.patch('redmine.packages.requests.put')
+    @mock.patch('redmine.requests.put')
     def test_update_resource(self, mock_put):
         mock_put.return_value = mock.Mock(status_code=200, content='')
         manager = self.redmine.wiki_page
@@ -107,8 +107,8 @@ class TestResourceManager(unittest.TestCase):
         del manager.params['project_id']
 
     @mock.patch('redmine.open', mock.mock_open(), create=True)
-    @mock.patch('redmine.packages.requests.put')
-    @mock.patch('redmine.packages.requests.post')
+    @mock.patch('redmine.requests.put')
+    @mock.patch('redmine.requests.post')
     def test_update_resource_with_uploads(self, mock_post, mock_put):
         mock_put.return_value = mock.Mock(status_code=200, content='')
         mock_post.return_value = response = mock.Mock(status_code=201)
@@ -118,7 +118,7 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(manager.update(1, subject='Bar', uploads=[{'path': 'foo'}]), True)
         del manager.params['subject']
 
-    @mock.patch('redmine.packages.requests.delete')
+    @mock.patch('redmine.requests.delete')
     def test_delete_resource(self, mock_delete):
         mock_delete.return_value = mock.Mock(status_code=200, content='')
         self.assertEqual(self.redmine.group.delete(1), True)
@@ -178,20 +178,20 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(project.url, unpickled_project.url)
         self.assertEqual(project.params['foo'], unpickled_project.params['foo'])
 
-    @mock.patch('redmine.packages.requests.put')
-    @mock.patch('redmine.packages.requests.post')
+    @mock.patch('redmine.requests.put')
+    @mock.patch('redmine.requests.post')
     def test_create_validation_exception_via_put(self, mock_post, mock_put):
         mock_post.return_value = mock.Mock(status_code=404)
         mock_put.return_value = mock.Mock(status_code=200)
         self.assertRaises(ValidationError, lambda: self.redmine.user.create(firstname='John', lastname='Smith'))
 
-    @mock.patch('redmine.packages.requests.get')
+    @mock.patch('redmine.requests.get')
     def test_reraises_not_found_exception(self, mock_get):
         from redmine.exceptions import ResourceNotFoundError
         mock_get.return_value = mock.Mock(status_code=404)
         self.assertRaises(ResourceNotFoundError, lambda: self.redmine.project.get('non-existent-project'))
 
-    @mock.patch('redmine.packages.requests.get')
+    @mock.patch('redmine.requests.get')
     def test_resource_requirements_exception(self, mock_get):
         from redmine.exceptions import ResourceRequirementsError
         FooResource.requirements = ('foo plugin', ('bar plugin', '1.2.3'),)
