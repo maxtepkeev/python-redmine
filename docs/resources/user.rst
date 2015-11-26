@@ -28,12 +28,26 @@ create
     :param string lastname: (required). User surname.
     :param string mail: (required). User email.
     :param integer auth_source_id: (optional). Authentication mode id.
+    :param string mail_notification:
+      .. raw:: html
+
+          (optional). Type of mail notification, available values are:
+
+      - all
+      - selected
+      - only_my_events
+      - only_assigned
+      - only_owner
+      - none
+
+    :param list notified_project_ids: (optional). Project IDs for a "selected" mail notification type.
+    :param boolean must_change_passwd: (optional). Whether user must change password.
     :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
     :return: User resource object
 
 .. code-block:: python
 
-    >>> user = redmine.user.create(login='jsmith', password='qwerty', firstname='John', lastname='Smith', mail='john@smith.com', auth_source_id=1, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
+    >>> user = redmine.user.create(login='jsmith', password='qwerty', firstname='John', lastname='Smith', mail='john@smith.com', auth_source_id=1, mail_notification='selected', notified_project_ids=[1, 2], must_change_passwd=True, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
     >>> user
     <redmine.resources.User #32 "John Smith">
 
@@ -59,6 +73,9 @@ new
     >>> user.lastname = 'Smith'
     >>> user.mail = 'john@smith.com'
     >>> user.auth_source_id = 1
+    >>> user.mail_notification = 'selected'
+    >>> user.notified_project_ids = [1, 2]
+    >>> user.must_change_passwd = True
     >>> user.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
     >>> user.save()
     True
@@ -223,12 +240,26 @@ update
     :param string lastname: (optional). User surname.
     :param string mail: (optional). User email.
     :param integer auth_source_id: (optional). Authentication mode id.
+    :param string mail_notification:
+      .. raw:: html
+
+          (optional). Type of mail notification, available values are:
+
+      - all
+      - selected
+      - only_my_events
+      - only_assigned
+      - only_owner
+      - none
+
+    :param list notified_project_ids: (optional). Project IDs for a "selected" mail notification type.
+    :param boolean must_change_passwd: (optional). Whether user must change password.
     :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
     :return: True
 
 .. code-block:: python
 
-    >>> redmine.user.update(1, login='jsmith', password='qwerty', firstname='John', lastname='Smith', mail='john@smith.com', auth_source_id=1, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
+    >>> redmine.user.update(1, login='jsmith', password='qwerty', firstname='John', lastname='Smith', mail='john@smith.com', auth_source_id=1, mail_notification='selected', notified_project_ids=[1, 2], must_change_passwd=True, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
     True
 
 save
@@ -252,6 +283,9 @@ save
     >>> user.lastname = 'Smith'
     >>> user.mail = 'john@smith.com'
     >>> user.auth_source_id = 1
+    >>> user.mail_notification = 'selected'
+    >>> user.notified_project_ids = [1, 2]
+    >>> user.must_change_passwd = True
     >>> user.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
     >>> user.save()
     True

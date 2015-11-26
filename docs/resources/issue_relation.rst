@@ -36,6 +36,8 @@ create
       - blocked
       - precedes
       - follows
+      - copied_to
+      - copied_from
 
     :param integer delay: (optional). Delay in days for a "precedes" or "follows" relation.
     :return: IssueRelation resource object
