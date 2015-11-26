@@ -13,7 +13,7 @@ See the :doc:`../configuration` about how to configure redmine object.
 Create methods
 --------------
 
-Not supported by Redmine. Some resources support adding attachments via it's create/update methods, e.g. issue.
+Not supported by Redmine. Some resources support adding attachments via it's create/update methods, e.g. issue, wiki page.
 
 Read methods
 ------------

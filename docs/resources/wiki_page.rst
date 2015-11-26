@@ -28,11 +28,22 @@ create
     :param string text: (required). Text of the wiki page.
     :param string parent_title: (optional). Title of parent wiki page.
     :param string comments: (optional). Comments of the wiki page.
+    :param uploads:
+      .. raw:: html
+
+          (optional). Uploads in the form of [{'': ''}, ...], accepted keys are:
+
+      - path (required). Absolute path to the file that should be uploaded.
+      - filename (optional). Name of the file after upload.
+      - description (optional). Description of the file.
+      - content_type (optional). Content type of the file.
+
+    :type uploads: list or tuple
     :return: WikiPage resource object
 
 .. code-block:: python
 
-    >>> wiki_page = redmine.wiki_page.create(project_id='vacation', title='FooBar', text='foo', parent_title='Yada', comments='bar')
+    >>> wiki_page = redmine.wiki_page.create(project_id='vacation', title='FooBar', text='foo', parent_title='Yada', comments='bar', uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}])
     >>> wiki_page
     <redmine.resources.WikiPage "FooBar">
 
@@ -57,6 +68,7 @@ new
     >>> wiki_page.text = 'foo'
     >>> wiki_page.parent_title = 'Yada'
     >>> wiki_page.comments = 'bar'
+    >>> wiki_page.uploads = [{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
     >>> wiki_page.save()
     True
 
@@ -166,11 +178,22 @@ update
     :param string text: (optional). Text of the wiki page.
     :param string parent_title: (optional). Title of parent wiki page.
     :param string comments: (optional). Comments of the wiki page.
+    :param uploads:
+      .. raw:: html
+
+          (optional). Uploads in the form of [{'': ''}, ...], accepted keys are:
+
+      - path (required). Absolute path to the file that should be uploaded.
+      - filename (optional). Name of the file after upload.
+      - description (optional). Description of the file.
+      - content_type (optional). Content type of the file.
+
+    :type uploads: list or tuple
     :return: True
 
 .. code-block:: python
 
-    >>> redmine.wiki_page.update('Foo', project_id='vacation', title='FooBar', text='foo', parent_title='Yada', comments='bar')
+    >>> redmine.wiki_page.update('Foo', project_id='vacation', title='FooBar', text='foo', parent_title='Yada', comments='bar', uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}])
     True
 
 save
@@ -192,6 +215,7 @@ save
     >>> wiki_page.text = 'bar'
     >>> wiki_page.parent_title = 'Yada'
     >>> wiki_page.comments = 'changed foo to bar'
+    >>> wiki_page.uploads = [{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
     >>> wiki_page.save()
     True
 

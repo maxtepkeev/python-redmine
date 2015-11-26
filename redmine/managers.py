@@ -163,9 +163,6 @@ class ResourceManager(object):
         if not fields:
             raise ResourceNoFieldsProvidedError
 
-        for index, upload in enumerate(fields.get('uploads', [])):
-            fields['uploads'][index]['token'] = self.redmine.upload(upload.get('path', ''))
-
         formatter = MemorizeFormatter()
 
         try:
@@ -175,6 +172,11 @@ class ResourceManager(object):
 
         self.container = self.resource_class.container_one
         data = {self.resource_class.container_create: self.prepare_params(formatter.unused_kwargs)}
+
+        if 'uploads' in data[self.resource_class.container_create]:
+            data['attachments'] = data[self.resource_class.container_create].pop('uploads')
+            for index, attachment in enumerate(data['attachments']):
+                data['attachments'][index]['token'] = self.redmine.upload(attachment.get('path', ''))
 
         # Almost all resources are created via POST method, but some
         # resources are created via PUT, so we should check for this
@@ -203,9 +205,6 @@ class ResourceManager(object):
         if not fields:
             raise ResourceNoFieldsProvidedError
 
-        for index, upload in enumerate(fields.get('uploads', [])):
-            fields['uploads'][index]['token'] = self.redmine.upload(upload.get('path', ''))
-
         formatter = MemorizeFormatter()
 
         try:
@@ -221,6 +220,12 @@ class ResourceManager(object):
 
         url = '{0}{1}'.format(self.redmine.url, query_update)
         data = {self.resource_class.container_update: self.prepare_params(formatter.unused_kwargs)}
+
+        if 'uploads' in data[self.resource_class.container_update]:
+            data['attachments'] = data[self.resource_class.container_update].pop('uploads')
+            for index, attachment in enumerate(data['attachments']):
+                data['attachments'][index]['token'] = self.redmine.upload(attachment.get('path', ''))
+
         return self.redmine.request('put', url, data=data)
 
     def delete(self, resource_id, **params):

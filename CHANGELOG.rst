@@ -5,6 +5,8 @@ Changelog
 ++++++++++++++++++
 
 - Added: Documented support for new fields and field values in User, Issue and IssueRelation resources
+- Added: `Issue #115 <https://github.com/maxtepkeev/python-redmine/issues/115>`__ (File upload support
+  for WikiPage resource)
 
 1.4.0 (2015-10-18)
 ++++++++++++++++++
