@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-1.5.0 (2015-11-XX)
+1.5.0 (2015-11-26)
 ++++++++++++++++++
 
 - Added: Documented support for new fields and values in User, Issue and IssueRelation resources
