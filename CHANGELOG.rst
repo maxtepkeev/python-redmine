@@ -5,6 +5,9 @@ Changelog
 ++++++++++++++++++
 
 - Added: Documented support for new fields and field values in User, Issue and IssueRelation resources
+- Added: `Issue #109 <https://github.com/maxtepkeev/python-redmine/issues/109>`__ (Smart imports for
+  vendored packages (see `docs <http://python-redmine.readthedocs.org/installation.html#dependencies>`__
+  for details)
 - Added: `Issue #115 <https://github.com/maxtepkeev/python-redmine/issues/115>`__ (File upload support
   for WikiPage resource)
 

@@ -56,6 +56,8 @@ setup(
     name='python-redmine',
     version=globals()['__version__'],
     packages=find_packages(exclude=('tests',)),
+    package_data={'requests': ['*.pem']},
+    include_package_data=True,
     url='https://github.com/maxtepkeev/python-redmine',
     license=open('LICENSE').read(),
     author='Max Tepkeev',
