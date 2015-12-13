@@ -267,10 +267,7 @@ class _Resource(object):
     def url(self):
         """Returns full url to the resource for humans if there is one"""
         if self.query_one is not None:
-            return '{0}{1}'.format(
-                self.manager.redmine.url,
-                self.query_one.format(self.internal_id).replace('.json', '')
-            )
+            return self.manager.redmine.url + self.query_one.format(self.internal_id).replace('.json', '')
         else:
             return None
 
@@ -549,13 +546,10 @@ class WikiPage(_Resource):
 
     @property
     def url(self):
-        return '{0}{1}'.format(
-            self.manager.redmine.url,
-            self.query_one.format(
+        return self.manager.redmine.url + self.query_one.format(
                 self.internal_id,
                 project_id=self.manager.params.get('project_id', 0)
-            ).replace('.json', '')
-        )
+        ).replace('.json', '')
 
     @property
     def internal_id(self):
@@ -944,7 +938,7 @@ class Contact(_Resource):
             return super(Contact, self).__str__()
         except ResourceAttrError:
             if not getattr(self, 'last_name', False):
-                return '{0}'.format(to_string(self.first_name))
+                return to_string(self.first_name)
             else:
                 return '{0} {1}'.format(to_string(self.first_name), to_string(self.last_name))
 

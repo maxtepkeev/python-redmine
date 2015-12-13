@@ -53,7 +53,7 @@ class Redmine(object):
 
         try:
             with open(filepath, 'rb') as stream:
-                url = '{0}{1}'.format(self.url, '/uploads.json')
+                url = '{0}/uploads.json'.format(self.url)
                 response = self.request('post', url, data=stream, headers={'Content-Type': 'application/octet-stream'})
         except IOError:
             raise NoFileError
