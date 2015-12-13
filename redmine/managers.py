@@ -244,10 +244,14 @@ class ResourceManager(object):
         """Prepares params so Redmine could understand them correctly"""
         for name, value in params.items():
             type_ = type(value)
+            translation = self.resource_class.translations.get(name)
 
             if type_ is datetime.date:
                 params[name] = value.strftime(self.redmine.date_format)
             elif type_ is datetime.datetime:
                 params[name] = value.strftime(self.redmine.datetime_format)
 
-        return self.resource_class.translate_params(params)
+            if translation is not None:
+                params[translation[0]] = translation[1](params.pop(name))
+
+        return params

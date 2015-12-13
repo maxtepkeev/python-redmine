@@ -111,6 +111,8 @@ class _Resource(object):
     query_update = None
     query_delete = None
 
+    translations = {}
+
     _includes = ()
     _relations = ()
     _relations_name = None
@@ -261,11 +263,6 @@ class _Resource(object):
         self._changes = {}
         return True
 
-    @classmethod
-    def translate_params(cls, params):
-        """Translates internal param names to the real Redmine param names if needed"""
-        return params
-
     @property
     def url(self):
         """Returns full url to the resource for humans if there is one"""
@@ -377,6 +374,8 @@ class Issue(_Resource):
     query_update = '/issues/{0}.json'
     query_delete = '/issues/{0}.json'
 
+    translations = {'version_id': ('fixed_version_id', lambda x: x)}
+
     _includes = ('children', 'attachments', 'relations', 'changesets', 'journals', 'watchers')
     _relations = ('relations', 'time_entries')
     _unconvertible = _Resource._unconvertible + ('subject', 'notes')
@@ -401,13 +400,6 @@ class Issue(_Resource):
             """Removes user from issue watchers list"""
             url = '{0}/issues/{1}/watchers/{2}.json'.format(self._redmine.url, self._issue_id, user_id)
             return self._redmine.request('delete', url)
-
-    @classmethod
-    def translate_params(cls, params):
-        if 'version_id' in params:
-            params['fixed_version_id'] = params.pop('version_id')
-
-        return super(Issue, cls).translate_params(params)
 
     def __getattr__(self, item):
         if item == 'version':
@@ -461,15 +453,10 @@ class TimeEntry(_Resource):
     query_update = '/time_entries/{0}.json'
     query_delete = '/time_entries/{0}.json'
 
-    @classmethod
-    def translate_params(cls, params):
-        if 'from_date' in params:
-            params['from'] = params.pop('from_date')
-
-        if 'to_date' in params:
-            params['to'] = params.pop('to_date')
-
-        return super(TimeEntry, cls).translate_params(params)
+    translations = {
+        'from_date': ('from', lambda x: x),
+        'to_date': ('to', lambda x: x),
+    }
 
     def __str__(self):
         return str(self.id)
@@ -897,6 +884,12 @@ class Contact(_Resource):
     query_update = '/contacts/{0}.json'
     query_delete = '/contacts/{0}.json'
 
+    translations = {
+        'tag_list': ('tag_list', lambda x: ','.join(x) if isinstance(x, (list, tuple)) else x),
+        'phones': ('phone', lambda x: ','.join(x)),
+        'emails': ('email', lambda x: ','.join(x)),
+    }
+
     _includes = ('notes', 'contacts', 'deals', 'issues')
     _unconvertible = _Resource._unconvertible + ('company', 'skype_name')
 
@@ -932,19 +925,6 @@ class Contact(_Resource):
             except ForbiddenError:
                 raise ValidationError(
                     'Attempt to remove contact from a project that either has contacts module disabled or is read-only')
-
-    @classmethod
-    def translate_params(cls, params):
-        if isinstance(params.get('tag_list'), (list, tuple)):
-            params['tag_list'] = ','.join(params['tag_list'])
-
-        if 'phones' in params:
-            params['phone'] = ','.join(params.pop('phones'))
-
-        if 'emails' in params:
-            params['email'] = ','.join(params.pop('emails'))
-
-        return super(Contact, cls).translate_params(params)
 
     def __getattr__(self, item):
         if item == 'project':
