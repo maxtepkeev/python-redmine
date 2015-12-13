@@ -2,11 +2,6 @@ import sys
 import string
 
 
-def is_string(string):
-    """Python 2 and 3 friendly function to check if a string is really a string"""
-    return isinstance(string, basestring if sys.version_info[0] < 3 else str)
-
-
 def to_string(string):
     """Converts unicode to utf-8 if on Python 2, leaves as is if on Python 3"""
     return string.encode('utf-8') if sys.version_info[0] < 3 else string
