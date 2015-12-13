@@ -30,7 +30,19 @@ parameter is the Redmine location (without the forward slash in the end):
 
 .. code-block:: python
 
-    redmine = Redmine('http://demo.redmine.org')
+    redmine = Redmine('https://redmine.url')
+
+Version
++++++++
+
+There are a lot of different Redmine versions out there and different versions support different
+resources and features. To be sure that everything will work as expected you need to tell Python
+Redmine what version of Redmine you're using. You can find the Redmine version by visiting the
+following address ``https://redmine.url/admin/info``:
+
+.. code-block:: python
+
+    redmine = Redmine('https://redmine.url', version='2.3.3')
 
 Authentication
 ++++++++++++++
@@ -41,13 +53,13 @@ Most of the time, the API requires authentication. It can be done in 2 different
 
 .. code-block:: python
 
-    redmine = Redmine('http://demo.redmine.org', username='foo', password='bar')
+    redmine = Redmine('https://redmine.url', username='foo', password='bar')
 
 * using user's API key which is a handy way to avoid putting a password in a script:
 
 .. code-block:: python
 
-    redmine = Redmine('http://demo.redmine.org', key='b244397884889a29137643be79c83f1d470c1e2fac')
+    redmine = Redmine('https://redmine.url', key='b244397884889a29137643be79c83f1d470c1e2fac')
 
 The API key can be found on users account page when logged in, on the right-hand pane of
 the default layout.
@@ -61,20 +73,9 @@ when using the API with a regular user account.
 
 .. code-block:: python
 
-    redmine = Redmine('http://demo.redmine.org', impersonate='jsmith')
+    redmine = Redmine('https://redmine.url', impersonate='jsmith')
 
 If the login specified does not exist or is not active, you will get an exception.
-
-Version
-+++++++
-
-There are a lot of different Redmine versions out there and different versions support different
-resources and features. To be sure that everything will work as expected you need to tell Python
-Redmine what version of Redmine do you use:
-
-.. code-block:: python
-
-    redmine = Redmine('http://demo.redmine.org', version='2.3.3')
 
 DateTime Formats
 ++++++++++++++++
@@ -97,11 +98,11 @@ date/datetime objects when setting resource attributes or in ResourceManager met
 
 If the conversion doesn't work for you and you receive strings instead of objects, you have a
 different datetime formatting than default. To make the conversion work you have to tell Redmine
-object what datetime formatting do you use, e.g. if the string returned is ``31.12.2013T13:27:47Z``:
+object what datetime formatting you're using, e.g. if the string returned is ``31.12.2013T13:27:47Z``:
 
 .. code-block:: python
 
-    redmine = Redmine('http://demo.redmine.org', date_format='%d.%m.%Y', datetime_format='%d.%m.%YT%H:%M:%SZ')
+    redmine = Redmine('https://redmine.url', date_format='%d.%m.%Y', datetime_format='%d.%m.%YT%H:%M:%SZ')
 
 Exception Control
 +++++++++++++++++
@@ -150,7 +151,7 @@ Full list of available connection options can be found in the Requests
     .. code-block:: python
 
         # settings.py
-        REDMINE_URL = 'http://demo.redmine.org'
+        REDMINE_URL = 'https://redmine.urlg'
         REDMINE_KEY = 'b244397884889a29137643be79c83f1d470c1e2fac'
 
         # somewhere in the code
