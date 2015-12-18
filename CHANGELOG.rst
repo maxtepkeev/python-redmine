@@ -5,6 +5,8 @@ Changelog
 ++++++++++++++++++
 
 - Changed: ``_Resource`` class renamed to ``Resource``.
+- Changed: ``Resource.translate_params()`` removed in favor of ``Resource.translations`` dict.
+- Changed: ``redmine.utilities.is_string`` function removed.
 
 1.5.0 (2015-11-26)
 ++++++++++++++++++
