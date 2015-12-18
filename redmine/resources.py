@@ -124,12 +124,13 @@ class Resource(object):
 
     def __init__(self, manager, attributes):
         """Accepts manager instance object and resource attributes dict"""
+        relations_includes = self._relations + self._includes
+
         self.manager = manager
-        self._attributes = dict((include, None) for include in self._includes)
-        self._attributes.update(dict((relation, None) for relation in self._relations))
+        self._attributes = dict((item, None) for item in relations_includes)
         self._attributes.update(attributes)
-        self._create_readonly += self._relations + self._includes
-        self._update_readonly += self._relations + self._includes
+        self._create_readonly += relations_includes
+        self._update_readonly += relations_includes
         self._changes = {}
 
         if self._relations_name is None:
