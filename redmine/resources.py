@@ -95,7 +95,7 @@ _RESOURCE_MULTIPLE_ATTR_ID_MAP = {
 }
 
 
-class _Resource(object):
+class Resource(object):
     """Implementation of Redmine resource"""
     redmine_version = None
     requirements = ()
@@ -197,7 +197,7 @@ class _Resource(object):
     def __setattr__(self, item, value):
         """Sets the requested attribute"""
         if item in self._members or item.startswith('_'):
-            super(_Resource, self).__setattr__(item, value)
+            super(Resource, self).__setattr__(item, value)
         elif item in self._create_readonly and self.is_new():
             raise ReadonlyAttrError
         elif item in self._update_readonly and not self.is_new():
@@ -317,7 +317,7 @@ class _Resource(object):
         )
 
 
-class Project(_Resource):
+class Project(Resource):
     redmine_version = '1.0'
     container_all = 'projects'
     container_one = 'project'
@@ -342,8 +342,8 @@ class Project(_Resource):
         'deals',
         'deal_categories',
     )
-    _unconvertible = _Resource._unconvertible + ('identifier', 'status')
-    _update_readonly = _Resource._update_readonly + ('identifier',)
+    _unconvertible = Resource._unconvertible + ('identifier', 'status')
+    _update_readonly = Resource._update_readonly + ('identifier',)
 
     def __getattr__(self, item):
         if item == 'parent' and item in self._attributes:
@@ -357,7 +357,7 @@ class Project(_Resource):
         return value
 
 
-class Issue(_Resource):
+class Issue(Resource):
     redmine_version = '1.0'
     container_all = 'issues'
     container_one = 'issue'
@@ -375,8 +375,8 @@ class Issue(_Resource):
 
     _includes = ('children', 'attachments', 'relations', 'changesets', 'journals', 'watchers')
     _relations = ('relations', 'time_entries')
-    _unconvertible = _Resource._unconvertible + ('subject', 'notes')
-    _create_readonly = _Resource._create_readonly + ('spent_hours',)
+    _unconvertible = Resource._unconvertible + ('subject', 'notes')
+    _create_readonly = Resource._create_readonly + ('spent_hours',)
     _update_readonly = _create_readonly
 
     class Watcher:
@@ -436,7 +436,7 @@ class Issue(_Resource):
             )
 
 
-class TimeEntry(_Resource):
+class TimeEntry(Resource):
     redmine_version = '1.1'
     container_all = 'time_entries'
     container_one = 'time_entry'
@@ -466,7 +466,7 @@ class TimeEntry(_Resource):
         )
 
 
-class Enumeration(_Resource):
+class Enumeration(Resource):
     redmine_version = '2.2'
     container_filter = '{resource}'
     query_filter = '/enumerations/{resource}.json'
@@ -476,7 +476,7 @@ class Enumeration(_Resource):
         return '{0}/enumerations/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
 
 
-class Attachment(_Resource):
+class Attachment(Resource):
     redmine_version = '1.3'
     container_one = 'attachment'
     query_one = '/attachments/{0}.json'
@@ -506,7 +506,7 @@ class Attachment(_Resource):
             )
 
 
-class IssueJournal(_Resource):
+class IssueJournal(Resource):
     redmine_version = '1.0'
     _unconvertible = ('notes',)
 
@@ -521,7 +521,7 @@ class IssueJournal(_Resource):
         )
 
 
-class WikiPage(_Resource):
+class WikiPage(Resource):
     redmine_version = '2.2'
     container_filter = 'wiki_pages'
     container_one = 'wiki_page'
@@ -534,8 +534,8 @@ class WikiPage(_Resource):
     query_delete = '/projects/{project_id}/wiki/{0}.json'
 
     _includes = ('attachments',)
-    _unconvertible = _Resource._unconvertible + ('title', 'text')
-    _create_readonly = _Resource._create_readonly + ('version',)
+    _unconvertible = Resource._unconvertible + ('title', 'text')
+    _create_readonly = Resource._create_readonly + ('version',)
     _update_readonly = _create_readonly
 
     def refresh(self, **params):
@@ -585,7 +585,7 @@ class WikiPage(_Resource):
         )
 
 
-class ProjectMembership(_Resource):
+class ProjectMembership(Resource):
     redmine_version = '1.4'
     container_filter = 'memberships'
     container_one = 'membership'
@@ -597,7 +597,7 @@ class ProjectMembership(_Resource):
     query_update = '/memberships/{0}.json'
     query_delete = '/memberships/{0}.json'
 
-    _create_readonly = _Resource._create_readonly + ('user', 'roles')
+    _create_readonly = Resource._create_readonly + ('user', 'roles')
     _update_readonly = _create_readonly
 
     def __str__(self):
@@ -611,7 +611,7 @@ class ProjectMembership(_Resource):
         )
 
 
-class IssueCategory(_Resource):
+class IssueCategory(Resource):
     redmine_version = '1.3'
     container_filter = 'issue_categories'
     container_one = 'issue_category'
@@ -624,7 +624,7 @@ class IssueCategory(_Resource):
     query_delete = '/issue_categories/{0}.json'
 
 
-class IssueRelation(_Resource):
+class IssueRelation(Resource):
     redmine_version = '1.3'
     container_filter = 'relations'
     container_one = 'relation'
@@ -645,7 +645,7 @@ class IssueRelation(_Resource):
         )
 
 
-class Version(_Resource):
+class Version(Resource):
     redmine_version = '1.3'
     container_filter = 'versions'
     container_one = 'version'
@@ -660,7 +660,7 @@ class Version(_Resource):
     _unconvertible = ('status',)
 
 
-class User(_Resource):
+class User(Resource):
     redmine_version = '1.1'
     container_all = 'users'
     container_one = 'user'
@@ -678,7 +678,7 @@ class User(_Resource):
     _relations = ('issues', 'time_entries', 'contacts', 'deals')
     _relations_name = 'assigned_to'
     _unconvertible = ('status',)
-    _create_readonly = _Resource._create_readonly + ('api_key', 'last_login_on')
+    _create_readonly = Resource._create_readonly + ('api_key', 'last_login_on')
     _update_readonly = _create_readonly
 
     def __getattr__(self, item):
@@ -709,7 +709,7 @@ class User(_Resource):
             )
 
 
-class Group(_Resource):
+class Group(Resource):
     redmine_version = '2.1'
     container_all = 'groups'
     container_one = 'group'
@@ -746,7 +746,7 @@ class Group(_Resource):
         return super(Group, self).__getattr__(item)
 
 
-class Role(_Resource):
+class Role(Resource):
     redmine_version = '1.4'
     container_all = 'roles'
     container_one = 'role'
@@ -754,7 +754,7 @@ class Role(_Resource):
     query_one = '/roles/{0}.json'
 
 
-class News(_Resource):
+class News(Resource):
     redmine_version = '1.1'
     container_all = 'news'
     container_filter = 'news'
@@ -774,7 +774,7 @@ class News(_Resource):
         )
 
 
-class IssueStatus(_Resource):
+class IssueStatus(Resource):
     redmine_version = '1.3'
     container_all = 'issue_statuses'
     query_all = '/issue_statuses.json'
@@ -787,7 +787,7 @@ class IssueStatus(_Resource):
         return '{0}/issue_statuses/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
 
 
-class Tracker(_Resource):
+class Tracker(Resource):
     redmine_version = '1.3'
     container_all = 'trackers'
     query_all = '/trackers.json'
@@ -799,7 +799,7 @@ class Tracker(_Resource):
         return '{0}/trackers/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
 
 
-class Query(_Resource):
+class Query(Resource):
     redmine_version = '1.3'
     container_all = 'queries'
     query_all = '/queries.json'
@@ -813,7 +813,7 @@ class Query(_Resource):
         )
 
 
-class CustomField(_Resource):
+class CustomField(Resource):
     redmine_version = '2.4'
     container_all = 'custom_fields'
     query_all = '/custom_fields.json'
@@ -839,7 +839,7 @@ class CustomField(_Resource):
         return super(CustomField, self).__getattr__(item)
 
 
-class Note(_Resource):
+class Note(Resource):
     redmine_version = '2.1'
     requirements = (('CRM plugin', '3.2.4'),)
     container_one = 'note'
@@ -863,7 +863,7 @@ class Note(_Resource):
         )
 
 
-class Contact(_Resource):
+class Contact(Resource):
     redmine_version = '1.2.1'
     requirements = ('CRM plugin',)
     container_all = 'contacts'
@@ -885,7 +885,7 @@ class Contact(_Resource):
     }
 
     _includes = ('notes', 'contacts', 'deals', 'issues')
-    _unconvertible = _Resource._unconvertible + ('company', 'skype_name')
+    _unconvertible = Resource._unconvertible + ('company', 'skype_name')
 
     class Project:
         """A contact project implementation"""
@@ -963,7 +963,7 @@ class Contact(_Resource):
                 )
 
 
-class ContactTag(_Resource):
+class ContactTag(Resource):
     redmine_version = '2.3'
     requirements = (('CRM plugin', '3.4.0'),)
     container_all = 'tags'
@@ -974,7 +974,7 @@ class ContactTag(_Resource):
         return '{0}/contacts_tags/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
 
 
-class CrmQuery(_Resource):
+class CrmQuery(Resource):
     redmine_version = '2.3'
     requirements = (('CRM plugin', '3.3.0'),)
     container_filter = 'queries'
@@ -993,7 +993,7 @@ class CrmQuery(_Resource):
         )
 
 
-class Deal(_Resource):
+class Deal(Resource):
     redmine_version = '1.2.1'
     requirements = ('CRM plugin',)
     container_all = 'deals'
@@ -1034,7 +1034,7 @@ class Deal(_Resource):
             )
 
 
-class DealStatus(_Resource):
+class DealStatus(Resource):
     redmine_version = '2.3'
     requirements = (('CRM plugin', '3.3.0'),)
     container_all = 'deal_statuses'
@@ -1048,7 +1048,7 @@ class DealStatus(_Resource):
         return '{0}/deal_statuses/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
 
 
-class DealCategory(_Resource):
+class DealCategory(Resource):
     redmine_version = '2.3'
     requirements = (('CRM plugin', '3.3.0'),)
     container_filter = 'deal_categories'

@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+2.0.0 (2016-XX-XX)
+++++++++++++++++++
+
+- Changed: ``_Resource`` class renamed to ``Resource``.
+
 1.5.0 (2015-11-26)
 ++++++++++++++++++
 
