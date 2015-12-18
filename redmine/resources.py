@@ -348,7 +348,7 @@ class Project(Resource):
 
     def __getattr__(self, item):
         if item == 'parent' and item in self._attributes:
-            return ResourceManager(self.manager.redmine, 'Project').to_resource(self._attributes[item])
+            return ResourceManager(self.manager.redmine, self.__class__.__name__).to_resource(self._attributes[item])
 
         value = super(Project, self).__getattr__(item)
 
@@ -405,7 +405,7 @@ class Issue(Resource):
         elif item == 'watcher':
             return Issue.Watcher(self)
         elif item == 'parent' and item in self._attributes:
-            return ResourceManager(self.manager.redmine, 'Issue').to_resource(self._attributes[item])
+            return ResourceManager(self.manager.redmine, self.__class__.__name__).to_resource(self._attributes[item])
 
         return super(Issue, self).__getattr__(item)
 
@@ -558,7 +558,7 @@ class WikiPage(Resource):
 
     def __getattr__(self, item):
         if item == 'parent' and item in self._attributes:
-            manager = ResourceManager(self.manager.redmine, 'WikiPage')
+            manager = ResourceManager(self.manager.redmine, self.__class__.__name__)
             manager.params['project_id'] = self.manager.params.get('project_id', 0)
             return manager.to_resource(self._attributes[item])
 
@@ -1013,7 +1013,7 @@ class Deal(Resource):
 
     def __getattr__(self, item):
         if item in ('category', 'status') and item in self._attributes:
-            manager = ResourceManager(self.manager.redmine, 'Deal{0}'.format(item.capitalize()))
+            manager = ResourceManager(self.manager.redmine, self.__class__.__name__ + item.capitalize())
             return manager.to_resource(self._attributes[item])
 
         return super(Deal, self).__getattr__(item)
