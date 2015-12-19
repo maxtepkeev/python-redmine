@@ -5,13 +5,10 @@ from distutils.version import LooseVersion
 from .utilities import to_string
 from .managers import ResourceManager
 from .exceptions import (
-    ValidationError,
-    ForbiddenError,
     ResourceAttrError,
     ReadonlyAttrError,
     CustomFieldValueError,
     ResourceVersionMismatchError,
-    ResourceNotFoundError
 )
 
 # Resources which when accessed from some other
@@ -29,12 +26,6 @@ _RESOURCE_SET_MAP = {
     'journals': 'IssueJournal',
     'children': 'Issue',
     'roles': 'Role',
-    'issues': 'Issue',
-    'projects': 'Project',
-    'notes': 'Note',
-    'deals': 'Deal',
-    'contacts': 'Contact',
-    'related_contacts': 'Contact',
 }
 
 # Resources which when accessed from some other
@@ -51,7 +42,6 @@ _RESOURCE_MAP = {
     'activity': 'Enumeration',
     'category': 'IssueCategory',
     'fixed_version': 'Version',
-    'contact': 'Contact',
 }
 
 # Resources which when accessed from some other
@@ -65,9 +55,6 @@ _RESOURCE_RELATIONS_MAP = {
     'relations': 'IssueRelation',
     'time_entries': 'TimeEntry',
     'issues': 'Issue',
-    'contacts': 'Contact',
-    'deals': 'Deal',
-    'deal_categories': 'DealCategory',
 }
 
 # Resource attributes which when set should
@@ -83,8 +70,6 @@ _RESOURCE_SINGLE_ATTR_ID_MAP = {
     'parent_issue_id': 'parent',
     'issue_id': 'issue',
     'activity_id': 'activity',
-    'status_id': 'status',
-    'contact_id': 'contact',
 }
 
 # Resource attributes which when set should
@@ -339,9 +324,6 @@ class Project(Resource):
         'versions',
         'news',
         'issues',
-        'contacts',
-        'deals',
-        'deal_categories',
     )
     _unconvertible = Resource._unconvertible + ('identifier', 'status')
     _update_readonly = Resource._update_readonly + ('identifier',)
@@ -676,7 +658,7 @@ class User(Resource):
     query_delete = '/users/{0}.json'
 
     _includes = ('memberships', 'groups')
-    _relations = ('issues', 'time_entries', 'contacts', 'deals')
+    _relations = ('issues', 'time_entries')
     _relations_name = 'assigned_to'
     _unconvertible = ('status',)
     _create_readonly = Resource._create_readonly + ('api_key', 'last_login_on')
@@ -838,223 +820,3 @@ class CustomField(Resource):
             self._attributes[item] = [self._attributes[item]['tracker']]
 
         return super(CustomField, self).__getattr__(item)
-
-
-class Note(Resource):
-    redmine_version = '2.1'
-    requirements = (('CRM plugin', '3.2.4'),)
-    container_one = 'note'
-    query_one = '/notes/{0}.json'
-
-    def __getattr__(self, item):
-        if item == 'source' and item in self._attributes and self._attributes[item].get('type') in ('Deal', 'Contact'):
-            manager = ResourceManager(self.manager.redmine, self._attributes[item]['type'])
-            return manager.to_resource(self._attributes[item])
-
-        return super(Note, self).__getattr__(item)
-
-    def __str__(self):
-        return self.content
-
-    def __repr__(self):
-        return '<{0}.{1} #{2}>'.format(
-            self.__class__.__module__,
-            self.__class__.__name__,
-            self.id
-        )
-
-
-class Contact(Resource):
-    redmine_version = '1.2.1'
-    requirements = ('CRM plugin',)
-    container_all = 'contacts'
-    container_one = 'contact'
-    container_filter = 'contacts'
-    container_create = 'contact'
-    container_update = 'contact'
-    query_all = '/contacts.json'
-    query_one = '/contacts/{0}.json'
-    query_filter = '/contacts.json'
-    query_create = '/projects/{project_id}/contacts.json'
-    query_update = '/contacts/{0}.json'
-    query_delete = '/contacts/{0}.json'
-
-    translations = {
-        'tag_list': ('tag_list', lambda x: ','.join(x) if isinstance(x, (list, tuple)) else x),
-        'phones': ('phone', lambda x: ','.join(x)),
-        'emails': ('email', lambda x: ','.join(x)),
-    }
-
-    _includes = ('notes', 'contacts', 'deals', 'issues')
-    _unconvertible = Resource._unconvertible + ('company', 'skype_name')
-
-    class Project:
-        """A contact project implementation"""
-        def __init__(self, contact):
-            self._redmine = contact.manager.redmine
-            self._contact_id = contact.internal_id
-
-            if self._redmine.ver is not None and LooseVersion(str(self._redmine.ver)) < LooseVersion('2.3'):
-                raise ResourceVersionMismatchError
-
-        def add(self, project_id):
-            """Adds project to contact's project list"""
-            url = '{0}/contacts/{1}/projects.json'.format(self._redmine.url, self._contact_id)
-
-            try:
-                return self._redmine.request('post', url, data={'project': {'id': project_id}})
-            except ResourceNotFoundError:
-                raise ValidationError("Attempt to add contact to a project that doesn't exist")
-            except ForbiddenError:
-                raise ValidationError(
-                    'Attempt to add contact to a project that either has contacts module disabled or is read-only')
-
-        def remove(self, project_id):
-            """Removes project from contact's project list"""
-            url = '{0}/contacts/{1}/projects/{2}.json'.format(self._redmine.url, self._contact_id, project_id)
-
-            try:
-                return self._redmine.request('delete', url)
-            except ResourceNotFoundError:
-                raise ValidationError("Attempt to remove contact from a project that doesn't exist")
-            except ForbiddenError:
-                raise ValidationError(
-                    'Attempt to remove contact from a project that either has contacts module disabled or is read-only')
-
-    def __getattr__(self, item):
-        if item == 'project':
-            return Contact.Project(self)
-        elif item == 'phones':
-            return [p.get('number') if isinstance(p, dict) else p for p in self._attributes.get('phones', [])]
-        elif item == 'emails':
-            return [e.get('address') if isinstance(e, dict) else e for e in self._attributes.get('emails', [])]
-        elif item == 'avatar' and item in self._attributes:
-            manager = ResourceManager(self.manager.redmine, 'Attachment')
-            return manager.to_resource({'id': self._attributes[item].get('attachment_id', 0)})
-
-        return super(Contact, self).__getattr__(item)
-
-    def __str__(self):
-        try:
-            return super(Contact, self).__str__()
-        except ResourceAttrError:
-            if not getattr(self, 'last_name', False):
-                return to_string(self.first_name)
-            else:
-                return '{0} {1}'.format(to_string(self.first_name), to_string(self.last_name))
-
-    def __repr__(self):
-        try:
-            return super(Contact, self).__repr__()
-        except ResourceAttrError:
-            if not getattr(self, 'last_name', False):
-                return '<{0}.{1} #{2} "{3}">'.format(
-                    self.__class__.__module__,
-                    self.__class__.__name__,
-                    self.id,
-                    to_string(self.first_name),
-                )
-            else:
-                return '<{0}.{1} #{2} "{3} {4}">'.format(
-                    self.__class__.__module__,
-                    self.__class__.__name__,
-                    self.id,
-                    to_string(self.first_name),
-                    to_string(self.last_name)
-                )
-
-
-class ContactTag(Resource):
-    redmine_version = '2.3'
-    requirements = (('CRM plugin', '3.4.0'),)
-    container_all = 'tags'
-    query_all = '/contacts_tags.json'
-
-    @property
-    def url(self):
-        return '{0}/contacts_tags/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
-
-
-class CrmQuery(Resource):
-    redmine_version = '2.3'
-    requirements = (('CRM plugin', '3.3.0'),)
-    container_filter = 'queries'
-    query_filter = '/crm_queries.json?object_type={resource}'
-
-    _relations = ('deals',)
-    _relations_name = 'query'
-
-    @property
-    def url(self):
-        return '{0}/projects/{1}/{2}s?query_id={3}'.format(
-            self.manager.redmine.url,
-            self._attributes.get('project_id', 0),
-            self.manager.params.get('resource', ''),
-            self.internal_id
-        )
-
-
-class Deal(Resource):
-    redmine_version = '1.2.1'
-    requirements = ('CRM plugin',)
-    container_all = 'deals'
-    container_one = 'deal'
-    container_filter = 'deals'
-    container_create = 'deal'
-    container_update = 'deal'
-    query_all = '/deals.json'
-    query_one = '/deals/{0}.json'
-    query_filter = '/deals.json'
-    query_create = '/projects/{project_id}/deals.json'
-    query_update = '/deals/{0}.json'
-    query_delete = '/deals/{0}.json'
-
-    _includes = ('notes',)
-
-    def __getattr__(self, item):
-        if item in ('category', 'status') and item in self._attributes:
-            manager = ResourceManager(self.manager.redmine, self.__class__.__name__ + item.capitalize())
-            return manager.to_resource(self._attributes[item])
-
-        return super(Deal, self).__getattr__(item)
-
-    def __str__(self):
-        try:
-            return super(Deal, self).__str__()
-        except ResourceAttrError:
-            return str(self.id)
-
-    def __repr__(self):
-        try:
-            return super(Deal, self).__repr__()
-        except ResourceAttrError:
-            return '<{0}.{1} #{2}>'.format(
-                self.__class__.__module__,
-                self.__class__.__name__,
-                self.id
-            )
-
-
-class DealStatus(Resource):
-    redmine_version = '2.3'
-    requirements = (('CRM plugin', '3.3.0'),)
-    container_all = 'deal_statuses'
-    query_all = '/deal_statuses.json'
-
-    _relations = ('deals',)
-    _relations_name = 'status'
-
-    @property
-    def url(self):
-        return '{0}/deal_statuses/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
-
-
-class DealCategory(Resource):
-    redmine_version = '2.3'
-    requirements = (('CRM plugin', '3.3.0'),)
-    container_filter = 'deal_categories'
-    query_filter = '/projects/{project_id}/deal_categories.json'
-
-    @property
-    def url(self):
-        return '{0}/deal_categories/edit?id={1}'.format(self.manager.redmine.url, self.internal_id)
