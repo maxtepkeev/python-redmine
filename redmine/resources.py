@@ -86,11 +86,8 @@ class Resource(object):
     """
     redmine_version = None
     requirements = ()
-    container_all = None
+    container_many = None
     container_one = None
-    container_filter = None
-    container_create = None
-    container_update = None
     query_all = None
     query_one = None
     query_filter = None
@@ -350,10 +347,8 @@ class Resource(object):
 
 class Project(Resource):
     redmine_version = '1.0'
-    container_all = 'projects'
+    container_many = 'projects'
     container_one = 'project'
-    container_create = 'project'
-    container_update = 'project'
     query_all = '/projects.json'
     query_one = '/projects/{0}.json'
     query_create = '/projects.json'
@@ -387,11 +382,8 @@ class Project(Resource):
 
 class Issue(Resource):
     redmine_version = '1.0'
-    container_all = 'issues'
+    container_many = 'issues'
     container_one = 'issue'
-    container_filter = 'issues'
-    container_create = 'issue'
-    container_update = 'issue'
     query_all = '/issues.json'
     query_one = '/issues/{0}.json'
     query_filter = '/issues.json'
@@ -476,11 +468,8 @@ class Issue(Resource):
 
 class TimeEntry(Resource):
     redmine_version = '1.1'
-    container_all = 'time_entries'
+    container_many = 'time_entries'
     container_one = 'time_entry'
-    container_filter = 'time_entries'
-    container_create = 'time_entry'
-    container_update = 'time_entry'
     query_all = '/time_entries.json'
     query_one = '/time_entries/{0}.json'
     query_filter = '/time_entries.json'
@@ -506,7 +495,7 @@ class TimeEntry(Resource):
 
 class Enumeration(Resource):
     redmine_version = '2.2'
-    container_filter = '{resource}'
+    container_many = '{resource}'
     query_filter = '/enumerations/{resource}.json'
 
     @property
@@ -561,10 +550,8 @@ class IssueJournal(Resource):
 
 class WikiPage(Resource):
     redmine_version = '2.2'
-    container_filter = 'wiki_pages'
+    container_many = 'wiki_pages'
     container_one = 'wiki_page'
-    container_create = 'wiki_page'
-    container_update = 'wiki_page'
     query_filter = '/projects/{project_id}/wiki/index.json'
     query_one = '/projects/{project_id}/wiki/{0}.json'
     query_create = '/projects/{project_id}/wiki/{title}.json'
@@ -625,10 +612,8 @@ class WikiPage(Resource):
 
 class ProjectMembership(Resource):
     redmine_version = '1.4'
-    container_filter = 'memberships'
+    container_many = 'memberships'
     container_one = 'membership'
-    container_update = 'membership'
-    container_create = 'membership'
     query_filter = '/projects/{project_id}/memberships.json'
     query_one = '/memberships/{0}.json'
     query_create = '/projects/{project_id}/memberships.json'
@@ -651,10 +636,8 @@ class ProjectMembership(Resource):
 
 class IssueCategory(Resource):
     redmine_version = '1.3'
-    container_filter = 'issue_categories'
+    container_many = 'issue_categories'
     container_one = 'issue_category'
-    container_update = 'issue_category'
-    container_create = 'issue_category'
     query_filter = '/projects/{project_id}/issue_categories.json'
     query_one = '/issue_categories/{0}.json'
     query_create = '/projects/{project_id}/issue_categories.json'
@@ -664,9 +647,8 @@ class IssueCategory(Resource):
 
 class IssueRelation(Resource):
     redmine_version = '1.3'
-    container_filter = 'relations'
+    container_many = 'relations'
     container_one = 'relation'
-    container_create = 'relation'
     query_filter = '/issues/{issue_id}/relations.json'
     query_one = '/relations/{0}.json'
     query_create = '/issues/{issue_id}/relations.json'
@@ -685,10 +667,8 @@ class IssueRelation(Resource):
 
 class Version(Resource):
     redmine_version = '1.3'
-    container_filter = 'versions'
+    container_many = 'versions'
     container_one = 'version'
-    container_create = 'version'
-    container_update = 'version'
     query_filter = '/projects/{project_id}/versions.json'
     query_one = '/versions/{0}.json'
     query_create = '/projects/{project_id}/versions.json'
@@ -700,11 +680,8 @@ class Version(Resource):
 
 class User(Resource):
     redmine_version = '1.1'
-    container_all = 'users'
+    container_many = 'users'
     container_one = 'user'
-    container_filter = 'users'
-    container_create = 'user'
-    container_update = 'user'
     query_all = '/users.json'
     query_one = '/users/{0}.json'
     query_filter = '/users.json'
@@ -749,10 +726,8 @@ class User(Resource):
 
 class Group(Resource):
     redmine_version = '2.1'
-    container_all = 'groups'
+    container_many = 'groups'
     container_one = 'group'
-    container_create = 'group'
-    container_update = 'group'
     query_all = '/groups.json'
     query_one = '/groups/{0}.json'
     query_create = '/groups.json'
@@ -796,7 +771,7 @@ class Group(Resource):
 
 class Role(Resource):
     redmine_version = '1.4'
-    container_all = 'roles'
+    container_many = 'roles'
     container_one = 'role'
     query_all = '/roles.json'
     query_one = '/roles/{0}.json'
@@ -804,8 +779,7 @@ class Role(Resource):
 
 class News(Resource):
     redmine_version = '1.1'
-    container_all = 'news'
-    container_filter = 'news'
+    container_many = 'news'
     query_all = '/news.json'
     query_filter = '/news.json'
 
@@ -824,7 +798,7 @@ class News(Resource):
 
 class IssueStatus(Resource):
     redmine_version = '1.3'
-    container_all = 'issue_statuses'
+    container_many = 'issue_statuses'
     query_all = '/issue_statuses.json'
 
     _relations = ('issues',)
@@ -837,7 +811,7 @@ class IssueStatus(Resource):
 
 class Tracker(Resource):
     redmine_version = '1.3'
-    container_all = 'trackers'
+    container_many = 'trackers'
     query_all = '/trackers.json'
 
     _relations = ('issues',)
@@ -849,7 +823,7 @@ class Tracker(Resource):
 
 class Query(Resource):
     redmine_version = '1.3'
-    container_all = 'queries'
+    container_many = 'queries'
     query_all = '/queries.json'
 
     @property
@@ -863,7 +837,7 @@ class Query(Resource):
 
 class CustomField(Resource):
     redmine_version = '2.4'
-    container_all = 'custom_fields'
+    container_many = 'custom_fields'
     query_all = '/custom_fields.json'
 
     @property

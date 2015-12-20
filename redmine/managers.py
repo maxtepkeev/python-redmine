@@ -160,12 +160,12 @@ class ResourceManager(object):
 
         :param dict params: (optional). Parameters used for resources retrieval.
         """
-        if self.resource_class.query_all is None or self.resource_class.container_all is None:
+        if self.resource_class.query_all is None or self.resource_class.container_many is None:
             raise ResourceBadMethodError
 
         self.url = self.redmine.url + self.resource_class.query_all
         self.params = self.prepare_params(params)
-        self.container = self.resource_class.container_all
+        self.container = self.resource_class.container_many
         return ResourceSet(self)
 
     def filter(self, **filters):
@@ -174,7 +174,7 @@ class ResourceManager(object):
 
         :param dict filters: (optional). Filters used for resources retrieval.
         """
-        if self.resource_class.query_filter is None or self.resource_class.container_filter is None:
+        if self.resource_class.query_filter is None or self.resource_class.container_many is None:
             raise ResourceBadMethodError
 
         if not filters:
@@ -182,7 +182,7 @@ class ResourceManager(object):
 
         try:
             self.url = self.redmine.url + self.resource_class.query_filter.format(**filters)
-            self.container = self.resource_class.container_filter.format(**filters)
+            self.container = self.resource_class.container_many.format(**filters)
         except KeyError:
             raise ResourceFilterError
 
@@ -195,7 +195,7 @@ class ResourceManager(object):
 
         :param dict fields: (optional). Fields used for resource creation.
         """
-        if self.resource_class.query_create is None or self.resource_class.container_create is None:
+        if self.resource_class.query_create is None or self.resource_class.container_one is None:
             raise ResourceBadMethodError
 
         if not fields:
@@ -209,10 +209,10 @@ class ResourceManager(object):
             raise ValidationError('{0} field is required'.format(exception))
 
         self.container = self.resource_class.container_one
-        data = {self.resource_class.container_create: self.prepare_params(formatter.unused_kwargs)}
+        data = {self.resource_class.container_one: self.prepare_params(formatter.unused_kwargs)}
 
-        if 'uploads' in data[self.resource_class.container_create]:
-            data['attachments'] = data[self.resource_class.container_create].pop('uploads')
+        if 'uploads' in data[self.resource_class.container_one]:
+            data['attachments'] = data[self.resource_class.container_one].pop('uploads')
             for index, attachment in enumerate(data['attachments']):
                 data['attachments'][index]['token'] = self.redmine.upload(attachment.get('path', ''))
 
@@ -240,7 +240,7 @@ class ResourceManager(object):
         :type resource_id: int or str
         :param dict fields: (optional). Fields which will be updated for the resource.
         """
-        if self.resource_class.query_update is None or self.resource_class.container_update is None:
+        if self.resource_class.query_update is None or self.resource_class.container_one is None:
             raise ResourceBadMethodError
 
         if not fields:
@@ -260,10 +260,10 @@ class ResourceManager(object):
                 raise ValidationError('{0} argument is required'.format(exception))
 
         url = self.redmine.url + query_update
-        data = {self.resource_class.container_update: self.prepare_params(formatter.unused_kwargs)}
+        data = {self.resource_class.container_one: self.prepare_params(formatter.unused_kwargs)}
 
-        if 'uploads' in data[self.resource_class.container_update]:
-            data['attachments'] = data[self.resource_class.container_update].pop('uploads')
+        if 'uploads' in data[self.resource_class.container_one]:
+            data['attachments'] = data[self.resource_class.container_one].pop('uploads')
             for index, attachment in enumerate(data['attachments']):
                 data['attachments'][index]['token'] = self.redmine.upload(attachment.get('path', ''))
 
