@@ -25,8 +25,25 @@ from .exceptions import (
 
 
 class Redmine(object):
-    """An entry point for all requests"""
+    """
+    Entry point for all requests.
+    """
     def __init__(self, url, **kwargs):
+        """
+        :param str url: (required). Redmine location.
+        :param str key: (optional). API key used for authentication.
+        :param str version: (optional). Redmine version.
+        :param str username: (optional). Username used for authentication.
+        :param str password: (optional). Password used for authentication.
+        :param dict requests: (optional). Connection options.
+        :param str impersonate: (optional). Username to impersonate.
+        :param str date_format: (optional). Formatting directives for date format.
+        :param str datetime_format: (optional). Formatting directives for datetime format.
+        :param raise_attr_exception: (optional). Control over resource attribute access exception raising.
+        :type raise_attr_exception: bool or tuple
+        :param custom_resource_paths: (optional). Module paths which contain custom resources.
+        :type custom_resource_paths: list or tuple
+        """
         self.url = url.rstrip('/')
         self.key = kwargs.get('key', None)
         self.ver = kwargs.get('version', None)
@@ -39,17 +56,25 @@ class Redmine(object):
         self.raise_attr_exception = kwargs.get('raise_attr_exception', True)
         self.custom_resource_paths = kwargs.get('custom_resource_paths', None)
 
-    def __getattr__(self, resource):
-        """Returns either ResourceSet or Resource object depending on the method used on the ResourceManager"""
-        if resource.startswith('_'):
+    def __getattr__(self, resource_name):
+        """
+        Returns either ResourceSet or Resource object depending on the method used on the ResourceManager.
+
+        :param str resource_name: (required). Resource name.
+        """
+        if resource_name.startswith('_'):
             raise AttributeError
 
-        return ResourceManager(self, resource)
+        return ResourceManager(self, resource_name)
 
     def upload(self, filepath):
-        """Uploads file from filepath to Redmine and returns an assigned token"""
+        """
+        Uploads file from filepath to Redmine and returns an assigned token.
+
+        :param str filepath: (required). Path to the file that will be uploaded.
+        """
         if self.ver is not None and LooseVersion(str(self.ver)) < LooseVersion('1.4.0'):
-            raise VersionMismatchError('File upload')
+            raise VersionMismatchError('File uploading')
 
         try:
             with open(filepath, 'rb') as stream:
@@ -61,7 +86,13 @@ class Redmine(object):
         return response['upload']['token']
 
     def download(self, url, savepath=None, filename=None):
-        """Downloads file from Redmine and saves it to savepath or returns it as bytes"""
+        """
+        Downloads file from Redmine and saves it to savepath or returns it as bytes.
+
+        :param str url: (required). URL of the file that will be downloaded.
+        :param str savepath: (optional). Path where to save the file.
+        :param str filename: (optional). Name that will be used for the file.
+        """
         self.requests['stream'] = True   # We don't want to load the entire file into memory
         response = self.request('get', url, raw_response=True)
         self.requests['stream'] = False  # Return back this setting for all usual requests
@@ -92,11 +123,23 @@ class Redmine(object):
         return savepath
 
     def auth(self):
-        """Shortcut for the case if we just want to check if user provided valid auth credentials"""
+        """
+        Shortcut for the case if we just want to check if user provided valid auth credentials.
+        """
         return self.user.get('current')
 
     def request(self, method, url, headers=None, params=None, data=None, raw_response=False):
-        """Makes requests to Redmine and returns result in json format"""
+        """
+        Makes requests to Redmine and returns result.
+
+        :param str method: (required). HTTP method used for the request.
+        :param str url: (required). URL of the request.
+        :param dict headers: (optional). HTTP headers to send with the request.
+        :param dict params: (optional). Params to send in the query string.
+        :param data: (optional). Data to send in the body of the request.
+        :type data: dict, bytes or file-like object
+        :param bool raw_response: (optional). Whether to return raw or json encoded result.
+        """
         kwargs = dict(self.requests, **{
             'headers': headers or {},
             'params': params or {},

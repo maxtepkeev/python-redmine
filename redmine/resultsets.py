@@ -8,18 +8,30 @@ from .exceptions import (
 
 
 class ResourceSet(object):
-    """Represents a set of Redmine resources as objects"""
+    """
+    Represents a set of Redmine Resource objects.
+    """
     limit = 0
     offset = 0
     _total_count = -1
 
     def __init__(self, manager, resources=None):
-        """Accepts manager instance object, optionally can be prefilled with an iterable of resources"""
+        """
+        :param managers.ResourceManager manager: (required). ResourceManager instance object.
+        :param resources: (optional). Iterable of resources.
+        :type resources: list or tuple
+        """
         self.manager = manager
         self.resources = resources
 
     def get(self, resource_id, default=None):
-        """Returns a single item from a ResourceSet by resource id"""
+        """
+        Returns a single Resource from a ResourceSet by resource id.
+
+        :param resource_id: (required). Resource id.
+        :type resource_id: int or str
+        :param none default: (optional). What to return if Resource wasn't found.
+        """
         for resource in self:
             if resource_id == resource.internal_id:
                 return resource
@@ -27,7 +39,12 @@ class ResourceSet(object):
         return default
 
     def filter(self, resource_ids):
-        """Returns a ResourceSet with requested resource ids"""
+        """
+        Returns a ResourceSet with requested resource ids.
+
+        :param resource_ids: (required). Resource ids.
+        :type resource_ids: list or tuple
+        """
         if not isinstance(resource_ids, (tuple, list)):
             raise ResourceSetFilterParamError
 
@@ -40,7 +57,11 @@ class ResourceSet(object):
         return ResourceSet(self.manager, resources)
 
     def update(self, **fields):
-        """Updates fields of all resources in a ResourceSet with the given values"""
+        """
+        Updates fields of all resources in a ResourceSet with the given values.
+
+        :param dict fields: (optional). Fields in resources that will be updated.
+        """
         resources = []
 
         for resource in self:
@@ -53,19 +74,27 @@ class ResourceSet(object):
         return ResourceSet(self.manager, resources)
 
     def delete(self):
-        """Deletes all resources in a ResourceSet"""
+        """
+        Deletes all resources in a ResourceSet.
+        """
         for resource in self:
             self.manager.delete(resource.internal_id)
 
         return True
 
     def values(self, *fields):
-        """Returns ValuesResourceSet object which represents Resource as a dictionary"""
+        """
+        Returns ValuesResourceSet object which represents Resource as a dictionary.
+
+        :param list fields: (optional). Field names that each resource will contain.
+        """
         return ValuesResourceSet(self.manager, resources=self.resources, fields=fields)
 
     @property
     def total_count(self):
-        """Returns total count of available resources, this is known only after ResourceSet evaluation"""
+        """
+        Returns total count of available resources, this is known only after ResourceSet evaluation.
+        """
         if self._total_count == -1:
             if self.resources is None:
                 raise ResultSetTotalCountError
@@ -75,14 +104,18 @@ class ResourceSet(object):
         return self._total_count
 
     def _evaluate(self):
-        """Evaluates current ResourceSet object"""
+        """
+        Evaluates current ResourceSet object.
+        """
         self.resources, self._total_count = self.manager.retrieve(
             limit=self.manager.params.get('limit', self.limit),
             offset=self.manager.params.get('offset', self.offset)
         )
 
     def __getitem__(self, item):
-        """Sets limit and offset or returns a resource by requested index"""
+        """
+        Sets limit and offset or returns a Resource by requested index.
+        """
         if isinstance(item, slice):
             if item.stop is not None:
                 self.limit = item.stop
@@ -97,18 +130,24 @@ class ResourceSet(object):
         return self
 
     def __iter__(self):
-        """Returns requested resources in a lazy fashion"""
+        """
+        Returns requested resources in a lazy fashion.
+        """
         if self.resources is None:
             self._evaluate()
 
         return (self.manager.to_resource(resource) for resource in self.resources)
 
     def __len__(self):
-        """Allows len() to be called on an instance object"""
+        """
+        Allows len() to be called on a ResourceSet object.
+        """
         return sum(1 for _ in self)
 
     def __repr__(self):
-        """Official representation of ResourceSet object"""
+        """
+        Official representation of a ResourceSet object.
+        """
         return '<{0}.{1} object with {2} resources>'.format(
             self.__class__.__module__,
             self.__class__.__name__,
@@ -117,15 +156,28 @@ class ResourceSet(object):
 
 
 class ValuesResourceSet(ResourceSet):
-    """Represents a set of Redmine resources as dictionaries"""
+    """
+    Represents a set of Redmine resources as dictionaries.
+    """
     def __init__(self, manager, resources=None, fields=()):
-        """Accepts optional fields iterable which sets field names each resource will contain"""
+        """
+        :param managers.ResourceManager manager: (required). ResourceManager instance object.
+        :param resources: (optional). Iterable of resources.
+        :type resources: list or tuple
+        :param list fields: (optional). Field names that each resource will contain.
+        """
         super(ValuesResourceSet, self).__init__(manager, resources)
         self.fields = fields
         self.resource_internal_id = 'title' if self.manager.resource_class.__name__ == 'WikiPage' else 'id'
 
     def get(self, resource_id, default=None):
-        """Returns a single item from a ValuesResourceSet by resource id"""
+        """
+        Returns a single resource from a ValuesResourceSet by resource id.
+
+        :param resource_id: (required). Resource id.
+        :type resource_id: int or str
+        :param none default: (optional). What to return if resource wasn't found.
+        """
         for resource in self:
             if int(resource_id) == resource[self.resource_internal_id]:
                 return resource
@@ -133,7 +185,12 @@ class ValuesResourceSet(ResourceSet):
         return default
 
     def filter(self, resource_ids):
-        """Returns a ValuesResourceSet with requested resource ids"""
+        """
+        Returns a ValuesResourceSet with requested resource ids.
+
+        :param resource_ids: (required). Resource ids.
+        :type resource_ids: list or tuple
+        """
         if not isinstance(resource_ids, (tuple, list)):
             raise ResourceSetFilterParamError
 
@@ -146,7 +203,11 @@ class ValuesResourceSet(ResourceSet):
         return ValuesResourceSet(self.manager, resources=resources, fields=self.fields)
 
     def update(self, **fields):
-        """Updates fields of all resources in a ValuesResourceSet with the given values"""
+        """
+        Updates fields of all resources in a ValuesResourceSet with the given values.
+
+        :param dict fields: (optional). Fields in resources that will be updated.
+        """
         resources = []
 
         for resource in self:
@@ -159,14 +220,18 @@ class ValuesResourceSet(ResourceSet):
         return ValuesResourceSet(self.manager, resources=resources, fields=self.fields)
 
     def delete(self):
-        """Deletes all resources in a ValuesResourceSet"""
+        """
+        Deletes all resources in a ValuesResourceSet.
+        """
         for resource in self:
             self.manager.delete(resource[self.resource_internal_id])
 
         return True
 
     def __iter__(self):
-        """Returns requested resources in a lazy fashion"""
+        """
+        Returns requested resources in a lazy fashion.
+        """
         if self.resources is None:
             self._evaluate()
 

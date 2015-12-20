@@ -81,7 +81,9 @@ _RESOURCE_MULTIPLE_ATTR_ID_MAP = {
 
 
 class Resource(object):
-    """Implementation of Redmine resource"""
+    """
+    Implementation of Redmine resource.
+    """
     redmine_version = None
     requirements = ()
     container_all = None
@@ -108,7 +110,10 @@ class Resource(object):
     __length_hint__ = None  # fixes Python 2.6 list() call on resource object
 
     def __init__(self, manager, attributes):
-        """Accepts manager instance object and resource attributes dict"""
+        """
+        :param managers.ResourceManager manager: (required). ResourceManager instance object.
+        :param dict attributes: (required). Resource attributes.
+        """
         relations_includes = self._relations + self._includes
 
         self.manager = manager
@@ -122,15 +127,21 @@ class Resource(object):
             self._relations_name = self.__class__.__name__.lower()
 
     def __getitem__(self, item):
-        """Provides a dictionary-like access to resource attributes"""
+        """
+        Provides a dictionary-like access to Resource attributes.
+        """
         return getattr(self, item)
 
     def __setitem__(self, item, value):
-        """Provides a dictionary-like setter for resource attributes"""
+        """
+        Provides a dictionary-like setter for Resource attributes.
+        """
         return setattr(self, item, value)
 
     def __getattr__(self, item):
-        """Returns the requested attribute and makes a conversion if needed"""
+        """
+        Returns the requested attribute and makes a conversion if needed.
+        """
         if item.startswith('_'):
             raise AttributeError
 
@@ -181,7 +192,9 @@ class Resource(object):
             return self._action_if_attribute_absent()
 
     def __setattr__(self, item, value):
-        """Sets the requested attribute"""
+        """
+        Sets the requested attribute.
+        """
         if item in self._members or item.startswith('_'):
             super(Resource, self).__setattr__(item, value)
         elif item in self._create_readonly and self.is_new():
@@ -214,27 +227,41 @@ class Resource(object):
                 self._attributes[_RESOURCE_MULTIPLE_ATTR_ID_MAP[item]] = [{'id': member_id} for member_id in value]
 
     def refresh(self, **params):
-        """Reloads resource data from Redmine"""
+        """
+        Reloads resource data from Redmine.
+
+        :param dict params: (optional). Parameters used for resource retrieval.
+        """
         return self.manager.get(self.internal_id, **params)
 
     def pre_create(self):
-        """Tasks that should be done before creating the resource"""
+        """
+        Tasks that should be done before creating the Resource.
+        """
         pass
 
     def post_create(self):
-        """Tasks that should be done after creating the resource"""
+        """
+        Tasks that should be done after creating the Resource.
+        """
         pass
 
     def pre_update(self):
-        """Tasks that should be done before updating the resource"""
+        """
+        Tasks that should be done before updating the Resource.
+        """
         pass
 
     def post_update(self):
-        """Tasks that should be done after updating the resource"""
+        """
+        Tasks that should be done after updating the Resource.
+        """
         pass
 
     def save(self):
-        """Creates or updates a resource"""
+        """
+        Creates or updates a Resource.
+        """
         if not self.is_new():
             self.pre_update()
             self.manager.update(self.internal_id, **self._changes)
@@ -251,7 +278,9 @@ class Resource(object):
 
     @property
     def url(self):
-        """Returns full url to the resource for humans if there is one"""
+        """
+        Returns full URL to the Resource for humans if there is one.
+        """
         if self.query_one is not None:
             return self.manager.redmine.url + self.query_one.format(self.internal_id).replace('.json', '')
         else:
@@ -259,15 +288,21 @@ class Resource(object):
 
     @property
     def internal_id(self):
-        """Returns identifier of the resource for usage in internals of the library"""
+        """
+        Returns identifier of the Resource for usage in internals of the library.
+        """
         return self.id
 
     def is_new(self):
-        """Checks if resource was just created and not yet saved to Redmine or it is an existing resource"""
+        """
+        Checks if Resource was just created and not yet saved to Redmine or it is an existing Resource.
+        """
         return False if 'id' in self._attributes or 'created_on' in self._attributes else True
 
     def _action_if_attribute_absent(self):
-        """Whether we should raise an exception in case of attribute absence or just return None"""
+        """
+        Whether we should raise an exception in case of attribute absence or just return None.
+        """
         raise_attr_exception = self.manager.redmine.raise_attr_exception
 
         if isinstance(raise_attr_exception, bool) and raise_attr_exception:
@@ -278,23 +313,33 @@ class Resource(object):
         return None
 
     def __dir__(self):
-        """We need to show only real Redmine resource attributes on dir() call"""
+        """
+        Allows dir() to be called on a Resource object and shows Resource attributes.
+        """
         return list(self._attributes.keys())
 
     def __iter__(self):
-        """Provides a way to iterate through resource attributes and its values"""
+        """
+        Provides a way to iterate through Resource attributes and its values.
+        """
         return iter(self._attributes.items())
 
     def __int__(self):
-        """Integer representation of the Redmine resource object"""
+        """
+        Integer representation of a Resource object.
+        """
         return self.id
 
     def __str__(self):
-        """Informal representation of the Redmine resource object"""
+        """
+        Informal representation of a Resource object.
+        """
         return to_string(self.name)
 
     def __repr__(self):
-        """Official representation of the Redmine resource object"""
+        """
+        Official representation of a Resource object.
+        """
         return '<{0}.{1} #{2} "{3}">'.format(
             self.__class__.__module__,
             self.__class__.__name__,
@@ -363,7 +408,9 @@ class Issue(Resource):
     _update_readonly = _create_readonly
 
     class Watcher:
-        """An issue watcher implementation"""
+        """
+        An issue watcher implementation.
+        """
         def __init__(self, issue):
             self._redmine = issue.manager.redmine
             self._issue_id = issue.internal_id
@@ -372,12 +419,20 @@ class Issue(Resource):
                 raise ResourceVersionMismatchError
 
         def add(self, user_id):
-            """Adds user to issue watchers list"""
+            """
+            Adds user to issue watchers list.
+
+            :param int user_id: (required). User id.
+            """
             url = '{0}/issues/{1}/watchers.json'.format(self._redmine.url, self._issue_id)
             return self._redmine.request('post', url, data={'user_id': user_id})
 
         def remove(self, user_id):
-            """Removes user from issue watchers list"""
+            """
+            Removes user from issue watchers list.
+
+            :param int user_id: (required). User id.
+            """
             url = '{0}/issues/{1}/watchers/{2}.json'.format(self._redmine.url, self._issue_id, user_id)
             return self._redmine.request('delete', url)
 
@@ -707,18 +762,28 @@ class Group(Resource):
     _includes = ('memberships', 'users')
 
     class User:
-        """A group user implementation"""
+        """
+        A group user implementation.
+        """
         def __init__(self, group):
             self._redmine = group.manager.redmine
             self._group_id = group.internal_id
 
         def add(self, user_id):
-            """Adds user to a group"""
+            """
+            Adds user to a group.
+
+            :param int user_id: (required). User id.
+            """
             url = '{0}/groups/{1}/users.json'.format(self._redmine.url, self._group_id)
             return self._redmine.request('post', url, data={'user_id': user_id})
 
         def remove(self, user_id):
-            """Removes user from a group"""
+            """
+            Removes user from a group.
+
+            :param int user_id: (required). User id.
+            """
             url = '{0}/groups/{1}/users/{2}.json'.format(self._redmine.url, self._group_id, user_id)
             return self._redmine.request('delete', url)
 

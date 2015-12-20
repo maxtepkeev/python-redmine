@@ -18,13 +18,18 @@ from .exceptions import (
 
 
 class ResourceManager(object):
-    """Manages the behaviour of Redmine resources"""
+    """
+    Manages Redmine resource defined by the resource_name with the help of redmine instance object.
+    """
     url = ''
     params = {}
     container = None
 
     def __init__(self, redmine, resource_name):
-        """Accepts redmine instance object and tries to import the needed resource by resource name"""
+        """
+        :param redmine.Redmine redmine: (required). Redmine instance object.
+        :param str resource_name: (required). Resource name.
+        """
         resource_class = None
         resource_name = ''.join(word[0].upper() + word[1:] for word in resource_name.split('_'))
         resource_paths = tuple((redmine.custom_resource_paths or ())) + ('redmine.resources',)
@@ -46,7 +51,11 @@ class ResourceManager(object):
         self.resource_class = resource_class
 
     def retrieve(self, **params):
-        """A proxy for Redmine object request which does some extra work for resource retrieval"""
+        """
+        A proxy for redmine.Redmine.request() which does some extra work for resource retrieval.
+
+        :param dict params: (optional). Parameters used for resource retrieval.
+        """
         self.params.update(**params)
 
         results = []
@@ -103,19 +112,36 @@ class ResourceManager(object):
         return results, total_count
 
     def to_resource(self, resource):
-        """Converts a single resource dict from Redmine result set to resource object"""
+        """
+        Converts resource data to Resource object.
+
+        :param dict resource: (required). Resource data.
+        """
         return self.resource_class(self, resource)
 
     def to_resource_set(self, resources):
-        """Converts an iterable with resource dicts from Redmine result set to ResourceSet object"""
+        """
+        Converts an iterable with resources data to ResourceSet object.
+
+        :param resources: (required). Resource data.
+        :type resources: list or tuple
+        """
         return ResourceSet(self, resources)
 
     def new(self):
-        """Returns new empty resource"""
+        """
+        Returns new empty Resource object.
+        """
         return self.to_resource({})
 
     def get(self, resource_id, **params):
-        """Returns a Resource object directly by resource id (can be either integer id or string identifier)"""
+        """
+        Returns a Resource object from Redmine by resource id.
+
+        :param resource_id: (required). Resource id.
+        :type resource_id: int or str
+        :param dict params: (optional). Parameters used for resource retrieval.
+        """
         if self.resource_class.query_one is None or self.resource_class.container_one is None:
             raise ResourceBadMethodError
 
@@ -129,7 +155,11 @@ class ResourceManager(object):
         return self.resource_class(self, self.retrieve()[0])
 
     def all(self, **params):
-        """Returns a ResourceSet object with all Resource objects"""
+        """
+        Returns a ResourceSet object with all Resource objects.
+
+        :param dict params: (optional). Parameters used for resources retrieval.
+        """
         if self.resource_class.query_all is None or self.resource_class.container_all is None:
             raise ResourceBadMethodError
 
@@ -139,7 +169,11 @@ class ResourceManager(object):
         return ResourceSet(self)
 
     def filter(self, **filters):
-        """Returns a ResourceSet object with Resource objects filtered by a dict of filters"""
+        """
+        Returns a ResourceSet object with Resource objects filtered by a dict of filters.
+
+        :param dict filters: (optional). Filters used for resources retrieval.
+        """
         if self.resource_class.query_filter is None or self.resource_class.container_filter is None:
             raise ResourceBadMethodError
 
@@ -156,7 +190,11 @@ class ResourceManager(object):
         return ResourceSet(self)
 
     def create(self, **fields):
-        """Creates a new resource in Redmine database and returns resource object on success"""
+        """
+        Creates a new resource in Redmine and returns created Resource object on success.
+
+        :param dict fields: (optional). Fields used for resource creation.
+        """
         if self.resource_class.query_create is None or self.resource_class.container_create is None:
             raise ResourceBadMethodError
 
@@ -195,7 +233,13 @@ class ResourceManager(object):
         return resource
 
     def update(self, resource_id, **fields):
-        """Updates a Resource object by resource id (can be either integer id or string identifier)"""
+        """
+        Updates a Resource object by resource id.
+
+        :param resource_id: (required). Resource id.
+        :type resource_id: int or str
+        :param dict fields: (optional). Fields which will be updated for the resource.
+        """
         if self.resource_class.query_update is None or self.resource_class.container_update is None:
             raise ResourceBadMethodError
 
@@ -226,7 +270,13 @@ class ResourceManager(object):
         return self.redmine.request('put', url, data=data)
 
     def delete(self, resource_id, **params):
-        """Deletes a Resource object by resource id (can be either integer id or string identifier)"""
+        """
+        Deletes a Resource object by resource id.
+
+        :param resource_id: (required). Resource id.
+        :type resource_id: int or str
+        :param dict params: (optional). Parameters used for resource deletion.
+        """
         if self.resource_class.query_delete is None:
             raise ResourceBadMethodError
 
@@ -238,7 +288,11 @@ class ResourceManager(object):
         return self.redmine.request('delete', url, params=self.prepare_params(params))
 
     def prepare_params(self, params):
-        """Prepares params so Redmine could understand them correctly"""
+        """
+        Makes needed conversions to parameters so Redmine could understand them correctly.
+
+        :param dict params: (required). Parameters to process.
+        """
         for name, value in params.items():
             type_ = type(value)
             translation = self.resource_class.translations.get(name)
