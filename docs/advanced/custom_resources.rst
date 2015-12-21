@@ -61,11 +61,11 @@ the ``custom_resource_paths`` argument on Redmine object instantiation.
 Methods and Attributes
 ----------------------
 
-All existing resources are derived from a ``_Resource`` class which you usually won't inherit from
+All existing resources are derived from a ``Resource`` class which you usually won't inherit from
 directly unless you want to add support for a new resource which Python Redmine doesn't support.
 Below you will find methods and attributes which can be redefined in your custom resource:
 
-.. autoclass:: redmine.resources._Resource
-    :members: __init__, __getattr__, __setattr__, refresh, pre_create, post_create, pre_update, post_update, save, translate_params
+.. autoclass:: redmine.resources.Resource
+    :members: __init__, __getattr__, __setattr__, refresh, pre_create, post_create, pre_update, post_update, save, encode, decode, bulk_encode, bulk_decode
     :undoc-members:
     :private-members:

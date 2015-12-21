@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 
 from distutils.version import LooseVersion
 
@@ -46,7 +46,7 @@ _RESOURCE_MAP = {
 
 # Resources which when accessed from some other
 # resource should be requested from Redmine
-_RESOURCE_RELATIONS_MAP = {
+_RELATIONS_MAP = {
     'wiki_pages': 'WikiPage',
     'memberships': 'ProjectMembership',
     'issue_categories': 'IssueCategory',
@@ -59,7 +59,7 @@ _RESOURCE_RELATIONS_MAP = {
 
 # Resource attributes which when set should
 # also set another resource id to its value
-_RESOURCE_SINGLE_ATTR_ID_MAP = {
+_SINGLE_ATTR_ID_MAP = {
     'parent_id': 'parent',
     'project_id': 'project',
     'tracker_id': 'tracker',
@@ -74,7 +74,7 @@ _RESOURCE_SINGLE_ATTR_ID_MAP = {
 
 # Resource attributes which when set should
 # also set another resource ids to their value
-_RESOURCE_MULTIPLE_ATTR_ID_MAP = {
+_MULTIPLE_ATTR_ID_MAP = {
     'user_ids': 'users',
     'role_ids': 'roles',
 }
@@ -95,8 +95,6 @@ class Resource(object):
     query_update = None
     query_delete = None
 
-    translations = {}
-
     _includes = ()
     _relations = ()
     _relations_name = None
@@ -108,16 +106,15 @@ class Resource(object):
 
     def __init__(self, manager, attributes):
         """
-        :param managers.ResourceManager manager: (required). ResourceManager instance object.
+        :param managers.ResourceManager manager: (required). Manager instance object.
         :param dict attributes: (required). Resource attributes.
         """
         relations_includes = self._relations + self._includes
 
         self.manager = manager
-        self._attributes = dict((item, None) for item in relations_includes)
-        self._attributes.update(attributes)
         self._create_readonly += relations_includes
         self._update_readonly += relations_includes
+        self._attributes = self.bulk_encode(attributes)
         self._changes = {}
 
         if self._relations_name is None:
@@ -135,70 +132,49 @@ class Resource(object):
         """
         return setattr(self, item, value)
 
-    def __getattr__(self, item):
+    def __getattr__(self, attr):
         """
         Returns the requested attribute and makes a conversion if needed.
         """
-        if item.startswith('_'):
+        if attr.startswith('_'):
             raise AttributeError
 
-        if item in self._attributes:
-            # If item shouldn't be converted let's return it as it is
-            if item in self._unconvertible:
-                return self._attributes[item]
-
-            # If item should be a Resource object, let's convert it
-            elif item in _RESOURCE_MAP:
-                manager = ResourceManager(self.manager.redmine, _RESOURCE_MAP[item])
-                return manager.to_resource(self._attributes[item])
-
-            # If item should be a ResourceSet object, let's convert it
-            elif item in _RESOURCE_SET_MAP and self._attributes[item] is not None:
-                manager = ResourceManager(self.manager.redmine, _RESOURCE_SET_MAP[item])
-                return manager.to_resource_set(self._attributes[item])
-
-            # If item is a relation and should be requested from Redmine, let's do it
-            elif item in self._relations and self._attributes[item] is None:
-                filters = {'{0}_id'.format(self._relations_name): self.internal_id}
-                manager = ResourceManager(self.manager.redmine, _RESOURCE_RELATIONS_MAP[item])
-                self._attributes[item] = manager.filter(**filters)
-                return self._attributes[item]
-
-            # If item is an include and should be requested from Redmine, let's do it
-            elif item in self._includes and self._attributes[item] is None:
-                self._attributes[item] = self.refresh(include=item)._attributes[item] or []
-                return getattr(self, item)
-
         try:
-            # If the requested item is a date/datetime string
-            # we need to convert it to the appropriate object
-            possible_dt = str(self._attributes[item])
-
-            try:
-                return datetime.strptime(possible_dt, self.manager.redmine.datetime_format)
-            except ValueError:
-                return datetime.strptime(possible_dt, self.manager.redmine.date_format).date()
-        except ValueError:
-            return self._attributes[item]
+            return self._attributes[attr]
         except KeyError:
+            if attr in self._relations:
+                manager = ResourceManager(self.manager.redmine, _RELATIONS_MAP[attr])
+                self._attributes[attr] = manager.filter(**{'{0}_id'.format(self._relations_name): self.internal_id})
+                return self._attributes[attr]
+            elif attr in self._includes:
+                self._attributes[attr] = getattr(self.refresh(include=attr), attr)
+                return self._attributes[attr]
+
             if self.is_new():
-                if item in ('id', 'version'):
+                if attr in ('id', 'version'):
                     return 0
                 return ''
 
-            return self._action_if_attribute_absent()
+            raise_attr_exception = self.manager.redmine.raise_attr_exception
 
-    def __setattr__(self, item, value):
+            if isinstance(raise_attr_exception, bool) and raise_attr_exception:
+                raise ResourceAttrError
+            elif isinstance(raise_attr_exception, (list, tuple)) and self.__class__.__name__ in raise_attr_exception:
+                raise ResourceAttrError
+
+            return None
+
+    def __setattr__(self, attr, value):
         """
         Sets the requested attribute.
         """
-        if item in self._members or item.startswith('_'):
-            super(Resource, self).__setattr__(item, value)
-        elif item in self._create_readonly and self.is_new():
+        if attr in self._members or attr.startswith('_'):
+            super(Resource, self).__setattr__(attr, value)
+        elif attr in self._create_readonly and self.is_new():
             raise ReadonlyAttrError
-        elif item in self._update_readonly and not self.is_new():
+        elif attr in self._update_readonly and not self.is_new():
             raise ReadonlyAttrError
-        elif item == 'custom_fields':
+        elif attr == 'custom_fields':
             for org_index, org_field in enumerate(self._attributes.setdefault('custom_fields', [])):
                 if 'value' not in org_field:
                     self._attributes['custom_fields'][org_index]['value'] = '0'
@@ -206,22 +182,78 @@ class Resource(object):
                 try:
                     for new_index, new_field in enumerate(value):
                         if org_field['id'] == new_field['id']:
-                            self._attributes['custom_fields'][org_index]['value'] = self.manager.prepare_params(
+                            self._attributes['custom_fields'][org_index]['value'] = self.bulk_decode(
                                 value.pop(new_index))['value']
                 except (TypeError, KeyError):
                     raise CustomFieldValueError
 
             self._attributes['custom_fields'].extend(value)
-            self._changes[item] = self._attributes['custom_fields']
+            self._changes[attr] = self._attributes['custom_fields']
         else:
-            prep_item, prep_value = self.manager.prepare_params({item: value}).popitem()
-            self._changes[prep_item] = prep_value
-            self._attributes[item] = value
+            self._changes.update(self.bulk_decode({attr: value}))
 
-            if item in _RESOURCE_SINGLE_ATTR_ID_MAP:
-                self._attributes[_RESOURCE_SINGLE_ATTR_ID_MAP[item]] = {'id': value}
-            elif item in _RESOURCE_MULTIPLE_ATTR_ID_MAP:
-                self._attributes[_RESOURCE_MULTIPLE_ATTR_ID_MAP[item]] = [{'id': member_id} for member_id in value]
+            if attr in _SINGLE_ATTR_ID_MAP:
+                self._attributes.update(self.bulk_encode({_SINGLE_ATTR_ID_MAP[attr]: {'id': value}}))
+            elif attr in _MULTIPLE_ATTR_ID_MAP:
+                self._attributes.update(self.bulk_encode({_MULTIPLE_ATTR_ID_MAP[attr]: [{'id': mid} for mid in value]}))
+            else:
+                self._attributes[attr] = value
+
+    def decode(self, attr, value):
+        """
+        Decodes a single attr, value pair from Python representation to the needed Redmine representation.
+
+        :param str attr: (required). Attribute name.
+        :param any value: (required). Attribute value.
+        """
+        type_ = type(value)
+
+        if type_ is date:
+            return attr, value.strftime(self.manager.redmine.date_format)
+        elif type_ is datetime:
+            return attr, value.strftime(self.manager.redmine.datetime_format)
+
+        return attr, value
+
+    def encode(self, attr, value):
+        """
+        Encodes a single attr, value pair retrieved from Redmine to the needed Python representation.
+
+        :param str attr: (required). Attribute name.
+        :param any value: (required). Attribute value.
+        """
+        if attr in self._unconvertible:
+            return attr, value
+        elif attr in _RESOURCE_MAP:
+            return attr, ResourceManager(self.manager.redmine, _RESOURCE_MAP[attr]).to_resource(value)
+        elif attr in _RESOURCE_SET_MAP:
+            return attr, ResourceManager(self.manager.redmine, _RESOURCE_SET_MAP[attr]).to_resource_set(value)
+        elif attr == 'parent':
+            return attr, ResourceManager(self.manager.redmine, self.__class__.__name__).to_resource(value)
+
+        try:
+            try:
+                return attr, datetime.strptime(value, self.manager.redmine.datetime_format)
+            except (TypeError, ValueError):
+                return attr, datetime.strptime(value, self.manager.redmine.date_format).date()
+        except (TypeError, ValueError):
+            return attr, value
+
+    def bulk_decode(self, attrs):
+        """
+        Decodes resource data from Python representation to the needed Redmine representation.
+
+        :param dict attrs: (required). Attributes in the form of key, value pairs.
+        """
+        return dict(self.decode(attr, attrs[attr]) for attr in attrs)
+
+    def bulk_encode(self, attrs):
+        """
+        Encodes resource data retrieved from Redmine to the needed Python representation.
+
+        :param dict attrs: (required). Attributes in the form of key, value pairs.
+        """
+        return dict(self.encode(attr, attrs[attr]) for attr in attrs)
 
     def refresh(self, **params):
         """
@@ -296,19 +328,6 @@ class Resource(object):
         """
         return False if 'id' in self._attributes or 'created_on' in self._attributes else True
 
-    def _action_if_attribute_absent(self):
-        """
-        Whether we should raise an exception in case of attribute absence or just return None.
-        """
-        raise_attr_exception = self.manager.redmine.raise_attr_exception
-
-        if isinstance(raise_attr_exception, bool) and raise_attr_exception:
-            raise ResourceAttrError
-        elif isinstance(raise_attr_exception, (list, tuple)) and self.__class__.__name__ in raise_attr_exception:
-            raise ResourceAttrError
-
-        return None
-
     def __dir__(self):
         """
         Allows dir() to be called on a Resource object and shows Resource attributes.
@@ -368,16 +387,11 @@ class Project(Resource):
     _unconvertible = Resource._unconvertible + ('identifier', 'status')
     _update_readonly = Resource._update_readonly + ('identifier',)
 
-    def __getattr__(self, item):
-        if item == 'parent' and item in self._attributes:
-            return ResourceManager(self.manager.redmine, self.__class__.__name__).to_resource(self._attributes[item])
+    def encode(self, attr, value):
+        if attr == 'enabled_modules':
+            return attr, [module['name'] for module in value]
 
-        value = super(Project, self).__getattr__(item)
-
-        if item == 'enabled_modules':
-            value = [module.get('name') if isinstance(module, dict) else module for module in value]
-
-        return value
+        return super(Project, self).encode(attr, value)
 
 
 class Issue(Resource):
@@ -390,8 +404,6 @@ class Issue(Resource):
     query_create = '/projects/{project_id}/issues.json'
     query_update = '/issues/{0}.json'
     query_delete = '/issues/{0}.json'
-
-    translations = {'version_id': ('fixed_version_id', lambda x: x)}
 
     _includes = ('children', 'attachments', 'relations', 'changesets', 'journals', 'watchers')
     _relations = ('relations', 'time_entries')
@@ -428,21 +440,25 @@ class Issue(Resource):
             url = '{0}/issues/{1}/watchers/{2}.json'.format(self._redmine.url, self._issue_id, user_id)
             return self._redmine.request('delete', url)
 
-    def __getattr__(self, item):
-        if item == 'version':
+    def __getattr__(self, attr):
+        if attr == 'version':
             return super(Issue, self).__getattr__('fixed_version')
-        elif item == 'watcher':
+        elif attr == 'watcher':
             return Issue.Watcher(self)
-        elif item == 'parent' and item in self._attributes:
-            return ResourceManager(self.manager.redmine, self.__class__.__name__).to_resource(self._attributes[item])
 
-        return super(Issue, self).__getattr__(item)
+        return super(Issue, self).__getattr__(attr)
 
-    def __setattr__(self, item, value):
-        if item == 'version_id':
+    def __setattr__(self, attr, value):
+        if attr == 'version_id':
             super(Issue, self).__setattr__('fixed_version_id', value)
         else:
-            super(Issue, self).__setattr__(item, value)
+            super(Issue, self).__setattr__(attr, value)
+
+    def decode(self, attr, value):
+        if attr == 'version_id':
+            return 'fixed_version_id', value
+
+        return super(Issue, self).decode(attr, value)
 
     def __str__(self):
         try:
@@ -477,10 +493,13 @@ class TimeEntry(Resource):
     query_update = '/time_entries/{0}.json'
     query_delete = '/time_entries/{0}.json'
 
-    translations = {
-        'from_date': ('from', lambda x: x),
-        'to_date': ('to', lambda x: x),
-    }
+    def decode(self, attr, value):
+        if attr == 'from_date':
+            attr = 'from'
+        elif attr == 'to_date':
+            attr = 'to'
+
+        return super(TimeEntry, self).decode(attr, value)
 
     def __str__(self):
         return str(self.id)
@@ -563,6 +582,14 @@ class WikiPage(Resource):
     _create_readonly = Resource._create_readonly + ('version',)
     _update_readonly = _create_readonly
 
+    def encode(self, attr, value):
+        if attr == 'parent':
+            manager = ResourceManager(self.manager.redmine, self.__class__.__name__)
+            manager.params['project_id'] = self.manager.params.get('project_id', 0)
+            return attr, manager.to_resource(value)
+
+        return super(WikiPage, self).encode(attr, value)
+
     def refresh(self, **params):
         return super(WikiPage, self).refresh(**dict(params, project_id=self.manager.params.get('project_id', 0)))
 
@@ -580,21 +607,13 @@ class WikiPage(Resource):
     def internal_id(self):
         return to_string(self.title)
 
-    def __getattr__(self, item):
-        if item == 'parent' and item in self._attributes:
-            manager = ResourceManager(self.manager.redmine, self.__class__.__name__)
-            manager.params['project_id'] = self.manager.params.get('project_id', 0)
-            return manager.to_resource(self._attributes[item])
-
+    def __getattr__(self, attr):
         # If a text attribute of a resource is missing, we should
         # refresh a resource automatically for user's convenience
-        try:
-            return super(WikiPage, self).__getattr__(item)
-        except ResourceAttrError:
-            if 'text' not in self._attributes:
-                self._attributes = self.refresh()._attributes
+        if attr == 'text' and attr not in self._attributes:
+            self._attributes[attr] = getattr(self.refresh(), attr)
 
-            return super(WikiPage, self).__getattr__(item)
+        return super(WikiPage, self).__getattr__(attr)
 
     def __int__(self):
         return self.version
@@ -696,14 +715,14 @@ class User(Resource):
     _create_readonly = Resource._create_readonly + ('api_key', 'last_login_on')
     _update_readonly = _create_readonly
 
-    def __getattr__(self, item):
-        if item == 'time_entries':
+    def __getattr__(self, attr):
+        if attr == 'time_entries' and attr not in self._attributes:
             self._relations_name = 'user'
-            value = super(User, self).__getattr__(item)
+            value = super(User, self).__getattr__(attr)
             self._relations_name = 'assigned_to'
             return value
 
-        return super(User, self).__getattr__(item)
+        return super(User, self).__getattr__(attr)
 
     def __str__(self):
         try:
@@ -762,11 +781,11 @@ class Group(Resource):
             url = '{0}/groups/{1}/users/{2}.json'.format(self._redmine.url, self._group_id, user_id)
             return self._redmine.request('delete', url)
 
-    def __getattr__(self, item):
-        if item == 'user':
+    def __getattr__(self, attr):
+        if attr == 'user':
             return Group.User(self)
 
-        return super(Group, self).__getattr__(item)
+        return super(Group, self).__getattr__(attr)
 
 
 class Role(Resource):
@@ -840,22 +859,25 @@ class CustomField(Resource):
     container_many = 'custom_fields'
     query_all = '/custom_fields.json'
 
-    @property
-    def url(self):
-        return '{0}/custom_fields/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
-
-    def __getattr__(self, item):
+    def __getattr__(self, attr):
         # If custom field was created after the creation of the resource,
         # i.e. project, and it's not used in the resource, there will be
         # no value attribute defined, that is why we need to return 0 or
         # we'll get an exception
-        if item == 'value' and item not in self._attributes:
+        if attr == 'value' and attr not in self._attributes:
             return 0
 
+        return super(CustomField, self).__getattr__(attr)
+
+    def encode(self, attr, value):
         # Redmine <2.5.2 returns only single tracker instead of a list of
         # all available trackers, see http://www.redmine.org/issues/16739
         # for details
-        elif item == 'trackers' and 'tracker' in self._attributes[item]:
-            self._attributes[item] = [self._attributes[item]['tracker']]
+        if attr == 'trackers' and 'tracker' in value:
+            value = [value['tracker']]
 
-        return super(CustomField, self).__getattr__(item)
+        return super(CustomField, self).encode(attr, value)
+
+    @property
+    def url(self):
+        return '{0}/custom_fields/{1}/edit'.format(self.manager.redmine.url, self.internal_id)

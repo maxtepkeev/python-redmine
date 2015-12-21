@@ -1,5 +1,3 @@
-import datetime
-
 from distutils.version import LooseVersion
 
 from .resultsets import ResourceSet
@@ -150,7 +148,7 @@ class ResourceManager(object):
         except KeyError as exception:
             raise ValidationError('{0} argument is required'.format(exception))
 
-        self.params = self.prepare_params(params)
+        self.params = self.new().bulk_decode(params)
         self.container = self.resource_class.container_one
         return self.resource_class(self, self.retrieve()[0])
 
@@ -164,7 +162,7 @@ class ResourceManager(object):
             raise ResourceBadMethodError
 
         self.url = self.redmine.url + self.resource_class.query_all
-        self.params = self.prepare_params(params)
+        self.params = self.new().bulk_decode(params)
         self.container = self.resource_class.container_many
         return ResourceSet(self)
 
@@ -186,7 +184,7 @@ class ResourceManager(object):
         except KeyError:
             raise ResourceFilterError
 
-        self.params = self.prepare_params(filters)
+        self.params = self.new().bulk_decode(filters)
         return ResourceSet(self)
 
     def create(self, **fields):
@@ -209,7 +207,7 @@ class ResourceManager(object):
             raise ValidationError('{0} field is required'.format(exception))
 
         self.container = self.resource_class.container_one
-        data = {self.resource_class.container_one: self.prepare_params(formatter.unused_kwargs)}
+        data = {self.resource_class.container_one: self.new().bulk_decode(formatter.unused_kwargs)}
 
         if 'uploads' in data[self.resource_class.container_one]:
             data['attachments'] = data[self.resource_class.container_one].pop('uploads')
@@ -260,7 +258,7 @@ class ResourceManager(object):
                 raise ValidationError('{0} argument is required'.format(exception))
 
         url = self.redmine.url + query_update
-        data = {self.resource_class.container_one: self.prepare_params(formatter.unused_kwargs)}
+        data = {self.resource_class.container_one: self.new().bulk_decode(formatter.unused_kwargs)}
 
         if 'uploads' in data[self.resource_class.container_one]:
             data['attachments'] = data[self.resource_class.container_one].pop('uploads')
@@ -285,24 +283,4 @@ class ResourceManager(object):
         except KeyError as exception:
             raise ValidationError('{0} argument is required'.format(exception))
 
-        return self.redmine.request('delete', url, params=self.prepare_params(params))
-
-    def prepare_params(self, params):
-        """
-        Makes needed conversions to parameters so Redmine could understand them correctly.
-
-        :param dict params: (required). Parameters to process.
-        """
-        for name, value in params.items():
-            type_ = type(value)
-            translation = self.resource_class.translations.get(name)
-
-            if type_ is datetime.date:
-                params[name] = value.strftime(self.redmine.date_format)
-            elif type_ is datetime.datetime:
-                params[name] = value.strftime(self.redmine.datetime_format)
-
-            if translation is not None:
-                params[translation[0]] = translation[1](params.pop(name))
-
-        return params
+        return self.redmine.request('delete', url, params=self.new().bulk_decode(params))

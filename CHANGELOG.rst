@@ -4,9 +4,14 @@ Changelog
 2.0.0 (2016-XX-XX)
 ++++++++++++++++++
 
+- Added: ``bulk_decode()``, ``bulk_encode()``, ``decode()`` and ``encode()`` methods on ``Resource``
+  object which are used to translate attributes of the resource to/from Python/Redmine.
 - Changed: ``_Resource`` class renamed to ``Resource``.
-- Changed: ``Resource.translate_params()`` removed in favor of ``Resource.translations`` dict.
-- Changed: ``redmine.utilities.is_string`` function removed.
+- Changed: ``Resource.translate_params()`` and ``ResourceManager.prepare_params()`` removed in favor of
+  ``Resource.bulk_decode()``.
+- Changed: ``container_filter``, ``container_create`` and ``container_update`` attributes on ``Resource``
+  object are removed in favor of ``container_many`` attribute.
+- Removed: ``redmine.utilities.is_string`` function.
 
 1.5.0 (2015-11-26)
 ++++++++++++++++++

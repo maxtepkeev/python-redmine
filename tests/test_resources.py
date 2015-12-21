@@ -195,13 +195,13 @@ class TestResources(unittest.TestCase):
     def test_resource_dict_is_converted_to_resource_object(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
-        issue._attributes['author'] = {'id': 1, 'name': 'John Smith'}
+        issue._attributes.update(issue.bulk_encode({'author': {'id': 1, 'name': 'John Smith'}}))
         self.assertEqual(repr(issue.author), '<redmine.resources.User #1 "John Smith">')
 
     def test_resource_list_of_dicts_is_converted_to_resource_set(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
-        issue._attributes['custom_fields'] = [{'id': 1, 'name': 'Foo'}, {'id': 2, 'name': 'Bar'}]
+        issue._attributes.update(issue.bulk_encode({'custom_fields': [{'id': 1, 'name': 'Foo'}, {'id': 2, 'name': 'Bar'}]}))
         self.assertEqual(
             repr(issue.custom_fields),
             '<redmine.resultsets.ResourceSet object with CustomField resources>'
@@ -212,8 +212,6 @@ class TestResources(unittest.TestCase):
         attributes = dir(self.redmine.issue.get(1))
         self.assertIn('id', attributes)
         self.assertIn('subject', attributes)
-        self.assertIn('relations', attributes)
-        self.assertIn('time_entries', attributes)
 
     def test_supports_iteration(self):
         self.response.json.return_value = responses['project']['get']
@@ -434,14 +432,14 @@ class TestResources(unittest.TestCase):
     def test_issue_journals(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
-        issue._attributes['journals'] = [{'id': 1}]
+        issue._attributes.update(issue.bulk_encode({'journals': [{'id': 1}]}))
         self.assertEqual(str(issue.journals[0]), '1')
         self.assertEqual(repr(issue.journals[0]), '<redmine.resources.IssueJournal #1>')
 
     def test_issue_journals_url(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
-        issue._attributes['journals'] = [{'id': 1}]
+        issue._attributes.update(issue.bulk_encode({'journals': [{'id': 1}]}))
         self.assertEqual(issue.journals[0].url, None)
 
     def test_issue_version_can_be_retrieved_via_version_attribute(self):
