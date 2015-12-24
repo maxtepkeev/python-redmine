@@ -225,5 +225,4 @@ class JSONDecodeError(BaseRedmineError):
         self.response = response
         super(JSONDecodeError, self).__init__(
             'Unable to decode received JSON, you can inspect exception\'s '
-            '"response" attribute to find out what the response was'
-        )
+            '"response" attribute to find out what the response was')
