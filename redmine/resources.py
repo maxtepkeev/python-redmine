@@ -486,25 +486,21 @@ class Issue(Resource):
         return super(Issue, cls).decode(attr, value, manager)
 
     def __str__(self):
-        try:
+        if getattr(self, 'subject', None) is not None:
             return to_string(self.subject)
-        except ResourceAttrError:
-            return str(self.id)
+
+        return str(self.id)
 
     def __repr__(self):
-        try:
+        if getattr(self, 'subject', None) is not None:
             return '<{0}.{1} #{2} "{3}">'.format(
                 self.__class__.__module__,
                 self.__class__.__name__,
                 self.id,
                 to_string(self.subject)
             )
-        except ResourceAttrError:
-            return '<{0}.{1} #{2}>'.format(
-                self.__class__.__module__,
-                self.__class__.__name__,
-                self.id
-            )
+
+        return '<{0}.{1} #{2}>'.format(self.__class__.__module__, self.__class__.__name__, self.id)
 
 
 class TimeEntry(Resource):
@@ -531,11 +527,7 @@ class TimeEntry(Resource):
         return str(self.id)
 
     def __repr__(self):
-        return '<{0}.{1} #{2}>'.format(
-            self.__class__.__module__,
-            self.__class__.__name__,
-            self.id
-        )
+        return '<{0}.{1} #{2}>'.format(self.__class__.__module__, self.__class__.__name__, self.id)
 
 
 class Enumeration(Resource):
@@ -557,25 +549,21 @@ class Attachment(Resource):
         return self.manager.redmine.download(self.content_url, savepath, filename)
 
     def __str__(self):
-        try:
+        if getattr(self, 'filename', None) is not None:
             return to_string(self.filename)
-        except ResourceAttrError:
-            return str(self.id)
+
+        return str(self.id)
 
     def __repr__(self):
-        try:
+        if getattr(self, 'filename', None) is not None:
             return '<{0}.{1} #{2} "{3}">'.format(
                 self.__class__.__module__,
                 self.__class__.__name__,
                 self.id,
                 to_string(self.filename)
             )
-        except ResourceAttrError:
-            return '<{0}.{1} #{2}>'.format(
-                self.__class__.__module__,
-                self.__class__.__name__,
-                self.id
-            )
+
+        return '<{0}.{1} #{2}>'.format(self.__class__.__module__, self.__class__.__name__, self.id)
 
 
 class IssueJournal(Resource):
@@ -586,11 +574,7 @@ class IssueJournal(Resource):
         return str(self.id)
 
     def __repr__(self):
-        return '<{0}.{1} #{2}>'.format(
-            self.__class__.__module__,
-            self.__class__.__name__,
-            self.id
-        )
+        return '<{0}.{1} #{2}>'.format(self.__class__.__module__, self.__class__.__name__, self.id)
 
 
 class WikiPage(Resource):
@@ -648,11 +632,7 @@ class WikiPage(Resource):
         return self.internal_id
 
     def __repr__(self):
-        return '<{0}.{1} "{2}">'.format(
-            self.__class__.__module__,
-            self.__class__.__name__,
-            self.internal_id
-        )
+        return '<{0}.{1} "{2}">'.format(self.__class__.__module__, self.__class__.__name__, self.internal_id)
 
 
 class ProjectMembership(Resource):
@@ -672,11 +652,7 @@ class ProjectMembership(Resource):
         return str(self.id)
 
     def __repr__(self):
-        return '<{0}.{1} #{2}>'.format(
-            self.__class__.__module__,
-            self.__class__.__name__,
-            self.id
-        )
+        return '<{0}.{1} #{2}>'.format(self.__class__.__module__, self.__class__.__name__, self.id)
 
 
 class IssueCategory(Resource):
@@ -703,11 +679,7 @@ class IssueRelation(Resource):
         return str(self.id)
 
     def __repr__(self):
-        return '<{0}.{1} #{2}>'.format(
-            self.__class__.__module__,
-            self.__class__.__name__,
-            self.id
-        )
+        return '<{0}.{1} #{2}>'.format(self.__class__.__module__, self.__class__.__name__, self.id)
 
 
 class Version(Resource):
@@ -751,15 +723,15 @@ class User(Resource):
         return super(User, self).__getattr__(attr)
 
     def __str__(self):
-        try:
+        if getattr(self, 'name', None) is not None:
             return super(User, self).__str__()
-        except ResourceAttrError:
+        else:
             return '{0} {1}'.format(to_string(self.firstname), to_string(self.lastname))
 
     def __repr__(self):
-        try:
+        if getattr(self, 'name', None) is not None:
             return super(User, self).__repr__()
-        except ResourceAttrError:
+        else:
             return '<{0}.{1} #{2} "{3} {4}">'.format(
                 self.__class__.__module__,
                 self.__class__.__name__,
@@ -831,6 +803,9 @@ class News(Resource):
     @property
     def url(self):
         return '{0}/news/{1}'.format(self.manager.redmine.url, self.internal_id)
+
+    def __str__(self):
+        return to_string(self.title)
 
     def __repr__(self):
         return '<{0}.{1} #{2} "{3}">'.format(

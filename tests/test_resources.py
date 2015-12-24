@@ -1070,6 +1070,10 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = responses['news']['filter']
         self.assertEqual(self.redmine.news.filter(project_id=1)[0].url, '{0}/news/1'.format(self.url))
 
+    def test_news_str(self):
+        self.response.json.return_value = responses['news']['filter']
+        self.assertEqual(str(self.redmine.news.filter(project_id=1)[0]), 'Foo')
+
     def test_news_repr(self):
         self.response.json.return_value = responses['news']['filter']
         self.assertEqual(repr(self.redmine.news.filter(project_id=1)[0]), '<redmine.resources.News #1 "Foo">')

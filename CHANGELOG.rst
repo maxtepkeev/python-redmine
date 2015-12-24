@@ -11,6 +11,8 @@ Changelog
   ``Resource.bulk_decode()``.
 - Changed: ``container_filter``, ``container_create`` and ``container_update`` attributes on ``Resource``
   object are removed in favor of ``container_many`` attribute.
+- Fixed: Calling ``str()`` or ``repr()`` on a Resource was giving incorrect results if exception raising
+  was turned off for a resource
 - Removed: ``redmine.utilities.is_string`` function.
 
 1.5.0 (2015-11-26)
