@@ -1,3 +1,7 @@
+"""
+Defines basic Redmine resources and resource mappings.
+"""
+
 from datetime import date, datetime
 from distutils.version import LooseVersion
 
