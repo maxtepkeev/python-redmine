@@ -1,14 +1,12 @@
 from datetime import date, datetime
-
 from distutils.version import LooseVersion
 
 from .utilities import to_string
-from .managers import ResourceManager
 from .exceptions import (
     ResourceAttrError,
     ReadonlyAttrError,
     CustomFieldValueError,
-    ResourceVersionMismatchError,
+    ResourceVersionMismatchError
 )
 
 # Resources which when accessed from some other
@@ -114,7 +112,8 @@ class Resource(object):
         self.manager = manager
         self._create_readonly += relations_includes
         self._update_readonly += relations_includes
-        self._attributes = self.bulk_encode(attributes)
+        self._decoded_attrs = dict(dict.fromkeys(tuple(map(unicode, relations_includes))), **attributes)
+        self._encoded_attrs = {}
         self._changes = {}
 
         if self._relations_name is None:
@@ -139,121 +138,146 @@ class Resource(object):
         if attr.startswith('_'):
             raise AttributeError
 
-        try:
-            return self._attributes[attr]
-        except KeyError:
-            if attr in self._relations:
-                manager = ResourceManager(self.manager.redmine, _RELATIONS_MAP[attr])
-                self._attributes[attr] = manager.filter(**{'{0}_id'.format(self._relations_name): self.internal_id})
-                return self._attributes[attr]
-            elif attr in self._includes:
-                self._attributes[attr] = getattr(self.refresh(include=attr), attr)
-                return self._attributes[attr]
+        # If this isn't the first time attribute access we can return it from cache
+        encoded = self._encoded_attrs.get(attr)
+        if encoded is not None:
+            return encoded
 
-            if self.is_new():
-                if attr in ('id', 'version'):
-                    return 0
-                return ''
+        # Else this is the first time access and we need to encode the attribute
+        decoded = self._decoded_attrs.get(attr)
+        if decoded is not None:
+            attr, encoded = self.encode(attr, decoded, self.manager)
+        elif attr in self._relations:
+            filters = {'{0}_id'.format(self._relations_name): self.internal_id}
+            encoded = self.manager.new_manager(_RELATIONS_MAP[attr]).filter(**filters)
+        elif attr in self._includes:
+            encoded = getattr(self.refresh(include=attr), attr)
 
-            raise_attr_exception = self.manager.redmine.raise_attr_exception
+        # In case of successful encoding we put it to a cache and return
+        if encoded is not None:
+            self._encoded_attrs[attr] = encoded
+            return encoded
 
-            if isinstance(raise_attr_exception, bool) and raise_attr_exception:
-                raise ResourceAttrError
-            elif isinstance(raise_attr_exception, (list, tuple)) and self.__class__.__name__ in raise_attr_exception:
-                raise ResourceAttrError
+        # Else we return the defaults if this is a new item or throw an exception
+        if self.is_new():
+            return 0 if attr in ('id', 'version') else ''
 
-            return None
+        raise_attr_exception = self.manager.redmine.raise_attr_exception
+
+        if isinstance(raise_attr_exception, bool) and raise_attr_exception:
+            raise ResourceAttrError
+        elif isinstance(raise_attr_exception, (list, tuple)) and self.__class__.__name__ in raise_attr_exception:
+            raise ResourceAttrError
+
+        return None
 
     def __setattr__(self, attr, value):
         """
         Sets the requested attribute.
         """
         if attr in self._members or attr.startswith('_'):
-            super(Resource, self).__setattr__(attr, value)
+            return super(Resource, self).__setattr__(attr, value)
         elif attr in self._create_readonly and self.is_new():
             raise ReadonlyAttrError
         elif attr in self._update_readonly and not self.is_new():
             raise ReadonlyAttrError
         elif attr == 'custom_fields':
-            for org_index, org_field in enumerate(self._attributes.setdefault('custom_fields', [])):
-                if 'value' not in org_field:
-                    self._attributes['custom_fields'][org_index]['value'] = '0'
+            try:
+                new = dict((field['id'], self.bulk_decode(field, self.manager)) for field in value)
+            except (TypeError, KeyError):
+                raise CustomFieldValueError
 
-                try:
-                    for new_index, new_field in enumerate(value):
-                        if org_field['id'] == new_field['id']:
-                            self._attributes['custom_fields'][org_index]['value'] = self.bulk_decode(
-                                value.pop(new_index))['value']
-                except (TypeError, KeyError):
-                    raise CustomFieldValueError
+            for i, field in enumerate(self._decoded_attrs.setdefault('custom_fields', [])):
+                if field['id'] in new:
+                    self._decoded_attrs['custom_fields'][i] = new.pop(field['id'])
 
-            self._attributes['custom_fields'].extend(value)
-            self._changes[attr] = self._attributes['custom_fields']
+            self._decoded_attrs['custom_fields'].extend(list(new.values()))
+            self._changes[attr] = self._decoded_attrs['custom_fields']
         else:
-            self._changes.update(self.bulk_decode({attr: value}))
+            decoded_attr, decoded_value = self.decode(attr, value, self.manager)
+            self._changes[decoded_attr] = decoded_value
+            self._decoded_attrs[attr] = decoded_value
 
             if attr in _SINGLE_ATTR_ID_MAP:
-                self._attributes.update(self.bulk_encode({_SINGLE_ATTR_ID_MAP[attr]: {'id': value}}))
+                self._decoded_attrs[_SINGLE_ATTR_ID_MAP[attr]] = {'id': decoded_value}
             elif attr in _MULTIPLE_ATTR_ID_MAP:
-                self._attributes.update(self.bulk_encode({_MULTIPLE_ATTR_ID_MAP[attr]: [{'id': mid} for mid in value]}))
-            else:
-                self._attributes[attr] = value
+                self._decoded_attrs[_MULTIPLE_ATTR_ID_MAP[attr]] = [{'id': member_id} for member_id in decoded_value]
 
-    def decode(self, attr, value):
+        # When we set an attribute we put it's decoded value only to a _decoded_attrs
+        # dict because it may never be accessed again, that is why we don't waste time
+        # on the encode process but only clean the cache, and in case if it will be
+        # accessed, the encoding process will be run automatically by __getattr__
+        self._encoded_attrs.pop(attr, None)
+
+    @classmethod
+    def decode(cls, attr, value, manager):
         """
         Decodes a single attr, value pair from Python representation to the needed Redmine representation.
 
         :param str attr: (required). Attribute name.
         :param any value: (required). Attribute value.
+        :param managers.ResourceManager manager: (required). Manager instance object.
         """
         type_ = type(value)
 
         if type_ is date:
-            return attr, value.strftime(self.manager.redmine.date_format)
+            return attr, value.strftime(manager.redmine.date_format)
         elif type_ is datetime:
-            return attr, value.strftime(self.manager.redmine.datetime_format)
+            return attr, value.strftime(manager.redmine.datetime_format)
 
         return attr, value
 
-    def encode(self, attr, value):
+    @classmethod
+    def encode(cls, attr, value, manager):
         """
         Encodes a single attr, value pair retrieved from Redmine to the needed Python representation.
 
         :param str attr: (required). Attribute name.
         :param any value: (required). Attribute value.
+        :param managers.ResourceManager manager: (required). Manager instance object.
         """
-        if attr in self._unconvertible:
+        if attr in cls._unconvertible:
             return attr, value
         elif attr in _RESOURCE_MAP:
-            return attr, ResourceManager(self.manager.redmine, _RESOURCE_MAP[attr]).to_resource(value)
+            return attr, manager.new_manager(_RESOURCE_MAP[attr]).to_resource(value)
         elif attr in _RESOURCE_SET_MAP:
-            return attr, ResourceManager(self.manager.redmine, _RESOURCE_SET_MAP[attr]).to_resource_set(value)
+            return attr, manager.new_manager(_RESOURCE_SET_MAP[attr]).to_resource_set(value)
         elif attr == 'parent':
-            return attr, ResourceManager(self.manager.redmine, self.__class__.__name__).to_resource(value)
+            return attr, manager.new_manager(cls.__name__).to_resource(value)
 
         try:
             try:
-                return attr, datetime.strptime(value, self.manager.redmine.datetime_format)
+                return attr, datetime.strptime(value, manager.redmine.datetime_format)
             except (TypeError, ValueError):
-                return attr, datetime.strptime(value, self.manager.redmine.date_format).date()
+                return attr, datetime.strptime(value, manager.redmine.date_format).date()
         except (TypeError, ValueError):
             return attr, value
 
-    def bulk_decode(self, attrs):
+    @classmethod
+    def bulk_decode(cls, attrs, manager):
         """
         Decodes resource data from Python representation to the needed Redmine representation.
 
         :param dict attrs: (required). Attributes in the form of key, value pairs.
+        :param managers.ResourceManager manager: (required). Manager instance object.
         """
-        return dict(self.decode(attr, attrs[attr]) for attr in attrs)
+        return dict(cls.decode(attr, attrs[attr], manager) for attr in attrs)
 
-    def bulk_encode(self, attrs):
+    @classmethod
+    def bulk_encode(cls, attrs, manager):
         """
         Encodes resource data retrieved from Redmine to the needed Python representation.
 
         :param dict attrs: (required). Attributes in the form of key, value pairs.
+        :param managers.ResourceManager manager: (required). Manager instance object.
         """
-        return dict(self.encode(attr, attrs[attr]) for attr in attrs)
+        return dict(cls.encode(attr, attrs[attr], manager) for attr in attrs)
+
+    def raw(self):
+        """
+        Returns resource data as it was received from Redmine.
+        """
+        return self._decoded_attrs
 
     def refresh(self, **params):
         """
@@ -294,12 +318,11 @@ class Resource(object):
         if not self.is_new():
             self.pre_update()
             self.manager.update(self.internal_id, **self._changes)
-            self._attributes['updated_on'] = datetime.utcnow().strftime(self.manager.redmine.datetime_format)
+            self._decoded_attrs['updated_on'] = datetime.utcnow().strftime(self.manager.redmine.datetime_format)
             self.post_update()
         else:
             self.pre_create()
-            for item, value in self.manager.create(**self._changes):
-                self._attributes[item] = value
+            self._decoded_attrs = self.manager.create(**self._changes).raw()
             self.post_create()
 
         self._changes = {}
@@ -312,8 +335,8 @@ class Resource(object):
         """
         if self.query_one is not None:
             return self.manager.redmine.url + self.query_one.format(self.internal_id).replace('.json', '')
-        else:
-            return None
+
+        return None
 
     @property
     def internal_id(self):
@@ -326,19 +349,19 @@ class Resource(object):
         """
         Checks if Resource was just created and not yet saved to Redmine or it is an existing Resource.
         """
-        return False if 'id' in self._attributes or 'created_on' in self._attributes else True
+        return False if 'id' in self._decoded_attrs or 'created_on' in self._decoded_attrs else True
 
     def __dir__(self):
         """
         Allows dir() to be called on a Resource object and shows Resource attributes.
         """
-        return list(self._attributes.keys())
+        return list(self._decoded_attrs.keys())
 
     def __iter__(self):
         """
         Provides a way to iterate through Resource attributes and its values.
         """
-        return iter(self._attributes.items())
+        return iter(self._decoded_attrs.items())
 
     def __int__(self):
         """
@@ -387,11 +410,12 @@ class Project(Resource):
     _unconvertible = Resource._unconvertible + ('identifier', 'status')
     _update_readonly = Resource._update_readonly + ('identifier',)
 
-    def encode(self, attr, value):
+    @classmethod
+    def encode(cls, attr, value, manager):
         if attr == 'enabled_modules':
             return attr, [module['name'] for module in value]
 
-        return super(Project, self).encode(attr, value)
+        return super(Project, cls).encode(attr, value, manager)
 
 
 class Issue(Resource):
@@ -454,11 +478,12 @@ class Issue(Resource):
         else:
             super(Issue, self).__setattr__(attr, value)
 
-    def decode(self, attr, value):
+    @classmethod
+    def decode(cls, attr, value, manager):
         if attr == 'version_id':
             return 'fixed_version_id', value
 
-        return super(Issue, self).decode(attr, value)
+        return super(Issue, cls).decode(attr, value, manager)
 
     def __str__(self):
         try:
@@ -493,13 +518,14 @@ class TimeEntry(Resource):
     query_update = '/time_entries/{0}.json'
     query_delete = '/time_entries/{0}.json'
 
-    def decode(self, attr, value):
+    @classmethod
+    def decode(cls, attr, value, manager):
         if attr == 'from_date':
             attr = 'from'
         elif attr == 'to_date':
             attr = 'to'
 
-        return super(TimeEntry, self).decode(attr, value)
+        return super(TimeEntry, cls).decode(attr, value, manager)
 
     def __str__(self):
         return str(self.id)
@@ -582,19 +608,19 @@ class WikiPage(Resource):
     _create_readonly = Resource._create_readonly + ('version',)
     _update_readonly = _create_readonly
 
-    def encode(self, attr, value):
+    @classmethod
+    def encode(cls, attr, value, manager):
         if attr == 'parent':
-            manager = ResourceManager(self.manager.redmine, self.__class__.__name__)
-            manager.params['project_id'] = self.manager.params.get('project_id', 0)
-            return attr, manager.to_resource(value)
+            value = manager.new_manager(cls.__name__, project_id=manager.params.get('project_id', 0)).to_resource(value)
+            return attr, value
 
-        return super(WikiPage, self).encode(attr, value)
+        return super(WikiPage, cls).encode(attr, value, manager)
 
     def refresh(self, **params):
         return super(WikiPage, self).refresh(**dict(params, project_id=self.manager.params.get('project_id', 0)))
 
     def post_update(self):
-        self._attributes['version'] = self._attributes.get('version', 0) + 1
+        self._encoded_attrs['version'] = self._decoded_attrs['version'] = self._decoded_attrs.get('version', 0) + 1
 
     @property
     def url(self):
@@ -610,8 +636,8 @@ class WikiPage(Resource):
     def __getattr__(self, attr):
         # If a text attribute of a resource is missing, we should
         # refresh a resource automatically for user's convenience
-        if attr == 'text' and attr not in self._attributes:
-            self._attributes[attr] = getattr(self.refresh(), attr)
+        if attr == 'text' and attr not in self._decoded_attrs:
+            self._decoded_attrs[attr] = getattr(self.refresh(), attr)
 
         return super(WikiPage, self).__getattr__(attr)
 
@@ -716,7 +742,7 @@ class User(Resource):
     _update_readonly = _create_readonly
 
     def __getattr__(self, attr):
-        if attr == 'time_entries' and attr not in self._attributes:
+        if attr == 'time_entries' and attr not in self._encoded_attrs:
             self._relations_name = 'user'
             value = super(User, self).__getattr__(attr)
             self._relations_name = 'assigned_to'
@@ -849,7 +875,7 @@ class Query(Resource):
     def url(self):
         return '{0}/projects/{1}/issues?query_id={2}'.format(
             self.manager.redmine.url,
-            self._attributes.get('project_id', 0),
+            self._decoded_attrs.get('project_id', 0),
             self.internal_id
         )
 
@@ -864,19 +890,20 @@ class CustomField(Resource):
         # i.e. project, and it's not used in the resource, there will be
         # no value attribute defined, that is why we need to return 0 or
         # we'll get an exception
-        if attr == 'value' and attr not in self._attributes:
-            return 0
+        if attr == 'value' and attr not in self._decoded_attrs:
+            return '0'
 
         return super(CustomField, self).__getattr__(attr)
 
-    def encode(self, attr, value):
+    @classmethod
+    def encode(cls, attr, value, manager):
         # Redmine <2.5.2 returns only single tracker instead of a list of
         # all available trackers, see http://www.redmine.org/issues/16739
         # for details
         if attr == 'trackers' and 'tracker' in value:
             value = [value['tracker']]
 
-        return super(CustomField, self).encode(attr, value)
+        return super(CustomField, cls).encode(attr, value, manager)
 
     @property
     def url(self):

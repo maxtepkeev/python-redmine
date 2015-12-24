@@ -94,6 +94,8 @@ class TestResourceManager(unittest.TestCase):
 
     def test_create_empty_resource(self):
         project = self.redmine.project.new()
+        defaults = dict.fromkeys(project._includes + project._relations)
+        self.assertEqual(project._decoded_attrs, defaults)
         self.assertEqual(repr(project), '<redmine.resources.Project #0 "">')
 
     @mock.patch('redmine.requests.put')

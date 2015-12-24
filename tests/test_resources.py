@@ -117,11 +117,13 @@ class TestResources(unittest.TestCase):
         from datetime import date, datetime
         issue = self.redmine.issue.new()
         issue.start_date = date(2014, 3, 9)
-        self.assertEqual(issue._attributes['start_date'], date(2014, 3, 9))
+        self.assertEqual(issue.start_date, date(2014, 3, 9))
+        self.assertEqual(issue._decoded_attrs['start_date'], '2014-03-09')
         self.assertEqual(issue._changes['start_date'], '2014-03-09')
         issue.start_date = datetime(2014, 3, 9, 20, 2, 2)
-        self.assertEqual(issue._attributes['start_date'], datetime(2014, 3, 9, 20, 2, 2))
+        self.assertEqual(issue._decoded_attrs['start_date'], '2014-03-09T20:02:02Z')
         self.assertEqual(issue._changes['start_date'], '2014-03-09T20:02:02Z')
+        self.assertEqual(issue.start_date, datetime(2014, 3, 9, 20, 2, 2))
 
     def test_supports_setting_of_attributes_via_dict(self):
         project = self.redmine.project.new()
@@ -195,13 +197,13 @@ class TestResources(unittest.TestCase):
     def test_resource_dict_is_converted_to_resource_object(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
-        issue._attributes.update(issue.bulk_encode({'author': {'id': 1, 'name': 'John Smith'}}))
+        issue._decoded_attrs['author'] = {'id': 1, 'name': 'John Smith'}
         self.assertEqual(repr(issue.author), '<redmine.resources.User #1 "John Smith">')
 
     def test_resource_list_of_dicts_is_converted_to_resource_set(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
-        issue._attributes.update(issue.bulk_encode({'custom_fields': [{'id': 1, 'name': 'Foo'}, {'id': 2, 'name': 'Bar'}]}))
+        issue._decoded_attrs['custom_fields'] = [{'id': 1, 'name': 'Foo'}, {'id': 2, 'name': 'Bar'}]
         self.assertEqual(
             repr(issue.custom_fields),
             '<redmine.resultsets.ResourceSet object with CustomField resources>'
@@ -212,6 +214,8 @@ class TestResources(unittest.TestCase):
         attributes = dir(self.redmine.issue.get(1))
         self.assertIn('id', attributes)
         self.assertIn('subject', attributes)
+        self.assertIn('relations', attributes)
+        self.assertIn('time_entries', attributes)
 
     def test_supports_iteration(self):
         self.response.json.return_value = responses['project']['get']
@@ -416,7 +420,7 @@ class TestResources(unittest.TestCase):
     def test_issue_custom_repr_without_subject(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
-        del issue['_attributes']['subject']
+        del issue['_decoded_attrs']['subject']
         self.assertEqual(repr(issue), '<redmine.resources.Issue #1>')
 
     def test_issue_custom_str(self):
@@ -426,20 +430,20 @@ class TestResources(unittest.TestCase):
     def test_issue_custom_str_without_subject(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
-        del issue['_attributes']['subject']
+        del issue['_decoded_attrs']['subject']
         self.assertEqual(str(issue), '1')
 
     def test_issue_journals(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
-        issue._attributes.update(issue.bulk_encode({'journals': [{'id': 1}]}))
+        issue._decoded_attrs['journals'] = [{'id': 1}]
         self.assertEqual(str(issue.journals[0]), '1')
         self.assertEqual(repr(issue.journals[0]), '<redmine.resources.IssueJournal #1>')
 
     def test_issue_journals_url(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
-        issue._attributes.update(issue.bulk_encode({'journals': [{'id': 1}]}))
+        issue._decoded_attrs['journals'] = [{'id': 1}]
         self.assertEqual(issue.journals[0].url, None)
 
     def test_issue_version_can_be_retrieved_via_version_attribute(self):
@@ -575,7 +579,7 @@ class TestResources(unittest.TestCase):
     def test_attachment_custom_str_without_filename(self):
         self.response.json.return_value = responses['attachment']['get']
         attachment = self.redmine.attachment.get(1)
-        del attachment['_attributes']['filename']
+        del attachment['_decoded_attrs']['filename']
         self.assertEqual(str(attachment), '1')
 
     def test_attachment_custom_repr(self):
@@ -585,7 +589,7 @@ class TestResources(unittest.TestCase):
     def test_attachment_custom_repr_without_subject(self):
         self.response.json.return_value = responses['attachment']['get']
         attachment = self.redmine.attachment.get(1)
-        del attachment['_attributes']['filename']
+        del attachment['_decoded_attrs']['filename']
         self.assertEqual(repr(attachment), '<redmine.resources.Attachment #1>')
 
     def test_attachment_url(self):
@@ -1131,7 +1135,7 @@ class TestResources(unittest.TestCase):
         fields = self.redmine.custom_field.all()
         self.assertEqual(fields[0].id, 1)
         self.assertEqual(fields[0].name, 'Foo')
-        self.assertEqual(fields[0].value, 0)
+        self.assertEqual(fields[0].value, '0')
 
     def test_custom_field_returns_single_tracker_instead_of_multiple_trackers(self):
         self.response.json.return_value = {

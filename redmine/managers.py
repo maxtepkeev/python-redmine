@@ -23,10 +23,11 @@ class ResourceManager(object):
     params = {}
     container = None
 
-    def __init__(self, redmine, resource_name):
+    def __init__(self, redmine, resource_name, **params):
         """
         :param redmine.Redmine redmine: (required). Redmine instance object.
         :param str resource_name: (required). Resource name.
+        :param dict params: (optional). Parameters used for resources retrieval.
         """
         resource_class = None
         resource_name = ''.join(word[0].upper() + word[1:] for word in resource_name.split('_'))
@@ -47,6 +48,7 @@ class ResourceManager(object):
 
         self.redmine = redmine
         self.resource_class = resource_class
+        self.params = params
 
     def retrieve(self, **params):
         """
@@ -132,6 +134,15 @@ class ResourceManager(object):
         """
         return self.to_resource({})
 
+    def new_manager(self, resource_name, **params):
+        """
+        Returns new ResourceManager instance object.
+
+        :param str resource_name: (required). Resource name.
+        :param dict params: (optional). Parameters used for resources retrieval.
+        """
+        return ResourceManager(self.redmine, resource_name, **params)
+
     def get(self, resource_id, **params):
         """
         Returns a Resource object from Redmine by resource id.
@@ -148,7 +159,7 @@ class ResourceManager(object):
         except KeyError as exception:
             raise ValidationError('{0} argument is required'.format(exception))
 
-        self.params = self.new().bulk_decode(params)
+        self.params = self.resource_class.bulk_decode(params, self)
         self.container = self.resource_class.container_one
         return self.resource_class(self, self.retrieve()[0])
 
@@ -162,7 +173,7 @@ class ResourceManager(object):
             raise ResourceBadMethodError
 
         self.url = self.redmine.url + self.resource_class.query_all
-        self.params = self.new().bulk_decode(params)
+        self.params = self.resource_class.bulk_decode(params, self)
         self.container = self.resource_class.container_many
         return ResourceSet(self)
 
@@ -184,7 +195,7 @@ class ResourceManager(object):
         except KeyError:
             raise ResourceFilterError
 
-        self.params = self.new().bulk_decode(filters)
+        self.params = self.resource_class.bulk_decode(filters, self)
         return ResourceSet(self)
 
     def create(self, **fields):
@@ -207,7 +218,7 @@ class ResourceManager(object):
             raise ValidationError('{0} field is required'.format(exception))
 
         self.container = self.resource_class.container_one
-        data = {self.resource_class.container_one: self.new().bulk_decode(formatter.unused_kwargs)}
+        data = {self.resource_class.container_one: self.resource_class.bulk_decode(formatter.unused_kwargs, self)}
 
         if 'uploads' in data[self.resource_class.container_one]:
             data['attachments'] = data[self.resource_class.container_one].pop('uploads')
@@ -258,7 +269,7 @@ class ResourceManager(object):
                 raise ValidationError('{0} argument is required'.format(exception))
 
         url = self.redmine.url + query_update
-        data = {self.resource_class.container_one: self.new().bulk_decode(formatter.unused_kwargs)}
+        data = {self.resource_class.container_one: self.resource_class.bulk_decode(formatter.unused_kwargs, self)}
 
         if 'uploads' in data[self.resource_class.container_one]:
             data['attachments'] = data[self.resource_class.container_one].pop('uploads')
@@ -283,4 +294,4 @@ class ResourceManager(object):
         except KeyError as exception:
             raise ValidationError('{0} argument is required'.format(exception))
 
-        return self.redmine.request('delete', url, params=self.new().bulk_decode(params))
+        return self.redmine.request('delete', url, params=self.resource_class.bulk_decode(params, self))
