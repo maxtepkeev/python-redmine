@@ -7,6 +7,8 @@ Changelog
 - Added: ``bulk_decode()``, ``bulk_encode()``, ``decode()`` and ``encode()`` methods on ``Resource``
   object which are used to translate attributes of the resource to/from Python/Redmine.
 - Changed: ``_Resource`` class renamed to ``Resource``.
+- Changed: ``Resource.refresh()`` now really refreshes itself instead of returning a new refreshed
+  resource, to get the previous behaviour call it like this ``Resource.refresh(itself=False)``
 - Changed: ``Resource.translate_params()`` and ``ResourceManager.prepare_params()`` removed in favor of
   ``Resource.bulk_decode()``.
 - Changed: ``container_filter``, ``container_create`` and ``container_update`` attributes on ``Resource``

@@ -155,7 +155,7 @@ class Resource(object):
             filters = {'{0}_id'.format(self._relations_name): self.internal_id}
             encoded = self.manager.new_manager(_RELATIONS_MAP[attr]).filter(**filters)
         elif attr in self._includes:
-            encoded = getattr(self.refresh(include=attr), attr)
+            encoded = getattr(self.refresh(itself=False, include=attr), attr)
 
         # In case of successful encoding we put it to a cache and return
         if encoded is not None:
@@ -283,13 +283,20 @@ class Resource(object):
         """
         return self._decoded_attrs
 
-    def refresh(self, **params):
+    def refresh(self, itself=True, **params):
         """
         Reloads resource data from Redmine.
 
+        :param bool itself: (optional). Whether to refresh itself or return a new resource.
         :param dict params: (optional). Parameters used for resource retrieval.
         """
-        return self.manager.get(self.internal_id, **params)
+        resource = self.manager.get(self.internal_id, **params)
+
+        if itself:
+            self._encoded_attrs = {}
+            self._decoded_attrs = resource.raw()
+        else:
+            return resource
 
     def pre_create(self):
         """
@@ -625,7 +632,7 @@ class WikiPage(Resource):
         # If a text attribute of a resource is missing, we should
         # refresh a resource automatically for user's convenience
         if attr == 'text' and attr not in self._decoded_attrs:
-            self._decoded_attrs[attr] = getattr(self.refresh(), attr)
+            self._decoded_attrs[attr] = getattr(self.refresh(itself=False), attr)
 
         return super(WikiPage, self).__getattr__(attr)
 

@@ -169,7 +169,7 @@ class TestResources(unittest.TestCase):
         project.name = 'Bar'
         self.assertEqual(project.save(), True)
         self.response.json.return_value = {'project': {'id': 1, 'name': 'Bar'}}
-        project = project.refresh()
+        project.refresh()
         self.assertEqual(project.name, 'Bar')
 
     def test_custom_int(self):
@@ -190,7 +190,7 @@ class TestResources(unittest.TestCase):
         self.assertEqual(project.id, 1)
         self.assertEqual(project.name, 'Foo')
         self.response.json.return_value = {'project': {'id': 2, 'name': 'Bar'}}
-        project = project.refresh()
+        project.refresh()
         self.assertEqual(project.id, 2)
         self.assertEqual(project.name, 'Bar')
 
@@ -641,7 +641,7 @@ class TestResources(unittest.TestCase):
         wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
         self.assertEqual(wiki_page.title, 'Foo')
         self.response.json.return_value = {'wiki_page': {'title': 'Bar'}}
-        wiki_page = wiki_page.refresh()
+        wiki_page.refresh()
         self.assertEqual(wiki_page.title, 'Bar')
 
     def test_wiki_page_refreshes_itself_if_text_attribute_not_exists(self):
