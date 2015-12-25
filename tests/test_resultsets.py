@@ -11,8 +11,7 @@ response = {
 
 class TestResultSet(unittest.TestCase):
     def setUp(self):
-        self.url = URL
-        self.redmine = Redmine(self.url)
+        self.redmine = Redmine(URL)
         self.response = mock.Mock(status_code=200, json=mock.Mock(return_value=response))
         patcher_get = mock.patch('redmine.requests.get', return_value=self.response)
         patcher_put = mock.patch('redmine.requests.put', return_value=self.response)

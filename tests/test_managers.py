@@ -11,8 +11,7 @@ class FooResource(Project):
 
 class TestResourceManager(unittest.TestCase):
     def setUp(self):
-        self.url = URL
-        self.redmine = Redmine(self.url)
+        self.redmine = Redmine(URL)
 
     def test_supports_custom_resources(self):
         self.redmine.custom_resource_paths = (__name__,)
@@ -63,7 +62,7 @@ class TestResourceManager(unittest.TestCase):
     def test_get_filtered_resources(self):
         self.assertIsInstance(self.redmine.issue.filter(project_id='foo'), ResourceSet)
 
-    def test_prepare_params(self):
+    def test_decode_params(self):
         from datetime import date, datetime
         time_entries = self.redmine.time_entry.filter(from_date=date(2014, 3, 9), to_date=date(2014, 3, 10))
         self.assertEqual(time_entries.manager.params['from'], '2014-03-09')
@@ -103,8 +102,7 @@ class TestResourceManager(unittest.TestCase):
         mock_put.return_value = mock.Mock(status_code=200, content='')
         manager = self.redmine.wiki_page
         manager.params['project_id'] = 1
-        self.assertEqual(manager.update('Foo', title='Bar'), True)
-        del manager.params['project_id']
+        self.assertEqual(self.redmine.wiki_page.update('Foo', project_id=1, title='Bar'), True)
 
     @mock.patch('redmine.open', mock.mock_open(), create=True)
     @mock.patch('redmine.requests.put')
@@ -116,7 +114,6 @@ class TestResourceManager(unittest.TestCase):
         manager = self.redmine.issue
         manager.params['subject'] = 'Foo'
         self.assertEqual(manager.update(1, subject='Bar', uploads=[{'path': 'foo'}]), True)
-        del manager.params['subject']
 
     @mock.patch('redmine.requests.delete')
     def test_delete_resource(self, mock_delete):
