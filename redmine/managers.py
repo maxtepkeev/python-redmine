@@ -60,8 +60,8 @@ class ResourceManager(object):
 
         results = []
         total_count = 0
-        limit = self.params.get('limit', 0)
-        offset = self.params.get('offset', 0)
+        limit = self.params.get('limit') or 0
+        offset = self.params.get('offset') or 0
 
         if limit == 0:
             limit = 100
