@@ -4,6 +4,8 @@ Changelog
 2.0.0 (2016-XX-XX)
 ++++++++++++++++++
 
+- Added: ``pre_delete()`` and ``post_delete()`` ``Resource`` object methods which can be used to execute
+  tasks that should be done before/after deleting the resource through ``delete()`` method
 - Added: ``delete()`` method on ``Resource`` object which deletes current resource from Redmine
 - Added: ``bulk_decode()``, ``bulk_encode()``, ``decode()`` and ``encode()`` methods on ``Resource``
   object which are used to translate attributes of the resource to/from Python/Redmine.

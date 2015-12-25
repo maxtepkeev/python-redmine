@@ -322,6 +322,18 @@ class Resource(object):
         """
         pass
 
+    def pre_delete(self):
+        """
+        Tasks that should be done before deleting the Resource.
+        """
+        pass
+
+    def post_delete(self):
+        """
+        Tasks that should be done after deleting the Resource.
+        """
+        pass
+
     def save(self):
         """
         Creates or updates a Resource.
@@ -345,7 +357,10 @@ class Resource(object):
 
         :param dict params: (optional). Parameters used for resource deletion.
         """
-        return self.manager.delete(self.internal_id, **params)
+        self.pre_delete()
+        response = self.manager.delete(self.internal_id, **params)
+        self.post_delete()
+        return response
 
     @property
     def url(self):
