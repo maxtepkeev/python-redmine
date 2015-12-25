@@ -194,6 +194,20 @@ class TestResources(unittest.TestCase):
         self.assertEqual(project.id, 2)
         self.assertEqual(project.name, 'Bar')
 
+    def test_bulk_decode(self):
+        from datetime import date, datetime
+        encoded = {'start_date': date(2014, 3, 9), 'created_at': datetime(2014, 3, 9, 20, 2, 2)}
+        decoded = self.redmine.project.resource_class.bulk_decode(encoded, self.redmine.project)
+        self.assertEqual(decoded['start_date'], '2014-03-09')
+        self.assertEqual(decoded['created_at'], '2014-03-09T20:02:02Z')
+
+    def test_bulk_encode(self):
+        from datetime import date, datetime
+        decoded = {'start_date': '2014-03-09', 'created_at': '2014-03-09T20:02:02Z'}
+        encoded = self.redmine.project.resource_class.bulk_encode(decoded, self.redmine.project)
+        self.assertEqual(encoded['start_date'], date(2014, 3, 9))
+        self.assertEqual(encoded['created_at'], datetime(2014, 3, 9, 20, 2, 2))
+
     def test_resource_dict_is_converted_to_resource_object(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
@@ -282,6 +296,7 @@ class TestResources(unittest.TestCase):
         self.assertIsInstance(project.wiki_pages, ResourceSet)
         self.assertIsInstance(project.memberships, ResourceSet)
         self.assertIsInstance(project.issue_categories, ResourceSet)
+        self.assertIsInstance(project.time_entries, ResourceSet)
         self.assertIsInstance(project.versions, ResourceSet)
         self.assertIsInstance(project.news, ResourceSet)
         self.assertIsInstance(project.issues, ResourceSet)
