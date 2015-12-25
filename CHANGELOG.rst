@@ -4,6 +4,7 @@ Changelog
 2.0.0 (2016-XX-XX)
 ++++++++++++++++++
 
+- Added: ``delete()`` method on ``Resource`` object which deletes current resource from Redmine
 - Added: ``bulk_decode()``, ``bulk_encode()``, ``decode()`` and ``encode()`` methods on ``Resource``
   object which are used to translate attributes of the resource to/from Python/Redmine.
 - Changed: ``_Resource`` class renamed to ``Resource``.

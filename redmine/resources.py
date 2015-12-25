@@ -339,6 +339,14 @@ class Resource(object):
         self._changes = {}
         return True
 
+    def delete(self, **params):
+        """
+        Deletes Resource from Redmine.
+
+        :param dict params: (optional). Parameters used for resource deletion.
+        """
+        return self.manager.delete(self.internal_id, **params)
+
     @property
     def url(self):
         """
@@ -616,6 +624,9 @@ class WikiPage(Resource):
 
     def post_update(self):
         self._encoded_attrs['version'] = self._decoded_attrs['version'] = self._decoded_attrs.get('version', 0) + 1
+
+    def delete(self, **params):
+        return super(WikiPage, self).delete(**dict(params, project_id=self.manager.params.get('project_id', 0)))
 
     @property
     def url(self):

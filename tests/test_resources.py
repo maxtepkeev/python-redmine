@@ -277,7 +277,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(project.name, 'Foo')
 
     def test_project_delete(self):
+        self.response.json.return_value = responses['project']['get']
+        project = self.redmine.project.get(1)
         self.response.content = ''
+        self.assertEqual(project.delete(), True)
         self.assertEqual(self.redmine.project.delete(1), True)
 
     def test_project_update(self):
@@ -370,7 +373,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(issue.subject, 'Foo')
 
     def test_issue_delete(self):
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
         self.response.content = ''
+        self.assertEqual(issue.delete(), True)
         self.assertEqual(self.redmine.issue.delete(1), True)
 
     def test_issue_update(self):
@@ -524,7 +530,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(time_entry.hours, 2)
 
     def test_time_entry_delete(self):
+        self.response.json.return_value = responses['time_entry']['get']
+        time_entry = self.redmine.time_entry.get(1)
         self.response.content = ''
+        self.assertEqual(time_entry.delete(), True)
         self.assertEqual(self.redmine.time_entry.delete(1), True)
 
     def test_time_entry_update(self):
@@ -640,7 +649,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(wiki_page.title, 'Foo')
 
     def test_wiki_page_delete(self):
+        self.response.json.return_value = responses['wiki_page']['get']
+        wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
         self.response.content = ''
+        self.assertEqual(wiki_page.delete(), True)
         self.assertEqual(self.redmine.wiki_page.delete('Foo', project_id=1), True)
 
     def test_wiki_page_update(self):
@@ -730,7 +742,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(membership.id, 1)
 
     def test_project_membership_delete(self):
+        self.response.json.return_value = responses['project_membership']['get']
+        membership = self.redmine.project_membership.get(1)
         self.response.content = ''
+        self.assertEqual(membership.delete(), True)
         self.assertEqual(self.redmine.project_membership.delete(1), True)
 
     def test_project_membership_update(self):
@@ -783,7 +798,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(category.name, 'Foo')
 
     def test_issue_category_delete(self):
+        self.response.json.return_value = responses['issue_category']['get']
+        category = self.redmine.issue_category.get(1)
         self.response.content = ''
+        self.assertEqual(category.delete(), True)
         self.assertEqual(self.redmine.issue_category.delete(1), True)
 
     def test_issue_category_update(self):
@@ -823,7 +841,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(relation.id, 1)
 
     def test_issue_relation_delete(self):
+        self.response.json.return_value = responses['issue_relation']['get']
+        relation = self.redmine.issue_relation.get(1)
         self.response.content = ''
+        self.assertEqual(relation.delete(), True)
         self.assertEqual(self.redmine.issue_relation.delete(1), True)
 
     def test_issue_relation_custom_str(self):
@@ -868,7 +889,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(version.name, 'Foo')
 
     def test_version_delete(self):
+        self.response.json.return_value = responses['version']['get']
+        version = self.redmine.version.get(1)
         self.response.content = ''
+        self.assertEqual(version.delete(), True)
         self.assertEqual(self.redmine.version.delete(1), True)
 
     def test_version_update(self):
@@ -925,7 +949,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(user.lastname, 'Smith')
 
     def test_user_delete(self):
+        self.response.json.return_value = responses['user']['get']
+        user = self.redmine.user.get(1)
         self.response.content = ''
+        self.assertEqual(user.delete(), True)
         self.assertEqual(self.redmine.user.delete(1), True)
 
     def test_user_update(self):
@@ -999,7 +1026,10 @@ class TestResources(unittest.TestCase):
         self.assertEqual(group.name, 'Foo')
 
     def test_group_delete(self):
+        self.response.json.return_value = responses['group']['get']
+        group = self.redmine.group.get(1)
         self.response.content = ''
+        self.assertEqual(group.delete(), True)
         self.assertEqual(self.redmine.group.delete(1), True)
 
     def test_group_update(self):
