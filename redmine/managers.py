@@ -3,7 +3,7 @@ import datetime
 from distutils.version import LooseVersion
 
 from .resultsets import ResourceSet
-from .utilities import MemorizeFormatter
+from .utilities import MemorizeFormatter, is_unicode, to_string
 from .exceptions import (
     ResourceError,
     ResourceBadMethodError,
@@ -119,6 +119,8 @@ class ResourceManager(object):
         if self.resource_class.query_one is None or self.resource_class.container_one is None:
             raise ResourceBadMethodError
 
+        if is_unicode(resource_id):
+            resource_id = to_string(resource_id)
         try:
             self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_one.format(resource_id, **params))
         except KeyError as exception:
