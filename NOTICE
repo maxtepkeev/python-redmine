@@ -3,7 +3,7 @@ Python Redmine includes code from several Python libraries.
 Requests License
 ================
 
-Copyright 2015 Kenneth Reitz
+Copyright 2016 Kenneth Reitz
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
