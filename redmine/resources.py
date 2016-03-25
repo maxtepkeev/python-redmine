@@ -351,6 +351,10 @@ class Project(_Resource):
     _unconvertible = _Resource._unconvertible + ('identifier', 'status')
     _update_readonly = _Resource._update_readonly + ('identifier',)
 
+    @property
+    def url(self):
+        return '{0}{1}'.format(self.manager.redmine.url, self.query_one.format(self.identifier).replace('.json', ''))
+
     def __getattr__(self, item):
         if item == 'parent' and item in self._attributes:
             return ResourceManager(self.manager.redmine, 'Project').to_resource(self._attributes[item])

@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+1.5.X (2016-03-XX)
+++++++++++++++++++
+
+- Changed: `Issue #124 <https://github.com/maxtepkeev/python-redmine/issues/124>`__ (``project.url``
+  now uses ``identifier`` rather than ``id`` to generate url for the project resource)
+
 1.5.0 (2015-11-26)
 ++++++++++++++++++
 
