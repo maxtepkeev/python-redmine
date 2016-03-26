@@ -90,6 +90,15 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(user.firstname, 'John')
         self.assertEqual(user.lastname, 'Smith')
 
+    @mock.patch('redmine.requests.post')
+    def test_create_unicode_resource(self, mock_post):
+        mock_post.return_value = response = mock.Mock(status_code=201)
+        unicode_name = b'\xcf\x86oo'.decode('utf8')
+        response.json.return_value = {'wiki_page': {'title': unicode_name, 'project_id': 1}}
+        wiki_page = self.redmine.wiki_page.create(title=unicode_name, project_id=1)
+        self.assertEqual(wiki_page.title, unicode_name)
+        self.assertEqual(wiki_page.project_id, 1)
+
     @mock.patch('redmine.open', mock.mock_open(), create=True)
     @mock.patch('redmine.requests.post')
     def test_create_resource_with_uploads(self, mock_post):
@@ -113,7 +122,7 @@ class TestResourceManager(unittest.TestCase):
         mock_put.return_value = mock.Mock(status_code=200, content='')
         manager = self.redmine.wiki_page
         manager.params['project_id'] = 1
-        self.assertEqual(manager.update('Foo', title='Bar'), True)
+        self.assertEqual(manager.update(b'\xcf\x86oo'.decode('utf8'), title='Bar'), True)
         del manager.params['project_id']
 
     @mock.patch('redmine.open', mock.mock_open(), create=True)
@@ -131,7 +140,7 @@ class TestResourceManager(unittest.TestCase):
     @mock.patch('redmine.requests.delete')
     def test_delete_resource(self, mock_delete):
         mock_delete.return_value = mock.Mock(status_code=200, content='')
-        self.assertEqual(self.redmine.group.delete(1), True)
+        self.assertEqual(self.redmine.wiki_page.delete(b'\xcf\x86oo'.decode('utf8'), project_id=1), True)
 
     def test_resource_get_method_unsupported_exception(self):
         self.assertRaises(ResourceBadMethodError, lambda: self.redmine.enumeration.get('foo'))

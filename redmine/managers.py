@@ -121,6 +121,7 @@ class ResourceManager(object):
 
         if is_unicode(resource_id):
             resource_id = to_string(resource_id)
+
         try:
             self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_one.format(resource_id, **params))
         except KeyError as exception:
@@ -167,6 +168,10 @@ class ResourceManager(object):
 
         formatter = MemorizeFormatter()
 
+        title = fields.get('title')
+        if title is not None and is_unicode(title):
+            fields['title'] = to_string(title)
+
         try:
             url = '{0}{1}'.format(self.redmine.url, formatter.format(self.resource_class.query_create, **fields))
         except KeyError as exception:
@@ -209,6 +214,9 @@ class ResourceManager(object):
 
         formatter = MemorizeFormatter()
 
+        if is_unicode(resource_id):
+            resource_id = to_string(resource_id)
+
         try:
             query_update = formatter.format(self.resource_class.query_update, resource_id, **fields)
         except KeyError as exception:
@@ -234,6 +242,9 @@ class ResourceManager(object):
         """Deletes a Resource object by resource id (can be either integer id or string identifier)"""
         if self.resource_class.query_delete is None:
             raise ResourceBadMethodError
+
+        if is_unicode(resource_id):
+            resource_id = to_string(resource_id)
 
         try:
             url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_delete.format(resource_id, **params))
