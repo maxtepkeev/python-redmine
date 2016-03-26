@@ -7,6 +7,11 @@ def is_string(string):
     return isinstance(string, basestring if sys.version_info[0] < 3 else str)
 
 
+def is_unicode(string):
+    """Python 2 and 3 friendly function to check if an object is a unicode string"""
+    return isinstance(string, unicode if sys.version_info[0] < 3 else str)
+
+
 def to_string(string):
     """Converts unicode to utf-8 if on Python 2, leaves as is if on Python 3"""
     return string.encode('utf-8') if sys.version_info[0] < 3 else string

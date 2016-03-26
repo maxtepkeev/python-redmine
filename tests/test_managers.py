@@ -57,6 +57,16 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(project.identifier, 'foo')
         self.assertEqual(project.id, 1)
 
+    @mock.patch('redmine.requests.get')
+    def test_get_unicode_resource(self, mock_get):
+        mock_get.return_value = response = mock.Mock(status_code=200)
+        unicode_name = b'\xcf\x86oo'.decode('utf8')
+        response.json.return_value = {'project': {'name': unicode_name, 'identifier': unicode_name, 'id': 1}}
+        project = self.redmine.project.get(unicode_name)
+        self.assertEqual(project.name, unicode_name)
+        self.assertEqual(project.identifier, unicode_name)
+        self.assertEqual(project.id, 1)
+
     def test_get_all_resources(self):
         self.assertIsInstance(self.redmine.project.all(), ResourceSet)
 
