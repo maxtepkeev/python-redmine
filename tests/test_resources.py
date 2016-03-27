@@ -3,7 +3,7 @@ from redmine.resultsets import ResourceSet
 
 responses = {
     'project': {
-        'get': {'project': {'name': 'Foo', 'id': 1}},
+        'get': {'project': {'name': 'Foo', 'id': 1, 'identifier': 'foo'}},
         'all': {'projects': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]},
     },
     'issue': {
@@ -100,7 +100,7 @@ class TestResources(unittest.TestCase):
 
     def test_supports_url_retrieval(self):
         self.response.json.return_value = responses['project']['get']
-        self.assertEqual(self.redmine.project.get(1).url, '{0}/projects/1'.format(self.url))
+        self.assertEqual(self.redmine.project.get(1).url, '{0}/projects/foo'.format(self.url))
 
     def test_supports_internal_id(self):
         self.response.json.return_value = responses['project']['get']
@@ -331,7 +331,7 @@ class TestResources(unittest.TestCase):
 
     def test_project_url(self):
         self.response.json.return_value = responses['project']['get']
-        self.assertEqual(self.redmine.project.get(1).url, '{0}/projects/1'.format(self.url))
+        self.assertEqual(self.redmine.project.get(1).url, '{0}/projects/foo'.format(self.url))
 
     def test_project_parent_converts_to_resource(self):
         from redmine.resources import Project
@@ -1184,7 +1184,7 @@ class TestResources(unittest.TestCase):
         fields = self.redmine.custom_field.all()
         self.assertEqual(fields[0].id, 1)
         self.assertEqual(fields[0].name, 'Foo')
-        self.assertEqual(fields[0].value, '0')
+        self.assertEqual(fields[0].value, '')
 
     def test_custom_field_returns_single_tracker_instead_of_multiple_trackers(self):
         self.response.json.return_value = {

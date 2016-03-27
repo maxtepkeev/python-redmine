@@ -20,6 +20,17 @@ Changelog
   was turned off for a resource
 - Removed: ``redmine.utilities.is_string`` function.
 
+1.5.1 (2016-03-27)
+++++++++++++++++++
+
+- Changed: Updated bundled requests package to 2.9.1
+- Changed: `Issue #124 <https://github.com/maxtepkeev/python-redmine/issues/124>`__ (``project.url``
+  now uses ``identifier`` rather than ``id`` to generate url for the project resource)
+- Fixed: `Issue #122 <https://github.com/maxtepkeev/python-redmine/issues/122>`__ (``ValidationError`` for
+  empty custom field values was possible under some circumstances with Redmine < 2.5.0)
+- Fixed: `Issue #112 <https://github.com/maxtepkeev/python-redmine/issues/112>`__ (``UnicodeEncodeError``
+  on Python 2 if ``resource_id`` was of ``unicode`` type) (thanks to `Digenis <https://github.com/Digenis>`__)
+
 1.5.0 (2015-11-26)
 ++++++++++++++++++
 

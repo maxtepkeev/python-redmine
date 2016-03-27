@@ -29,7 +29,7 @@ from .compat import (quote, urlparse, bytes, str, OrderedDict, unquote, is_py2,
                      basestring)
 from .cookies import RequestsCookieJar, cookiejar_from_dict
 from .structures import CaseInsensitiveDict
-from .exceptions import InvalidURL
+from .exceptions import InvalidURL, FileModeWarning
 
 _hush_pyflakes = (RequestsCookieJar,)
 
@@ -48,23 +48,44 @@ def dict_to_sequence(d):
 
 
 def super_len(o):
+    total_length = 0
+    current_position = 0
+
     if hasattr(o, '__len__'):
-        return len(o)
+        total_length = len(o)
 
-    if hasattr(o, 'len'):
-        return o.len
+    elif hasattr(o, 'len'):
+        total_length = o.len
 
-    if hasattr(o, 'fileno'):
+    elif hasattr(o, 'getvalue'):
+        # e.g. BytesIO, cStringIO.StringIO
+        total_length = len(o.getvalue())
+
+    elif hasattr(o, 'fileno'):
         try:
             fileno = o.fileno()
         except io.UnsupportedOperation:
             pass
         else:
-            return os.fstat(fileno).st_size
+            total_length = os.fstat(fileno).st_size
 
-    if hasattr(o, 'getvalue'):
-        # e.g. BytesIO, cStringIO.StringIO
-        return len(o.getvalue())
+            # Having used fstat to determine the file length, we need to
+            # confirm that this file was opened up in binary mode.
+            if 'b' not in o.mode:
+                warnings.warn((
+                    "Requests has determined the content-length for this "
+                    "request using the binary size of the file: however, the "
+                    "file has been opened in text mode (i.e. without the 'b' "
+                    "flag in the mode). This may lead to an incorrect "
+                    "content-length. In Requests 3.0, support will be removed "
+                    "for files in text mode."),
+                    FileModeWarning
+                )
+
+    if hasattr(o, 'tell'):
+        current_position = o.tell()
+
+    return max(0, total_length - current_position)
 
 
 def get_netrc_auth(url, raise_errors=False):
@@ -94,8 +115,12 @@ def get_netrc_auth(url, raise_errors=False):
 
         ri = urlparse(url)
 
-        # Strip port numbers from netloc
-        host = ri.netloc.split(':')[0]
+        # Strip port numbers from netloc. This weird `if...encode`` dance is
+        # used for Python 3.2, which doesn't support unicode literals.
+        splitstr = b':'
+        if isinstance(url, str):
+            splitstr = splitstr.decode('ascii')
+        host = ri.netloc.split(splitstr)[0]
 
         try:
             _netrc = netrc(netrc_path).authenticators(host)

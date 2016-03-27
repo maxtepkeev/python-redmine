@@ -8,6 +8,7 @@ This module contains the transport adapters that Requests uses to define
 and maintain connections.
 """
 
+import os.path
 import socket
 
 from .models import Response
@@ -107,7 +108,7 @@ class HTTPAdapter(BaseAdapter):
 
     def __setstate__(self, state):
         # Can't handle by adding 'proxy_manager' to self.__attrs__ because
-        # because self.poolmanager uses a lambda function, which isn't pickleable.
+        # self.poolmanager uses a lambda function, which isn't pickleable.
         self.proxy_manager = {}
         self.config = {}
 
@@ -185,10 +186,15 @@ class HTTPAdapter(BaseAdapter):
                 raise Exception("Could not find a suitable SSL CA certificate bundle.")
 
             conn.cert_reqs = 'CERT_REQUIRED'
-            conn.ca_certs = cert_loc
+
+            if not os.path.isdir(cert_loc):
+                conn.ca_certs = cert_loc
+            else:
+                conn.ca_cert_dir = cert_loc
         else:
             conn.cert_reqs = 'CERT_NONE'
             conn.ca_certs = None
+            conn.ca_cert_dir = None
 
         if cert:
             if not isinstance(cert, basestring):
@@ -394,7 +400,15 @@ class HTTPAdapter(BaseAdapter):
                         low_conn.send(b'\r\n')
                     low_conn.send(b'0\r\n\r\n')
 
-                    r = low_conn.getresponse()
+                    # Receive the response from the server
+                    try:
+                        # For Python 2.7+ versions, use buffering of HTTP
+                        # responses
+                        r = low_conn.getresponse(buffering=True)
+                    except TypeError:
+                        # For compatibility with Python 2.6 versions and back
+                        r = low_conn.getresponse()
+
                     resp = HTTPResponse.from_httplib(
                         r,
                         pool=conn,

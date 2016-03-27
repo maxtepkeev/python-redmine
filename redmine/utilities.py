@@ -11,6 +11,11 @@ def to_string(unistr):
     return unistr.encode('utf-8') if sys.version_info[0] < 3 else unistr
 
 
+def is_unicode(string):
+    """Python 2 and 3 friendly function to check if an object is a unicode string"""
+    return isinstance(string, unicode if sys.version_info[0] < 3 else str)
+
+
 class MemorizeFormatter(string.Formatter):
     """
     Memorizes all arguments, used during string formatting.

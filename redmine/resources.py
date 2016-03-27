@@ -444,6 +444,10 @@ class Project(Resource):
     _unconvertible = Resource._unconvertible + ('identifier', 'status')
     _update_readonly = Resource._update_readonly + ('identifier',)
 
+    @property
+    def url(self):
+        return '{0}{1}'.format(self.manager.redmine.url, self.query_one.format(self.identifier).replace('.json', ''))
+
     @classmethod
     def encode(cls, attr, value, manager):
         if attr == 'enabled_modules':
@@ -900,10 +904,10 @@ class CustomField(Resource):
     def __getattr__(self, attr):
         # If custom field was created after the creation of the resource,
         # i.e. project, and it's not used in the resource, there will be
-        # no value attribute defined, that is why we need to return 0 or
+        # no value attribute defined, that is why we need to return '' or
         # we'll get an exception
         if attr == 'value' and attr not in self._decoded_attrs:
-            return '0'
+            return ''
 
         return super(CustomField, self).__getattr__(attr)
 
