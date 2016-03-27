@@ -848,10 +848,10 @@ class CustomField(_Resource):
     def __getattr__(self, item):
         # If custom field was created after the creation of the resource,
         # i.e. project, and it's not used in the resource, there will be
-        # no value attribute defined, that is why we need to return 0 or
+        # no value attribute defined, that is why we need to return '' or
         # we'll get an exception
         if item == 'value' and item not in self._attributes:
-            return 0
+            return ''
 
         # Redmine <2.5.2 returns only single tracker instead of a list of
         # all available trackers, see http://www.redmine.org/issues/16739
