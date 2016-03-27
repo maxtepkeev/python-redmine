@@ -273,13 +273,13 @@ class Session(SessionRedirectMixin):
       >>> import requests
       >>> s = requests.Session()
       >>> s.get('http://httpbin.org/get')
-      200
+      <Response [200]>
 
     Or as a context manager::
 
       >>> with requests.Session() as s:
       >>>     s.get('http://httpbin.org/get')
-      200
+      <Response [200]>
     """
 
     __attrs__ = [
@@ -325,7 +325,7 @@ class Session(SessionRedirectMixin):
         #: limit, a :class:`TooManyRedirects` exception is raised.
         self.max_redirects = DEFAULT_REDIRECT_LIMIT
 
-        #: Trust environement settings for proxy configuration, default
+        #: Trust environment settings for proxy configuration, default
         #: authentication and similar.
         self.trust_env = True
 
@@ -433,8 +433,8 @@ class Session(SessionRedirectMixin):
             hostname to the URL of the proxy.
         :param stream: (optional) whether to immediately download the response
             content. Defaults to ``False``.
-        :param verify: (optional) if ``True``, the SSL cert will be verified.
-            A CA_BUNDLE path can also be provided.
+        :param verify: (optional) whether the SSL cert will be verified.
+            A CA_BUNDLE path can also be provided. Defaults to ``True``.
         :param cert: (optional) if String, path to ssl client cert file (.pem).
             If Tuple, ('cert', 'key') pair.
         """
@@ -634,7 +634,7 @@ class Session(SessionRedirectMixin):
                 'cert': cert}
 
     def get_adapter(self, url):
-        """Returns the appropriate connnection adapter for the given URL."""
+        """Returns the appropriate connection adapter for the given URL."""
         for (prefix, adapter) in self.adapters.items():
 
             if url.lower().startswith(prefix):

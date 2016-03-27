@@ -4,6 +4,7 @@ Changelog
 1.5.X (2016-03-XX)
 ++++++++++++++++++
 
+- Changed: Updated bundled requests package to 2.9.1
 - Changed: `Issue #124 <https://github.com/maxtepkeev/python-redmine/issues/124>`__ (``project.url``
   now uses ``identifier`` rather than ``id`` to generate url for the project resource)
 - Fixed: `Issue #122 <https://github.com/maxtepkeev/python-redmine/issues/122>`__ (``ValidationError`` for
