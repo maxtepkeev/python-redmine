@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-1.5.X (2016-03-XX)
+1.5.1 (2016-03-27)
 ++++++++++++++++++
 
 - Changed: Updated bundled requests package to 2.9.1
