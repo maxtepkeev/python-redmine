@@ -87,4 +87,7 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy'
     ],
+    install_requires=[
+        'requests',
+    ],
 )

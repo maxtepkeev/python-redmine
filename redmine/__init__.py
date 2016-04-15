@@ -3,7 +3,8 @@ import json
 
 from distutils.version import LooseVersion
 
-from .packages import requests
+import requests
+
 from .version import __version__
 from .managers import ResourceManager
 from .utilities import is_string, to_string
