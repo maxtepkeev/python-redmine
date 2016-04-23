@@ -9,6 +9,7 @@ Changelog
   tasks that should be done before/after deleting the resource through ``delete()`` method
 - Added: ``bulk_decode()``, ``bulk_encode()``, ``decode()`` and ``encode()`` methods on ``Resource``
   object which are used to translate attributes of the resource to/from Python/Redmine
+- Changed: Unicode handling was significantly rewritten and shouldn't cause any more troubles
 - Changed: ``_Resource`` class renamed to ``Resource``
 - Changed: ``Resource.refresh()`` now really refreshes itself instead of returning a new refreshed
   resource, to get the previous behaviour call it like this ``Resource.refresh(itself=False)``

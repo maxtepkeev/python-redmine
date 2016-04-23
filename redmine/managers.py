@@ -1,7 +1,7 @@
 from distutils.version import LooseVersion
 
 from .resultsets import ResourceSet
-from .utilities import MemorizeFormatter, is_unicode, to_string
+from .utilities import MemorizeFormatter
 from .exceptions import (
     ResourceError,
     ResourceBadMethodError,
@@ -154,9 +154,6 @@ class ResourceManager(object):
         if self.resource_class.query_one is None or self.resource_class.container_one is None:
             raise ResourceBadMethodError
 
-        if is_unicode(resource_id):
-            resource_id = to_string(resource_id)
-
         try:
             self.url = self.redmine.url + self.resource_class.query_one.format(resource_id, **params)
         except KeyError as exception:
@@ -215,10 +212,6 @@ class ResourceManager(object):
 
         formatter = MemorizeFormatter()
 
-        title = fields.get('title')
-        if title is not None and is_unicode(title):
-            fields['title'] = to_string(title)
-
         try:
             url = self.redmine.url + formatter.format(self.resource_class.query_create, **fields)
         except KeyError as exception:
@@ -264,13 +257,10 @@ class ResourceManager(object):
 
         formatter = MemorizeFormatter()
 
-        if is_unicode(resource_id):
-            resource_id = to_string(resource_id)
-
         try:
             query_update = formatter.format(self.resource_class.query_update, resource_id, **fields)
         except KeyError as exception:
-            param = str(exception).replace("'", "")
+            param = exception.args[0]
 
             if param in self.params:
                 fields[param] = self.params[param]
@@ -298,9 +288,6 @@ class ResourceManager(object):
         """
         if self.resource_class.query_delete is None:
             raise ResourceBadMethodError
-
-        if is_unicode(resource_id):
-            resource_id = to_string(resource_id)
 
         try:
             url = self.redmine.url + self.resource_class.query_delete.format(resource_id, **params)

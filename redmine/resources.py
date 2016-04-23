@@ -2,10 +2,12 @@
 Defines basic Redmine resources and resource mappings.
 """
 
+from __future__ import unicode_literals
+
 from datetime import date, datetime
 from distutils.version import LooseVersion
 
-from .utilities import to_string
+from .utilities import fix_unicode
 from .exceptions import (
     ResourceAttrError,
     ReadonlyAttrError,
@@ -82,6 +84,7 @@ _MULTIPLE_ATTR_ID_MAP = {
 }
 
 
+@fix_unicode
 class Resource(object):
     """
     Implementation of Redmine resource.
@@ -97,6 +100,7 @@ class Resource(object):
     query_update = None
     query_delete = None
 
+    _repr = (('id', 'name'),)
     _includes = ()
     _relations = ()
     _relations_name = None
@@ -116,7 +120,7 @@ class Resource(object):
         self.manager = manager
         self._create_readonly += relations_includes
         self._update_readonly += relations_includes
-        self._decoded_attrs = dict(dict.fromkeys(tuple(map(unicode, relations_includes))), **attributes)
+        self._decoded_attrs = dict(dict.fromkeys(relations_includes), **attributes)
         self._encoded_attrs = {}
         self._changes = {}
 
@@ -403,22 +407,54 @@ class Resource(object):
         """
         return self.id
 
+    def _representation(self, target):
+        """
+        Prepares values which should be used in either __str__ or __repr__ methods.
+
+        :param str target: (required). Target of representation.
+        """
+        _str_, _repr_ = [], []
+
+        for attrs in self._repr:
+            for attr in reversed(attrs):
+                value = getattr(self, attr, None)
+                if value is None:
+                    break
+
+                _repr_.insert(0, value)
+
+                if attr != 'id':
+                    _str_.insert(0, value)
+
+            if len(_repr_) > 0:
+                break
+
+        if self.is_new() and len(_repr_) > 2:
+            _str_ = _str_[:-1]
+            _repr_ = _repr_[:-1]
+
+        return _str_ or [str(_repr_[0])] if target == 'str' else _repr_
+
     def __str__(self):
         """
         Informal representation of a Resource object.
         """
-        return to_string(self.name)
+        return ' '.join(self._representation('str'))
 
     def __repr__(self):
         """
         Official representation of a Resource object.
         """
-        return '<{0}.{1} #{2} "{3}">'.format(
-            self.__class__.__module__,
-            self.__class__.__name__,
-            self.id,
-            to_string(self.name)
-        )
+        values = self._representation('repr')
+        view = '<{0.__class__.__module__}.{0.__class__.__name__}'.format(self)
+
+        if isinstance(values[0], int):
+            view += ' #{0}'.format(values.pop(0))
+
+        if len(values) > 0:
+            view += ' "{0}"'.format(' '.join(values))
+
+        return view + '>'
 
 
 class Project(Resource):
@@ -467,6 +503,7 @@ class Issue(Resource):
     query_update = '/issues/{0}.json'
     query_delete = '/issues/{0}.json'
 
+    _repr = (('id', 'subject'), ('id',))
     _includes = ('children', 'attachments', 'relations', 'changesets', 'journals', 'watchers')
     _relations = ('relations', 'time_entries')
     _unconvertible = Resource._unconvertible + ('subject', 'notes')
@@ -523,23 +560,6 @@ class Issue(Resource):
 
         return super(Issue, cls).decode(attr, value, manager)
 
-    def __str__(self):
-        if getattr(self, 'subject', None) is not None:
-            return to_string(self.subject)
-
-        return str(self.id)
-
-    def __repr__(self):
-        if getattr(self, 'subject', None) is not None:
-            return '<{0}.{1} #{2} "{3}">'.format(
-                self.__class__.__module__,
-                self.__class__.__name__,
-                self.id,
-                to_string(self.subject)
-            )
-
-        return '<{0}.{1} #{2}>'.format(self.__class__.__module__, self.__class__.__name__, self.id)
-
 
 class TimeEntry(Resource):
     redmine_version = '1.1'
@@ -552,6 +572,8 @@ class TimeEntry(Resource):
     query_update = '/time_entries/{0}.json'
     query_delete = '/time_entries/{0}.json'
 
+    _repr = (('id',),)
+
     @classmethod
     def decode(cls, attr, value, manager):
         if attr == 'from_date':
@@ -560,12 +582,6 @@ class TimeEntry(Resource):
             attr = 'to'
 
         return super(TimeEntry, cls).decode(attr, value, manager)
-
-    def __str__(self):
-        return str(self.id)
-
-    def __repr__(self):
-        return '<{0}.{1} #{2}>'.format(self.__class__.__module__, self.__class__.__name__, self.id)
 
 
 class Enumeration(Resource):
@@ -583,36 +599,17 @@ class Attachment(Resource):
     container_one = 'attachment'
     query_one = '/attachments/{0}.json'
 
+    _repr = (('id', 'filename'), ('id',))
+
     def download(self, savepath=None, filename=None):
         return self.manager.redmine.download(self.content_url, savepath, filename)
-
-    def __str__(self):
-        if getattr(self, 'filename', None) is not None:
-            return to_string(self.filename)
-
-        return str(self.id)
-
-    def __repr__(self):
-        if getattr(self, 'filename', None) is not None:
-            return '<{0}.{1} #{2} "{3}">'.format(
-                self.__class__.__module__,
-                self.__class__.__name__,
-                self.id,
-                to_string(self.filename)
-            )
-
-        return '<{0}.{1} #{2}>'.format(self.__class__.__module__, self.__class__.__name__, self.id)
 
 
 class IssueJournal(Resource):
     redmine_version = '1.0'
+
+    _repr = (('id',),)
     _unconvertible = ('notes',)
-
-    def __str__(self):
-        return str(self.id)
-
-    def __repr__(self):
-        return '<{0}.{1} #{2}>'.format(self.__class__.__module__, self.__class__.__name__, self.id)
 
 
 class WikiPage(Resource):
@@ -625,6 +622,7 @@ class WikiPage(Resource):
     query_update = '/projects/{project_id}/wiki/{0}.json'
     query_delete = '/projects/{project_id}/wiki/{0}.json'
 
+    _repr = (('title',),)
     _includes = ('attachments',)
     _unconvertible = Resource._unconvertible + ('title', 'text')
     _create_readonly = Resource._create_readonly + ('version',)
@@ -656,7 +654,7 @@ class WikiPage(Resource):
 
     @property
     def internal_id(self):
-        return to_string(self.title)
+        return self.title
 
     def __getattr__(self, attr):
         # If a text attribute of a resource is missing, we should
@@ -669,12 +667,6 @@ class WikiPage(Resource):
     def __int__(self):
         return self.version
 
-    def __str__(self):
-        return self.internal_id
-
-    def __repr__(self):
-        return '<{0}.{1} "{2}">'.format(self.__class__.__module__, self.__class__.__name__, self.internal_id)
-
 
 class ProjectMembership(Resource):
     redmine_version = '1.4'
@@ -686,14 +678,9 @@ class ProjectMembership(Resource):
     query_update = '/memberships/{0}.json'
     query_delete = '/memberships/{0}.json'
 
+    _repr = (('id',),)
     _create_readonly = Resource._create_readonly + ('user', 'roles')
     _update_readonly = _create_readonly
-
-    def __str__(self):
-        return str(self.id)
-
-    def __repr__(self):
-        return '<{0}.{1} #{2}>'.format(self.__class__.__module__, self.__class__.__name__, self.id)
 
 
 class IssueCategory(Resource):
@@ -716,11 +703,7 @@ class IssueRelation(Resource):
     query_create = '/issues/{issue_id}/relations.json'
     query_delete = '/relations/{0}.json'
 
-    def __str__(self):
-        return str(self.id)
-
-    def __repr__(self):
-        return '<{0}.{1} #{2}>'.format(self.__class__.__module__, self.__class__.__name__, self.id)
+    _repr = (('id',),)
 
 
 class Version(Resource):
@@ -747,6 +730,7 @@ class User(Resource):
     query_update = '/users/{0}.json'
     query_delete = '/users/{0}.json'
 
+    _repr = (('id', 'firstname', 'lastname'), ('id', 'name'))
     _includes = ('memberships', 'groups')
     _relations = ('issues', 'time_entries')
     _relations_name = 'assigned_to'
@@ -762,24 +746,6 @@ class User(Resource):
             return value
 
         return super(User, self).__getattr__(attr)
-
-    def __str__(self):
-        if getattr(self, 'name', None) is not None:
-            return super(User, self).__str__()
-        else:
-            return '{0} {1}'.format(to_string(self.firstname), to_string(self.lastname))
-
-    def __repr__(self):
-        if getattr(self, 'name', None) is not None:
-            return super(User, self).__repr__()
-        else:
-            return '<{0}.{1} #{2} "{3} {4}">'.format(
-                self.__class__.__module__,
-                self.__class__.__name__,
-                self.id,
-                to_string(self.firstname),
-                to_string(self.lastname)
-            )
 
 
 class Group(Resource):
@@ -841,20 +807,11 @@ class News(Resource):
     query_all = '/news.json'
     query_filter = '/news.json'
 
+    _repr = (('id', 'title'),)
+
     @property
     def url(self):
         return '{0}/news/{1}'.format(self.manager.redmine.url, self.internal_id)
-
-    def __str__(self):
-        return to_string(self.title)
-
-    def __repr__(self):
-        return '<{0}.{1} #{2} "{3}">'.format(
-            self.__class__.__module__,
-            self.__class__.__name__,
-            self.id,
-            to_string(self.title)
-        )
 
 
 class IssueStatus(Resource):

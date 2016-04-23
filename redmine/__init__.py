@@ -6,7 +6,6 @@ from distutils.version import LooseVersion
 from .packages import requests
 from .version import __version__
 from .managers import ResourceManager
-from .utilities import to_string
 from .exceptions import (
     AuthError,
     ConflictError,
@@ -185,7 +184,7 @@ class Redmine(object):
             raise RequestEntityTooLargeError
         elif response.status_code == 422:
             errors = response.json()['errors']
-            raise ValidationError(to_string(', '.join(': '.join(e) if isinstance(e, list) else e for e in errors)))
+            raise ValidationError(', '.join(': '.join(e) if isinstance(e, list) else e for e in errors))
         elif response.status_code == 500:
             raise ServerError
 

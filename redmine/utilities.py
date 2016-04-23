@@ -1,19 +1,39 @@
+"""
+Provides helper utilities.
+"""
+
 import sys
 import string
+import functools
 
 
-def to_string(unistr):
+def fix_unicode(cls):
     """
-    Encodes unicode string to utf-8 if on Python 2, leaves as is if on Python 3.
+    A class decorator that defines __unicode__, makes __str__ and __repr__
+    return a utf-8 encoded string and encodes unicode exception messages
+    to utf-8 encoded strings under Python 2. Does nothing under Python 3.
 
-    :param str unistr: (required). Unicode string.
+    :param class cls: (required). A class where unicode should be fixed.
     """
-    return unistr.encode('utf-8') if sys.version_info[0] < 3 else unistr
+    if sys.version_info[0] >= 3:
+        return cls
 
+    def decorator(fn):
+        @functools.wraps(fn, assigned=('__name__', '__doc__'))
+        def wrapper(self, *args, **kwargs):
+            if fn.__name__ == '__init__':
+                return fn(self, *[arg.encode('utf-8') if isinstance(arg, unicode) else arg for arg in args], **kwargs)
+            return fn(self).encode('utf-8')
+        return wrapper
 
-def is_unicode(string):
-    """Python 2 and 3 friendly function to check if an object is a unicode string"""
-    return isinstance(string, unicode if sys.version_info[0] < 3 else str)
+    if issubclass(cls, Exception):
+        cls.__init__ = decorator(cls.__init__)
+        return cls
+
+    cls.__unicode__ = cls.__str__
+    cls.__str__ = decorator(cls.__unicode__)
+    cls.__repr__ = decorator(cls.__repr__)
+    return cls
 
 
 class MemorizeFormatter(string.Formatter):
