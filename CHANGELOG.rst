@@ -4,21 +4,21 @@ Changelog
 2.0.0 (2016-XX-XX)
 ++++++++++++++++++
 
+- Added: ``delete()`` method on ``Resource`` object which deletes current resource from Redmine
 - Added: ``pre_delete()`` and ``post_delete()`` ``Resource`` object methods which can be used to execute
   tasks that should be done before/after deleting the resource through ``delete()`` method
-- Added: ``delete()`` method on ``Resource`` object which deletes current resource from Redmine
 - Added: ``bulk_decode()``, ``bulk_encode()``, ``decode()`` and ``encode()`` methods on ``Resource``
-  object which are used to translate attributes of the resource to/from Python/Redmine.
-- Changed: ``_Resource`` class renamed to ``Resource``.
+  object which are used to translate attributes of the resource to/from Python/Redmine
+- Changed: ``_Resource`` class renamed to ``Resource``
 - Changed: ``Resource.refresh()`` now really refreshes itself instead of returning a new refreshed
   resource, to get the previous behaviour call it like this ``Resource.refresh(itself=False)``
-- Changed: ``Resource.translate_params()`` and ``ResourceManager.prepare_params()`` removed in favor of
-  ``Resource.bulk_decode()``.
-- Changed: ``container_filter``, ``container_create`` and ``container_update`` attributes on ``Resource``
-  object are removed in favor of ``container_many`` attribute.
 - Fixed: Calling ``str()`` or ``repr()`` on a Resource was giving incorrect results if exception raising
   was turned off for a resource
-- Removed: ``redmine.utilities.is_string`` function.
+- Removed: ``container_filter``, ``container_create`` and ``container_update`` attributes on ``Resource``
+  object in favor of ``container_many`` attribute
+- Removed: ``Resource.translate_params()`` and ``ResourceManager.prepare_params()`` in favor of
+  ``Resource.bulk_decode()``
+- Removed: ``is_string``, ``to_string`` and ``is_unicode`` functions from ``redmine.utilities``
 
 1.5.1 (2016-03-27)
 ++++++++++++++++++
