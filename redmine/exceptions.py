@@ -3,10 +3,10 @@ Python-Redmine tries it's best to provide human readable errors in all situation
 This is a list of all exceptions that Python-Redmine can throw.
 """
 
-from .utilities import fix_unicode
+from . import utilities
 
 
-@fix_unicode
+@utilities.fix_unicode
 class BaseRedmineError(Exception):
     """
     Base exception class for Redmine exceptions.

@@ -7,13 +7,7 @@ from __future__ import unicode_literals
 from datetime import date, datetime
 from distutils.version import LooseVersion
 
-from .utilities import fix_unicode
-from .exceptions import (
-    ResourceAttrError,
-    ReadonlyAttrError,
-    CustomFieldValueError,
-    ResourceVersionMismatchError
-)
+from . import utilities, exceptions
 
 # Resources which when accessed from some other
 # resource should become a ResourceSet object
@@ -84,7 +78,7 @@ _MULTIPLE_ATTR_ID_MAP = {
 }
 
 
-@fix_unicode
+@utilities.fix_unicode
 class Resource(object):
     """
     Implementation of Redmine resource.
@@ -173,9 +167,9 @@ class Resource(object):
         raise_attr_exception = self.manager.redmine.raise_attr_exception
 
         if isinstance(raise_attr_exception, bool) and raise_attr_exception:
-            raise ResourceAttrError
+            raise exceptions.ResourceAttrError
         elif isinstance(raise_attr_exception, (list, tuple)) and self.__class__.__name__ in raise_attr_exception:
-            raise ResourceAttrError
+            raise exceptions.ResourceAttrError
 
         return None
 
@@ -186,14 +180,14 @@ class Resource(object):
         if attr in self._members or attr.startswith('_'):
             return super(Resource, self).__setattr__(attr, value)
         elif attr in self._create_readonly and self.is_new():
-            raise ReadonlyAttrError
+            raise exceptions.ReadonlyAttrError
         elif attr in self._update_readonly and not self.is_new():
-            raise ReadonlyAttrError
+            raise exceptions.ReadonlyAttrError
         elif attr == 'custom_fields':
             try:
                 new = dict((field['id'], self.bulk_decode(field, self.manager)) for field in value)
             except (TypeError, KeyError):
-                raise CustomFieldValueError
+                raise exceptions.CustomFieldValueError
 
             for i, field in enumerate(self._decoded_attrs.setdefault('custom_fields', [])):
                 if field['id'] in new:
@@ -519,7 +513,7 @@ class Issue(Resource):
             self._issue_id = issue.internal_id
 
             if self._redmine.ver is not None and LooseVersion(str(self._redmine.ver)) < LooseVersion('2.3'):
-                raise ResourceVersionMismatchError
+                raise exceptions.ResourceVersionMismatchError
 
         def add(self, user_id):
             """

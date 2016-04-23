@@ -1,18 +1,6 @@
 from distutils.version import LooseVersion
 
-from .resultsets import ResourceSet
-from .utilities import MemorizeFormatter
-from .exceptions import (
-    ResourceError,
-    ResourceBadMethodError,
-    ResourceFilterError,
-    ResourceNoFiltersProvidedError,
-    ResourceNoFieldsProvidedError,
-    ResourceVersionMismatchError,
-    ResourceNotFoundError,
-    ValidationError,
-    ResourceRequirementsError
-)
+from . import utilities, resultsets, exceptions
 
 
 class ResourceManager(object):
@@ -41,10 +29,10 @@ class ResourceManager(object):
                 continue
 
         if resource_class is None:
-            raise ResourceError
+            raise exceptions.ResourceError
 
         if redmine.ver is not None and LooseVersion(str(redmine.ver)) < LooseVersion(resource_class.redmine_version):
-            raise ResourceVersionMismatchError
+            raise exceptions.ResourceVersionMismatchError
 
         self.redmine = redmine
         self.resource_class = resource_class
@@ -69,14 +57,14 @@ class ResourceManager(object):
         while True:
             try:
                 response = self.redmine.request('get', self.url, params=dict(self.params, limit=limit, offset=offset))
-            except ResourceNotFoundError:
+            except exceptions.ResourceNotFoundError:
                 # This is the only place we're checking for ResourceRequirementsError
                 # because for some POST/PUT/DELETE requests Redmine may also return 404
                 # status code instead of 405 which can lead us to improper decisions
                 if self.resource_class.requirements:
-                    raise ResourceRequirementsError(self.resource_class.requirements)
+                    raise exceptions.ResourceRequirementsError(self.resource_class.requirements)
 
-                raise ResourceNotFoundError
+                raise exceptions.ResourceNotFoundError
 
             # A single resource was requested via get()
             if isinstance(response[self.container], dict):
@@ -126,7 +114,7 @@ class ResourceManager(object):
         :param resources: (required). Resource data.
         :type resources: list or tuple
         """
-        return ResourceSet(self, resources)
+        return resultsets.ResourceSet(self, resources)
 
     def new(self):
         """
@@ -152,12 +140,12 @@ class ResourceManager(object):
         :param dict params: (optional). Parameters used for resource retrieval.
         """
         if self.resource_class.query_one is None or self.resource_class.container_one is None:
-            raise ResourceBadMethodError
+            raise exceptions.ResourceBadMethodError
 
         try:
             self.url = self.redmine.url + self.resource_class.query_one.format(resource_id, **params)
         except KeyError as exception:
-            raise ValidationError('{0} argument is required'.format(exception))
+            raise exceptions.ValidationError('{0} argument is required'.format(exception))
 
         self.params = self.resource_class.bulk_decode(params, self)
         self.container = self.resource_class.container_one
@@ -170,12 +158,12 @@ class ResourceManager(object):
         :param dict params: (optional). Parameters used for resources retrieval.
         """
         if self.resource_class.query_all is None or self.resource_class.container_many is None:
-            raise ResourceBadMethodError
+            raise exceptions.ResourceBadMethodError
 
         self.url = self.redmine.url + self.resource_class.query_all
         self.params = self.resource_class.bulk_decode(params, self)
         self.container = self.resource_class.container_many
-        return ResourceSet(self)
+        return resultsets.ResourceSet(self)
 
     def filter(self, **filters):
         """
@@ -184,19 +172,19 @@ class ResourceManager(object):
         :param dict filters: (optional). Filters used for resources retrieval.
         """
         if self.resource_class.query_filter is None or self.resource_class.container_many is None:
-            raise ResourceBadMethodError
+            raise exceptions.ResourceBadMethodError
 
         if not filters:
-            raise ResourceNoFiltersProvidedError
+            raise exceptions.ResourceNoFiltersProvidedError
 
         try:
             self.url = self.redmine.url + self.resource_class.query_filter.format(**filters)
             self.container = self.resource_class.container_many.format(**filters)
         except KeyError:
-            raise ResourceFilterError
+            raise exceptions.ResourceFilterError
 
         self.params = self.resource_class.bulk_decode(filters, self)
-        return ResourceSet(self)
+        return resultsets.ResourceSet(self)
 
     def create(self, **fields):
         """
@@ -205,17 +193,17 @@ class ResourceManager(object):
         :param dict fields: (optional). Fields used for resource creation.
         """
         if self.resource_class.query_create is None or self.resource_class.container_one is None:
-            raise ResourceBadMethodError
+            raise exceptions.ResourceBadMethodError
 
         if not fields:
-            raise ResourceNoFieldsProvidedError
+            raise exceptions.ResourceNoFieldsProvidedError
 
-        formatter = MemorizeFormatter()
+        formatter = utilities.MemorizeFormatter()
 
         try:
             url = self.redmine.url + formatter.format(self.resource_class.query_create, **fields)
         except KeyError as exception:
-            raise ValidationError('{0} field is required'.format(exception))
+            raise exceptions.ValidationError('{0} field is required'.format(exception))
 
         self.container = self.resource_class.container_one
         data = {self.resource_class.container_one: self.resource_class.bulk_decode(formatter.unused_kwargs, self)}
@@ -229,13 +217,13 @@ class ResourceManager(object):
         # resources are created via PUT, so we should check for this
         try:
             response = self.redmine.request('post', url, data=data)
-        except ResourceNotFoundError:
+        except exceptions.ResourceNotFoundError:
             response = self.redmine.request('put', url, data=data)
 
         try:
             resource = self.to_resource(response[self.container])
         except TypeError:
-            raise ValidationError('Resource already exists')  # fix for repeated PUT requests
+            raise exceptions.ValidationError('Resource already exists')  # fix for repeated PUT requests
 
         self.params = formatter.used_kwargs
         self.url = self.redmine.url + self.resource_class.query_one.format(resource.internal_id, **fields)
@@ -250,12 +238,12 @@ class ResourceManager(object):
         :param dict fields: (optional). Fields which will be updated for the resource.
         """
         if self.resource_class.query_update is None or self.resource_class.container_one is None:
-            raise ResourceBadMethodError
+            raise exceptions.ResourceBadMethodError
 
         if not fields:
-            raise ResourceNoFieldsProvidedError
+            raise exceptions.ResourceNoFieldsProvidedError
 
-        formatter = MemorizeFormatter()
+        formatter = utilities.MemorizeFormatter()
 
         try:
             query_update = formatter.format(self.resource_class.query_update, resource_id, **fields)
@@ -266,7 +254,7 @@ class ResourceManager(object):
                 fields[param] = self.params[param]
                 query_update = formatter.format(self.resource_class.query_update, resource_id, **fields)
             else:
-                raise ValidationError('{0} argument is required'.format(exception))
+                raise exceptions.ValidationError('{0} argument is required'.format(exception))
 
         url = self.redmine.url + query_update
         data = {self.resource_class.container_one: self.resource_class.bulk_decode(formatter.unused_kwargs, self)}
@@ -287,11 +275,11 @@ class ResourceManager(object):
         :param dict params: (optional). Parameters used for resource deletion.
         """
         if self.resource_class.query_delete is None:
-            raise ResourceBadMethodError
+            raise exceptions.ResourceBadMethodError
 
         try:
             url = self.redmine.url + self.resource_class.query_delete.format(resource_id, **params)
         except KeyError as exception:
-            raise ValidationError('{0} argument is required'.format(exception))
+            raise exceptions.ValidationError('{0} argument is required'.format(exception))
 
         return self.redmine.request('delete', url, params=self.resource_class.bulk_decode(params, self))

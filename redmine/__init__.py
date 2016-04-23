@@ -3,24 +3,9 @@ import json
 
 from distutils.version import LooseVersion
 
+from . import managers, exceptions
 from .packages import requests
 from .version import __version__
-from .managers import ResourceManager
-from .exceptions import (
-    AuthError,
-    ConflictError,
-    ImpersonateError,
-    ServerError,
-    ValidationError,
-    NoFileError,
-    FileUrlError,
-    VersionMismatchError,
-    ResourceNotFoundError,
-    RequestEntityTooLargeError,
-    UnknownError,
-    ForbiddenError,
-    JSONDecodeError
-)
 
 
 class Redmine(object):
@@ -64,7 +49,7 @@ class Redmine(object):
         if resource_name.startswith('_'):
             raise AttributeError
 
-        return ResourceManager(self, resource_name)
+        return managers.ResourceManager(self, resource_name)
 
     def upload(self, filepath):
         """
@@ -73,14 +58,14 @@ class Redmine(object):
         :param string filepath: (required). Path to the file that will be uploaded.
         """
         if self.ver is not None and LooseVersion(str(self.ver)) < LooseVersion('1.4.0'):
-            raise VersionMismatchError('File uploading')
+            raise exceptions.VersionMismatchError('File uploading')
 
         try:
             with open(filepath, 'rb') as stream:
                 url = '{0}/uploads.json'.format(self.url)
                 response = self.request('post', url, data=stream, headers={'Content-Type': 'application/octet-stream'})
         except IOError:
-            raise NoFileError
+            raise exceptions.NoFileError
 
         return response['upload']['token']
 
@@ -111,7 +96,7 @@ class Redmine(object):
             filename = urlsplit(url)[2].split('/')[-1]
 
             if not filename:
-                raise FileUrlError
+                raise exceptions.FileUrlError
 
         savepath = os.path.join(savepath, filename)
 
@@ -169,23 +154,23 @@ class Redmine(object):
                 try:
                     return response.json()
                 except (ValueError, TypeError):
-                    raise JSONDecodeError(response)
+                    raise exceptions.JSONDecodeError(response)
         elif response.status_code == 401:
-            raise AuthError
+            raise exceptions.AuthError
         elif response.status_code == 403:
-            raise ForbiddenError
+            raise exceptions.ForbiddenError
         elif response.status_code == 404:
-            raise ResourceNotFoundError
+            raise exceptions.ResourceNotFoundError
         elif response.status_code == 409:
-            raise ConflictError
+            raise exceptions.ConflictError
         elif response.status_code == 412 and self.impersonate is not None:
-            raise ImpersonateError
+            raise exceptions.ImpersonateError
         elif response.status_code == 413:
-            raise RequestEntityTooLargeError
+            raise exceptions.RequestEntityTooLargeError
         elif response.status_code == 422:
             errors = response.json()['errors']
-            raise ValidationError(', '.join(': '.join(e) if isinstance(e, list) else e for e in errors))
+            raise exceptions.ValidationError(', '.join(': '.join(e) if isinstance(e, list) else e for e in errors))
         elif response.status_code == 500:
-            raise ServerError
+            raise exceptions.ServerError
 
-        raise UnknownError(response.status_code)
+        raise exceptions.UnknownError(response.status_code)
