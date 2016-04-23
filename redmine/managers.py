@@ -26,7 +26,7 @@ class ResourceManager(object):
     def __init__(self, redmine, resource_name, **params):
         """
         :param redmine.Redmine redmine: (required). Redmine instance object.
-        :param str resource_name: (required). Resource name.
+        :param string resource_name: (required). Resource name.
         :param dict params: (optional). Parameters used for resources retrieval.
         """
         resource_class = None
@@ -138,7 +138,7 @@ class ResourceManager(object):
         """
         Returns new ResourceManager instance object.
 
-        :param str resource_name: (required). Resource name.
+        :param string resource_name: (required). Resource name.
         :param dict params: (optional). Parameters used for resources retrieval.
         """
         return ResourceManager(self.redmine, resource_name, **params)
@@ -148,7 +148,7 @@ class ResourceManager(object):
         Returns a Resource object from Redmine by resource id.
 
         :param resource_id: (required). Resource id.
-        :type resource_id: int or str
+        :type resource_id: int or string
         :param dict params: (optional). Parameters used for resource retrieval.
         """
         if self.resource_class.query_one is None or self.resource_class.container_one is None:
@@ -246,7 +246,7 @@ class ResourceManager(object):
         Updates a Resource object by resource id.
 
         :param resource_id: (required). Resource id.
-        :type resource_id: int or str
+        :type resource_id: int or string
         :param dict fields: (optional). Fields which will be updated for the resource.
         """
         if self.resource_class.query_update is None or self.resource_class.container_one is None:
@@ -283,7 +283,7 @@ class ResourceManager(object):
         Deletes a Resource object by resource id.
 
         :param resource_id: (required). Resource id.
-        :type resource_id: int or str
+        :type resource_id: int or string
         :param dict params: (optional). Parameters used for resource deletion.
         """
         if self.resource_class.query_delete is None:

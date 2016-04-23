@@ -29,15 +29,15 @@ class Redmine(object):
     """
     def __init__(self, url, **kwargs):
         """
-        :param str url: (required). Redmine location.
-        :param str key: (optional). API key used for authentication.
-        :param str version: (optional). Redmine version.
-        :param str username: (optional). Username used for authentication.
-        :param str password: (optional). Password used for authentication.
+        :param string url: (required). Redmine location.
+        :param string key: (optional). API key used for authentication.
+        :param string version: (optional). Redmine version.
+        :param string username: (optional). Username used for authentication.
+        :param string password: (optional). Password used for authentication.
         :param dict requests: (optional). Connection options.
-        :param str impersonate: (optional). Username to impersonate.
-        :param str date_format: (optional). Formatting directives for date format.
-        :param str datetime_format: (optional). Formatting directives for datetime format.
+        :param string impersonate: (optional). Username to impersonate.
+        :param string date_format: (optional). Formatting directives for date format.
+        :param string datetime_format: (optional). Formatting directives for datetime format.
         :param raise_attr_exception: (optional). Control over resource attribute access exception raising.
         :type raise_attr_exception: bool or tuple
         :param custom_resource_paths: (optional). Module paths which contain custom resources.
@@ -59,7 +59,7 @@ class Redmine(object):
         """
         Returns either ResourceSet or Resource object depending on the method used on the ResourceManager.
 
-        :param str resource_name: (required). Resource name.
+        :param string resource_name: (required). Resource name.
         """
         if resource_name.startswith('_'):
             raise AttributeError
@@ -70,7 +70,7 @@ class Redmine(object):
         """
         Uploads file from filepath to Redmine and returns an assigned token.
 
-        :param str filepath: (required). Path to the file that will be uploaded.
+        :param string filepath: (required). Path to the file that will be uploaded.
         """
         if self.ver is not None and LooseVersion(str(self.ver)) < LooseVersion('1.4.0'):
             raise VersionMismatchError('File uploading')
@@ -88,9 +88,9 @@ class Redmine(object):
         """
         Downloads file from Redmine and saves it to savepath or returns it as bytes.
 
-        :param str url: (required). URL of the file that will be downloaded.
-        :param str savepath: (optional). Path where to save the file.
-        :param str filename: (optional). Name that will be used for the file.
+        :param string url: (required). URL of the file that will be downloaded.
+        :param string savepath: (optional). Path where to save the file.
+        :param string filename: (optional). Name that will be used for the file.
         """
         self.requests['stream'] = True   # We don't want to load the entire file into memory
         response = self.request('get', url, raw_response=True)
@@ -131,8 +131,8 @@ class Redmine(object):
         """
         Makes requests to Redmine and returns result.
 
-        :param str method: (required). HTTP method used for the request.
-        :param str url: (required). URL of the request.
+        :param string method: (required). HTTP method used for the request.
+        :param string url: (required). URL of the request.
         :param dict headers: (optional). HTTP headers to send with the request.
         :param dict params: (optional). Params to send in the query string.
         :param data: (optional). Data to send in the body of the request.

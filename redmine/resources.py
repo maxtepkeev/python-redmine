@@ -222,7 +222,7 @@ class Resource(object):
         """
         Decodes a single attr, value pair from Python representation to the needed Redmine representation.
 
-        :param str attr: (required). Attribute name.
+        :param string attr: (required). Attribute name.
         :param any value: (required). Attribute value.
         :param managers.ResourceManager manager: (required). Manager instance object.
         """
@@ -240,7 +240,7 @@ class Resource(object):
         """
         Encodes a single attr, value pair retrieved from Redmine to the needed Python representation.
 
-        :param str attr: (required). Attribute name.
+        :param string attr: (required). Attribute name.
         :param any value: (required). Attribute value.
         :param managers.ResourceManager manager: (required). Manager instance object.
         """
@@ -411,7 +411,7 @@ class Resource(object):
         """
         Prepares values which should be used in either __str__ or __repr__ methods.
 
-        :param str target: (required). Target of representation.
+        :param string target: (required). Target of representation.
         """
         _str_, _repr_ = [], []
 
