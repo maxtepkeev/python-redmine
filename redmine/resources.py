@@ -366,7 +366,7 @@ class Resource(object):
         Returns full URL to the Resource for humans if there is one.
         """
         if self.query_one is not None:
-            return self.manager.redmine.url + self.query_one.format(self.internal_id).replace('.json', '')
+            return self.manager.redmine.url + self.query_one.format(self.internal_id)[:-5]
 
         return None
 
@@ -476,7 +476,7 @@ class Project(Resource):
 
     @property
     def url(self):
-        return '{0}{1}'.format(self.manager.redmine.url, self.query_one.format(self.identifier).replace('.json', ''))
+        return self.manager.redmine.url + self.query_one.format(self.identifier)[:-5]
 
     @classmethod
     def encode(cls, attr, value, manager):
@@ -642,9 +642,9 @@ class WikiPage(Resource):
     @property
     def url(self):
         return self.manager.redmine.url + self.query_one.format(
-                self.internal_id,
-                project_id=self.manager.params.get('project_id', 0)
-        ).replace('.json', '')
+            self.internal_id,
+            project_id=self.manager.params.get('project_id', 0)
+        )[:-5]
 
     @property
     def internal_id(self):
