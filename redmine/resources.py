@@ -83,6 +83,7 @@ class Resource(object):
     """
     Implementation of Redmine resource.
     """
+    internal_id_key = 'id'
     redmine_version = None
     requirements = ()
     container_many = None
@@ -375,7 +376,7 @@ class Resource(object):
         """
         Returns identifier of the Resource for usage in internals of the library.
         """
-        return self.id
+        return getattr(self, self.internal_id_key)
 
     def is_new(self):
         """
@@ -607,6 +608,7 @@ class IssueJournal(Resource):
 
 
 class WikiPage(Resource):
+    internal_id_key = 'title'
     redmine_version = '2.2'
     container_many = 'wiki_pages'
     container_one = 'wiki_page'
@@ -645,10 +647,6 @@ class WikiPage(Resource):
             self.internal_id,
             project_id=self.manager.params.get('project_id', 0)
         )[:-5]
-
-    @property
-    def internal_id(self):
-        return self.title
 
     def __getattr__(self, attr):
         # If a text attribute of a resource is missing, we should
