@@ -24,10 +24,8 @@ class TestResultSet(unittest.TestCase):
         self.addCleanup(patcher_delete.stop)
 
     def test_has_custom_repr(self):
-        self.assertEqual(
-            repr(self.redmine.project.all()),
-            '<redmine.resultsets.ResourceSet object with Project resources>'
-        )
+        self.assertEqual(repr(self.redmine.project.all()),
+                         '<redmine.resultsets.ResourceSet object with Project resources>')
 
     def test_offset_limit_all(self):
         self.response.json.return_value = dict(response, total_count=3, limit=0, offset=0)
@@ -46,6 +44,9 @@ class TestResultSet(unittest.TestCase):
         self.assertEqual(projects.offset, 1)
         self.assertEqual(projects[0].id, 2)
         self.assertEqual(projects[1].id, 3)
+        self.assertEqual(projects[:1][0].id, 2)
+        self.assertEqual(projects[1:][0].id, 3)
+        self.assertEqual(projects[1:1][0].id, 3)
 
     def test_offset_limit_mimic(self):
         projects = self.redmine.project.all()[1:3]
@@ -116,45 +117,6 @@ class TestResultSet(unittest.TestCase):
     def test_delete_method(self):
         self.assertEqual(self.redmine.project.all().delete(), True)
 
-    def test_values_method(self):
-        from redmine.resultsets import ValuesResourceSet
-        self.assertIsInstance(self.redmine.project.all().values(), ValuesResourceSet)
-
-    def test_values_resourceset_supports_iteration(self):
-        projects = list(self.redmine.project.all().values())
-        self.assertEqual(projects[0]['name'], 'Foo')
-        self.assertEqual(projects[0]['identifier'], 'foo')
-        self.assertEqual(projects[0]['id'], 1)
-        self.assertEqual(projects[1]['name'], 'Bar')
-        self.assertEqual(projects[1]['identifier'], 'bar')
-        self.assertEqual(projects[1]['id'], 2)
-
-    def test_values_resourceset_supports_field_limits(self):
-        projects = list(self.redmine.project.all().values('id'))
-        self.assertEqual(projects[0]['id'], 1)
-        self.assertRaises(KeyError, lambda: projects[0]['name'])
-        self.assertEqual(projects[1]['id'], 2)
-        self.assertRaises(KeyError, lambda: projects[1]['name'])
-
-    def test_values_resourceset_get_method_resource_found(self):
-        projects = self.redmine.project.all().values().get(2)
-        self.assertEqual(projects['id'], 2)
-
-    def test_values_resourceset_get_method_resource_not_found(self):
-        projects = self.redmine.project.all().values().get(6)
-        self.assertEqual(projects, None)
-
-    def test_values_resourceset_filter_method(self):
-        projects = self.redmine.project.all().values().filter((1, 3))
-        self.assertEqual(projects[0]['id'], 1)
-        self.assertEqual(projects[1]['id'], 3)
-
-    def test_values_resourceset_update_method(self):
-        projects = self.redmine.project.all().values().update(name='FooBar')
-        self.assertEqual(projects[0]['name'], 'FooBar')
-        self.assertEqual(projects[1]['name'], 'FooBar')
-        self.assertEqual(projects[2]['name'], 'FooBar')
-
     def test_resourceset_is_picklable(self):
         import pickle
         projects = self.redmine.project.all()
@@ -163,12 +125,59 @@ class TestResultSet(unittest.TestCase):
         self.assertEqual(projects[1]['name'], unpickled_projects[1]['name'])
         self.assertEqual(projects[2]['name'], unpickled_projects[2]['name'])
 
-    def test_values_resourceset_delete_method(self):
-        self.assertEqual(self.redmine.project.all().values().delete(), True)
+    def test_values_method(self):
+        projects = list(self.redmine.project.all().values())
+        self.assertEqual(projects[0]['name'], 'Foo')
+        self.assertEqual(projects[0]['identifier'], 'foo')
+        self.assertEqual(projects[0]['id'], 1)
+        self.assertEqual(projects[1]['name'], 'Bar')
+        self.assertEqual(projects[1]['identifier'], 'bar')
+        self.assertEqual(projects[1]['id'], 2)
+        self.assertEqual(projects[2]['name'], 'Baz')
+        self.assertEqual(projects[2]['identifier'], 'baz')
+        self.assertEqual(projects[2]['id'], 3)
 
-    def test_values_resourceset_filter_param_exception(self):
-        from redmine.exceptions import ResourceSetFilterParamError
-        self.assertRaises(ResourceSetFilterParamError, lambda: self.redmine.project.all().values().filter(1))
+    def test_values_method_with_fields(self):
+        projects = list(self.redmine.project.all().values('name', 'id'))
+        self.assertEqual(len(projects[0]), 2)
+        self.assertEqual(projects[0]['name'], 'Foo')
+        self.assertEqual(projects[0]['id'], 1)
+        self.assertEqual(len(projects[1]), 2)
+        self.assertEqual(projects[1]['name'], 'Bar')
+        self.assertEqual(projects[1]['id'], 2)
+        self.assertEqual(len(projects[2]), 2)
+        self.assertEqual(projects[2]['name'], 'Baz')
+        self.assertEqual(projects[2]['id'], 3)
+
+    def test_values_list_method(self):
+        projects = list(self.redmine.project.all().values_list())
+        self.assertIn('Foo', projects[0])
+        self.assertIn('foo', projects[0])
+        self.assertIn(1, projects[0])
+        self.assertIn('Bar', projects[1])
+        self.assertIn('bar', projects[1])
+        self.assertIn(2, projects[1])
+        self.assertIn('Baz', projects[2])
+        self.assertIn('baz', projects[2])
+        self.assertIn(3, projects[2])
+
+    def test_values_list_method_with_fields(self):
+        projects = list(self.redmine.project.all().values_list('id', 'name'))
+        self.assertEqual(len(projects[0]), 2)
+        self.assertEqual(projects[0][0], 1)
+        self.assertEqual(projects[0][1], 'Foo')
+        self.assertEqual(len(projects[1]), 2)
+        self.assertEqual(projects[1][0], 2)
+        self.assertEqual(projects[1][1], 'Bar')
+        self.assertEqual(len(projects[2]), 2)
+        self.assertEqual(projects[2][0], 3)
+        self.assertEqual(projects[2][1], 'Baz')
+
+    def test_values_list_method_flattened(self):
+        projects = list(self.redmine.project.all().values_list('id', flat=True))
+        self.assertEqual(projects[0], 1)
+        self.assertEqual(projects[1], 2)
+        self.assertEqual(projects[2], 3)
 
     def test_filter_param_exception(self):
         from redmine.exceptions import ResourceSetFilterParamError
