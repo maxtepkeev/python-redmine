@@ -4,6 +4,20 @@ Changelog
 2.0.0 (2016-XX-XX)
 ++++++++++++++++++
 
+- Changed: ResourceSet objects was completely rewritten:
+
+  * ``ResourceSet`` object that was already sliced now supports reslicing
+  * ``ResourceSet`` object's ``delete()``, ``update()``, ``filter()`` and ``get()`` methods have been
+    optimized for speed
+  * ``ResourceSet`` object's ``delete()`` and ``update()`` methods now calls Resource's ``pre_*()`` and
+    ``post_*()`` methods
+  * ``ResourceSet`` object's ``get()`` and ``filter()`` methods now supports non-integer id's, e.g.
+    WikiPage's title can now be used with it
+  * ``ValuesResourceSet`` class has been removed
+  * ``ResourceSet.values()`` method now returns an iterable of dicts instead of ``ValuesResourceSet`` object
+  * ``ResourceSet.values_list()`` method has been added which returns an iterable of tuples with Resource
+    values or single values if flattened, i.e. ``flat=True``
+
 - Added: ``delete()`` method on ``Resource`` object which deletes current resource from Redmine
 - Added: ``pre_delete()`` and ``post_delete()`` ``Resource`` object methods which can be used to execute
   tasks that should be done before/after deleting the resource through ``delete()`` method
