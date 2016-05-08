@@ -1,3 +1,7 @@
+"""
+Provides public API.
+"""
+
 import os
 import json
 

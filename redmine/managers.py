@@ -1,3 +1,7 @@
+"""
+Defines manager classes.
+"""
+
 from distutils.version import LooseVersion
 
 from . import utilities, resultsets, exceptions
