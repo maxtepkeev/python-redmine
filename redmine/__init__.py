@@ -90,6 +90,10 @@ class Redmine(object):
         # control and iterate over the response data
         if savepath is None:
             return response.iter_content
+        elif savepath == 'bytes':
+            return response.content
+        elif savepath == 'text':
+            return response.text
 
         try:
             from urlparse import urlsplit

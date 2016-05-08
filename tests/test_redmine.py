@@ -92,9 +92,14 @@ class TestRedmineRequest(unittest.TestCase):
         self.assertEqual(self.redmine.download('http://foo/bar.txt', '/some/path'), '/some/path/bar.txt')
 
     def test_successful_in_memory_file_download(self):
+        from redmine.packages.requests import compat
         self.response.status_code = 200
         self.response.iter_content = lambda: (str(num) for num in range(0, 5))
+        self.response.content = compat.bytes('foo')
+        self.response.text = compat.str('foo')
         self.assertEqual(''.join(self.redmine.download('http://foo/bar.txt')()), '01234')
+        self.assertIsInstance(self.redmine.download('http://foo/bar.txt', 'bytes'), compat.bytes)
+        self.assertIsInstance(self.redmine.download('http://foo/bar.txt', 'text'), compat.str)
 
     def test_file_url_exception(self):
         from redmine.exceptions import FileUrlError
