@@ -82,8 +82,10 @@ class UnknownError(BaseRedmineError):
     """
     Redmine returned unknown error.
     """
-    def __init__(self, code):
-        super(UnknownError, self).__init__("Redmine returned unknown error with the code {0}".format(code))
+    def __init__(self, status_code):
+        self.status_code = status_code
+        super(UnknownError, self).__init__(
+            'Redmine returned unknown error with the status code {0}'.format(status_code))
 
 
 class ValidationError(BaseRedmineError):
