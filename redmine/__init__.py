@@ -73,17 +73,16 @@ class Redmine(object):
 
         return response['upload']['token']
 
-    def download(self, url, savepath=None, filename=None):
+    def download(self, url, savepath=None, filename=None, params=None):
         """
         Downloads file from Redmine and saves it to savepath or returns it as bytes.
 
         :param string url: (required). URL of the file that will be downloaded.
         :param string savepath: (optional). Path where to save the file.
         :param string filename: (optional). Name that will be used for the file.
+        :param dict params: (optional). Params to send in the query string.
         """
-        self.requests['stream'] = True   # We don't want to load the entire file into memory
-        response = self.request('get', url, raw_response=True)
-        self.requests['stream'] = False  # Return back this setting for all usual requests
+        response = self.request('get', url, params=dict(params or {}, **{'stream': True}), raw_response=True)
 
         # If a savepath wasn't provided we return an iter_content method
         # so a user can call it with the desired parameters for maximum
