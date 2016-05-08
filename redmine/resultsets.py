@@ -67,6 +67,9 @@ class BaseResourceSet(object):
             except StopIteration:
                 raise exceptions.ResourceSetIndexError
 
+        if self._resources is not None and self._is_sliced:
+            return self._resource_cls(self.__class__, [resource for resource in BaseResourceSet.__iter__(self)])
+
         return self
 
     def __iter__(self):
