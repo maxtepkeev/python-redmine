@@ -26,7 +26,7 @@ class NoFileError(BaseRedmineError):
     File doesn't exist exception.
     """
     def __init__(self):
-        super(NoFileError, self).__init__("Can't upload the file that doesn't exist")
+        super(NoFileError, self).__init__("Can't upload file that doesn't exist")
 
 
 class ResourceNotFoundError(BaseRedmineError):
@@ -42,7 +42,7 @@ class ConflictError(BaseRedmineError):
     Resource version on the server is newer than on the client.
     """
     def __init__(self):
-        super(ConflictError, self).__init__("Resource version on the server is newer than on the client")
+        super(ConflictError, self).__init__('Resource version on the server is newer than on the client')
 
 
 class AuthError(BaseRedmineError):
@@ -66,7 +66,7 @@ class ServerError(BaseRedmineError):
     Redmine internal error.
     """
     def __init__(self):
-        super(ServerError, self).__init__('Redmine returned internal error, perhaps you are doing something wrong')
+        super(ServerError, self).__init__('Redmine returned internal error, check Redmine logs for details')
 
 
 class RequestEntityTooLargeError(BaseRedmineError):
@@ -217,7 +217,7 @@ class ForbiddenError(BaseRedmineError):
     Requested resource is forbidden.
     """
     def __init__(self):
-        super(ForbiddenError, self).__init__("Requested resource is forbidden")
+        super(ForbiddenError, self).__init__('Requested resource is forbidden')
 
 
 class JSONDecodeError(BaseRedmineError):
