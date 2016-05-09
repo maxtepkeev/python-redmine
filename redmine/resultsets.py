@@ -4,7 +4,7 @@ Defines ResourceSet objects that can be used to represent a set of resources.
 
 import itertools
 
-from . import exceptions
+from . import utilities, exceptions
 
 
 class BaseResourceSet(object):
@@ -40,6 +40,29 @@ class BaseResourceSet(object):
                 self._total_count = len(self)
 
         return self._total_count
+
+    def export(self, fmt, savepath=None, filename=None):
+        """
+        Exports all resources from resource set to requested format if Resource supports that.
+
+        :param string fmt: Format to use for export, e.g. atom, csv, txt, pdf, html etc.
+        :param string savepath: (optional). Path where to save the file.
+        :param string filename: (optional). Name that will be used for the file.
+        """
+        if self.manager.resource_class.query_all_export is None:
+            raise exceptions.ExportNotSupported
+
+        formatter = utilities.MemorizeFormatter()
+
+        url = self.manager.redmine.url + formatter.format(
+            self.manager.resource_class.query_all_export, format=fmt, **self.manager.params)
+
+        try:
+            return self.manager.redmine.download(url, savepath, filename, params=formatter.unused_kwargs)
+        except exceptions.UnknownError as e:
+            if e.status_code == 406:
+                raise exceptions.ExportFormatNotSupportedError
+            raise e
 
     def _resource_cls(self, cls, resources, **kwargs):
         """

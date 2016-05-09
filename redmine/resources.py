@@ -88,6 +88,8 @@ class Resource(object):
     requirements = ()
     container_many = None
     container_one = None
+    query_all_export = None
+    query_one_export = None
     query_all = None
     query_one = None
     query_filter = None
@@ -361,6 +363,37 @@ class Resource(object):
         self.post_delete()
         return response
 
+    def export(self, fmt, savepath=None, filename=None):
+        """
+        Exports Resource to requested format if Resource supports that.
+
+        :param string fmt: Format to use for export, e.g. atom, csv, txt, pdf, html etc.
+        :param string savepath: (optional). Path where to save the file.
+        :param string filename: (optional). Name that will be used for the file.
+        """
+        url = self.export_url(fmt)
+
+        if url is None:
+            raise exceptions.ExportNotSupported
+
+        try:
+            return self.manager.redmine.download(url, savepath, filename)
+        except exceptions.UnknownError as e:
+            if e.status_code == 406:
+                raise exceptions.ExportFormatNotSupportedError
+            raise e
+
+    def export_url(self, fmt):
+        """
+        Returns export URL for the Resource according to format.
+
+        :param string fmt: Export format, e.g. atom, csv, txt, pdf, html etc.
+        """
+        if self.query_one_export is not None:
+            return self.manager.redmine.url + self.query_one_export.format(self.internal_id, format=fmt)
+
+        return None
+
     @property
     def url(self):
         """
@@ -456,6 +489,7 @@ class Project(Resource):
     redmine_version = '1.0'
     container_many = 'projects'
     container_one = 'project'
+    query_all_export = '/projects.{format}'
     query_all = '/projects.json'
     query_one = '/projects/{0}.json'
     query_create = '/projects.json'
@@ -491,6 +525,8 @@ class Issue(Resource):
     redmine_version = '1.0'
     container_many = 'issues'
     container_one = 'issue'
+    query_all_export = '/issues.{format}'
+    query_one_export = '/issues/{0}.{format}'
     query_all = '/issues.json'
     query_one = '/issues/{0}.json'
     query_filter = '/issues.json'
@@ -560,6 +596,7 @@ class TimeEntry(Resource):
     redmine_version = '1.1'
     container_many = 'time_entries'
     container_one = 'time_entry'
+    query_all_export = '/time_entries.{format}'
     query_all = '/time_entries.json'
     query_one = '/time_entries/{0}.json'
     query_filter = '/time_entries.json'
@@ -612,6 +649,7 @@ class WikiPage(Resource):
     redmine_version = '2.2'
     container_many = 'wiki_pages'
     container_one = 'wiki_page'
+    query_one_export = '/projects/{project_id}/wiki/{0}.{format}'
     query_filter = '/projects/{project_id}/wiki/index.json'
     query_one = '/projects/{project_id}/wiki/{0}.json'
     query_create = '/projects/{project_id}/wiki/{title}.json'
@@ -633,20 +671,25 @@ class WikiPage(Resource):
         return super(WikiPage, cls).encode(attr, value, manager)
 
     def refresh(self, **params):
-        return super(WikiPage, self).refresh(**dict(params, project_id=self.manager.params.get('project_id', 0)))
+        return super(WikiPage, self).refresh(**dict(params, project_id=self.project_id))
 
     def post_update(self):
         self._encoded_attrs['version'] = self._decoded_attrs['version'] = self._decoded_attrs.get('version', 0) + 1
 
     def delete(self, **params):
-        return super(WikiPage, self).delete(**dict(params, project_id=self.manager.params.get('project_id', 0)))
+        return super(WikiPage, self).delete(**dict(params, project_id=self.project_id))
+
+    def export_url(self, fmt):
+        return self.manager.redmine.url + self.query_one_export.format(
+            self.internal_id, project_id=self.project_id, format=fmt)
+
+    @property
+    def project_id(self):
+        return self.manager.params.get('project_id', 0)
 
     @property
     def url(self):
-        return self.manager.redmine.url + self.query_one.format(
-            self.internal_id,
-            project_id=self.manager.params.get('project_id', 0)
-        )[:-5]
+        return self.manager.redmine.url + self.query_one.format(self.internal_id, project_id=self.project_id)[:-5]
 
     def __getattr__(self, attr):
         # If a text attribute of a resource is missing, we should
@@ -796,6 +839,7 @@ class Role(Resource):
 class News(Resource):
     redmine_version = '1.1'
     container_many = 'news'
+    query_all_export = '/news.{format}'
     query_all = '/news.json'
     query_filter = '/news.json'
 
@@ -839,10 +883,7 @@ class Query(Resource):
     @property
     def url(self):
         return '{0}/projects/{1}/issues?query_id={2}'.format(
-            self.manager.redmine.url,
-            self._decoded_attrs.get('project_id', 0),
-            self.internal_id
-        )
+            self.manager.redmine.url, self._decoded_attrs.get('project_id', 0), self.internal_id)
 
 
 class CustomField(Resource):

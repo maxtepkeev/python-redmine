@@ -229,3 +229,20 @@ class JSONDecodeError(BaseRedmineError):
         super(JSONDecodeError, self).__init__(
             'Unable to decode received JSON, you can inspect exception\'s '
             '"response" attribute to find out what the response was')
+
+
+class ExportNotSupported(BaseRedmineError):
+    """
+    Export functionality not supported by resource.
+    """
+    def __init__(self):
+        super(ExportNotSupported, self).__init__('Export functionality not supported by resource')
+
+
+class ExportFormatNotSupportedError(BaseRedmineError):
+    """
+    The given format isn't supported by resource.
+    """
+    def __init__(self):
+        super(ExportFormatNotSupportedError, self).__init__(
+            "The given format isn't supported by resource, formats to try: atom, csv, txt, pdf, html")

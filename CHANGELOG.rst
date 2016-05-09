@@ -18,6 +18,8 @@ Changelog
   * ``ResourceSet.values_list()`` method has been added which returns an iterable of tuples with Resource
     values or single values if flattened, i.e. ``flat=True``
 
+- Added: WikiPage resource now provides ``project_id`` attribute
+- Added: `Issue #58 <https://github.com/maxtepkeev/python-redmine/issues/58>`__ (Export functionality)
 - Added: Shortcuts ``bytes`` and ``text`` to ``Redmine.download()`` method to allow immediate downloads of
   files to memory as bytes or unicode types
 - Added: ``delete()`` method on ``Resource`` object which deletes current resource from Redmine

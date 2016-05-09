@@ -102,6 +102,38 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = responses['project']['get']
         self.assertEqual(self.redmine.project.get(1).url, '{0}/projects/foo'.format(self.url))
 
+    def test_supports_export_url_retrieval(self):
+        self.response.json.return_value = responses['issue']['get']
+        self.assertEqual(self.redmine.issue.get(1).export_url('pdf'), '{0}/issues/1.pdf'.format(self.url))
+        self.response.json.return_value = responses['attachment']['get']
+        self.assertEqual(self.redmine.attachment.get(1).export_url('pdf'), None)
+
+    def test_export(self):
+        self.response.content = 'foo'
+        self.response.text = b'foo'.decode()
+        self.response.json.return_value = responses['issue']['get']
+        self.assertEqual(self.redmine.issue.get(1).export('txt', 'bytes'), 'foo')
+        self.assertEqual(self.redmine.issue.get(1).export('txt', 'text'), b'foo'.decode())
+
+    def test_export_not_supported_exception(self):
+        from redmine.exceptions import ExportNotSupported
+        self.response.json.return_value = responses['attachment']['get']
+        self.assertRaises(ExportNotSupported, lambda: self.redmine.attachment.get(1).export('pdf'))
+
+    def test_export_format_not_supported_exception(self):
+        from redmine.exceptions import ExportFormatNotSupportedError
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        self.response.status_code = 406
+        self.assertRaises(ExportFormatNotSupportedError, lambda: issue.export('foo'))
+
+    def test_export_reraises_unknown_error(self):
+        from redmine.exceptions import UnknownError
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        self.response.status_code = 999
+        self.assertRaises(UnknownError, lambda: issue.export('foo'))
+
     def test_supports_internal_id(self):
         self.response.json.return_value = responses['project']['get']
         self.assertEqual(self.redmine.project.get(1).internal_id, 1)
@@ -333,6 +365,13 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = responses['project']['get']
         self.assertEqual(self.redmine.project.get(1).url, '{0}/projects/foo'.format(self.url))
 
+    def test_project_export(self):
+        self.response.content = 'foo'
+        self.response.text = b'foo'.decode()
+        self.response.json.return_value = responses['project']['all']
+        self.assertEqual(self.redmine.project.all().export('txt', 'bytes'), 'foo')
+        self.assertEqual(self.redmine.project.all().export('txt', 'text'), b'foo'.decode())
+
     def test_project_parent_converts_to_resource(self):
         from redmine.resources import Project
         self.response.json.return_value = {'project': {'name': 'Foo', 'id': 1, 'parent': {'id': 2}}}
@@ -490,6 +529,16 @@ class TestResources(unittest.TestCase):
         self.response.json.return_value = responses['issue']['get']
         self.assertEqual(self.redmine.issue.get(1).url, '{0}/issues/1'.format(self.url))
 
+    def test_issue_export(self):
+        self.response.content = 'foo'
+        self.response.text = b'foo'.decode()
+        self.response.json.return_value = responses['issue']['all']
+        self.assertEqual(self.redmine.issue.all().export('txt', 'bytes'), 'foo')
+        self.assertEqual(self.redmine.issue.all().export('txt', 'text'), b'foo'.decode())
+        self.response.json.return_value = responses['issue']['get']
+        self.assertEqual(self.redmine.issue.get(1).export('txt', 'bytes'), 'foo')
+        self.assertEqual(self.redmine.issue.get(1).export('txt', 'text'), b'foo'.decode())
+
     def test_issue_parent_converts_to_resource(self):
         from redmine.resources import Issue
         self.response.json.return_value = {'issue': {'subject': 'Foo', 'id': 1, 'parent': {'id': 2}}}
@@ -568,6 +617,13 @@ class TestResources(unittest.TestCase):
     def test_time_entry_url(self):
         self.response.json.return_value = responses['time_entry']['get']
         self.assertEqual(self.redmine.time_entry.get(1).url, '{0}/time_entries/1'.format(self.url))
+
+    def test_time_entry_export(self):
+        self.response.content = 'foo'
+        self.response.text = b'foo'.decode()
+        self.response.json.return_value = responses['time_entry']['all']
+        self.assertEqual(self.redmine.time_entry.all().export('txt', 'bytes'), 'foo')
+        self.assertEqual(self.redmine.time_entry.all().export('txt', 'text'), b'foo'.decode())
 
     def test_enumeration_version(self):
         self.assertEqual(self.redmine.enumeration.resource_class.redmine_version, '2.2')
@@ -713,6 +769,13 @@ class TestResources(unittest.TestCase):
             self.redmine.wiki_page.get('Foo', project_id='Foo').url,
             '{0}/projects/Foo/wiki/Foo'.format(self.url)
         )
+
+    def test_wiki_page_export(self):
+        self.response.content = 'foo'
+        self.response.text = b'foo'.decode()
+        self.response.json.return_value = responses['wiki_page']['get']
+        self.assertEqual(self.redmine.wiki_page.get('Foo', project_id='Foo').export('txt', 'bytes'), 'foo')
+        self.assertEqual(self.redmine.wiki_page.get('Foo', project_id='Foo').export('txt', 'text'), b'foo'.decode())
 
     def test_wiki_page_parent_converts_to_resource(self):
         from redmine.resources import WikiPage
@@ -1114,6 +1177,13 @@ class TestResources(unittest.TestCase):
     def test_news_url(self):
         self.response.json.return_value = responses['news']['filter']
         self.assertEqual(self.redmine.news.filter(project_id=1)[0].url, '{0}/news/1'.format(self.url))
+
+    def test_news_export(self):
+        self.response.content = 'foo'
+        self.response.text = b'foo'.decode()
+        self.response.json.return_value = responses['news']['all']
+        self.assertEqual(self.redmine.news.all().export('txt', 'bytes'), 'foo')
+        self.assertEqual(self.redmine.news.all().export('txt', 'text'), b'foo'.decode())
 
     def test_news_str(self):
         self.response.json.return_value = responses['news']['filter']

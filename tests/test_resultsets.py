@@ -179,6 +179,26 @@ class TestResultSet(unittest.TestCase):
         self.assertEqual(projects[1], 2)
         self.assertEqual(projects[2], 3)
 
+    def test_export(self):
+        self.response.content = 'foo'
+        self.response.text = b'foo'.decode()
+        self.assertEqual(self.redmine.issue.all().export('txt', 'bytes'), 'foo')
+        self.assertEqual(self.redmine.issue.all().export('txt', 'text'), b'foo'.decode())
+
+    def test_export_not_supported_exception(self):
+        from redmine.exceptions import ExportNotSupported
+        self.assertRaises(ExportNotSupported, lambda: self.redmine.custom_field.all().export('pdf'))
+
+    def test_export_format_not_supported_exception(self):
+        from redmine.exceptions import ExportFormatNotSupportedError
+        self.response.status_code = 406
+        self.assertRaises(ExportFormatNotSupportedError, lambda: self.redmine.issue.all().export('foo'))
+
+    def test_export_reraises_unknown_error(self):
+        from redmine.exceptions import UnknownError
+        self.response.status_code = 999
+        self.assertRaises(UnknownError, lambda: self.redmine.issue.all().export('foo'))
+
     def test_filter_param_exception(self):
         from redmine.exceptions import ResourceSetFilterParamError
         self.assertRaises(ResourceSetFilterParamError, lambda: self.redmine.project.all().filter(1))
