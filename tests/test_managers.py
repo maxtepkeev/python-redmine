@@ -13,8 +13,8 @@ class TestResourceManager(unittest.TestCase):
     def setUp(self):
         self.redmine = Redmine(URL)
 
-    def test_supports_custom_resources(self):
-        self.redmine.custom_resource_paths = (__name__,)
+    def test_supports_additional_resources(self):
+        self.redmine.resource_paths = (__name__,)
         self.assertIsInstance(self.redmine.foo_resource, ResourceManager)
 
     def test_not_supported_resource_exception(self):
@@ -212,5 +212,5 @@ class TestResourceManager(unittest.TestCase):
         from redmine.exceptions import ResourceRequirementsError
         FooResource.requirements = ('foo plugin', ('bar plugin', '1.2.3'),)
         mock_get.return_value = mock.Mock(status_code=404)
-        self.redmine.custom_resource_paths = (__name__,)
+        self.redmine.resource_paths = (__name__,)
         self.assertRaises(ResourceRequirementsError, lambda: self.redmine.foo_resource.get(1))

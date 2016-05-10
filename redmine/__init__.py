@@ -29,8 +29,8 @@ class Redmine(object):
         :param string datetime_format: (optional). Formatting directives for datetime format.
         :param raise_attr_exception: (optional). Control over resource attribute access exception raising.
         :type raise_attr_exception: bool or tuple
-        :param custom_resource_paths: (optional). Module paths which contain custom resources.
-        :type custom_resource_paths: list or tuple
+        :param resource_paths: (optional). Paths to modules which contain additional resources.
+        :type resource_paths: list or tuple
         """
         self.url = url.rstrip('/')
         self.key = kwargs.get('key', None)
@@ -42,7 +42,7 @@ class Redmine(object):
         self.date_format = kwargs.get('date_format', '%Y-%m-%d')
         self.datetime_format = kwargs.get('datetime_format', '%Y-%m-%dT%H:%M:%SZ')
         self.raise_attr_exception = kwargs.get('raise_attr_exception', True)
-        self.custom_resource_paths = kwargs.get('custom_resource_paths', None)
+        self.resource_paths = kwargs.get('resource_paths', None)
 
     def __getattr__(self, resource_name):
         """

@@ -29,6 +29,7 @@ Changelog
   object which are used to translate attributes of the resource to/from Python/Redmine
 - Added: ``UnknownError`` exception now contains ``status_code`` attribute which can be used to handle the
   exception instead of parsing code from exception's text
+- Changed: ``Redmine.custom_resource_paths`` keyword argument renamed to ``resource_paths``
 - Changed: Unicode handling was significantly rewritten and shouldn't cause any more troubles
 - Changed: ``_Resource`` class renamed to ``Resource``
 - Changed: ``Resource.refresh()`` now really refreshes itself instead of returning a new refreshed

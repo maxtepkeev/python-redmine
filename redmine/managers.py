@@ -23,7 +23,7 @@ class ResourceManager(object):
         """
         resource_class = None
         resource_name = ''.join(word[0].upper() + word[1:] for word in resource_name.split('_'))
-        resource_paths = tuple((redmine.custom_resource_paths or ())) + ('redmine.resources',)
+        resource_paths = tuple((redmine.resource_paths or ())) + ('redmine.resources',)
 
         for path in resource_paths:
             try:
