@@ -95,7 +95,7 @@ class TestRedmineRequest(unittest.TestCase):
         from redmine.packages.requests import compat
         self.response.status_code = 200
         self.response.iter_content = lambda: (str(num) for num in range(0, 5))
-        self.response.content = compat.bytes('foo')
+        self.response.content = compat.bytes(123)
         self.response.text = compat.str('foo')
         self.assertEqual(''.join(self.redmine.download('http://foo/bar.txt')()), '01234')
         self.assertIsInstance(self.redmine.download('http://foo/bar.txt', 'bytes'), compat.bytes)
