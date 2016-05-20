@@ -35,6 +35,7 @@ _RESOURCE_SET_MAP = {
     'deals': 'Deal',
     'contacts': 'Contact',
     'related_contacts': 'Contact',
+    'checklists': 'IssueChecklist',
 }
 
 # Resources which when accessed from some other
@@ -68,6 +69,7 @@ _RESOURCE_RELATIONS_MAP = {
     'contacts': 'Contact',
     'deals': 'Deal',
     'deal_categories': 'DealCategory',
+    'checklists': 'IssueChecklist',
 }
 
 # Resource attributes which when set should
@@ -114,6 +116,7 @@ class _Resource(object):
     _includes = ()
     _relations = ()
     _relations_name = None
+    _checklists = ()
     _unconvertible = ('name', 'description')
     _members = ('manager',)
     _create_readonly = ('id', 'created_on', 'updated_on', 'author', 'user', 'project', 'issue')
@@ -125,6 +128,7 @@ class _Resource(object):
         self.manager = manager
         self._attributes = dict((include, None) for include in self._includes)
         self._attributes.update(dict((relation, None) for relation in self._relations))
+        self._attributes.update(dict((checklist, None) for checklist in self._checklists))
         self._attributes.update(attributes)
         self._create_readonly += self._relations + self._includes
         self._update_readonly += self._relations + self._includes
@@ -381,8 +385,9 @@ class Issue(_Resource):
     query_update = '/issues/{0}.json'
     query_delete = '/issues/{0}.json'
 
-    _includes = ('children', 'attachments', 'relations', 'changesets', 'journals', 'watchers')
-    _relations = ('relations', 'time_entries')
+    _includes = ('children', 'attachments', 'relations', 'changesets', 'journals', 'watchers', 'checklists')
+    _relations = ('relations', 'time_entries', 'checklists')
+    _checklists = ('checklists',)
     _unconvertible = _Resource._unconvertible + ('subject', 'notes')
     _create_readonly = _Resource._create_readonly + ('spent_hours',)
     _update_readonly = _create_readonly
@@ -656,6 +661,31 @@ class IssueRelation(_Resource):
     query_one = '/relations/{0}.json'
     query_create = '/issues/{issue_id}/relations.json'
     query_delete = '/relations/{0}.json'
+
+    def __str__(self):
+        return str(self.id)
+
+    def __repr__(self):
+        return '<{0}.{1} #{2}>'.format(
+            self.__class__.__module__,
+            self.__class__.__name__,
+            self.id
+        )
+
+
+class IssueChecklist(_Resource):
+    redmine_version = '2.3'
+    container_filter = 'checklists'
+    container_one = 'checklist'
+    container_create = 'checklist'
+    query_filter = '/issues/{issue_id}/checklists.json'
+    query_one = '/checklists/{0}.json'
+    query_create = '/issues/{issue_id}/checklists.json'
+    query_delete = '/checklists/{0}.json'
+    query_update = '/checklists/{0}.json'
+
+    _create_readonly = _Resource._create_readonly + ('created_at', 'updated_at')
+    _update_readonly = _create_readonly
 
     def __str__(self):
         return str(self.id)

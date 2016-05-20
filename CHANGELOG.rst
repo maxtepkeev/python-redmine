@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+1.5.2 (2017-01-05)
+++++++++++++++++++
+
+- Added: `Issue #84 <https://github.com/maxtepkeev/python-redmine/issues/84>`__ (Support of Redmine
+  CRM Checklists plugin)
+
 1.5.1 (2016-03-27)
 ++++++++++++++++++
 
