@@ -367,7 +367,7 @@ class Resource(object):
         """
         Exports Resource to requested format if Resource supports that.
 
-        :param string fmt: Format to use for export, e.g. atom, csv, txt, pdf, html etc.
+        :param string fmt: (required). Format to use for export, e.g. atom, csv, txt, pdf, html etc.
         :param string savepath: (optional). Path where to save the file.
         :param string filename: (optional). Name that will be used for the file.
         """
@@ -387,7 +387,7 @@ class Resource(object):
         """
         Returns export URL for the Resource according to format.
 
-        :param string fmt: Export format, e.g. atom, csv, txt, pdf, html etc.
+        :param string fmt: (required). Export format, e.g. atom, csv, txt, pdf, html etc.
         """
         if self.query_one_export is not None:
             return self.manager.redmine.url + self.query_one_export.format(self.internal_id, format=fmt)

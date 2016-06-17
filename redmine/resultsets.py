@@ -45,7 +45,7 @@ class BaseResourceSet(object):
         """
         Exports all resources from resource set to requested format if Resource supports that.
 
-        :param string fmt: Format to use for export, e.g. atom, csv, txt, pdf, html etc.
+        :param string fmt: (required). Format to use for export, e.g. atom, csv, txt, pdf, html etc.
         :param string savepath: (optional). Path where to save the file.
         :param string filename: (optional). Name that will be used for the file.
         """
