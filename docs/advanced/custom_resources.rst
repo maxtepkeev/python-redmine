@@ -28,6 +28,13 @@ resources:
     #. foo.baz
     #. redmine.resources
 
+.. note::
+    If you only have a single custom resource, then you need to add a trailing comma after the path (else python will see it as string, rather than as a single item tupple)
+    
+.. code-block:: python
+    
+    Redmine('https://redmine.url', custom_resource_paths=('foo.bar',))
+
 Existing Resources
 ------------------
 
