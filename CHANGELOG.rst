@@ -4,12 +4,12 @@ Changelog
 2.0.0 (2016-XX-XX)
 ++++++++++++++++++
 
-- Changed: ResourceSet objects was completely rewritten:
+- Changed: ResourceSet objects were completely rewritten:
 
   * ``ResourceSet`` object that was already sliced now supports reslicing
   * ``ResourceSet`` object's ``delete()``, ``update()``, ``filter()`` and ``get()`` methods have been
     optimized for speed
-  * ``ResourceSet`` object's ``delete()`` and ``update()`` methods now calls Resource's ``pre_*()`` and
+  * ``ResourceSet`` object's ``delete()`` and ``update()`` methods now call Resource's ``pre_*()`` and
     ``post_*()`` methods
   * ``ResourceSet`` object's ``get()`` and ``filter()`` methods now supports non-integer id's, e.g.
     WikiPage's title can now be used with it
@@ -36,11 +36,11 @@ Changelog
   resource, to get the previous behaviour call it like this ``Resource.refresh(itself=False)``
 - Fixed: Calling ``str()`` or ``repr()`` on a Resource was giving incorrect results if exception raising
   was turned off for a resource
-- Removed: ``container_filter``, ``container_create`` and ``container_update`` attributes on ``Resource``
-  object in favor of ``container_many`` attribute
+- Removed: ``Resource.container_all`` and ``Resource.container_filter`` in favor of ``Resource.container_many``
+  and ``Resource.container_create`` and ``Resource.container_update`` in favor of ``Resource.container_one``
 - Removed: ``Resource.translate_params()`` and ``ResourceManager.prepare_params()`` in favor of
   ``Resource.bulk_decode()``
-- Removed: ``is_string``, ``to_string`` and ``is_unicode`` functions from ``redmine.utilities``
+- Removed: ``is_unicode()``, ``is_string()`` and ``to_string()`` from ``redmine.utilities``
 
 1.5.1 (2016-03-27)
 ++++++++++++++++++
