@@ -20,8 +20,6 @@ Changelog
 
 - Added: WikiPage resource now provides ``project_id`` attribute
 - Added: `Issue #58 <https://github.com/maxtepkeev/python-redmine/issues/58>`__ (Export functionality)
-- Added: Shortcuts ``bytes`` and ``text`` to ``Redmine.download()`` method to allow immediate downloads of
-  files to memory as bytes or unicode types
 - Added: ``delete()`` method on ``Resource`` object which deletes current resource from Redmine
 - Added: ``pre_delete()`` and ``post_delete()`` ``Resource`` object methods which can be used to execute
   tasks that should be done before/after deleting the resource through ``delete()`` method
@@ -30,6 +28,8 @@ Changelog
 - Added: ``UnknownError`` exception now contains ``status_code`` attribute which can be used to handle the
   exception instead of parsing code from exception's text
 - Changed: ``Redmine.custom_resource_paths`` keyword argument renamed to ``resource_paths``
+- Changed: ``Redmine.download()`` method now returns a response object directly instead of ``iter_content``
+  method if a ``savepath`` param wasn't provided, this gives user even more control over response data
 - Changed: Unicode handling was significantly rewritten and shouldn't cause any more troubles
 - Changed: ``_Resource`` class renamed to ``Resource``
 - Changed: ``Resource.refresh()`` now really refreshes itself instead of returning a new refreshed

@@ -179,11 +179,10 @@ class TestResultSet(unittest.TestCase):
         self.assertEqual(projects[1], 2)
         self.assertEqual(projects[2], 3)
 
+    @mock.patch('redmine.open', mock.mock_open(), create=True)
     def test_export(self):
-        self.response.content = 'foo'
-        self.response.text = b'foo'.decode()
-        self.assertEqual(self.redmine.issue.all().export('txt', 'bytes'), 'foo')
-        self.assertEqual(self.redmine.issue.all().export('txt', 'text'), b'foo'.decode())
+        self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
+        self.assertEqual(self.redmine.issue.all().export('txt', '/foo/bar'), '/foo/bar/issues.txt')
 
     def test_export_not_supported_exception(self):
         from redmine.exceptions import ExportNotSupported

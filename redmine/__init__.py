@@ -84,15 +84,10 @@ class Redmine(object):
         """
         response = self.request('get', url, params=dict(params or {}, **{'stream': True}), raw_response=True)
 
-        # If a savepath wasn't provided we return an iter_content method
-        # so a user can call it with the desired parameters for maximum
-        # control and iterate over the response data
+        # If a savepath wasn't provided we return a response directly
+        # so a user can have maximum control over response data
         if savepath is None:
-            return response.iter_content
-        elif savepath == 'bytes':
-            return response.content
-        elif savepath == 'text':
-            return response.text
+            return response
 
         try:
             from urlparse import urlsplit
