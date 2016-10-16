@@ -31,6 +31,8 @@ Changelog
 - Added: ``UnknownError`` exception now contains ``status_code`` attribute which can be used to handle the
   exception instead of parsing code from exception's text
 - Added: Wrong HTTP protocol usage detector, e.g. one use HTTP when HTTPS should be used
+- Added: REDMINE_USE_EXTERNAL_REQUESTS environmental variable for emergency cases which allows to use
+  external requests instead of bundled one even if external requests version is lower than the bundled one
 - Changed: ``Redmine.custom_resource_paths`` keyword argument renamed to ``resource_paths``
 - Changed: ``Redmine.download()`` method now returns a response object directly instead of ``iter_content``
   method if a ``savepath`` param wasn't provided, this gives user even more control over response data
