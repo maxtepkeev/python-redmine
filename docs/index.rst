@@ -56,7 +56,7 @@ Features
 --------
 
 * Supports 100% of Redmine API features
-* Supports Python 2.6 - 3.5, PyPy and PyPy3
+* Supports Python 2.6, 2.7, 3.3 - 3.5, PyPy and PyPy3
 * Extensively documented
 * Provides ORM-style Pythonic API
 

@@ -45,8 +45,6 @@ tests_require = ['nose', 'coverage']
 
 if sys.version_info[:2] < (3, 3):
     tests_require.append('mock')
-    if sys.version_info[:2] == (3, 2):
-        tests_require[1] = 'coverage<4.0'
     if sys.version_info[:2] == (2, 6):
         tests_require.append('unittest2')
 
@@ -80,7 +78,6 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
