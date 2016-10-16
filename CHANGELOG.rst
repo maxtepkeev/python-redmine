@@ -18,6 +18,9 @@ Changelog
   * ``ResourceSet.values_list()`` method has been added which returns an iterable of tuples with Resource
     values or single values if flattened, i.e. ``flat=True``
 
+- Added: It is now possibles to create engines to define how requests to the redmine are made, e.g.
+  synchronous (one by one) or asynchronous using threads or processes
+- Added: ``Redmine.session()`` context manager which allows to temporary redefine engine's options
 - Added: WikiPage resource now provides ``project_id`` attribute
 - Added: `Issue #58 <https://github.com/maxtepkeev/python-redmine/issues/58>`__ (Export functionality)
 - Added: ``delete()`` method on ``Resource`` object which deletes current resource from Redmine
@@ -34,6 +37,9 @@ Changelog
 - Changed: ``_Resource`` class renamed to ``Resource``
 - Changed: ``Resource.refresh()`` now really refreshes itself instead of returning a new refreshed
   resource, to get the previous behaviour call it like this ``Resource.refresh(itself=False)``
+- Changed: Sync engine's speed improved to 8-12% depending on the amount of resources fetched
+- Fixed: It was impossible to set ``data``, ``params`` and ``headers`` via ``requests`` keyword argument on
+  Redmine object
 - Fixed: Calling ``str()`` or ``repr()`` on a Resource was giving incorrect results if exception raising
   was turned off for a resource
 - Removed: ``Resource.container_all`` and ``Resource.container_filter`` in favor of ``Resource.container_many``

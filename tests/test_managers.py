@@ -1,18 +1,16 @@
-from tests import unittest, mock, Redmine, URL
+from . import mock, BaseRedmineTestCase
+
 from redmine.managers import ResourceManager
 from redmine.resources import Project
 from redmine.resultsets import ResourceSet
-from redmine.exceptions import ResourceBadMethodError, ValidationError
+from redmine.exceptions import ResourceBadMethodError, ResourceNoFieldsProvidedError, ValidationError
 
 
 class FooResource(Project):
     pass
 
 
-class TestResourceManager(unittest.TestCase):
-    def setUp(self):
-        self.redmine = Redmine(URL)
-
+class ResourceManagerTestCase(BaseRedmineTestCase):
     def test_supports_additional_resources(self):
         self.redmine.resource_paths = (__name__,)
         self.assertIsInstance(self.redmine.foo_resource, ResourceManager)
@@ -27,7 +25,6 @@ class TestResourceManager(unittest.TestCase):
         self.assertRaises(ResourceVersionMismatchError, lambda: self.redmine.project)
 
     def test_convert_dict_to_resource_object(self):
-        from redmine.resources import Project
         project = self.redmine.project.to_resource({'name': 'Foo', 'identifier': 'foo', 'id': 1})
         self.assertIsInstance(project, Project)
         self.assertEqual(project.name, 'Foo')
@@ -47,20 +44,16 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(resourceset[1].identifier, 'bar')
         self.assertEqual(resourceset[1].id, 2)
 
-    @mock.patch('redmine.requests.get')
-    def test_get_single_resource(self, mock_get):
-        mock_get.return_value = response = mock.Mock(status_code=200)
-        response.json.return_value = {'project': {'name': 'Foo', 'identifier': 'foo', 'id': 1}}
+    def test_get_single_resource(self):
+        self.response.json.return_value = {'project': {'name': 'Foo', 'identifier': 'foo', 'id': 1}}
         project = self.redmine.project.get('foo')
         self.assertEqual(project.name, 'Foo')
         self.assertEqual(project.identifier, 'foo')
         self.assertEqual(project.id, 1)
 
-    @mock.patch('redmine.requests.get')
-    def test_get_unicode_resource(self, mock_get):
-        mock_get.return_value = response = mock.Mock(status_code=200)
+    def test_get_unicode_resource(self):
         unicode_name = b'\xcf\x86oo'.decode('utf8')
-        response.json.return_value = {'project': {'name': unicode_name, 'identifier': unicode_name, 'id': 1}}
+        self.response.json.return_value = {'project': {'name': unicode_name, 'identifier': unicode_name, 'id': 1}}
         project = self.redmine.project.get(unicode_name)
         self.assertEqual(project.name, unicode_name)
         self.assertEqual(project.identifier, unicode_name)
@@ -81,28 +74,25 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(time_entries.manager.params['from'], '2014-03-09T00:00:00Z')
         self.assertEqual(time_entries.manager.params['to'], '2014-03-10T00:00:00Z')
 
-    @mock.patch('redmine.requests.post')
-    def test_create_resource(self, mock_post):
-        mock_post.return_value = response = mock.Mock(status_code=201)
-        response.json.return_value = {'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1}}
+    def test_create_resource(self):
+        self.response.status_code = 201
+        self.response.json.return_value = {'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1}}
         user = self.redmine.user.create(firstname='John', lastname='Smith')
         self.assertEqual(user.firstname, 'John')
         self.assertEqual(user.lastname, 'Smith')
 
-    @mock.patch('redmine.requests.post')
-    def test_create_unicode_resource(self, mock_post):
-        mock_post.return_value = response = mock.Mock(status_code=201)
+    def test_create_unicode_resource(self):
         unicode_name = b'\xcf\x86oo'.decode('utf8')
-        response.json.return_value = {'wiki_page': {'title': unicode_name, 'project_id': 1}}
+        self.response.status_code = 201
+        self.response.json.return_value = {'wiki_page': {'title': unicode_name, 'project_id': 1}}
         wiki_page = self.redmine.wiki_page.create(title=unicode_name, project_id=1)
         self.assertEqual(wiki_page.title, unicode_name)
         self.assertEqual(wiki_page.project_id, 1)
 
     @mock.patch('redmine.open', mock.mock_open(), create=True)
-    @mock.patch('redmine.requests.post')
-    def test_create_resource_with_uploads(self, mock_post):
-        mock_post.return_value = response = mock.Mock(status_code=201)
-        response.json.return_value = {
+    def test_create_resource_with_uploads(self):
+        self.response.status_code = 201
+        self.response.json.return_value = {
             'upload': {'token': '123456'},
             'issue': {'subject': 'Foo', 'project_id': 1, 'id': 1}
         }
@@ -116,27 +106,22 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(project._decoded_attrs, defaults)
         self.assertEqual(repr(project), '<redmine.resources.Project #0 "">')
 
-    @mock.patch('redmine.requests.put')
-    def test_update_resource(self, mock_put):
-        mock_put.return_value = mock.Mock(status_code=200, content='')
+    def test_update_resource(self):
+        self.response.content = ''
         manager = self.redmine.wiki_page
         manager.params['project_id'] = 1
         self.assertEqual(manager.update(b'\xcf\x86oo'.decode('utf8'), title='Bar'), True)
 
     @mock.patch('redmine.open', mock.mock_open(), create=True)
-    @mock.patch('redmine.requests.put')
-    @mock.patch('redmine.requests.post')
-    def test_update_resource_with_uploads(self, mock_post, mock_put):
-        mock_put.return_value = mock.Mock(status_code=200, content='')
-        mock_post.return_value = response = mock.Mock(status_code=201)
-        response.json.return_value = {'upload': {'token': '123456'}}
-        manager = self.redmine.issue
-        manager.params['subject'] = 'Foo'
-        self.assertEqual(manager.update(1, subject='Bar', uploads=[{'path': 'foo'}]), True)
+    def test_update_resource_with_uploads(self):
+        self.set_patch_side_effect([
+            mock.Mock(status_code=201, **{'json.return_value': {'upload': {'token': '123456'}}}),
+            mock.Mock(status_code=200, content='')
+        ])
+        self.assertEqual(self.redmine.issue.update(1, subject='Bar', uploads=[{'path': 'foo'}]), True)
 
-    @mock.patch('redmine.requests.delete')
-    def test_delete_resource(self, mock_delete):
-        mock_delete.return_value = mock.Mock(status_code=200, content='')
+    def test_delete_resource(self):
+        self.response.content = ''
         self.assertEqual(self.redmine.wiki_page.delete(b'\xcf\x86oo'.decode('utf8'), project_id=1), True)
 
     def test_resource_get_method_unsupported_exception(self):
@@ -166,11 +151,9 @@ class TestResourceManager(unittest.TestCase):
         self.assertRaises(ResourceFilterError, lambda: self.redmine.version.filter(foo='bar'))
 
     def test_create_no_fields_exception(self):
-        from redmine.exceptions import ResourceNoFieldsProvidedError
         self.assertRaises(ResourceNoFieldsProvidedError, lambda: self.redmine.user.create())
 
     def test_update_no_fields_exception(self):
-        from redmine.exceptions import ResourceNoFieldsProvidedError
         self.assertRaises(ResourceNoFieldsProvidedError, lambda: self.redmine.project.update(1))
 
     def test_get_validation_exception(self):
@@ -194,23 +177,18 @@ class TestResourceManager(unittest.TestCase):
         self.assertEqual(project.url, unpickled_project.url)
         self.assertEqual(project.params['foo'], unpickled_project.params['foo'])
 
-    @mock.patch('redmine.requests.put')
-    @mock.patch('redmine.requests.post')
-    def test_create_validation_exception_via_put(self, mock_post, mock_put):
-        mock_post.return_value = mock.Mock(status_code=404)
-        mock_put.return_value = mock.Mock(status_code=200)
+    def test_create_validation_exception_via_put(self):
+        self.set_patch_side_effect([mock.Mock(status_code=404), mock.Mock(status_code=200)])
         self.assertRaises(ValidationError, lambda: self.redmine.user.create(firstname='John', lastname='Smith'))
 
-    @mock.patch('redmine.requests.get')
-    def test_reraises_not_found_exception(self, mock_get):
+    def test_reraises_not_found_exception(self):
         from redmine.exceptions import ResourceNotFoundError
-        mock_get.return_value = mock.Mock(status_code=404)
+        self.response.status_code = 404
         self.assertRaises(ResourceNotFoundError, lambda: self.redmine.project.get('non-existent-project'))
 
-    @mock.patch('redmine.requests.get')
-    def test_resource_requirements_exception(self, mock_get):
+    def test_resource_requirements_exception(self):
         from redmine.exceptions import ResourceRequirementsError
         FooResource.requirements = ('foo plugin', ('bar plugin', '1.2.3'),)
-        mock_get.return_value = mock.Mock(status_code=404)
+        self.response.status_code = 404
         self.redmine.resource_paths = (__name__,)
         self.assertRaises(ResourceRequirementsError, lambda: self.redmine.foo_resource.get(1))

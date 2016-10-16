@@ -3,12 +3,11 @@ Provides public API.
 """
 
 import os
-import json
+import contextlib
 
 from distutils.version import LooseVersion
 
-from . import managers, exceptions
-from .packages import requests
+from . import managers, exceptions, engines, utilities
 from .version import __version__
 
 
@@ -31,18 +30,15 @@ class Redmine(object):
         :type raise_attr_exception: bool or tuple
         :param resource_paths: (optional). Paths to modules which contain additional resources.
         :type resource_paths: list or tuple
+        :param cls engine: (optional). Engine that will be used to make requests to Redmine.
         """
         self.url = url.rstrip('/')
-        self.key = kwargs.get('key', None)
         self.ver = kwargs.get('version', None)
-        self.username = kwargs.get('username', None)
-        self.password = kwargs.get('password', None)
-        self.requests = kwargs.get('requests', {})
-        self.impersonate = kwargs.get('impersonate', None)
         self.date_format = kwargs.get('date_format', '%Y-%m-%d')
         self.datetime_format = kwargs.get('datetime_format', '%Y-%m-%dT%H:%M:%SZ')
         self.raise_attr_exception = kwargs.get('raise_attr_exception', True)
         self.resource_paths = kwargs.get('resource_paths', None)
+        self.engine = kwargs.get('engine', engines.SyncEngine)(**kwargs)
 
     def __getattr__(self, resource_name):
         """
@@ -54,6 +50,19 @@ class Redmine(object):
             raise AttributeError
 
         return managers.ResourceManager(self, resource_name)
+
+    @contextlib.contextmanager
+    def session(self, **options):
+        """
+        Initiates a temporary session with a copy of the current engine but with new options.
+
+        :param dict options: (optional). Engine's options for a session.
+        """
+        engine = self.engine
+        self.engine = engine.__class__(
+            requests=utilities.merge_dicts(engine.requests, options.pop('requests', {})), **options)
+        yield self
+        self.engine = engine
 
     def upload(self, filepath):
         """
@@ -67,7 +76,8 @@ class Redmine(object):
         try:
             with open(filepath, 'rb') as stream:
                 url = '{0}/uploads.json'.format(self.url)
-                response = self.request('post', url, data=stream, headers={'Content-Type': 'application/octet-stream'})
+                headers = {'Content-Type': 'application/octet-stream'}
+                response = self.engine.request('post', url, data=stream, headers=headers)
         except IOError:
             raise exceptions.NoFileError
 
@@ -82,7 +92,7 @@ class Redmine(object):
         :param string filename: (optional). Name that will be used for the file.
         :param dict params: (optional). Params to send in the query string.
         """
-        response = self.request('get', url, params=dict(params or {}, **{'stream': True}), raw_response=True)
+        response = self.engine.request('get', url, params=dict(params or {}, **{'stream': True}), return_raw=True)
 
         # If a savepath wasn't provided we return a response directly
         # so a user can have maximum control over response data
@@ -113,66 +123,3 @@ class Redmine(object):
         Shortcut for the case if we just want to check if user provided valid auth credentials.
         """
         return self.user.get('current')
-
-    def request(self, method, url, headers=None, params=None, data=None, raw_response=False):
-        """
-        Makes requests to Redmine and returns result.
-
-        :param string method: (required). HTTP method used for the request.
-        :param string url: (required). URL of the request.
-        :param dict headers: (optional). HTTP headers to send with the request.
-        :param dict params: (optional). Params to send in the query string.
-        :param data: (optional). Data to send in the body of the request.
-        :type data: dict, bytes or file-like object
-        :param bool raw_response: (optional). Whether to return raw or json encoded result.
-        """
-        kwargs = dict(self.requests, **{
-            'headers': headers or {},
-            'params': params or {},
-            'data': data or {},
-        })
-
-        if 'Content-Type' not in kwargs['headers'] and method in ('post', 'put'):
-            kwargs['data'] = json.dumps(data)
-            kwargs['headers']['Content-Type'] = 'application/json'
-
-        if self.impersonate is not None:
-            kwargs['headers']['X-Redmine-Switch-User'] = self.impersonate
-
-        # We would like to be authenticated by API key by default
-        if 'key' not in kwargs['params'] and self.key is not None:
-            kwargs['params']['key'] = self.key
-        else:
-            kwargs['auth'] = (self.username, self.password)
-
-        response = getattr(requests, method)(url, **kwargs)
-
-        if response.status_code in (200, 201):
-            if raw_response:
-                return response
-            elif not response.content.strip():
-                return True
-            else:
-                try:
-                    return response.json()
-                except (ValueError, TypeError):
-                    raise exceptions.JSONDecodeError(response)
-        elif response.status_code == 401:
-            raise exceptions.AuthError
-        elif response.status_code == 403:
-            raise exceptions.ForbiddenError
-        elif response.status_code == 404:
-            raise exceptions.ResourceNotFoundError
-        elif response.status_code == 409:
-            raise exceptions.ConflictError
-        elif response.status_code == 412 and self.impersonate is not None:
-            raise exceptions.ImpersonateError
-        elif response.status_code == 413:
-            raise exceptions.RequestEntityTooLargeError
-        elif response.status_code == 422:
-            errors = response.json()['errors']
-            raise exceptions.ValidationError(', '.join(': '.join(e) if isinstance(e, list) else e for e in errors))
-        elif response.status_code == 500:
-            raise exceptions.ServerError
-
-        raise exceptions.UnknownError(response.status_code)

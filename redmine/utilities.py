@@ -3,6 +3,7 @@ Provides helper utilities.
 """
 
 import sys
+import copy
 import string
 import functools
 
@@ -34,6 +35,24 @@ def fix_unicode(cls):
     cls.__str__ = decorator(cls.__unicode__)
     cls.__repr__ = decorator(cls.__repr__)
     return cls
+
+
+def merge_dicts(a, b):
+    """
+    Merges dicts a and b recursively into a new dict.
+
+    :param dict a: (required).
+    :param dict b: (required).
+    """
+    result = copy.deepcopy(a)
+
+    for key, value in b.items():
+        if isinstance(value, dict):
+            result[key] = merge_dicts(value, a.get(key, {}))
+        else:
+            result[key] = value
+
+    return result
 
 
 class MemorizeFormatter(string.Formatter):

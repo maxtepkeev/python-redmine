@@ -42,66 +42,25 @@ class ResourceManager(object):
         self.resource_class = resource_class
         self.params = params
 
-    def retrieve(self, **params):
+    def request(self, is_bulk, **params):
         """
-        A proxy for redmine.Redmine.request() which does some extra work for resource retrieval.
+        Makes request(s) and additionally checks for resource specific stuff.
 
+        :param bool is_bulk: (required). Whether this is a bulk or single request.
         :param dict params: (optional). Parameters used for resource retrieval.
         """
-        self.params.update(**params)
-
-        results = []
-        total_count = 0
-        limit = self.params.get('limit') or 0
-        offset = self.params.get('offset') or 0
-
-        if limit == 0:
-            limit = 100
-
-        while True:
-            try:
-                response = self.redmine.request('get', self.url, params=dict(self.params, limit=limit, offset=offset))
-            except exceptions.ResourceNotFoundError:
-                # This is the only place we're checking for ResourceRequirementsError
-                # because for some POST/PUT/DELETE requests Redmine may also return 404
-                # status code instead of 405 which can lead us to improper decisions
-                if self.resource_class.requirements:
-                    raise exceptions.ResourceRequirementsError(self.resource_class.requirements)
-
-                raise exceptions.ResourceNotFoundError
-
-            # A single resource was requested via get()
-            if isinstance(response[self.container], dict):
-                results = response[self.container]
-                total_count = 1
-                break
-
-            # Resource supports limit/offset on Redmine level
-            if all(response.get(param) is not None for param in ('total_count', 'limit', 'offset')):
-                total_count = response['total_count']
-                results.extend(response[self.container])
-
-                # We want to get all resources
-                if self.params.get('limit', 0) == 0:
-                    offset += limit
-
-                    if total_count <= offset:
-                        break
-                # We want to get only some resources
-                else:
-                    limit -= 100
-                    offset += 100
-
-                    if limit <= 0:
-                        break
-            # We have to mimic limit/offset if a resource
-            # doesn't support this feature on Redmine level
+        try:
+            if not is_bulk:
+                return self.redmine.engine.request('get', self.url, params=params)[self.container]
             else:
-                total_count = len(response[self.container])
-                results = response[self.container][offset:None if self.params.get('limit', 0) == 0 else limit + offset]
-                break
-
-        return results, total_count
+                return self.redmine.engine.bulk_request('get', self.url, self.container, **self.params)
+        except exceptions.ResourceNotFoundError as e:
+            # This is the only place we're checking for ResourceRequirementsError
+            # because for some POST/PUT/DELETE requests Redmine may also return 404
+            # status code instead of 405 which can lead us to improper decisions
+            if self.resource_class.requirements:
+                raise exceptions.ResourceRequirementsError(self.resource_class.requirements)
+            raise e
 
     def to_resource(self, resource):
         """
@@ -153,7 +112,7 @@ class ResourceManager(object):
 
         self.params = self.resource_class.bulk_decode(params, self)
         self.container = self.resource_class.container_one
-        return self.resource_class(self, self.retrieve()[0])
+        return self.to_resource(self.request(False, **self.params))
 
     def all(self, **params):
         """
@@ -220,9 +179,9 @@ class ResourceManager(object):
         # Almost all resources are created via POST method, but some
         # resources are created via PUT, so we should check for this
         try:
-            response = self.redmine.request('post', url, data=data)
+            response = self.redmine.engine.request('post', url, data=data)
         except exceptions.ResourceNotFoundError:
-            response = self.redmine.request('put', url, data=data)
+            response = self.redmine.engine.request('put', url, data=data)
 
         try:
             resource = self.to_resource(response[self.container])
@@ -268,7 +227,7 @@ class ResourceManager(object):
             for index, attachment in enumerate(data['attachments']):
                 data['attachments'][index]['token'] = self.redmine.upload(attachment.get('path', ''))
 
-        return self.redmine.request('put', url, data=data)
+        return self.redmine.engine.request('put', url, data=data)
 
     def delete(self, resource_id, **params):
         """
@@ -286,4 +245,4 @@ class ResourceManager(object):
         except KeyError as exception:
             raise exceptions.ValidationError('{0} argument is required'.format(exception))
 
-        return self.redmine.request('delete', url, params=self.resource_class.bulk_decode(params, self))
+        return self.redmine.engine.request('delete', url, params=self.resource_class.bulk_decode(params, self))

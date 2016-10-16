@@ -100,11 +100,11 @@ class BaseResourceSet(object):
         Returns requested resources in a lazy fashion.
         """
         # If this is the first time we are evaluating the ResourceSet
-        # all the hard part will be done by the ResourceManager object
+        # all the hard part will be done by the active Engine object
         if self._resources is None:
-            self._resources, self._total_count = self.manager.retrieve(
-                limit=self.manager.params.get('limit', self.limit),
-                offset=self.manager.params.get('offset', self.offset))
+            self.manager.params.setdefault('limit', self.limit)
+            self.manager.params.setdefault('offset', self.offset)
+            self._resources, self._total_count = self.manager.request(True)
             resources = self._resources
         # Otherwise ResourceSet object should handle slicing by itself
         elif self._is_sliced:

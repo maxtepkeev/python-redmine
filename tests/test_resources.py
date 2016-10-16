@@ -1,4 +1,5 @@
-from tests import unittest, mock, Redmine, URL
+from . import mock, BaseRedmineTestCase
+
 from redmine.resultsets import ResourceSet
 
 responses = {
@@ -74,24 +75,7 @@ responses = {
 }
 
 
-class TestResources(unittest.TestCase):
-    def setUp(self):
-        self.url = URL
-        self.redmine = Redmine(self.url)
-        self.response = mock.Mock(status_code=200)
-        patcher_get = mock.patch('redmine.requests.get', return_value=self.response)
-        patcher_post = mock.patch('redmine.requests.post', return_value=self.response)
-        patcher_put = mock.patch('redmine.requests.put', return_value=self.response)
-        patcher_delete = mock.patch('redmine.requests.delete', return_value=self.response)
-        patcher_get.start()
-        patcher_post.start()
-        patcher_put.start()
-        patcher_delete.start()
-        self.addCleanup(patcher_get.stop)
-        self.addCleanup(patcher_post.stop)
-        self.addCleanup(patcher_put.stop)
-        self.addCleanup(patcher_delete.stop)
-
+class ResourcesTestCase(BaseRedmineTestCase):
     def test_supports_dictionary_like_attribute_retrieval(self):
         self.response.json.return_value = responses['project']['get']
         project = self.redmine.project.get(1)

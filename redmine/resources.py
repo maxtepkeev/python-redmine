@@ -559,7 +559,7 @@ class Issue(Resource):
             :param int user_id: (required). User id.
             """
             url = '{0}/issues/{1}/watchers.json'.format(self._redmine.url, self._issue_id)
-            return self._redmine.request('post', url, data={'user_id': user_id})
+            return self._redmine.engine.request('post', url, data={'user_id': user_id})
 
         def remove(self, user_id):
             """
@@ -568,7 +568,7 @@ class Issue(Resource):
             :param int user_id: (required). User id.
             """
             url = '{0}/issues/{1}/watchers/{2}.json'.format(self._redmine.url, self._issue_id, user_id)
-            return self._redmine.request('delete', url)
+            return self._redmine.engine.request('delete', url)
 
     def __getattr__(self, attr):
         if attr == 'version':
@@ -810,7 +810,7 @@ class Group(Resource):
             :param int user_id: (required). User id.
             """
             url = '{0}/groups/{1}/users.json'.format(self._redmine.url, self._group_id)
-            return self._redmine.request('post', url, data={'user_id': user_id})
+            return self._redmine.engine.request('post', url, data={'user_id': user_id})
 
         def remove(self, user_id):
             """
@@ -819,7 +819,7 @@ class Group(Resource):
             :param int user_id: (required). User id.
             """
             url = '{0}/groups/{1}/users/{2}.json'.format(self._redmine.url, self._group_id, user_id)
-            return self._redmine.request('delete', url)
+            return self._redmine.engine.request('delete', url)
 
     def __getattr__(self, attr):
         if attr == 'user':
