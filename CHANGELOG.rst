@@ -46,8 +46,8 @@ Changelog
   Redmine object
 - Fixed: Calling ``str()`` or ``repr()`` on a Resource was giving incorrect results if exception raising
   was turned off for a resource
-- Removed: ``Resource.container_all`` and ``Resource.container_filter`` in favor of ``Resource.container_many``
-  and ``Resource.container_create`` and ``Resource.container_update`` in favor of ``Resource.container_one``
+- Removed: ``container_filter``, ``container_create`` and ``container_update`` attributes on ``Resource``
+  object in favor of ``container_many`` attribute
 - Removed: ``Resource.translate_params()`` and ``ResourceManager.prepare_params()`` in favor of
   ``Resource.bulk_decode()``
 - Removed: ``is_unicode()``, ``is_string()`` and ``to_string()`` from ``redmine.utilities``
