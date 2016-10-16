@@ -18,7 +18,7 @@ class BaseRedmineTestCase(unittest.TestCase):
 
     def setUp(self):
         self.redmine = Redmine(self.url)
-        self.response = mock.Mock(status_code=200)
+        self.response = mock.Mock(status_code=200, history=[])
 
         for target, path in self.patch_targets.items():
             setattr(self, '{0}_{1}'.format(self.patch_prefix, target),

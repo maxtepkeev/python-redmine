@@ -115,8 +115,8 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
     @mock.patch('redmine.open', mock.mock_open(), create=True)
     def test_update_resource_with_uploads(self):
         self.set_patch_side_effect([
-            mock.Mock(status_code=201, **{'json.return_value': {'upload': {'token': '123456'}}}),
-            mock.Mock(status_code=200, content='')
+            mock.Mock(status_code=201, history=[], **{'json.return_value': {'upload': {'token': '123456'}}}),
+            mock.Mock(status_code=200, history=[], content='')
         ])
         self.assertEqual(self.redmine.issue.update(1, subject='Bar', uploads=[{'path': 'foo'}]), True)
 
@@ -178,7 +178,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.assertEqual(project.params['foo'], unpickled_project.params['foo'])
 
     def test_create_validation_exception_via_put(self):
-        self.set_patch_side_effect([mock.Mock(status_code=404), mock.Mock(status_code=200)])
+        self.set_patch_side_effect([mock.Mock(status_code=404, history=[]), mock.Mock(status_code=200, history=[])])
         self.assertRaises(ValidationError, lambda: self.redmine.user.create(firstname='John', lastname='Smith'))
 
     def test_reraises_not_found_exception(self):

@@ -89,6 +89,12 @@ class BaseEngineTestCase(BaseRedmineTestCase):
         self.response.status_code = 888
         self.assertRaises(UnknownError, lambda: self.redmine.engine.request('get', self.url))
 
+    def test_http_protocol_exception(self):
+        from redmine.exceptions import HTTPProtocolError
+        self.response.history = [mock.Mock()]
+        self.redmine.url = 'http://foo.bar'
+        self.assertRaises(HTTPProtocolError, lambda: self.redmine.engine.request('get', self.url))
+
     def test_engine_is_picklable(self):
         import pickle
         self.redmine.engine.requests['params']['key'] = '123'

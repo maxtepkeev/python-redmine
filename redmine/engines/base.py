@@ -133,6 +133,11 @@ class BaseEngine(object):
         :param obj response: (required). Response object with response details.
         :param bool return_raw: (optional). Whether to return raw or json encoded response.
         """
+        if response.history:
+            r = response.history[0]
+            if r.is_redirect and r.request.url.startswith('http://') and response.request.url.startswith('https://'):
+                raise exceptions.HTTPProtocolError
+
         status_code = response.status_code
 
         if status_code in (200, 201):
