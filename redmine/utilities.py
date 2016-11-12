@@ -37,6 +37,16 @@ def fix_unicode(cls):
     return cls
 
 
+def with_metaclass(meta, *bases):
+    """
+    Create a base class with a metaclass.
+    """
+    class MetaClass(meta):
+        def __new__(cls, name, this_bases, dct):
+            return meta(name, bases, dct)
+    return type.__new__(MetaClass, 'temporary_class', (), {})
+
+
 def merge_dicts(a, b):
     """
     Merges dicts a and b recursively into a new dict.

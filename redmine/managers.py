@@ -22,7 +22,7 @@ class ResourceManager(object):
         :param dict params: (optional). Parameters used for resources retrieval.
         """
         resource_class = None
-        resource_name = ''.join(word[0].upper() + word[1:] for word in resource_name.split('_'))
+        resource_name = ''.join(word[0].upper() + word[1:] for word in str(resource_name).split('_'))
         resource_paths = tuple((redmine.resource_paths or ())) + ('redmine.resources',)
 
         for path in resource_paths:

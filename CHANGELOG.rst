@@ -18,6 +18,10 @@ Changelog
   * ``ResourceSet.values_list()`` method has been added which returns an iterable of tuples with Resource
     values or single values if flattened, i.e. ``flat=True``
 
+- Added: ``type`` attribute for a RedmineCRM Note resource which shows text representation of Note's type_id
+- Added: ``status`` attribute for a RedmineCRM DealStatus resource which shows text representation of
+  DealStatuses's status_type
+- Added: Attachment ``delete()`` method support (requires Redmine >= 3.3.0)
 - Added: It is now possibles to create engines to define how requests to the redmine are made, e.g.
   synchronous (one by one) or asynchronous using threads or processes
 - Added: ``Redmine.session()`` context manager which allows to temporary redefine engine's options
@@ -33,6 +37,7 @@ Changelog
 - Added: Wrong HTTP protocol usage detector, e.g. one use HTTP when HTTPS should be used
 - Added: REDMINE_USE_EXTERNAL_REQUESTS environmental variable for emergency cases which allows to use
   external requests instead of bundled one even if external requests version is lower than the bundled one
+- Changed: Resources class attributes that were previously tuples are now lists
 - Changed: Dropped Python 3.2 support
 - Changed: ``Redmine.custom_resource_paths`` keyword argument renamed to ``resource_paths``
 - Changed: ``Redmine.download()`` method now returns a response object directly instead of ``iter_content``
