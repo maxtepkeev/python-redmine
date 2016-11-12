@@ -23,10 +23,10 @@ class ResourceError(BaseRedmineError):
 
 class NoFileError(BaseRedmineError):
     """
-    File doesn't exist exception.
+    File doesn't exist or is empty exception.
     """
     def __init__(self):
-        super(NoFileError, self).__init__("Can't upload file that doesn't exist")
+        super(NoFileError, self).__init__("Can't upload a file that doesn't exist or is empty")
 
 
 class ResourceNotFoundError(BaseRedmineError):

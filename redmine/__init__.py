@@ -73,13 +73,13 @@ class Redmine(object):
         if self.ver is not None and LooseVersion(str(self.ver)) < LooseVersion('1.4.0'):
             raise exceptions.VersionMismatchError('File uploading')
 
-        try:
-            with open(filepath, 'rb') as stream:
-                url = '{0}/uploads.json'.format(self.url)
-                headers = {'Content-Type': 'application/octet-stream'}
-                response = self.engine.request('post', url, data=stream, headers=headers)
-        except IOError:
+        if not os.path.isfile(filepath) or os.path.getsize(filepath) == 0:
             raise exceptions.NoFileError
+
+        with open(filepath, 'rb') as stream:
+            url = '{0}/uploads.json'.format(self.url)
+            headers = {'Content-Type': 'application/octet-stream'}
+            response = self.engine.request('post', url, data=stream, headers=headers)
 
         return response['upload']['token']
 

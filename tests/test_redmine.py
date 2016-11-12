@@ -53,6 +53,8 @@ class RedmineTestCase(BaseRedmineTestCase):
         self.assertRaises(KeyError, lambda: self.redmine.engine.requests['verify'])
         self.assertRaises(KeyError, lambda: self.redmine.engine.requests['timeout'])
 
+    @mock.patch('os.path.isfile', mock.Mock())
+    @mock.patch('os.path.getsize', mock.Mock())
     @mock.patch('redmine.open', mock.mock_open(), create=True)
     def test_successful_file_upload(self):
         self.response.status_code = 201

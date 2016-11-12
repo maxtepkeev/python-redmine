@@ -89,6 +89,8 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.assertEqual(wiki_page.title, unicode_name)
         self.assertEqual(wiki_page.project_id, 1)
 
+    @mock.patch('os.path.isfile', mock.Mock())
+    @mock.patch('os.path.getsize', mock.Mock())
     @mock.patch('redmine.open', mock.mock_open(), create=True)
     def test_create_resource_with_uploads(self):
         self.response.status_code = 201
@@ -112,6 +114,8 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         manager.params['project_id'] = 1
         self.assertEqual(manager.update(b'\xcf\x86oo'.decode('utf8'), title='Bar'), True)
 
+    @mock.patch('os.path.isfile', mock.Mock())
+    @mock.patch('os.path.getsize', mock.Mock())
     @mock.patch('redmine.open', mock.mock_open(), create=True)
     def test_update_resource_with_uploads(self):
         self.set_patch_side_effect([
