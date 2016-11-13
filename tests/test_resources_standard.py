@@ -1,7 +1,7 @@
 from . import mock, BaseRedmineTestCase
 from .responses import responses
 
-from redmine.resultsets import ResourceSet
+from redmine import resources, resultsets, exceptions
 
 
 class StandardResourcesTestCase(BaseRedmineTestCase):
@@ -28,23 +28,20 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(self.redmine.issue.get(1).export('txt', '/foo/bar'), '/foo/bar/1.txt')
 
     def test_export_not_supported_exception(self):
-        from redmine.exceptions import ExportNotSupported
         self.response.json.return_value = responses['attachment']['get']
-        self.assertRaises(ExportNotSupported, lambda: self.redmine.attachment.get(1).export('pdf'))
+        self.assertRaises(exceptions.ExportNotSupported, lambda: self.redmine.attachment.get(1).export('pdf'))
 
     def test_export_format_not_supported_exception(self):
-        from redmine.exceptions import ExportFormatNotSupportedError
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
         self.response.status_code = 406
-        self.assertRaises(ExportFormatNotSupportedError, lambda: issue.export('foo'))
+        self.assertRaises(exceptions.ExportFormatNotSupportedError, lambda: issue.export('foo'))
 
     def test_export_reraises_unknown_error(self):
-        from redmine.exceptions import UnknownError
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
         self.response.status_code = 999
-        self.assertRaises(UnknownError, lambda: issue.export('foo'))
+        self.assertRaises(exceptions.UnknownError, lambda: issue.export('foo'))
 
     def test_supports_internal_id(self):
         self.response.json.return_value = responses['project']['get']
@@ -77,27 +74,24 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(project.description, 'Bar')
 
     def test_setting_create_readonly_attrs_raises_exception(self):
-        from redmine.exceptions import ReadonlyAttrError
-        with self.assertRaises(ReadonlyAttrError):
+        with self.assertRaises(exceptions.ReadonlyAttrError):
             project = self.redmine.project.new()
             project.id = 1
 
     def test_setting_update_readonly_attrs_raises_exception(self):
-        from redmine.exceptions import ReadonlyAttrError
-        with self.assertRaises(ReadonlyAttrError):
+        with self.assertRaises(exceptions.ReadonlyAttrError):
             self.response.json.return_value = responses['project']['get']
             project = self.redmine.project.get(1)
             project.identifier = 1
 
     def test_control_raising_of_resource_attr_exception(self):
-        from redmine.exceptions import ResourceAttrError
         self.response.json.return_value = responses['project']['get']
         self.redmine.raise_attr_exception = False
         self.assertEqual(self.redmine.project.get(1).foo, None)
         self.redmine.raise_attr_exception = ('Project',)
-        self.assertRaises(ResourceAttrError, lambda: self.redmine.project.get(1).foo)
+        self.assertRaises(exceptions.ResourceAttrError, lambda: self.redmine.project.get(1).foo)
         self.redmine.raise_attr_exception = True
-        self.assertRaises(ResourceAttrError, lambda: self.redmine.project.get(1).foo)
+        self.assertRaises(exceptions.ResourceAttrError, lambda: self.redmine.project.get(1).foo)
 
     def test_saving_new_resource_creates_it(self):
         self.response.status_code = 201
@@ -182,10 +176,9 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertIn(('id', 1), project)
 
     def test_setting_custom_field_raises_exception_if_not_list_of_dicts(self):
-        from redmine.exceptions import CustomFieldValueError
         self.response.json.return_value = {'project': {'name': 'Foo', 'id': 1, 'custom_fields': [{'id': 1}]}}
         project = self.redmine.project.get(1)
-        with self.assertRaises(CustomFieldValueError):
+        with self.assertRaises(exceptions.CustomFieldValueError):
             project.custom_fields = 'foo'
 
     def test_resource_is_picklable(self):
@@ -240,13 +233,13 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_project_relations(self):
         self.response.json.return_value = responses['project']['get']
         project = self.redmine.project.get(1)
-        self.assertIsInstance(project.wiki_pages, ResourceSet)
-        self.assertIsInstance(project.memberships, ResourceSet)
-        self.assertIsInstance(project.issue_categories, ResourceSet)
-        self.assertIsInstance(project.time_entries, ResourceSet)
-        self.assertIsInstance(project.versions, ResourceSet)
-        self.assertIsInstance(project.news, ResourceSet)
-        self.assertIsInstance(project.issues, ResourceSet)
+        self.assertIsInstance(project.wiki_pages, resultsets.ResourceSet)
+        self.assertIsInstance(project.memberships, resultsets.ResourceSet)
+        self.assertIsInstance(project.issue_categories, resultsets.ResourceSet)
+        self.assertIsInstance(project.time_entries, resultsets.ResourceSet)
+        self.assertIsInstance(project.versions, resultsets.ResourceSet)
+        self.assertIsInstance(project.news, resultsets.ResourceSet)
+        self.assertIsInstance(project.issues, resultsets.ResourceSet)
 
     def test_project_includes(self):
         response_includes = responses['project']['get']
@@ -254,10 +247,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         project = self.redmine.project.get(1)
         response_includes['project'].update(responses['issue_category']['filter'])
         self.response.json.return_value = response_includes
-        self.assertIsInstance(project.issue_categories, ResourceSet)
+        self.assertIsInstance(project.issue_categories, resultsets.ResourceSet)
         response_includes['project'].update(responses['tracker']['all'])
         self.response.json.return_value = response_includes
-        self.assertIsInstance(project.trackers, ResourceSet)
+        self.assertIsInstance(project.trackers, resultsets.ResourceSet)
         response_includes['project'].update({'enabled_modules': [{'id': 36, 'name': 'issue_tracking'}]})
         self.response.json.return_value = response_includes
         self.assertEqual(project.enabled_modules, ['issue_tracking'])
@@ -284,10 +277,9 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(self.redmine.project.all().export('txt', '/foo/bar'), '/foo/bar/projects.txt')
 
     def test_project_parent_converts_to_resource(self):
-        from redmine.resources import Project
         self.response.json.return_value = {'project': {'name': 'Foo', 'id': 1, 'parent': {'id': 2}}}
         parent = self.redmine.project.get(1).parent
-        self.assertIsInstance(parent, Project)
+        self.assertIsInstance(parent, resources.Project)
         self.assertEqual(parent.id, 2)
 
     def test_issue_version(self):
@@ -342,8 +334,8 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_issue_relations(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
-        self.assertIsInstance(issue.relations, ResourceSet)
-        self.assertIsInstance(issue.time_entries, ResourceSet)
+        self.assertIsInstance(issue.relations, resultsets.ResourceSet)
+        self.assertIsInstance(issue.time_entries, resultsets.ResourceSet)
 
     def test_issue_includes(self):
         response_includes = responses['issue']['get']
@@ -351,26 +343,25 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         issue = self.redmine.issue.get(1)
         response_includes['issue']['children'] = responses['issue']['all']['issues']
         self.response.json.return_value = response_includes
-        self.assertIsInstance(issue.children, ResourceSet)
+        self.assertIsInstance(issue.children, resultsets.ResourceSet)
         response_includes['issue']['attachments'] = responses['attachment']['get']
         self.response.json.return_value = response_includes
-        self.assertIsInstance(issue.attachments, ResourceSet)
+        self.assertIsInstance(issue.attachments, resultsets.ResourceSet)
         response_includes['issue']['relations'] = responses['issue_relation']['get']['relation']
         self.response.json.return_value = response_includes
-        self.assertIsInstance(issue.relations, ResourceSet)
+        self.assertIsInstance(issue.relations, resultsets.ResourceSet)
         response_includes['issue']['journals'] = [{'id': 1}, {'id': 2}]
         self.response.json.return_value = response_includes
-        self.assertIsInstance(issue.journals, ResourceSet)
+        self.assertIsInstance(issue.journals, resultsets.ResourceSet)
         response_includes['issue']['watchers'] = responses['user']['all']['users']
         self.response.json.return_value = response_includes
-        self.assertIsInstance(issue.watchers, ResourceSet)
+        self.assertIsInstance(issue.watchers, resultsets.ResourceSet)
 
     def test_issue_add_watcher_raises_exception_if_wrong_version(self):
-        from redmine.exceptions import ResourceVersionMismatchError
         self.response.json.return_value = responses['issue']['get']
         self.redmine.ver = '2.2.0'
         issue = self.redmine.issue.get(1)
-        self.assertRaises(ResourceVersionMismatchError, lambda: issue.watcher.add(1))
+        self.assertRaises(exceptions.ResourceVersionMismatchError, lambda: issue.watcher.add(1))
 
     def test_issue_add_watcher(self):
         self.response.json.return_value = responses['issue']['get']
@@ -418,11 +409,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(issue.journals[0].url, None)
 
     def test_issue_version_can_be_retrieved_via_version_attribute(self):
-        from redmine.resources import Version
         self.response.json.return_value = {
             'issue': {'subject': 'Foo', 'id': 1, 'fixed_version': {'id': 1, 'name': 'Foo'}}}
         issue = self.redmine.issue.get(1)
-        self.assertIsInstance(issue.version, Version)
+        self.assertIsInstance(issue.version, resources.Version)
 
     def test_issue_version_can_be_set_via_version_attribute(self):
         self.response.json.return_value = responses['issue']['get']
@@ -449,10 +439,9 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(self.redmine.issue.get(1).export('txt', '/foo/bar'), '/foo/bar/1.txt')
 
     def test_issue_parent_converts_to_resource(self):
-        from redmine.resources import Issue
         self.response.json.return_value = {'issue': {'subject': 'Foo', 'id': 1, 'parent': {'id': 2}}}
         parent = self.redmine.issue.get(1).parent
-        self.assertIsInstance(parent, Issue)
+        self.assertIsInstance(parent, resources.Issue)
         self.assertEqual(parent.id, 2)
 
     def test_time_entry_version(self):
@@ -670,7 +659,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
         response_includes['wiki_page']['attachments'] = responses['attachment']['get']['attachment']
         self.response.json.return_value = response_includes
-        self.assertIsInstance(wiki_page.attachments, ResourceSet)
+        self.assertIsInstance(wiki_page.attachments, resultsets.ResourceSet)
 
     def test_wiki_page_is_new(self):
         wiki_page = self.redmine.wiki_page.new()
@@ -692,10 +681,9 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(self.redmine.wiki_page.get('Foo', project_id='Foo').export('txt', '/foo'), '/foo/Foo.txt')
 
     def test_wiki_page_parent_converts_to_resource(self):
-        from redmine.resources import WikiPage
         self.response.json.return_value = {'wiki_page': {'title': 'Foo', 'project_id': 1, 'parent': {'title': 'Bar'}}}
         parent = self.redmine.wiki_page.get('Foo', project_id=1).parent
-        self.assertIsInstance(parent, WikiPage)
+        self.assertIsInstance(parent, resources.WikiPage)
         self.assertEqual(parent.title, 'Bar')
 
     def test_project_membership_version(self):
@@ -950,8 +938,8 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_user_relations(self):
         self.response.json.return_value = responses['user']['get']
         user = self.redmine.user.get(1)
-        self.assertIsInstance(user.issues, ResourceSet)
-        self.assertIsInstance(user.time_entries, ResourceSet)
+        self.assertIsInstance(user.issues, resultsets.ResourceSet)
+        self.assertIsInstance(user.time_entries, resultsets.ResourceSet)
 
     def test_user_includes(self):
         response_includes = responses['user']['get']
@@ -959,10 +947,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         user = self.redmine.user.get(1)
         response_includes['user']['memberships'] = responses['project_membership']['filter']['memberships']
         self.response.json.return_value = response_includes
-        self.assertIsInstance(user.memberships, ResourceSet)
+        self.assertIsInstance(user.memberships, resultsets.ResourceSet)
         response_includes['user']['groups'] = responses['group']['all']['groups']
         self.response.json.return_value = response_includes
-        self.assertIsInstance(user.groups, ResourceSet)
+        self.assertIsInstance(user.groups, resultsets.ResourceSet)
 
     def test_user_returns_status_without_conversion(self):
         self.response.json.return_value = {'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1, 'status': 1}}
@@ -1021,10 +1009,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         group = self.redmine.group.get(1)
         response_includes['group']['memberships'] = responses['project_membership']['filter']['memberships']
         self.response.json.return_value = response_includes
-        self.assertIsInstance(group.memberships, ResourceSet)
+        self.assertIsInstance(group.memberships, resultsets.ResourceSet)
         response_includes['group']['users'] = responses['user']['all']['users']
         self.response.json.return_value = response_includes
-        self.assertIsInstance(group.users, ResourceSet)
+        self.assertIsInstance(group.users, resultsets.ResourceSet)
 
     def test_group_add_user(self):
         self.response.json.return_value = responses['group']['get']

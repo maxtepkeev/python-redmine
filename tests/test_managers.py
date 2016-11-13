@@ -1,32 +1,27 @@
 from . import mock, BaseRedmineTestCase
 
-from redmine.managers import ResourceManager
-from redmine.resources import Project
-from redmine.resultsets import ResourceSet
-from redmine.exceptions import ResourceBadMethodError, ResourceNoFieldsProvidedError, ValidationError
+from redmine import managers, resources, resultsets, exceptions
 
 
-class FooResource(Project):
+class FooResource(resources.Project):
     pass
 
 
 class ResourceManagerTestCase(BaseRedmineTestCase):
     def test_supports_additional_resources(self):
         self.redmine.resource_paths = (__name__,)
-        self.assertIsInstance(self.redmine.foo_resource, ResourceManager)
+        self.assertIsInstance(self.redmine.foo_resource, managers.ResourceManager)
 
     def test_not_supported_resource_exception(self):
-        from redmine.exceptions import ResourceError
-        self.assertRaises(ResourceError, lambda: self.redmine.foobar)
+        self.assertRaises(exceptions.ResourceError, lambda: self.redmine.foobar)
 
     def test_not_supported_version_exception(self):
-        from redmine.exceptions import ResourceVersionMismatchError
         self.redmine.ver = '0.0.1'
-        self.assertRaises(ResourceVersionMismatchError, lambda: self.redmine.project)
+        self.assertRaises(exceptions.ResourceVersionMismatchError, lambda: self.redmine.project)
 
     def test_convert_dict_to_resource_object(self):
         project = self.redmine.project.to_resource({'name': 'Foo', 'identifier': 'foo', 'id': 1})
-        self.assertIsInstance(project, Project)
+        self.assertIsInstance(project, resources.Project)
         self.assertEqual(project.name, 'Foo')
         self.assertEqual(project.identifier, 'foo')
         self.assertEqual(project.id, 1)
@@ -36,7 +31,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
             {'name': 'Foo', 'identifier': 'foo', 'id': 1},
             {'name': 'Bar', 'identifier': 'bar', 'id': 2}
         ])
-        self.assertIsInstance(resourceset, ResourceSet)
+        self.assertIsInstance(resourceset, resultsets.ResourceSet)
         self.assertEqual(resourceset[0].name, 'Foo')
         self.assertEqual(resourceset[0].identifier, 'foo')
         self.assertEqual(resourceset[0].id, 1)
@@ -60,10 +55,10 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.assertEqual(project.id, 1)
 
     def test_get_all_resources(self):
-        self.assertIsInstance(self.redmine.project.all(), ResourceSet)
+        self.assertIsInstance(self.redmine.project.all(), resultsets.ResourceSet)
 
     def test_get_filtered_resources(self):
-        self.assertIsInstance(self.redmine.issue.filter(project_id='foo'), ResourceSet)
+        self.assertIsInstance(self.redmine.issue.filter(project_id='foo'), resultsets.ResourceSet)
 
     def test_decode_params(self):
         from datetime import date, datetime
@@ -129,48 +124,46 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.assertEqual(self.redmine.wiki_page.delete(b'\xcf\x86oo'.decode('utf8'), project_id=1), True)
 
     def test_resource_get_method_unsupported_exception(self):
-        self.assertRaises(ResourceBadMethodError, lambda: self.redmine.enumeration.get('foo'))
+        self.assertRaises(exceptions.ResourceBadMethodError, lambda: self.redmine.enumeration.get('foo'))
 
     def test_resource_all_method_unsupported_exception(self):
-        self.assertRaises(ResourceBadMethodError, lambda: self.redmine.attachment.all())
+        self.assertRaises(exceptions.ResourceBadMethodError, lambda: self.redmine.attachment.all())
 
     def test_resource_filter_method_unsupported_exception(self):
-        self.assertRaises(ResourceBadMethodError, lambda: self.redmine.project.filter())
+        self.assertRaises(exceptions.ResourceBadMethodError, lambda: self.redmine.project.filter())
 
     def test_resource_create_method_unsupported_exception(self):
-        self.assertRaises(ResourceBadMethodError, lambda: self.redmine.query.create())
+        self.assertRaises(exceptions.ResourceBadMethodError, lambda: self.redmine.query.create())
 
     def test_resource_update_method_unsupported_exception(self):
-        self.assertRaises(ResourceBadMethodError, lambda: self.redmine.query.update(1))
+        self.assertRaises(exceptions.ResourceBadMethodError, lambda: self.redmine.query.update(1))
 
     def test_resource_delete_method_unsupported_exception(self):
-        self.assertRaises(ResourceBadMethodError, lambda: self.redmine.query.delete(1))
+        self.assertRaises(exceptions.ResourceBadMethodError, lambda: self.redmine.query.delete(1))
 
     def test_filter_no_filters_exception(self):
-        from redmine.exceptions import ResourceNoFiltersProvidedError
-        self.assertRaises(ResourceNoFiltersProvidedError, lambda: self.redmine.issue.filter())
+        self.assertRaises(exceptions.ResourceNoFiltersProvidedError, lambda: self.redmine.issue.filter())
 
     def test_filter_unknown_filters_exception(self):
-        from redmine.exceptions import ResourceFilterError
-        self.assertRaises(ResourceFilterError, lambda: self.redmine.version.filter(foo='bar'))
+        self.assertRaises(exceptions.ResourceFilterError, lambda: self.redmine.version.filter(foo='bar'))
 
     def test_create_no_fields_exception(self):
-        self.assertRaises(ResourceNoFieldsProvidedError, lambda: self.redmine.user.create())
+        self.assertRaises(exceptions.ResourceNoFieldsProvidedError, lambda: self.redmine.user.create())
 
     def test_update_no_fields_exception(self):
-        self.assertRaises(ResourceNoFieldsProvidedError, lambda: self.redmine.project.update(1))
+        self.assertRaises(exceptions.ResourceNoFieldsProvidedError, lambda: self.redmine.project.update(1))
 
     def test_get_validation_exception(self):
-        self.assertRaises(ValidationError, lambda: self.redmine.wiki_page.get('foo'))
+        self.assertRaises(exceptions.ValidationError, lambda: self.redmine.wiki_page.get('foo'))
 
     def test_create_validation_exception(self):
-        self.assertRaises(ValidationError, lambda: self.redmine.issue_category.create(foo='bar'))
+        self.assertRaises(exceptions.ValidationError, lambda: self.redmine.issue_category.create(foo='bar'))
 
     def test_update_validation_exception(self):
-        self.assertRaises(ValidationError, lambda: self.redmine.wiki_page.update('Foo', title='Bar'))
+        self.assertRaises(exceptions.ValidationError, lambda: self.redmine.wiki_page.update('Foo', title='Bar'))
 
     def test_delete_validation_exception(self):
-        self.assertRaises(ValidationError, lambda: self.redmine.wiki_page.delete('Foo'))
+        self.assertRaises(exceptions.ValidationError, lambda: self.redmine.wiki_page.delete('Foo'))
 
     def test_manager_is_picklable(self):
         import pickle
@@ -183,16 +176,14 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
 
     def test_create_validation_exception_via_put(self):
         self.set_patch_side_effect([mock.Mock(status_code=404, history=[]), mock.Mock(status_code=200, history=[])])
-        self.assertRaises(ValidationError, lambda: self.redmine.user.create(firstname='John', lastname='Smith'))
+        self.assertRaises(exceptions.ValidationError, lambda: self.redmine.user.create(firstname='J', lastname='Smith'))
 
     def test_reraises_not_found_exception(self):
-        from redmine.exceptions import ResourceNotFoundError
         self.response.status_code = 404
-        self.assertRaises(ResourceNotFoundError, lambda: self.redmine.project.get('non-existent-project'))
+        self.assertRaises(exceptions.ResourceNotFoundError, lambda: self.redmine.project.get('non-existent-project'))
 
     def test_resource_requirements_exception(self):
-        from redmine.exceptions import ResourceRequirementsError
         FooResource.requirements = ('foo plugin', ('bar plugin', '1.2.3'),)
         self.response.status_code = 404
         self.redmine.resource_paths = (__name__,)
-        self.assertRaises(ResourceRequirementsError, lambda: self.redmine.foo_resource.get(1))
+        self.assertRaises(exceptions.ResourceRequirementsError, lambda: self.redmine.foo_resource.get(1))

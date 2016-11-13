@@ -1,6 +1,6 @@
 from . import mock, BaseRedmineTestCase, Redmine
 
-from redmine import engines
+from redmine import engines, exceptions
 
 
 class RedmineTestCase(BaseRedmineTestCase):
@@ -73,18 +73,15 @@ class RedmineTestCase(BaseRedmineTestCase):
         self.assertEqual(''.join(self.redmine.download('http://foo/bar.txt').iter_content()), '01234')
 
     def test_file_url_exception(self):
-        from redmine.exceptions import FileUrlError
         self.response.status_code = 200
-        self.assertRaises(FileUrlError, lambda: self.redmine.download('http://bad_url', '/some/path'))
+        self.assertRaises(exceptions.FileUrlError, lambda: self.redmine.download('http://bad_url', '/some/path'))
 
     def test_file_upload_no_file_exception(self):
-        from redmine.exceptions import NoFileError
-        self.assertRaises(NoFileError, lambda: self.redmine.upload('foo',))
+        self.assertRaises(exceptions.NoFileError, lambda: self.redmine.upload('foo',))
 
     def test_file_upload_not_supported_exception(self):
-        from redmine.exceptions import VersionMismatchError
         self.redmine.ver = '1.0.0'
-        self.assertRaises(VersionMismatchError, lambda: self.redmine.upload('foo',))
+        self.assertRaises(exceptions.VersionMismatchError, lambda: self.redmine.upload('foo',))
 
     def test_auth(self):
         self.redmine.username = 'john'

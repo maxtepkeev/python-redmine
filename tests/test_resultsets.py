@@ -1,5 +1,7 @@
 from . import mock, BaseRedmineTestCase
 
+from redmine import exceptions
+
 response = {
     'projects': [
         {'name': 'Foo', 'identifier': 'foo', 'id': 1},
@@ -59,8 +61,7 @@ class ResultSetTestCase(BaseRedmineTestCase):
         self.assertEqual(project.custom_fields.total_count, 1)
 
     def test_total_count_raise_exception_if_not_evaluated(self):
-        from redmine.exceptions import ResultSetTotalCountError
-        self.assertRaises(ResultSetTotalCountError, lambda: self.redmine.project.all().total_count)
+        self.assertRaises(exceptions.ResultSetTotalCountError, lambda: self.redmine.project.all().total_count)
 
     def test_resultset_is_empty(self):
         self.response.json.return_value = {'limit': 100, 'projects': [], 'total_count': 0, 'offset': 0}
@@ -176,23 +177,18 @@ class ResultSetTestCase(BaseRedmineTestCase):
         self.assertEqual(self.redmine.issue.all().export('txt', '/foo/bar'), '/foo/bar/issues.txt')
 
     def test_export_not_supported_exception(self):
-        from redmine.exceptions import ExportNotSupported
-        self.assertRaises(ExportNotSupported, lambda: self.redmine.custom_field.all().export('pdf'))
+        self.assertRaises(exceptions.ExportNotSupported, lambda: self.redmine.custom_field.all().export('pdf'))
 
     def test_export_format_not_supported_exception(self):
-        from redmine.exceptions import ExportFormatNotSupportedError
         self.response.status_code = 406
-        self.assertRaises(ExportFormatNotSupportedError, lambda: self.redmine.issue.all().export('foo'))
+        self.assertRaises(exceptions.ExportFormatNotSupportedError, lambda: self.redmine.issue.all().export('foo'))
 
     def test_export_reraises_unknown_error(self):
-        from redmine.exceptions import UnknownError
         self.response.status_code = 999
-        self.assertRaises(UnknownError, lambda: self.redmine.issue.all().export('foo'))
+        self.assertRaises(exceptions.UnknownError, lambda: self.redmine.issue.all().export('foo'))
 
     def test_filter_param_exception(self):
-        from redmine.exceptions import ResourceSetFilterParamError
-        self.assertRaises(ResourceSetFilterParamError, lambda: self.redmine.project.all().filter(1))
+        self.assertRaises(exceptions.ResourceSetFilterParamError, lambda: self.redmine.project.all().filter(1))
 
     def test_index_error_exception(self):
-        from redmine.exceptions import ResourceSetIndexError
-        self.assertRaises(ResourceSetIndexError, lambda: self.redmine.project.all()[6])
+        self.assertRaises(exceptions.ResourceSetIndexError, lambda: self.redmine.project.all()[6])
