@@ -22,7 +22,7 @@ Changelog
 - Added: ``status`` attribute for a RedmineCRM DealStatus resource which shows text representation of
   DealStatuses's status_type
 - Added: Attachment ``delete()`` method support (requires Redmine >= 3.3.0)
-- Added: It is now possibles to create engines to define how requests to the redmine are made, e.g.
+- Added: It is now possible to create engines to define how requests to the redmine are made, e.g.
   synchronous (one by one) or asynchronous using threads or processes
 - Added: ``Redmine.session()`` context manager which allows to temporary redefine engine's options
 - Added: WikiPage resource now provides ``project_id`` attribute
