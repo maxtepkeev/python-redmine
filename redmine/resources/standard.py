@@ -20,7 +20,9 @@ class Project(BaseResource):
     query_create = '/projects.json'
     query_update = '/projects/{0}.json'
     query_delete = '/projects/{0}.json'
+    search_hints = ['project']
 
+    _repr = [['id', 'name'], ['title']]
     _includes = ['trackers', 'issue_categories', 'enabled_modules']
     _relations = ['wiki_pages', 'memberships', 'issue_categories', 'time_entries', 'versions', 'news', 'issues']
     _unconvertible = BaseResource._unconvertible + ['identifier', 'status']
@@ -63,8 +65,9 @@ class Issue(BaseResource):
     query_create = '/projects/{project_id}/issues.json'
     query_update = '/issues/{0}.json'
     query_delete = '/issues/{0}.json'
+    search_hints = ['issue', 'issue closed']
 
-    _repr = [['id', 'subject'], ['id']]
+    _repr = [['id', 'subject'], ['title'], ['id']]
     _includes = ['children', 'attachments', 'relations', 'changesets', 'journals', 'watchers']
     _relations = ['relations', 'time_entries']
     _unconvertible = BaseResource._unconvertible + ['subject', 'notes']
@@ -225,6 +228,7 @@ class WikiPage(BaseResource):
     query_create = '/projects/{project_id}/wiki/{title}.json'
     query_update = '/projects/{project_id}/wiki/{0}.json'
     query_delete = '/projects/{project_id}/wiki/{0}.json'
+    search_hints = ['wiki-page']
 
     _repr = [['title']]
     _includes = ['attachments']
@@ -433,6 +437,7 @@ class News(BaseResource):
     query_all_export = '/news.{format}'
     query_all = '/news.json'
     query_filter = '/news.json'
+    search_hints = ['news']
 
     _repr = [['id', 'title']]
     _resource_map = {'project': 'Project', 'author': 'User'}

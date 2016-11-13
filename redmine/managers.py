@@ -246,3 +246,16 @@ class ResourceManager(object):
             raise exceptions.ValidationError('{0} argument is required'.format(exception))
 
         return self.redmine.engine.request('delete', url, params=self.resource_class.bulk_decode(params, self))
+
+    def search(self, query, **options):
+        """
+        Searches for Resources using a query.
+
+        :param string query: (required). What to search.
+        :param dict options: (optional). Dictionary of search options.
+        """
+        if self.resource_class.search_hints is None or self.resource_class.container_many is None:
+            raise exceptions.ResourceBadMethodError
+
+        results = self.redmine.search(query, **dict(resources=[self.resource_class.container_many], **options))
+        return results.get(self.resource_class.container_many) if results is not None else results

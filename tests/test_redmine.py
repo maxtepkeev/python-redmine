@@ -1,6 +1,6 @@
 from . import mock, BaseRedmineTestCase, Redmine
 
-from redmine import engines, exceptions
+from redmine import engines, resultsets, exceptions
 
 
 class RedmineTestCase(BaseRedmineTestCase):
@@ -89,6 +89,38 @@ class RedmineTestCase(BaseRedmineTestCase):
         self.response.status_code = 200
         self.response.json.return_value = {'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1}}
         self.assertEqual(self.redmine.auth().firstname, 'John')
+
+    def test_search(self):
+        self.response.json.return_value = {'total_count': 6, 'offset': 0, 'limit': 0, 'results': [
+            {'id': 1, 'title': 'Foo', 'type': 'issue'},
+            {'id': 2, 'title': 'Bar', 'type': 'issue closed'},
+            {'id': 3, 'title': 'Foo', 'type': 'project'},
+            {'id': 4, 'title': 'Foo', 'type': 'news'},
+            {'id': 5, 'title': 'Foo', 'type': 'wiki-page'},
+            {'id': 6, 'title': 'Foo', 'type': 'document'},
+        ]}
+        results = self.redmine.search('foo')
+        self.assertIsInstance(results['issues'], resultsets.ResourceSet)
+        self.assertEqual(len(results['issues']), 2)
+        self.assertIsInstance(results['projects'], resultsets.ResourceSet)
+        self.assertEqual(len(results['projects']), 1)
+        self.assertIsInstance(results['news'], resultsets.ResourceSet)
+        self.assertEqual(len(results['news']), 1)
+        self.assertIsInstance(results['wiki_pages'], resultsets.ResourceSet)
+        self.assertEqual(len(results['wiki_pages']), 1)
+        self.assertIsInstance(results['unknown'], dict)
+        self.assertEqual(len(results['unknown']['document']), 1)
+
+    def test_search_without_unknown(self):
+        self.response.json.return_value = {'total_count': 1, 'offset': 0, 'limit': 0, 'results': [
+            {'id': 1, 'title': 'Foo', 'type': 'issue'}]}
+        results = self.redmine.search('foo')
+        self.assertIsInstance(results['issues'], resultsets.ResourceSet)
+        self.assertEqual(len(results['issues']), 1)
+
+    def test_search_not_supported_exception(self):
+        self.redmine.ver = '1.0.0'
+        self.assertRaises(exceptions.VersionMismatchError, lambda: self.redmine.search('foo'))
 
     def test_redmine_is_picklable(self):
         import pickle

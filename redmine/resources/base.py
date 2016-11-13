@@ -93,6 +93,7 @@ class BaseResource(utilities.with_metaclass(Registrar)):
     query_create = None
     query_update = None
     query_delete = None
+    search_hints = None
 
     _repr = [['id', 'name']]
     _includes = []

@@ -141,6 +141,9 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
     def test_resource_delete_method_unsupported_exception(self):
         self.assertRaises(exceptions.ResourceBadMethodError, lambda: self.redmine.query.delete(1))
 
+    def test_resource_search_method_unsupported_exception(self):
+        self.assertRaises(exceptions.ResourceBadMethodError, lambda: self.redmine.query.search('foo'))
+
     def test_filter_no_filters_exception(self):
         self.assertRaises(exceptions.ResourceNoFiltersProvidedError, lambda: self.redmine.issue.filter())
 
@@ -187,3 +190,14 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.response.status_code = 404
         self.redmine.resource_paths = (__name__,)
         self.assertRaises(exceptions.ResourceRequirementsError, lambda: self.redmine.foo_resource.get(1))
+
+    def test_search(self):
+        self.response.json.return_value = {'total_count': 1, 'offset': 0, 'limit': 0, 'results': [
+            {'id': 1, 'title': 'Foo', 'type': 'issue'}]}
+        results = self.redmine.issue.search('foo')
+        self.assertIsInstance(results['issues'], resultsets.ResourceSet)
+        self.assertEqual(len(results['issues']), 1)
+
+    def test_search_returns_none_if_nothing_found(self):
+        self.response.json.return_value = {'total_count': 0, 'offset': 0, 'limit': 0, 'results': []}
+        self.assertIsNone(self.redmine.issue.search('foo'))

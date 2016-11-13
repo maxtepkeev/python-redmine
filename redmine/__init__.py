@@ -7,7 +7,7 @@ import contextlib
 
 from distutils.version import LooseVersion
 
-from . import managers, exceptions, engines, utilities
+from . import managers, exceptions, engines, utilities, resources
 from .version import __version__
 
 
@@ -123,3 +123,54 @@ class Redmine(object):
         Shortcut for the case if we just want to check if user provided valid auth credentials.
         """
         return self.user.get('current')
+
+    def search(self, query, **options):
+        """
+        Interface to Redmine Search API
+
+        :param string query: (required). What to search.
+        :param dict options: (optional). Dictionary of search options.
+        """
+        if self.ver is not None and LooseVersion(str(self.ver)) < LooseVersion('3.0.0'):
+            raise exceptions.VersionMismatchError('Search functionality')
+
+        container_map, manager_map, results = {}, {}, {'unknown': {}}
+
+        for resource in options.pop('resources', []):
+            options[resource] = True
+
+        options['q'] = query
+
+        for name, details in resources.registry.items():
+            if details['class'].search_hints is not None:
+                for hint in details['class'].search_hints:
+                    container_map[hint] = details['class'].container_many
+
+                manager_map[details['class'].container_many] = getattr(self, name)
+
+        raw_resources, _ = self.engine.bulk_request('get', '{0}/search.json'.format(self.url), 'results', **options)
+
+        for resource in raw_resources:
+            if resource['type'] in container_map:
+                container = container_map[resource['type']]
+
+                if container not in results:
+                    results[container] = []
+
+                results[container].append(resource)
+            else:
+                if resource['type'] not in results['unknown']:
+                    results['unknown'][resource['type']] = []
+
+                results['unknown'][resource['type']].append(resource)
+
+            del resource['type']  # all resources are already sorted by type so we don't need it
+
+        if not results['unknown']:
+            del results['unknown']
+
+        for container in results:
+            if container in manager_map:
+                results[container] = manager_map[container].to_resource_set(results[container])
+
+        return results or None

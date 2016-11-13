@@ -26,6 +26,7 @@ Changelog
   synchronous (one by one) or asynchronous using threads or processes
 - Added: ``Redmine.session()`` context manager which allows to temporary redefine engine's options
 - Added: WikiPage resource now provides ``project_id`` attribute
+- Added: `Issue #138 <https://github.com/maxtepkeev/python-redmine/issues/138>`__ (Search API support)
 - Added: `Issue #58 <https://github.com/maxtepkeev/python-redmine/issues/58>`__ (Export functionality)
 - Added: ``delete()`` method on ``Resource`` object which deletes current resource from Redmine
 - Added: ``pre_delete()`` and ``post_delete()`` ``Resource`` object methods which can be used to execute
