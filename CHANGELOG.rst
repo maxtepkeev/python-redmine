@@ -47,6 +47,8 @@ Changelog
 - Changed: ``Resource.refresh()`` now really refreshes itself instead of returning a new refreshed
   resource, to get the previous behaviour call it like this ``Resource.refresh(itself=False)``
 - Changed: Sync engine's speed improved to 8-12% depending on the amount of resources fetched
+- Fixed: `Issue #152 <https://github.com/maxtepkeev/python-redmine/issues/152>`__ (Infinite loop when
+  uploading zero-length files)
 - Fixed: It was impossible to set ``data``, ``params`` and ``headers`` via ``requests`` keyword argument on
   Redmine object
 - Fixed: Calling ``str()`` or ``repr()`` on a Resource was giving incorrect results if exception raising
