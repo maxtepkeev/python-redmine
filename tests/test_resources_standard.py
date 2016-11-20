@@ -1,7 +1,7 @@
 from . import mock, BaseRedmineTestCase
 from .responses import responses
 
-from redmine import resources, resultsets, exceptions
+from redminelib import resources, resultsets, exceptions
 
 
 class StandardResourcesTestCase(BaseRedmineTestCase):
@@ -21,7 +21,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = responses['attachment']['get']
         self.assertEqual(self.redmine.attachment.get(1).export_url('pdf'), None)
 
-    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_export(self):
         self.response.json.return_value = responses['issue']['get']
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
@@ -120,7 +120,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
 
     def test_custom_repr(self):
         self.response.json.return_value = responses['project']['get']
-        self.assertEqual(repr(self.redmine.project.get(1)), '<redmine.resources.Project #1 "Foo">')
+        self.assertEqual(repr(self.redmine.project.get(1)), '<redminelib.resources.Project #1 "Foo">')
 
     def test_can_refresh_itself(self):
         self.response.json.return_value = responses['project']['get']
@@ -150,7 +150,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
         issue._decoded_attrs['author'] = {'id': 1, 'name': 'John Smith'}
-        self.assertEqual(repr(issue.author), '<redmine.resources.User #1 "John Smith">')
+        self.assertEqual(repr(issue.author), '<redminelib.resources.User #1 "John Smith">')
 
     def test_resource_list_of_dicts_is_converted_to_resource_set(self):
         self.response.json.return_value = responses['issue']['get']
@@ -158,7 +158,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         issue._decoded_attrs['custom_fields'] = [{'id': 1, 'name': 'Foo'}, {'id': 2, 'name': 'Bar'}]
         self.assertEqual(
             repr(issue.custom_fields),
-            '<redmine.resultsets.ResourceSet object with CustomField resources>'
+            '<redminelib.resultsets.ResourceSet object with CustomField resources>'
         )
 
     def test_dir_returns_resource_attributes(self):
@@ -264,13 +264,13 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         project = self.redmine.project.new()
         self.assertEqual(int(project), 0)
         self.assertEqual(str(project), '')
-        self.assertEqual(repr(project), '<redmine.resources.Project #0 "">')
+        self.assertEqual(repr(project), '<redminelib.resources.Project #0 "">')
 
     def test_project_url(self):
         self.response.json.return_value = responses['project']['get']
         self.assertEqual(self.redmine.project.get(1).url, '{0}/projects/foo'.format(self.url))
 
-    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_project_export(self):
         self.response.json.return_value = responses['project']['all']
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
@@ -377,13 +377,13 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
 
     def test_issue_custom_repr(self):
         self.response.json.return_value = responses['issue']['get']
-        self.assertEqual(repr(self.redmine.issue.get(1)), '<redmine.resources.Issue #1 "Foo">')
+        self.assertEqual(repr(self.redmine.issue.get(1)), '<redminelib.resources.Issue #1 "Foo">')
 
     def test_issue_custom_repr_without_subject(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)
         del issue['_decoded_attrs']['subject']
-        self.assertEqual(repr(issue), '<redmine.resources.Issue #1>')
+        self.assertEqual(repr(issue), '<redminelib.resources.Issue #1>')
 
     def test_issue_custom_str(self):
         self.response.json.return_value = responses['issue']['get']
@@ -400,7 +400,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         issue = self.redmine.issue.get(1)
         issue._decoded_attrs['journals'] = [{'id': 1}]
         self.assertEqual(str(issue.journals[0]), '1')
-        self.assertEqual(repr(issue.journals[0]), '<redmine.resources.IssueJournal #1>')
+        self.assertEqual(repr(issue.journals[0]), '<redminelib.resources.IssueJournal #1>')
 
     def test_issue_journals_url(self):
         self.response.json.return_value = responses['issue']['get']
@@ -424,13 +424,13 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         issue = self.redmine.issue.new()
         self.assertEqual(int(issue), 0)
         self.assertEqual(str(issue), '')
-        self.assertEqual(repr(issue), '<redmine.resources.Issue #0 "">')
+        self.assertEqual(repr(issue), '<redminelib.resources.Issue #0 "">')
 
     def test_issue_url(self):
         self.response.json.return_value = responses['issue']['get']
         self.assertEqual(self.redmine.issue.get(1).url, '{0}/issues/1'.format(self.url))
 
-    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_issue_export(self):
         self.response.json.return_value = responses['issue']['all']
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
@@ -504,19 +504,19 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
 
     def test_time_entry_custom_repr(self):
         self.response.json.return_value = responses['time_entry']['get']
-        self.assertEqual(repr(self.redmine.time_entry.get(1)), '<redmine.resources.TimeEntry #1>')
+        self.assertEqual(repr(self.redmine.time_entry.get(1)), '<redminelib.resources.TimeEntry #1>')
 
     def test_time_entry_is_new(self):
         time_entry = self.redmine.time_entry.new()
         self.assertEqual(int(time_entry), 0)
         self.assertEqual(str(time_entry), '0')
-        self.assertEqual(repr(time_entry), '<redmine.resources.TimeEntry #0>')
+        self.assertEqual(repr(time_entry), '<redminelib.resources.TimeEntry #0>')
 
     def test_time_entry_url(self):
         self.response.json.return_value = responses['time_entry']['get']
         self.assertEqual(self.redmine.time_entry.get(1).url, '{0}/time_entries/1'.format(self.url))
 
-    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_time_entry_export(self):
         self.response.json.return_value = responses['time_entry']['all']
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
@@ -568,19 +568,19 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
 
     def test_attachment_custom_repr(self):
         self.response.json.return_value = responses['attachment']['get']
-        self.assertEqual(repr(self.redmine.attachment.get(1)), '<redmine.resources.Attachment #1 "foo.jpg">')
+        self.assertEqual(repr(self.redmine.attachment.get(1)), '<redminelib.resources.Attachment #1 "foo.jpg">')
 
     def test_attachment_custom_repr_without_subject(self):
         self.response.json.return_value = responses['attachment']['get']
         attachment = self.redmine.attachment.get(1)
         del attachment['_decoded_attrs']['filename']
-        self.assertEqual(repr(attachment), '<redmine.resources.Attachment #1>')
+        self.assertEqual(repr(attachment), '<redminelib.resources.Attachment #1>')
 
     def test_attachment_url(self):
         self.response.json.return_value = responses['attachment']['get']
         self.assertEqual(self.redmine.attachment.get(1).url, '{0}/attachments/1'.format(self.url))
 
-    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_attachment_download(self):
         response = responses['attachment']['get']
         response['attachment']['content_url'] = 'http://foo/bar.txt'
@@ -651,7 +651,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
 
     def test_wiki_page_custom_repr(self):
         self.response.json.return_value = responses['wiki_page']['get']
-        self.assertEqual(repr(self.redmine.wiki_page.get('Foo', project_id=1)), '<redmine.resources.WikiPage "Foo">')
+        self.assertEqual(repr(self.redmine.wiki_page.get('Foo', project_id=1)), '<redminelib.resources.WikiPage "Foo">')
 
     def test_wiki_page_includes(self):
         response_includes = responses['wiki_page']['get']
@@ -665,7 +665,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         wiki_page = self.redmine.wiki_page.new()
         self.assertEqual(int(wiki_page), 0)
         self.assertEqual(str(wiki_page), '')
-        self.assertEqual(repr(wiki_page), '<redmine.resources.WikiPage "">')
+        self.assertEqual(repr(wiki_page), '<redminelib.resources.WikiPage "">')
 
     def test_wiki_page_url(self):
         self.response.json.return_value = responses['wiki_page']['get']
@@ -674,7 +674,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
             '{0}/projects/Foo/wiki/Foo'.format(self.url)
         )
 
-    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_wiki_page_export(self):
         self.response.json.return_value = responses['wiki_page']['get']
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
@@ -727,13 +727,13 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
 
     def test_project_membership_custom_repr(self):
         self.response.json.return_value = responses['project_membership']['get']
-        self.assertEqual(repr(self.redmine.project_membership.get(1)), '<redmine.resources.ProjectMembership #1>')
+        self.assertEqual(repr(self.redmine.project_membership.get(1)), '<redminelib.resources.ProjectMembership #1>')
 
     def test_project_membership_is_new(self):
         membership = self.redmine.project_membership.new()
         self.assertEqual(int(membership), 0)
         self.assertEqual(str(membership), '0')
-        self.assertEqual(repr(membership), '<redmine.resources.ProjectMembership #0>')
+        self.assertEqual(repr(membership), '<redminelib.resources.ProjectMembership #0>')
 
     def test_project_membership_url(self):
         self.response.json.return_value = responses['project_membership']['get']
@@ -779,7 +779,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         category = self.redmine.issue_category.new()
         self.assertEqual(int(category), 0)
         self.assertEqual(str(category), '')
-        self.assertEqual(repr(category), '<redmine.resources.IssueCategory #0 "">')
+        self.assertEqual(repr(category), '<redminelib.resources.IssueCategory #0 "">')
 
     def test_issue_category_url(self):
         self.response.json.return_value = responses['issue_category']['get']
@@ -818,13 +818,13 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
 
     def test_issue_relation_custom_repr(self):
         self.response.json.return_value = responses['issue_relation']['get']
-        self.assertEqual(repr(self.redmine.issue_relation.get(1)), '<redmine.resources.IssueRelation #1>')
+        self.assertEqual(repr(self.redmine.issue_relation.get(1)), '<redminelib.resources.IssueRelation #1>')
 
     def test_issue_relation_is_new(self):
         relation = self.redmine.issue_relation.new()
         self.assertEqual(int(relation), 0)
         self.assertEqual(str(relation), '0')
-        self.assertEqual(repr(relation), '<redmine.resources.IssueRelation #0>')
+        self.assertEqual(repr(relation), '<redminelib.resources.IssueRelation #0>')
 
     def test_issue_relation_url(self):
         self.response.json.return_value = responses['issue_relation']['get']
@@ -875,7 +875,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         version = self.redmine.version.new()
         self.assertEqual(int(version), 0)
         self.assertEqual(str(version), '')
-        self.assertEqual(repr(version), '<redmine.resources.Version #0 "">')
+        self.assertEqual(repr(version), '<redminelib.resources.Version #0 "">')
 
     def test_version_url(self):
         self.response.json.return_value = responses['version']['get']
@@ -933,7 +933,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
 
     def test_user_custom_repr(self):
         self.response.json.return_value = responses['user']['get']
-        self.assertEqual(repr(self.redmine.user.get(1)), '<redmine.resources.User #1 "John Smith">')
+        self.assertEqual(repr(self.redmine.user.get(1)), '<redminelib.resources.User #1 "John Smith">')
 
     def test_user_relations(self):
         self.response.json.return_value = responses['user']['get']
@@ -961,7 +961,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         user = self.redmine.user.new()
         self.assertEqual(int(user), 0)
         self.assertEqual(str(user), '')
-        self.assertEqual(repr(user), '<redmine.resources.User #0 "">')
+        self.assertEqual(repr(user), '<redminelib.resources.User #0 "">')
 
     def test_user_url(self):
         self.response.json.return_value = responses['user']['get']
@@ -1030,7 +1030,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         group = self.redmine.group.new()
         self.assertEqual(int(group), 0)
         self.assertEqual(str(group), '')
-        self.assertEqual(repr(group), '<redmine.resources.Group #0 "">')
+        self.assertEqual(repr(group), '<redminelib.resources.Group #0 "">')
 
     def test_group_url(self):
         self.response.json.return_value = responses['group']['get']
@@ -1080,7 +1080,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = responses['news']['filter']
         self.assertEqual(self.redmine.news.filter(project_id=1)[0].url, '{0}/news/1'.format(self.url))
 
-    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_news_export(self):
         self.response.json.return_value = responses['news']['all']
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
@@ -1092,7 +1092,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
 
     def test_news_repr(self):
         self.response.json.return_value = responses['news']['filter']
-        self.assertEqual(repr(self.redmine.news.filter(project_id=1)[0]), '<redmine.resources.News #1 "Foo">')
+        self.assertEqual(repr(self.redmine.news.filter(project_id=1)[0]), '<redminelib.resources.News #1 "Foo">')
 
     def test_issue_status_version(self):
         self.assertEqual(self.redmine.issue_status.resource_class.redmine_version, '1.3')

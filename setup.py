@@ -2,28 +2,6 @@ import sys
 
 from setuptools import setup, find_packages
 from setuptools.command.test import test
-from pkg_resources import get_distribution, DistributionNotFound
-
-try:
-    get_distribution('pyredmine')
-    sys.stdout.write('''
-{delimiter}
-                  INSTALLATION ABORTED
-
-PyRedmineWS library was found on this system. Unfortunately
-Python Redmine and PyRedmineWS can't work together because
-they both use the same package name, i.e. redmine. There's
-no need to use PyRedmineWS because it's development seems
-to be discontinued and Python Redmine provides a lot more
-features than PyRedmineWS. In order to complete the install
-process, please uninstall PyRedmineWS first and rerun the
-installation procedure for Python Redmine afterwards
-{delimiter}
-
-'''.format(delimiter='=' * 60))
-    sys.exit(0)
-except DistributionNotFound:
-    pass
 
 try:
     import multiprocessing  # https://bugs.python.org/issue15881
@@ -48,7 +26,7 @@ if sys.version_info[:2] < (3, 3):
     if sys.version_info[:2] == (2, 6):
         tests_require.append('unittest2')
 
-exec(open('redmine/version.py').read())
+exec(open('redminelib/version.py').read())
 
 setup(
     name='python-redmine',
@@ -62,7 +40,7 @@ setup(
     author_email='tepkeev@gmail.com',
     description='Library for communicating with a Redmine project management application',
     long_description=open('README.rst').read() + '\n\n' + open('CHANGELOG.rst').read(),
-    keywords='redmine,redminecrm,easyredmine',
+    keywords='redmine,redminecrm,redminelib,easyredmine',
     tests_require=tests_require,
     cmdclass={'test': NoseTests},
     zip_safe=False,

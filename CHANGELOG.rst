@@ -4,6 +4,7 @@ Changelog
 2.0.0 (2016-XX-XX)
 ++++++++++++++++++
 
+- Changed: Package name from ``redmine`` to ``redminelib``
 - Changed: ResourceSet objects were completely rewritten:
 
   * ``ResourceSet`` object that was already sliced now supports reslicing

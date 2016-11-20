@@ -40,7 +40,7 @@ To create a custom resource choose which resource behavior you want to change, e
 
 .. code-block:: python
 
-    from redmine.resources import Project
+    from redminelib.resources import Project
 
     class CustomProject(Project):
         pass

@@ -1,6 +1,6 @@
 from . import mock, BaseRedmineTestCase
 
-from redmine import exceptions
+from redminelib import exceptions
 
 response = {
     'projects': [
@@ -18,7 +18,7 @@ class ResultSetTestCase(BaseRedmineTestCase):
 
     def test_has_custom_repr(self):
         self.assertEqual(repr(self.redmine.project.all()),
-                         '<redmine.resultsets.ResourceSet object with Project resources>')
+                         '<redminelib.resultsets.ResourceSet object with Project resources>')
 
     def test_offset_limit_all(self):
         self.response.json.return_value = dict(total_count=3, limit=0, offset=0, **response)
@@ -171,7 +171,7 @@ class ResultSetTestCase(BaseRedmineTestCase):
         self.assertEqual(projects[1], 2)
         self.assertEqual(projects[2], 3)
 
-    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_export(self):
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
         self.assertEqual(self.redmine.issue.all().export('txt', '/foo/bar'), '/foo/bar/issues.txt')

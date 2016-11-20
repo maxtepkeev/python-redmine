@@ -18,7 +18,7 @@ a simple but powerful Pythonic API inspired by a well-known `Django ORM
 
 .. code-block:: python
 
-    >>> from redmine import Redmine
+    >>> from redminelib import Redmine
 
     >>> redmine = Redmine('http://demo.redmine.org', username='foo', password='bar')
     >>> project = redmine.project.get('vacation')

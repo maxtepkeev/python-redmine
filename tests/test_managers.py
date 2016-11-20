@@ -1,6 +1,6 @@
 from . import mock, BaseRedmineTestCase
 
-from redmine import managers, resources, resultsets, exceptions
+from redminelib import managers, resources, resultsets, exceptions
 
 
 class FooResource(resources.Project):
@@ -86,7 +86,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
 
     @mock.patch('os.path.isfile', mock.Mock())
     @mock.patch('os.path.getsize', mock.Mock())
-    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_create_resource_with_uploads(self):
         self.response.status_code = 201
         self.response.json.return_value = {
@@ -101,7 +101,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         project = self.redmine.project.new()
         defaults = dict.fromkeys(project._includes + project._relations)
         self.assertEqual(project._decoded_attrs, defaults)
-        self.assertEqual(repr(project), '<redmine.resources.Project #0 "">')
+        self.assertEqual(repr(project), '<redminelib.resources.Project #0 "">')
 
     def test_update_resource(self):
         self.response.content = ''
@@ -111,7 +111,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
 
     @mock.patch('os.path.isfile', mock.Mock())
     @mock.patch('os.path.getsize', mock.Mock())
-    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_update_resource_with_uploads(self):
         self.set_patch_side_effect([
             mock.Mock(status_code=201, history=[], **{'json.return_value': {'upload': {'token': '123456'}}}),

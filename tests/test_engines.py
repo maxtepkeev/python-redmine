@@ -1,6 +1,6 @@
 from . import mock, BaseRedmineTestCase, Redmine
 
-from redmine import engines, exceptions
+from redminelib import engines, exceptions
 
 
 class BaseEngineTestCase(BaseRedmineTestCase):

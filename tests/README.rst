@@ -14,4 +14,4 @@ dependencies are installed you can run tests with this command:
 
 .. code-block:: bash
 
-    $ nosetests --with-coverage --cover-erase --cover-package=redmine
+    $ nosetests --with-coverage --cover-erase --cover-package=redminelib

@@ -1,5 +1,5 @@
 [run]
-source = redmine
+source = redminelib
 
 [report]
 omit =

@@ -8,13 +8,13 @@ try:
 except ImportError:
     import mock
 
-from redmine import Redmine
+from redminelib import Redmine
 
 
 class BaseRedmineTestCase(unittest.TestCase):
     url = 'http://foo.bar'
     patch_prefix = 'patch'
-    patch_targets = {'requests': 'redmine.engines.sync.requests.Session.request'}
+    patch_targets = {'requests': 'redminelib.engines.sync.requests.Session.request'}
 
     def setUp(self):
         self.redmine = Redmine(self.url)

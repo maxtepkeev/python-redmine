@@ -13,6 +13,6 @@ install:
   - pip install coveralls
   - if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install unittest2; fi
 script:
-  - nosetests --with-coverage --cover-erase --cover-package=redmine
+  - nosetests --with-coverage --cover-erase --cover-package=redminelib
 after_success:
   - coveralls

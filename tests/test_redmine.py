@@ -1,6 +1,6 @@
 from . import mock, BaseRedmineTestCase, Redmine
 
-from redmine import engines, resultsets, exceptions
+from redminelib import engines, resultsets, exceptions
 
 
 class RedmineTestCase(BaseRedmineTestCase):
@@ -55,13 +55,13 @@ class RedmineTestCase(BaseRedmineTestCase):
 
     @mock.patch('os.path.isfile', mock.Mock())
     @mock.patch('os.path.getsize', mock.Mock())
-    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_successful_file_upload(self):
         self.response.status_code = 201
         self.response.json.return_value = {'upload': {'token': '123456'}}
         self.assertEqual(self.redmine.upload('foo'), '123456')
 
-    @mock.patch('redmine.open', mock.mock_open(), create=True)
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_successful_file_download(self):
         self.response.status_code = 200
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))

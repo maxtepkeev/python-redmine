@@ -478,7 +478,7 @@ class BaseResource(utilities.with_metaclass(Registrar)):
         Official representation of a Resource object.
         """
         values = self._representation('repr')
-        view = '<redmine.resources.{0.__class__.__name__}'.format(self)
+        view = '<redminelib.resources.{0.__class__.__name__}'.format(self)
 
         if isinstance(values[0], int):
             view += ' #{0}'.format(values.pop(0))

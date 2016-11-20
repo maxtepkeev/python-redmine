@@ -22,7 +22,7 @@ intercept ``AuthError`` exception and do what you need, for example:
 
 .. code-block:: python
 
-    from redmine.exceptions import AuthError
+    from redminelib.exceptions import AuthError
 
     username = 'john'    # username comes from the POST request on form submit
     password = 'qwerty'  # password comes from the POST request on form submit

@@ -20,7 +20,7 @@ the Redmine object, which will represent the connection to Redmine server:
 
 .. code-block:: python
 
-    from redmine import Redmine
+    from redminelib import Redmine
 
 Location
 ++++++++
@@ -156,6 +156,6 @@ Full list of available connection options can be found in the Requests
 
         # somewhere in the code
         from django.conf import settings
-        from redmine import Redmine
+        from redminelib import Redmine
 
         redmine = Redmine(settings.REDMINE_URL, key=settings.REDMINE_KEY)
