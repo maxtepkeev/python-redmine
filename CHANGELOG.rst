@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-2.0.0 (2016-XX-XX)
+2.0.0 (2017-XX-XX)
 ++++++++++++++++++
 
 - Changed: Package name from ``redmine`` to ``redminelib``
