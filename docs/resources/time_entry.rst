@@ -23,7 +23,7 @@ create
     Creates new time entry resource with given fields and saves it to the Redmine.
 
     :param integer issue_id or project_id: (required). The issue id or project id to log time on.
-    :param integer hours: (required). The number of spent hours.
+    :param float hours: (required). The number of spent hours.
     :param spent_on: (optional). The date the time was spent (current date if not set).
     :type spent_on: string or date object
     :param integer activity_id: (optional). The id of the time activity. This parameter is required unless
@@ -33,7 +33,7 @@ create
 
 .. code-block:: python
 
-    >>> time_entry = redmine.time_entry.create(issue_id=123, spent_on='2014-01-14', hours=3, activity_id=10, comments='hello')
+    >>> time_entry = redmine.time_entry.create(issue_id=123, spent_on='2014-01-14', hours=3.5, activity_id=10, comments='hello')
     >>> time_entry
     <redmine.resources.TimeEntry #12345>
 
@@ -55,7 +55,7 @@ new
     >>> time_entry = redmine.time_entry.new()
     >>> time_entry.issue_id = 123
     >>> time_entry.spent_on = date(2014, 1, 14)
-    >>> time_entry.hours = 3
+    >>> time_entry.hours = 3.5
     >>> time_entry.activity_id = 10
     >>> time_entry.comments = 'hello'
     >>> time_entry.save()
@@ -157,7 +157,7 @@ update
 
     :param integer resource_id: (required). Time entry id.
     :param integer issue_id or project_id: (optional). The issue id or project id to log time on.
-    :param integer hours: (optional). The number of spent hours.
+    :param float hours: (optional). The number of spent hours.
     :param spent_on: (optional). The date the time was spent.
     :type spent_on: string or date object
     :param integer activity_id: (optional). The id of the time activity.
@@ -166,7 +166,7 @@ update
 
 .. code-block:: python
 
-    >>> redmine.time_entry.update(1, issue_id=123, spent_on='2014-01-14', hours=3, activity_id=10, comments='hello')
+    >>> redmine.time_entry.update(1, issue_id=123, spent_on='2014-01-14', hours=3.5, activity_id=10, comments='hello')
     True
 
 save
@@ -186,7 +186,7 @@ save
     >>> time_entry = redmine.time_entry.get(1)
     >>> time_entry.issue_id = 123
     >>> time_entry.spent_on = date(2014, 1, 14)
-    >>> time_entry.hours = 3
+    >>> time_entry.hours = 3.5
     >>> time_entry.activity_id = 10
     >>> time_entry.comments = 'hello'
     >>> time_entry.save()
