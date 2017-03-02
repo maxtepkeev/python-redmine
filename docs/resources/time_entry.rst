@@ -23,8 +23,9 @@ create
     Creates new time entry resource with given fields and saves it to the Redmine.
 
     :param integer issue_id or project_id: (required). The issue id or project id to log time on.
-    :param integer or float hours: (required). The number of spent hours.
+    :param hours: (required). The number of spent hours.
     :param spent_on: (optional). The date the time was spent (current date if not set).
+    :type hours: int or float
     :type spent_on: string or date object
     :param integer activity_id: (optional). The id of the time activity. This parameter is required unless
       a default activity is defined in Redmine.
@@ -157,8 +158,9 @@ update
 
     :param integer resource_id: (required). Time entry id.
     :param integer issue_id or project_id: (optional). The issue id or project id to log time on.
-    :param integer or float hours: (optional). The number of spent hours.
+    :param hours: (optional). The number of spent hours.
     :param spent_on: (optional). The date the time was spent.
+    :type hours: int or float
     :type spent_on: string or date object
     :param integer activity_id: (optional). The id of the time activity.
     :param string comments: (optional). Short description for the entry (255 characters max).
