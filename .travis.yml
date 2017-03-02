@@ -13,7 +13,7 @@ install:
   - pip install -r tests/requirements.txt
   - pip install coveralls
   - if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install unittest2; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == '3.2' ]]; then pip install 'coverage<4.0'; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == '3.2' ]]; then pip install 'coverage<4.0' 'requests<2.11.0'; fi
 script:
   - nosetests --with-coverage --cover-erase --cover-package=redmine
 after_success:
