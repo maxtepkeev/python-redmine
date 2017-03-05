@@ -245,7 +245,7 @@ class ExportFormatNotSupportedError(BaseRedmineError):
     """
     def __init__(self):
         super(ExportFormatNotSupportedError, self).__init__(
-            "The given format isn't supported by resource, formats to try: atom, csv, txt, pdf, html")
+            "The given format isn't supported by resource")
 
 
 class HTTPProtocolError(BaseRedmineError):
