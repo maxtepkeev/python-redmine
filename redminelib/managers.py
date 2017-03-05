@@ -259,3 +259,10 @@ class ResourceManager(object):
 
         results = self.redmine.search(query, **dict(resources=[self.resource_class.container_many], **options))
         return results.get(self.resource_class.container_many) if results is not None else results
+
+    def __repr__(self):
+        """
+        Official representation of a ResourceManager object.
+        """
+        return '<{0}.{1} object for {2} resource>'.format(
+            self.__class__.__module__, self.__class__.__name__, self.resource_class.__name__)
