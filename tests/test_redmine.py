@@ -25,6 +25,9 @@ class RedmineTestCase(BaseRedmineTestCase):
         self.assertEqual(redmine.resource_paths, 'foo.bar.baz')
         self.assertEqual(redmine.engine.__class__, FooEngine)
 
+    def test_engine_class_exception(self):
+        self.assertRaises(exceptions.EngineClassError, lambda: Redmine(self.url, engine=type('Foo', (object,), {})))
+
     def test_session_impersonate(self):
         with self.redmine.session(impersonate='jsmith'):
             self.assertEqual(self.redmine.engine.requests['headers']['X-Redmine-Switch-User'], 'jsmith')

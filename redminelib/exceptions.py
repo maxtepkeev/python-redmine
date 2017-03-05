@@ -254,3 +254,11 @@ class HTTPProtocolError(BaseRedmineError):
     """
     def __init__(self):
         super(HTTPProtocolError, self).__init__('Redmine url should start with HTTPS and not with HTTP')
+
+
+class EngineClassError(BaseRedmineError):
+    """
+    Engine isn't a class or isn't a BaseEngine subclass.
+    """
+    def __init__(self):
+        super(EngineClassError, self).__init__("Engine isn't a class or isn't a BaseEngine subclass")

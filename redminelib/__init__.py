@@ -3,6 +3,7 @@ Provides public API.
 """
 
 import os
+import inspect
 import contextlib
 
 from distutils.version import LooseVersion
@@ -38,7 +39,13 @@ class Redmine(object):
         self.datetime_format = kwargs.get('datetime_format', '%Y-%m-%dT%H:%M:%SZ')
         self.raise_attr_exception = kwargs.get('raise_attr_exception', True)
         self.resource_paths = kwargs.get('resource_paths', None)
-        self.engine = kwargs.get('engine', engines.DefaultEngine)(**kwargs)
+
+        engine = kwargs.get('engine', engines.DefaultEngine)
+
+        if not inspect.isclass(engine) or not issubclass(engine, engines.BaseEngine):
+            raise exceptions.EngineClassError
+
+        self.engine = engine(**kwargs)
 
     def __getattr__(self, resource_name):
         """
