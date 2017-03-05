@@ -113,7 +113,7 @@ class BaseResource(utilities.with_metaclass(Registrar)):
 
     def __init__(self, manager, attributes):
         """
-        :param managers.ResourceManager manager: (required). Manager instance object.
+        :param managers.ResourceManager manager: (required). Manager object.
         :param dict attributes: (required). Resource attributes.
         """
         relations_includes = self._relations + self._includes
@@ -225,7 +225,7 @@ class BaseResource(utilities.with_metaclass(Registrar)):
 
         :param string attr: (required). Attribute name.
         :param any value: (required). Attribute value.
-        :param managers.ResourceManager manager: (required). Manager instance object.
+        :param managers.ResourceManager manager: (required). Manager object.
         """
         type_ = type(value)
 
@@ -243,7 +243,7 @@ class BaseResource(utilities.with_metaclass(Registrar)):
 
         :param string attr: (required). Attribute name.
         :param any value: (required). Attribute value.
-        :param managers.ResourceManager manager: (required). Manager instance object.
+        :param managers.ResourceManager manager: (required). Manager object.
         """
         if attr in cls._unconvertible:
             return attr, value
@@ -268,7 +268,7 @@ class BaseResource(utilities.with_metaclass(Registrar)):
         Decodes resource data from Python representation to the needed Redmine representation.
 
         :param dict attrs: (required). Attributes in the form of key, value pairs.
-        :param managers.ResourceManager manager: (required). Manager instance object.
+        :param managers.ResourceManager manager: (required). Manager object.
         """
         return dict(cls.decode(attr, attrs[attr], manager) for attr in attrs)
 
@@ -278,7 +278,7 @@ class BaseResource(utilities.with_metaclass(Registrar)):
         Encodes resource data retrieved from Redmine to the needed Python representation.
 
         :param dict attrs: (required). Attributes in the form of key, value pairs.
-        :param managers.ResourceManager manager: (required). Manager instance object.
+        :param managers.ResourceManager manager: (required). Manager object.
         """
         return dict(cls.encode(attr, attrs[attr], manager) for attr in attrs)
 

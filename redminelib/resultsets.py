@@ -13,7 +13,7 @@ class BaseResourceSet(object):
     """
     def __init__(self, manager, resources=None, limit=0, offset=0, total_count=None):
         """
-        :param managers.ResourceManager manager: (required). ResourceManager instance object.
+        :param managers.ResourceManager manager: (required). ResourceManager object.
         :param resources: (optional). Iterable of resources.
         :type resources: list or tuple
         :param int limit: (optional). Resource limit.

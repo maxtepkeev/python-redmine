@@ -85,7 +85,8 @@ class Redmine(object):
 
     def download(self, url, savepath=None, filename=None, params=None):
         """
-        Downloads file from Redmine and saves it to savepath or returns it as bytes.
+        Downloads file from Redmine and saves it to savepath or returns a response directly
+        for maximum control over file processing.
 
         :param string url: (required). URL of the file that will be downloaded.
         :param string savepath: (optional). Path where to save the file.

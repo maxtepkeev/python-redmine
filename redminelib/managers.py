@@ -9,7 +9,7 @@ from . import utilities, resultsets, exceptions
 
 class ResourceManager(object):
     """
-    Manages Redmine resource defined by the resource_name with the help of redmine instance object.
+    Manages Redmine resource defined by the resource_name with the help of redmine object.
     """
     url = ''
     params = {}
@@ -17,7 +17,7 @@ class ResourceManager(object):
 
     def __init__(self, redmine, resource_name, **params):
         """
-        :param redmine.Redmine redmine: (required). Redmine instance object.
+        :param redmine.Redmine redmine: (required). Redmine object.
         :param string resource_name: (required). Resource name.
         :param dict params: (optional). Parameters used for resources retrieval.
         """
@@ -87,7 +87,7 @@ class ResourceManager(object):
 
     def new_manager(self, resource_name, **params):
         """
-        Returns new ResourceManager instance object.
+        Returns new ResourceManager object.
 
         :param string resource_name: (required). Resource name.
         :param dict params: (optional). Parameters used for resources retrieval.
