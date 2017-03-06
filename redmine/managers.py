@@ -123,7 +123,7 @@ class ResourceManager(object):
             resource_id = to_string(resource_id)
 
         try:
-            self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_one.format(resource_id, **params))
+            self.url = u'{0}{1}'.format(self.redmine.url, self.resource_class.query_one.format(resource_id, **params))
         except KeyError as exception:
             raise ValidationError('{0} argument is required'.format(exception))
 
@@ -136,7 +136,7 @@ class ResourceManager(object):
         if self.resource_class.query_all is None or self.resource_class.container_all is None:
             raise ResourceBadMethodError
 
-        self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_all)
+        self.url = u'{0}{1}'.format(self.redmine.url, self.resource_class.query_all)
         self.params = self.prepare_params(params)
         self.container = self.resource_class.container_all
         return ResourceSet(self)
@@ -150,7 +150,7 @@ class ResourceManager(object):
             raise ResourceNoFiltersProvidedError
 
         try:
-            self.url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_filter.format(**filters))
+            self.url = u'{0}{1}'.format(self.redmine.url, self.resource_class.query_filter.format(**filters))
             self.container = self.resource_class.container_filter.format(**filters)
         except KeyError:
             raise ResourceFilterError
@@ -173,7 +173,7 @@ class ResourceManager(object):
             fields['title'] = to_string(title)
 
         try:
-            url = '{0}{1}'.format(self.redmine.url, formatter.format(self.resource_class.query_create, **fields))
+            url = u'{0}{1}'.format(self.redmine.url, formatter.format(self.resource_class.query_create, **fields))
         except KeyError as exception:
             raise ValidationError('{0} field is required'.format(exception))
 
@@ -198,7 +198,7 @@ class ResourceManager(object):
             raise ValidationError('Resource already exists')  # fix for repeated PUT requests
 
         self.params = formatter.used_kwargs
-        self.url = '{0}{1}'.format(
+        self.url = u'{0}{1}'.format(
             self.redmine.url,
             self.resource_class.query_one.format(resource.internal_id, **fields)
         )
@@ -228,7 +228,7 @@ class ResourceManager(object):
             else:
                 raise ValidationError('{0} argument is required'.format(exception))
 
-        url = '{0}{1}'.format(self.redmine.url, query_update)
+        url = u'{0}{1}'.format(self.redmine.url, query_update)
         data = {self.resource_class.container_update: self.prepare_params(formatter.unused_kwargs)}
 
         if 'uploads' in data[self.resource_class.container_update]:
@@ -247,7 +247,7 @@ class ResourceManager(object):
             resource_id = to_string(resource_id)
 
         try:
-            url = '{0}{1}'.format(self.redmine.url, self.resource_class.query_delete.format(resource_id, **params))
+            url = u'{0}{1}'.format(self.redmine.url, self.resource_class.query_delete.format(resource_id, **params))
         except KeyError as exception:
             raise ValidationError('{0} argument is required'.format(exception))
 
