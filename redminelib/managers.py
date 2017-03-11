@@ -2,6 +2,8 @@
 Defines manager classes.
 """
 
+import sys
+
 from distutils.version import LooseVersion
 
 from . import utilities, resultsets, exceptions
@@ -23,7 +25,7 @@ class ResourceManager(object):
         """
         resource_class = None
         resource_name = ''.join(word[0].upper() + word[1:] for word in str(resource_name).split('_'))
-        resource_paths = tuple((redmine.resource_paths or ())) + ('redminelib.resources',)
+        resource_paths = tuple(redmine.resource_paths) + (sys.modules[self.__module__].__package__ + '.resources',)
 
         for path in resource_paths:
             try:

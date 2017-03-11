@@ -10,7 +10,7 @@ class RedmineTestCase(BaseRedmineTestCase):
         self.assertEqual(self.redmine.date_format, '%Y-%m-%d')
         self.assertEqual(self.redmine.datetime_format, '%Y-%m-%dT%H:%M:%SZ')
         self.assertEqual(self.redmine.raise_attr_exception, True)
-        self.assertEqual(self.redmine.resource_paths, None)
+        self.assertEqual(self.redmine.resource_paths, ())
         self.assertEqual(self.redmine.engine.__class__, engines.DefaultEngine)
 
     def test_set_attributes_through_kwargs(self):
