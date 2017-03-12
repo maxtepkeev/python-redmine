@@ -229,6 +229,7 @@ class WikiPage(BaseResource):
     query_update = '/projects/{project_id}/wiki/{0}.json'
     query_delete = '/projects/{project_id}/wiki/{0}.json'
     search_hints = ['wiki-page']
+    http_method_create = 'put'
 
     _repr = [['title']]
     _includes = ['attachments']

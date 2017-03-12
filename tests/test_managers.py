@@ -181,10 +181,6 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.assertEqual(project.url, unpickled_project.url)
         self.assertEqual(project.params['foo'], unpickled_project.params['foo'])
 
-    def test_create_validation_exception_via_put(self):
-        self.set_patch_side_effect([mock.Mock(status_code=404, history=[]), mock.Mock(status_code=200, history=[])])
-        self.assertRaises(exceptions.ValidationError, lambda: self.redmine.user.create(firstname='J', lastname='Smith'))
-
     def test_reraises_not_found_exception(self):
         self.response.status_code = 404
         self.assertRaises(exceptions.ResourceNotFoundError, lambda: self.redmine.project.get('non-existent-project'))

@@ -176,17 +176,8 @@ class ResourceManager(object):
             for index, attachment in enumerate(data['attachments']):
                 data['attachments'][index]['token'] = self.redmine.upload(attachment.get('path', ''))
 
-        # Almost all resources are created via POST method, but some
-        # resources are created via PUT, so we should check for this
-        try:
-            response = self.redmine.engine.request('post', url, data=data)
-        except exceptions.ResourceNotFoundError:
-            response = self.redmine.engine.request('put', url, data=data)
-
-        try:
-            resource = self.to_resource(response[self.container])
-        except TypeError:
-            raise exceptions.ValidationError('Resource already exists')  # fix for repeated PUT requests
+        response = self.redmine.engine.request(self.resource_class.http_method_create, url, data=data)
+        resource = self.to_resource(response[self.container])
 
         self.params = formatter.used_kwargs
         self.url = self.redmine.url + self.resource_class.query_one.format(resource.internal_id, **fields)
@@ -227,7 +218,7 @@ class ResourceManager(object):
             for index, attachment in enumerate(data['attachments']):
                 data['attachments'][index]['token'] = self.redmine.upload(attachment.get('path', ''))
 
-        return self.redmine.engine.request('put', url, data=data)
+        return self.redmine.engine.request(self.resource_class.http_method_update, url, data=data)
 
     def delete(self, resource_id, **params):
         """
@@ -245,7 +236,8 @@ class ResourceManager(object):
         except KeyError as exception:
             raise exceptions.ValidationError('{0} argument is required'.format(exception))
 
-        return self.redmine.engine.request('delete', url, params=self.resource_class.bulk_decode(params, self))
+        return self.redmine.engine.request(
+            self.resource_class.http_method_delete, url, params=self.resource_class.bulk_decode(params, self))
 
     def search(self, query, **options):
         """
