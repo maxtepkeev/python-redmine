@@ -13,10 +13,6 @@ class ResourceManager(object):
     """
     Manages Redmine resource defined by the resource_name with the help of redmine object.
     """
-    url = ''
-    params = {}
-    container = None
-
     def __init__(self, redmine, resource_name, **params):
         """
         :param redmine.Redmine redmine: (required). Redmine object.
@@ -40,9 +36,11 @@ class ResourceManager(object):
         if redmine.ver is not None and LooseVersion(str(redmine.ver)) < LooseVersion(resource_class.redmine_version):
             raise exceptions.ResourceVersionMismatchError
 
+        self.url = ''
+        self.container = None
+        self.params = params
         self.redmine = redmine
         self.resource_class = resource_class
-        self.params = params
 
     def request(self, is_bulk, **params):
         """
