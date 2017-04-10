@@ -33,10 +33,10 @@ a simple but powerful Pythonic API inspired by a well-known `Django ORM
     datetime.datetime(2013, 12, 31, 13, 27, 47)
 
     >>> project.issues
-    <redmine.resultsets.ResourceSet object with Issue resources>
+    <redminelib.resultsets.ResourceSet object with Issue resources>
 
     >>> project.issues[0]
-    <redmine.resources.Issue #34441 "Vacation">
+    <redminelib.resources.Issue #34441 "Vacation">
 
     >>> dir(project.issues[0])
     ['assigned_to', 'author', 'created_on', 'description', 'done_ratio',
@@ -47,7 +47,7 @@ a simple but powerful Pythonic API inspired by a well-known `Django ORM
     'Vacation'
 
     >>> project.issues[0].time_entries
-    <redmine.resultsets.ResourceSet object with TimeEntry resources>
+    <redminelib.resultsets.ResourceSet object with TimeEntry resources>
 
 Features
 --------
@@ -88,8 +88,8 @@ Documentation is available at https://python-redmine.com.
 Contacts and Support
 --------------------
 
-Support for Standard Edition is provided via `GitHub <https://github.com/maxtepkeev/python-redmine/issues>`_
-only, while support for Pro Edition is provided both via `GitHub <https://github.com/maxtepkeev/python-redmine/issues>`_
+Support for Standard Edition is provided via `GitHub <https://github.com/maxtepkeev/python-redmine/issues>`__
+only, while support for Pro Edition is provided both via `GitHub <https://github.com/maxtepkeev/python-redmine/issues>`__
 and support@python-redmine.com. Be sure to write from email that was specified during the purchase procedure.
 
 Copyright and License
