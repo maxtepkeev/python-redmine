@@ -1,4 +1,4 @@
-Python Redmine
+Python-Redmine
 ==============
 
 .. image:: https://badge.fury.io/py/python-redmine.svg
@@ -10,9 +10,9 @@ Python Redmine
 .. image:: https://img.shields.io/coveralls/maxtepkeev/python-redmine/master.svg
     :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
 
-Python Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`_
+Python-Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`_
 project management application. Redmine exposes some of it's data via `REST API
-<http://www.redmine.org/projects/redmine/wiki/Rest_api>`_ for which Python Redmine provides
+<http://www.redmine.org/projects/redmine/wiki/Rest_api>`_ for which Python-Redmine provides
 a simple but powerful Pythonic API inspired by a well-known `Django ORM
 <https://docs.djangoproject.com/en/dev/topics/db/queries/>`_:
 
@@ -52,51 +52,49 @@ a simple but powerful Pythonic API inspired by a well-known `Django ORM
 Features
 --------
 
-* Supports 100% of Redmine API features
+* Supports 100% of Redmine API
+* Supports external Redmine plugins API
 * Supports Python 2.6, 2.7, 3.3 - 3.6, PyPy and PyPy3
+* Supports different request engines
+* Extendable via custom resources and custom request engines
 * Extensively documented
 * Provides ORM-style Pythonic API
+* And many more...
 
 Installation
 ------------
 
-To install Python Redmine, simply:
+Standard Edition
+++++++++++++++++
+
+The recommended way to install is from Python Package Index (PyPI) with `pip <http://www.pip-installer.org>`_:
 
 .. code-block:: bash
 
     $ pip install python-redmine
 
-or:
+Pro Edition
++++++++++++
 
-.. code-block:: bash
-
-    $ easy_install python-redmine
+License for a Pro Edition can be bought
+`here <https://secure.avangate.com/order/checkout.php?PRODS=4708754&QTY=1&CART=1&CARD=1&DISABLE_SHORT_FORM_MOBILE=1>`_.
+You will receive an email with all the details regarding Pro Edition installation process.
 
 Documentation
 -------------
 
-Documentation is available at http://python-redmine.readthedocs.org.
+Documentation is available at https://python-redmine.com.
 
 Contacts and Support
 --------------------
 
-I will be glad to get your feedback, `pull requests <https://github.com/maxtepkeev/python-redmine/pulls>`_,
-`issues <https://github.com/maxtepkeev/python-redmine/issues>`_, whatever. Feel free to contact me for any
-questions.
-
-Donations and Sponsorship
--------------------------
-
-If you like this project and want to support it you have 3 options:
-
-#. Just give this project a star at the top of the `GitHub <https://github.com/maxtepkeev/python-redmine>`_
-   repository. That doesn't cost you anything but makes the `author <https://github.com/maxtepkeev>`_ happier.
-#. You can express your gratitude via `Gratipay <https://gratipay.com/maxtepkeev/>`_.
-#. Become a sponsor. Contact me via ``tepkeev at gmail dot com`` if you are interested in becoming a sponsor
-   and we will discuss the terms and conditions.
+Support for Standard Edition is provided via `GitHub <https://github.com/maxtepkeev/python-redmine/issues>`_
+only, while support for Pro Edition is provided both via `GitHub <https://github.com/maxtepkeev/python-redmine/issues>`_
+and support@python-redmine.com. Be sure to write from email that was specified during the purchase procedure.
 
 Copyright and License
 ---------------------
 
-Python Redmine is licensed under Apache 2.0 license. Check the `LICENSE
-<https://github.com/maxtepkeev/python-redmine/blob/master/LICENSE>`_ for details.
+Python-Redmine Standard Edition is licensed under Apache 2.0 license. Python-Redmine Pro Edition is licensed
+under the Python-Redmine Pro Edition 1.0 license. Check the `License <https://python-redmine.com/license.html>`_
+for details.

@@ -6,7 +6,7 @@ Supported by Redmine starting from version 1.3
 Manager
 -------
 
-All operations on the query resource are provided via it's manager. To get access to
+All operations on the Query resource are provided by it's manager. To get access to
 it you have to call ``redmine.query`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -27,20 +27,20 @@ all
 +++
 
 .. py:method:: all(**params)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns all query resources from the Redmine.
+   Returns all Query resources from Redmine.
 
-    :param integer limit: (optional). How much resources to return.
-    :param integer offset: (optional). Starting from what resource to return the other resources.
-    :return: ResourceSet object
+   :param int limit: (optional). How much resources to return.
+   :param int offset: (optional). Starting from what resource to return the other resources.
+   :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
-    >>> queries = redmine.query.all(offset=10, limit=100)
-    >>> queries
-    <redmine.resultsets.ResourceSet object with Query resources>
+   >>> queries = redmine.query.all(offset=10, limit=100)
+   >>> queries
+   <redminelib.resultsets.ResourceSet object with Query resources>
 
 filter
 ++++++
@@ -54,5 +54,10 @@ Not supported by Redmine
 
 Delete methods
 --------------
+
+Not supported by Redmine
+
+Export
+------
 
 Not supported by Redmine

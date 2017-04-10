@@ -6,7 +6,7 @@ Supported by Redmine starting from version 2.1
 Manager
 -------
 
-All operations on the group resource are provided via it's manager. To get access to it
+All operations on the Group resource are provided by it's manager. To get access to it
 you have to call ``redmine.group`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -17,42 +17,41 @@ create
 ++++++
 
 .. py:method:: create(**fields)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Creates new group resource with given fields and saves it to the Redmine.
+   Creates new Group resource with given fields and saves it to the Redmine.
 
-    :param string name: (required). Group name.
-    :param user_ids: (optional). Ids of users who will be members of a group.
-    :type user_ids: list or tuple
-    :return: Group resource object
+   :param string name: (required). Group name.
+   :param list user_ids: (optional). Ids of users who will be members of a group.
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> group = redmine.group.create(name='Developers', user_ids=[13, 15, 25])
-    >>> group
-    <redmine.resources.Group #8 "Developers">
+   >>> group = redmine.group.create(name='Developers', user_ids=[13, 15, 25])
+   >>> group
+   <redminelib.resources.Group #8 "Developers">
 
 new
 +++
 
 .. py:method:: new()
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Creates new empty group resource but doesn't save it to the Redmine. This is useful if
-    you want to set some resource fields later based on some condition(s) and only after
-    that save it to the Redmine. Valid attributes are the same as for ``create`` method above.
+   Creates new empty Group resource but saves it to the Redmine only when ``save()`` is called, also
+   calls ``pre_create()`` and ``post_create()`` methods of the :ref:`Resource` object. Valid attributes
+   are the same as for ``create()`` method above.
 
-    :return: Group resource object
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> group = redmine.group.new()
-    >>> group.name = 'Developers'
-    >>> group.user_ids = [13, 15, 25]
-    >>> group.save()
-    True
+   >>> group = redmine.group.new()
+   >>> group.name = 'Developers'
+   >>> group.user_ids = [13, 15, 25]
+   >>> group.save()
+   True
 
 Read methods
 ------------
@@ -61,65 +60,62 @@ get
 +++
 
 .. py:method:: get(resource_id, **params)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns single group resource from the Redmine by it's id.
+   Returns single group resource from Redmine by it's id.
 
-    :param integer resource_id: (required). Id of the group.
-    :param string include:
-      .. raw:: html
+   :param int resource_id: (required). Id of the group.
+   :param string include:
+    .. raw:: html
 
-          (optional). Can be used to fetch associated data in one call. Accepted values (separated by comma):
+       (optional). Can be used to fetch associated data in one call. Accepted values (separated by
+       <code class="docutils literal"><span class="pre">,</span></code>):
 
-      - memberships
-      - users
+    - memberships
+    - users
 
-    :return: Group resource object
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> group = redmine.group.get(524, include='memberships,users')
-    >>> group
-    <redmine.resources.Group #524 "DESIGN">
+   >>> group = redmine.group.get(524, include='memberships,users')
+   >>> group
+   <redminelib.resources.Group #524 "DESIGN">
 
 .. hint::
 
-    .. versionadded:: 0.4.0
-
-    |
-
     Group resource object provides you with on demand includes. On demand includes are the
-    other resource objects wrapped in a ResourceSet which are associated with a Group
+    other resource objects wrapped in a :ref:`ResourceSet` which are associated with a Group
     resource object. Keep in mind that on demand includes are retrieved in a separate request,
-    that means that if the speed is important it is recommended to use ``get`` method with a
-    ``include`` keyword argument. The on demand includes provided by the Group resource object
-    are the same as in the ``get`` method above:
+    that means that if the speed is important it is recommended to use ``get()`` method with
+    ``include`` keyword argument. On demand includes provided by the Group resource object
+    are the same as in the ``get()`` method above:
 
     .. code-block:: python
 
-        >>> group = redmine.group.get(524)
-        >>> group.users
-        <redmine.resultsets.ResourceSet object with User resources>
+       >>> group = redmine.group.get(524)
+       >>> group.users
+       <redminelib.resultsets.ResourceSet object with User resources>
 
 all
 +++
 
 .. py:method:: all()
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns all group resources from the Redmine.
+   Returns all Group resources from Redmine.
 
-    :param integer limit: (optional). How much resources to return.
-    :param integer offset: (optional). Starting from what resource to return the other resources.
-    :return: ResourceSet object
+   :param int limit: (optional). How much resources to return.
+   :param int offset: (optional). Starting from what resource to return the other resources.
+   :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
-    >>> groups = redmine.group.all()
-    >>> groups
-    <redmine.resultsets.ResourceSet object with Group resources>
+   >>> groups = redmine.group.all()
+   >>> groups
+   <redminelib.resultsets.ResourceSet object with Group resources>
 
 filter
 ++++++
@@ -133,41 +129,40 @@ update
 ++++++
 
 .. py:method:: update(resource_id, **fields)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Updates values of given fields of a group resource and saves them to the Redmine.
+   Updates values of given fields of a Group resource and saves them to the Redmine.
 
-    :param integer resource_id: (required). Group id.
-    :param string name: (optional). Group name.
-    :param user_ids: (optional). Ids of users who will be members of a group.
-    :type user_ids: list or tuple
-    :return: True
+   :param int resource_id: (required). Group id.
+   :param string name: (optional). Group name.
+   :param list user_ids: (optional). Ids of users who will be members of a group.
+   :return: True
 
 .. code-block:: python
 
-    >>> redmine.group.update(1, name='Developers', user_ids=[13, 15, 25])
-    True
+   >>> redmine.group.update(1, name='Developers', user_ids=[13, 15, 25])
+   True
 
 save
 ++++
 
 .. py:method:: save()
-    :module: redmine.resources.Group
-    :noindex:
+   :module: redminelib.resources.Group
+   :noindex:
 
-    Saves the current state of a group resource to the Redmine. Fields that
-    can be changed are the same as for ``update`` method above.
+   Saves current state of a Group resource to the Redmine. Fields that can be
+   changed are the same as for ``update()`` method above.
 
-    :return: True
+   :return: True
 
 .. code-block:: python
 
-    >>> group = redmine.group.get(1)
-    >>> group.name = 'Developers'
-    >>> group.user_ids = [13, 15, 25]
-    >>> group.save()
-    True
+   >>> group = redmine.group.get(1)
+   >>> group.name = 'Developers'
+   >>> group.user_ids = [13, 15, 25]
+   >>> group.save()
+   True
 
 Delete methods
 --------------
@@ -176,58 +171,75 @@ delete
 ++++++
 
 .. py:method:: delete(resource_id)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Deletes single group resource from the Redmine by it's id.
+   Deletes single Group resource from Redmine by it's id.
 
-    :param integer resource_id: (required). Group id.
-    :return: True
+   :param int resource_id: (required). Group id.
+   :return: True
 
 .. code-block:: python
 
-    >>> redmine.group.delete(1)
-    True
+   >>> redmine.group.delete(1)
+   True
+
+.. py:method:: delete()
+   :module: redminelib.resources.Group
+   :noindex:
+
+   Deletes current Group resource object from Redmine.
+
+   :return: True
+
+.. code-block:: python
+
+   >>> group = redmine.group.get(1)
+   >>> group.delete()
+   True
+
+Export
+------
+
+Not supported by Redmine
 
 Users
 -----
 
-.. versionadded:: 0.5.0
-
-Python Redmine provides 2 methods to work with group users: ``add`` and ``remove``.
+Python-Redmine provides 2 methods to work with group users:
 
 add
 +++
 
 .. py:method:: add(user_id)
-    :module: redmine.resources.Group.User
-    :noindex:
+   :module: redminelib.resources.Group.User
+   :noindex:
 
-    Adds a user to a group by it's id.
+   Adds a user to a group by it's id.
 
-    :param integer user_id: (required). User id.
-    :return: True
+   :param int user_id: (required). User id.
+   :return: True
 
 .. code-block:: python
 
-    >>> group = redmine.group.get(1)
-    >>> group.user.add(1)
-    True
+   >>> group = redmine.group.get(1)
+   >>> group.user.add(1)
+   True
 
 remove
 ++++++
 
 .. py:method:: remove(user_id)
-    :module: redmine.resources.Group.User
-    :noindex:
+   :module: redminelib.resources.Group.User
+   :noindex:
 
-    Removes a user from a group by it's id.
+   Removes a user from a group by it's id.
 
-    :param integer user_id: (required). User id.
-    :return: True
+   :param int user_id: (required). User id.
+   :return: True
 
 .. code-block:: python
 
-    >>> group = redmine.group.get(1)
-    >>> group.user.remove(1)
-    True
+   >>> group = redmine.group.get(1)
+   >>> group.user.remove(1)
+   True

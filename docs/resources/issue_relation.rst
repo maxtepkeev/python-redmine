@@ -6,9 +6,9 @@ Supported by Redmine starting from version 1.3
 Manager
 -------
 
-All operations on the issue relation resource are provided via it's manager. To get
-access to it you have to call ``redmine.issue_relation`` where ``redmine`` is a configured
-redmine object. See the :doc:`../configuration` about how to configure redmine object.
+All operations on the IssueRelation resource are provided by it's manager. To get access
+to it you have to call ``redmine.issue_relation`` where ``redmine`` is a configured redmine
+object. See the :doc:`../configuration` about how to configure redmine object.
 
 Create methods
 --------------
@@ -17,49 +17,54 @@ create
 ++++++
 
 .. py:method:: create(**fields)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Creates new issue relation resource with given fields and saves it to the Redmine.
+   Creates new IssueRelation resource with given fields and saves it to the Redmine.
 
-    :param integer issue_id: (required). Creates a relation for the issue of given id.
-    :param integer issue_to_id: (required). Id of the related issue.
-    :param string relation_type:
-      .. raw:: html
+   :param int issue_id: (required). Creates a relation for the issue of given id.
+   :param int issue_to_id: (required). Id of the related issue.
+   :param string relation_type:
+    .. raw:: html
 
-          (required). Type of the relation, available values are:
+       (required). Type of the relation, one of:
 
-      - relates
-      - duplicates
-      - duplicated
-      - blocks
-      - blocked
-      - precedes
-      - follows
-      - copied_to
-      - copied_from
+    - relates
+    - duplicates
+    - duplicated
+    - blocks
+    - blocked
+    - precedes
+    - follows
+    - copied_to
+    - copied_from
 
-    :param integer delay: (optional). Delay in days for a "precedes" or "follows" relation.
-    :return: IssueRelation resource object
+   :param int delay: (optional). Delay in days for a "precedes" or "follows" relation.
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> relation = redmine.issue_relation.create(issue_id=12345, issue_to_id=54321, relation_type='precedes', delay=5)
-    >>> relation
-    <redmine.resources.IssueRelation #667>
+   >>> relation = redmine.issue_relation.create(
+   ...     issue_id=12345,
+   ...     issue_to_id=54321,
+   ...     relation_type='precedes',
+   ...     delay=5
+   ... )
+   >>> relation
+   <redminelib.resources.IssueRelation #667>
 
 new
 +++
 
 .. py:method:: new()
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Creates new empty issue relation resource but doesn't save it to the Redmine. This is useful
-    if you want to set some resource fields later based on some condition(s) and only after
-    that save it to the Redmine. Valid attributes are the same as for ``create`` method above.
+   Creates new empty IssueRelation resource but saves it to the Redmine only when ``save()`` is
+   called, also calls ``pre_create()`` and ``post_create()`` methods of the :ref:`Resource` object.
+   Valid attributes are the same as for ``create()`` method above.
 
-    :return: IssueRelation resource object
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
@@ -78,19 +83,19 @@ get
 +++
 
 .. py:method:: get(resource_id)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns single issue relation resource from the Redmine by it's id.
+   Returns single IssueRelation resource from Redmine by it's id.
 
-    :param integer resource_id: (required). Id of the issue relation.
-    :return: IssueRelation resource object
+   :param int resource_id: (required). Id of the issue relation.
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> relation = redmine.issue_relation.get(606)
-    >>> relation
-    <redmine.resources.IssueRelation #606>
+   >>> relation = redmine.issue_relation.get(606)
+   >>> relation
+   <redminelib.resources.IssueRelation #606>
 
 all
 +++
@@ -101,32 +106,32 @@ filter
 ++++++
 
 .. py:method:: filter(**filters)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns issue relation resources that match the given lookup parameters.
+   Returns IssueRelation resources that match the given lookup parameters.
 
-    :param integer issue_id: (required). Get relations from the issue with the given id.
-    :param integer limit: (optional). How much resources to return.
-    :param integer offset: (optional). Starting from what resource to return the other resources.
-    :return: ResourceSet object
+   :param int issue_id: (required). Get relations from the issue with given id.
+   :param int limit: (optional). How much resources to return.
+   :param int offset: (optional). Starting from what resource to return the other resources.
+   :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
-    >>> relations = redmine.issue_relation.filter(issue_id=6543)
-    >>> relations
-    <redmine.resultsets.ResourceSet object with IssueRelation resources>
+   >>> relations = redmine.issue_relation.filter(issue_id=6543)
+   >>> relations
+   <redminelib.resultsets.ResourceSet object with IssueRelation resources>
 
 .. hint::
 
-    You can also get issue relations from an issue resource object directly using
-    ``relations`` relation:
+   You can also get issue relations from an Issue resource object directly using
+   ``relations`` relation:
 
-    .. code-block:: python
+   .. code-block:: python
 
-        >>> issue = redmine.issue.get(6543)
-        >>> issue.relations
-        <redmine.resultsets.ResourceSet object with IssueRelation resources>
+      >>> issue = redmine.issue.get(6543)
+      >>> issue.relations
+      <redminelib.resultsets.ResourceSet object with IssueRelation resources>
 
 Update methods
 --------------
@@ -140,15 +145,34 @@ delete
 ++++++
 
 .. py:method:: delete(resource_id)
-    :module: redmine.managers.ResourceManager
+    :module: redminelib.managers.ResourceManager
     :noindex:
 
-    Deletes single issue relation resource from the Redmine by it's id.
+    Deletes single IssueRelation resource from Redmine by it's id.
 
-    :param integer resource_id: (required). Issue relation id.
+    :param int resource_id: (required). Issue relation id.
     :return: True
 
 .. code-block:: python
 
     >>> redmine.issue_relation.delete(1)
     True
+
+.. py:method:: delete()
+   :module: redminelib.resources.IssueRelation
+   :noindex:
+
+   Deletes current IssueRelation resource object from Redmine.
+
+   :return: True
+
+.. code-block:: python
+
+   >>> relation = redmine.issue_relation.get(1)
+   >>> relation.delete()
+   True
+
+Export
+------
+
+Not supported by Redmine

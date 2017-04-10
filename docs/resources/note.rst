@@ -1,13 +1,12 @@
 Note
 ====
 
-Supported starting from version 1.0.0 and only available if `CRM plugin <http://redminecrm.com/
-projects/crm/pages/1>`_ 3.2.4 and higher is installed.
+Requires Pro Edition and `CRM plugin <https://www.redmineup.com/pages/plugins/crm>`_ >= 3.3.0.
 
 Manager
 -------
 
-All operations on the note resource are provided via it's manager. To get access to
+All operations on the Note resource are provided by it's manager. To get access to
 it you have to call ``redmine.note`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -23,19 +22,19 @@ get
 +++
 
 .. py:method:: get(resource_id)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns single note resource from the Redmine by it's id.
+   Returns single Note resource from the CRM plugin by it's id.
 
-    :param integer resource_id: (required). Id of the note.
-    :return: Note resource object
+   :param int resource_id: (required). Id of the note.
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> note = redmine.note.get(12345)
-    >>> note
-    <redmine.resources.Note #12345>
+   >>> note = redmine.note.get(12345)
+   >>> note
+   <redminelib.resources.Note #12345>
 
 all
 +++
@@ -54,5 +53,10 @@ Not supported by CRM plugin
 
 Delete methods
 --------------
+
+Not supported by CRM plugin
+
+Export
+------
 
 Not supported by CRM plugin

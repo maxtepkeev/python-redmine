@@ -6,7 +6,7 @@ Supported by Redmine starting from version 1.1
 Manager
 -------
 
-All operations on the user resource are provided via it's manager. To get access
+All operations on the User resource are provided by it's manager. To get access
 to it you have to call ``redmine.user`` where ``redmine`` is a configured redmine
 object. See the :doc:`../configuration` about how to configure redmine object.
 
@@ -17,68 +17,79 @@ create
 ++++++
 
 .. py:method:: create(**fields)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Creates new user resource with given fields and saves it to the Redmine.
+   Creates new User resource with given fields and saves it to the Redmine.
 
-    :param string login: (required). User login.
-    :param string password: (optional). User password.
-    :param string firstname: (required). User name.
-    :param string lastname: (required). User surname.
-    :param string mail: (required). User email.
-    :param integer auth_source_id: (optional). Authentication mode id.
-    :param string mail_notification:
-      .. raw:: html
+   :param string login: (required). User login.
+   :param string password: (optional). User password.
+   :param string firstname: (required). User name.
+   :param string lastname: (required). User surname.
+   :param string mail: (required). User email.
+   :param int auth_source_id: (optional). Authentication mode id.
+   :param string mail_notification:
+    .. raw:: html
 
-          (optional). Type of mail notification, available values are:
+       (optional). Type of mail notification, one of:
 
-      - all
-      - selected
-      - only_my_events
-      - only_assigned
-      - only_owner
-      - none
+    - all
+    - selected
+    - only_my_events
+    - only_assigned
+    - only_owner
+    - none
 
-    :param list notified_project_ids: (optional). Project IDs for a "selected" mail notification type.
-    :param boolean must_change_passwd: (optional). Whether user must change password.
-    :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
-    :return: User resource object
+   :param list notified_project_ids: (optional). Project IDs for a "selected" mail notification type.
+   :param bool must_change_passwd: (optional). Whether user must change password.
+   :param list custom_fields: (optional). Custom fields as [{'id': 1, 'value': 'foo'}].
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> user = redmine.user.create(login='jsmith', password='qwerty', firstname='John', lastname='Smith', mail='john@smith.com', auth_source_id=1, mail_notification='selected', notified_project_ids=[1, 2], must_change_passwd=True, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
-    >>> user
-    <redmine.resources.User #32 "John Smith">
+   >>> user = redmine.user.create(
+   ...     login='jsmith',
+   ...     password='qwerty',
+   ...     firstname='John',
+   ...     lastname='Smith',
+   ...     mail='john@smith.com',
+   ...     auth_source_id=1,
+   ...     mail_notification='selected',
+   ...     notified_project_ids=[1, 2],
+   ...     must_change_passwd=True,
+   ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
+   ... )
+   >>> user
+   <redminelib.resources.User #32 "John Smith">
 
 new
 +++
 
 .. py:method:: new()
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Creates new empty user resource but doesn't save it to the Redmine. This is useful
-    if you want to set some resource fields later based on some condition(s) and only after
-    that save it to the Redmine. Valid attributes are the same as for ``create`` method above.
+   Creates new empty User resource but saves it to the Redmine only when ``save()`` is called, also
+   calls ``pre_create()`` and ``post_create()`` methods of the :ref:`Resource` object. Valid attributes
+   are the same as for ``create()`` method above.
 
-    :return: User resource object
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> user = redmine.user.new()
-    >>> user.login = 'jsmith'
-    >>> user.password = 'qwerty'
-    >>> user.firstname = 'John
-    >>> user.lastname = 'Smith'
-    >>> user.mail = 'john@smith.com'
-    >>> user.auth_source_id = 1
-    >>> user.mail_notification = 'selected'
-    >>> user.notified_project_ids = [1, 2]
-    >>> user.must_change_passwd = True
-    >>> user.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
-    >>> user.save()
-    True
+   >>> user = redmine.user.new()
+   >>> user.login = 'jsmith'
+   >>> user.password = 'qwerty'
+   >>> user.firstname = 'John
+   >>> user.lastname = 'Smith'
+   >>> user.mail = 'john@smith.com'
+   >>> user.auth_source_id = 1
+   >>> user.mail_notification = 'selected'
+   >>> user.notified_project_ids = [1, 2]
+   >>> user.must_change_passwd = True
+   >>> user.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
+   >>> user.save()
+   True
 
 Read methods
 ------------
@@ -87,139 +98,132 @@ get
 +++
 
 .. py:method:: get(resource_id, **params)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns single user resource from the Redmine by it's id.
+   Returns single User resource from Redmine by it's id.
 
-    :param integer resource_id: (required). Id of the user.
-    :param string include:
-      .. raw:: html
+   :param int resource_id: (required). Id of the user.
+   :param string include:
+    .. raw:: html
 
-          (optional). Can be used to fetch associated data in one call. Accepted values (separated by comma):
+       (optional). Can be used to fetch associated data in one call. Accepted values (separated by
+       <code class="docutils literal"><span class="pre">,</span></code>):
 
-      - memberships
-      - groups
+    - memberships
+    - groups
 
-    :return: User resource object
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> user = redmine.user.get(17, include='memberships,groups')
-    >>> user
-    <redmine.resources.User #17 "John Smith">
+   >>> user = redmine.user.get(17, include='memberships,groups')
+   >>> user
+   <redminelib.resources.User #17 "John Smith">
 
 .. hint::
 
-    You can easily get the details of the user whose credentials were used to access the API:
+   You can easily get the details of the user whose credentials were used to access the API:
 
-    .. code-block:: python
+   .. code-block:: python
 
-        >>> user = redmine.user.get('current')
-        >>> user
-        <redmine.resources.User #17 "John Smith">
-
-.. hint::
-
-    .. versionadded:: 0.4.0
-
-    |
-
-    User resource object provides you with on demand includes. On demand includes are the
-    other resource objects wrapped in a ResourceSet which are associated with a User
-    resource object. Keep in mind that on demand includes are retrieved in a separate request,
-    that means that if the speed is important it is recommended to use ``get`` method with a
-    ``include`` keyword argument. The on demand includes provided by the User resource object
-    are the same as in the ``get`` method above:
-
-    .. code-block:: python
-
-        >>> user = redmine.user.get(17)
-        >>> user.groups
-        <redmine.resultsets.ResourceSet object with Group resources>
+      >>> user = redmine.user.get('current')
+      >>> user
+      <redminelib.resources.User #17 "John Smith">
 
 .. hint::
 
-    .. versionadded:: 1.0.0
+   User resource object provides you with on demand includes. On demand includes are the
+   other resource objects wrapped in a :ref:`ResourceSet` which are associated with a User
+   resource object. Keep in mind that on demand includes are retrieved in a separate request,
+   that means that if the speed is important it is recommended to use ``get()`` method with
+   ``include`` keyword argument. On demand includes provided by the User resource object
+   are the same as in the ``get()`` method above:
 
-    |
+   .. code-block:: python
 
-    User resource object provides you with some relations. Relations are the other
-    resource objects wrapped in a ResourceSet which are somehow related to a User
-    resource object. The relations provided by the User resource object are:
+      >>> user = redmine.user.get(17)
+      >>> user.groups
+      <redminelib.resultsets.ResourceSet object with Group resources>
 
-    * issues
-    * time_entries
-    * deals (only available if `CRM plugin <http://redminecrm.com/projects/crm/pages/1>`_ is installed)
-    * contacts (only available if `CRM plugin <http://redminecrm.com/projects/crm/pages/1>`_ is installed)
+.. hint::
 
-    .. code-block:: python
+   User resource object provides you with some relations. Relations are the other
+   resource objects wrapped in a :ref:`ResourceSet` which are somehow related to a User
+   resource object. The relations provided by the User resource object are:
 
-        >>> user = redmine.user.get(17)
-        >>> user.issues
-        <redmine.resultsets.ResourceSet object with Issue resources>
+   * issues
+   * time_entries
+   * deals (requires Pro Edition and `CRM plugin <https://www.redmineup.com/pages/plugins/crm>`_)
+   * contacts (requires Pro Edition and `CRM plugin <https://www.redmineup.com/pages/plugins/crm>`_)
+
+   .. code-block:: python
+
+      >>> user = redmine.user.get(17)
+      >>> user.issues
+      <redminelib.resultsets.ResourceSet object with Issue resources>
 
 all
 +++
 
 .. py:method:: all(**params)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns all user resources from the Redmine.
+   Returns all User resources from Redmine.
 
-    :param integer limit: (optional). How much resources to return.
-    :param integer offset: (optional). Starting from what resource to return the other resources.
-    :return: ResourceSet object
+   :param int limit: (optional). How much resources to return.
+   :param int offset: (optional). Starting from what resource to return the other resources.
+   :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
-    >>> users = redmine.user.all(offset=10, limit=100)
-    >>> users
-    <redmine.resultsets.ResourceSet object with User resources>
+   >>> users = redmine.user.all(offset=10, limit=100)
+   >>> users
+   <redminelib.resultsets.ResourceSet object with User resources>
 
 filter
 ++++++
 
 .. py:method:: filter(**filters)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns user resources that match the given lookup parameters.
+   Returns User resources that match the given lookup parameters.
 
-    :param integer status:
-      .. raw:: html
+   :param int status:
+    .. raw:: html
 
-          (optional). Get only users with the given status. Available statuses are:
+       (optional). Get only users with given status. One of:
 
-      - 0 - anonymous
-      - 1 - active (default)
-      - 2 - registered
-      - 3 - locked
+    - 0 - anonymous
+    - 1 - active (default)
+    - 2 - registered
+    - 3 - locked
 
-    :param string name: (optional). Filter users on their login, firstname, lastname and mail. If the
-      pattern contains a space, it will also return users whose firstname match the
-      first word or lastname match the second word.
-    :param integer group_id: (optional). Get only users who are members of the given group.
-    :param integer limit: (optional). How much resources to return.
-    :param integer offset: (optional). Starting from what resource to return the other resources.
-    :return: ResourceSet object
+   :param string name: (optional). Filter users on their login, firstname, lastname and mail. If the
+    pattern contains a space, it will also return users whose firstname match the
+    first word or lastname match the second word.
+   :param int group_id: (optional). Get only members of the given group.
+   :param int limit: (optional). How much resources to return.
+   :param int offset: (optional). Starting from what resource to return the other resources.
+   :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
-    >>> users = redmine.user.filter(offset=10, limit=100, status=3)
-    >>> users
-    <redmine.resultsets.ResourceSet object with User resources>
+   >>> users = redmine.user.filter(offset=10, limit=100, status=3)
+   >>> users
+   <redminelib.resultsets.ResourceSet object with User resources>
 
 .. hint::
 
-    You can also get users from a group resource object directly using ``users`` on demand includes:
+   You can also get users from a Group resource object directly using ``users`` on demand includes:
 
-    .. code-block:: python
+   .. code-block:: python
 
-        >>> group = redmine.group.get(524)
-        >>> group.users
-        <redmine.resultsets.ResourceSet object with User resources>
+      >>> group = redmine.group.get(524)
+      >>> group.users
+      <redminelib.resultsets.ResourceSet object with User resources>
 
 Update methods
 --------------
@@ -228,67 +232,79 @@ update
 ++++++
 
 .. py:method:: update(resource_id, **fields)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Updates values of given fields of a user resource and saves them to the Redmine.
+   Updates values of given fields of a User resource and saves them to the Redmine.
 
-    :param integer resource_id: (required). User id.
-    :param string login: (optional). User login.
-    :param string password: (optional). User password.
-    :param string firstname: (optional). User name.
-    :param string lastname: (optional). User surname.
-    :param string mail: (optional). User email.
-    :param integer auth_source_id: (optional). Authentication mode id.
-    :param string mail_notification:
-      .. raw:: html
+   :param int resource_id: (required). User id.
+   :param string login: (optional). User login.
+   :param string password: (optional). User password.
+   :param string firstname: (optional). User name.
+   :param string lastname: (optional). User surname.
+   :param string mail: (optional). User email.
+   :param int auth_source_id: (optional). Authentication mode id.
+   :param string mail_notification:
+    .. raw:: html
 
-          (optional). Type of mail notification, available values are:
+       (optional). Type of mail notification, one of:
 
-      - all
-      - selected
-      - only_my_events
-      - only_assigned
-      - only_owner
-      - none
+    - all
+    - selected
+    - only_my_events
+    - only_assigned
+    - only_owner
+    - none
 
-    :param list notified_project_ids: (optional). Project IDs for a "selected" mail notification type.
-    :param boolean must_change_passwd: (optional). Whether user must change password.
-    :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
-    :return: True
+   :param list notified_project_ids: (optional). Project IDs for a "selected" mail notification type.
+   :param bool must_change_passwd: (optional). Whether user must change password.
+   :param list custom_fields: (optional). Custom fields as [{'id': 1, 'value': 'foo'}].
+   :return: True
 
 .. code-block:: python
 
-    >>> redmine.user.update(1, login='jsmith', password='qwerty', firstname='John', lastname='Smith', mail='john@smith.com', auth_source_id=1, mail_notification='selected', notified_project_ids=[1, 2], must_change_passwd=True, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}])
-    True
+   >>> redmine.user.update(
+   ...     1,
+   ...     login='jsmith',
+   ...     password='qwerty',
+   ...     firstname='John',
+   ...     lastname='Smith',
+   ...     mail='john@smith.com',
+   ...     auth_source_id=1,
+   ...     mail_notification='selected',
+   ...     notified_project_ids=[1, 2],
+   ...     must_change_passwd=True,
+   ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
+   ... )
+   True
 
 save
 ++++
 
 .. py:method:: save()
-    :module: redmine.resources.User
-    :noindex:
+   :module: redminelib.resources.User
+   :noindex:
 
-    Saves the current state of a user resource to the Redmine. Fields that
-    can be changed are the same as for ``update`` method above.
+   Saves the current state of a User resource to the Redmine. Fields that
+   can be changed are the same as for ``update()`` method above.
 
-    :return: True
+   :return: True
 
 .. code-block:: python
 
-    >>> user = redmine.user.get(1)
-    >>> user.login = 'jsmith'
-    >>> user.password = 'qwerty'
-    >>> user.firstname = 'John'
-    >>> user.lastname = 'Smith'
-    >>> user.mail = 'john@smith.com'
-    >>> user.auth_source_id = 1
-    >>> user.mail_notification = 'selected'
-    >>> user.notified_project_ids = [1, 2]
-    >>> user.must_change_passwd = True
-    >>> user.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
-    >>> user.save()
-    True
+   >>> user = redmine.user.get(1)
+   >>> user.login = 'jsmith'
+   >>> user.password = 'qwerty'
+   >>> user.firstname = 'John'
+   >>> user.lastname = 'Smith'
+   >>> user.mail = 'john@smith.com'
+   >>> user.auth_source_id = 1
+   >>> user.mail_notification = 'selected'
+   >>> user.notified_project_ids = [1, 2]
+   >>> user.must_change_passwd = True
+   >>> user.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
+   >>> user.save()
+   True
 
 Delete methods
 --------------
@@ -297,15 +313,34 @@ delete
 ++++++
 
 .. py:method:: delete(resource_id)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Deletes single user resource from the Redmine by it's id.
+   Deletes single User resource from Redmine by it's id.
 
-    :param integer resource_id: (required). User id.
-    :return: True
+   :param int resource_id: (required). User id.
+   :return: True
 
 .. code-block:: python
 
-    >>> redmine.user.delete(1)
-    True
+   >>> redmine.user.delete(1)
+   True
+
+.. py:method:: delete()
+   :module: redminelib.resources.User
+   :noindex:
+
+   Deletes current User resource object from Redmine.
+
+   :return: True
+
+.. code-block:: python
+
+   >>> user = redmine.user.get(1)
+   >>> user.delete()
+   True
+
+Export
+------
+
+Not supported by Redmine

@@ -6,7 +6,7 @@ Supported by Redmine starting from version 1.4
 Manager
 -------
 
-All operations on the role resource are provided via it's manager. To get access to
+All operations on the Role resource are provided by it's manager. To get access to
 it you have to call ``redmine.role`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -22,38 +22,38 @@ get
 +++
 
 .. py:method:: get(resource_id)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns single role resource from the Redmine by it's id.
+   Returns single Role resource from Redmine by it's id.
 
-    :param integer resource_id: (required). Id of the role.
-    :return: Role resource object
+   :param int resource_id: (required). Id of the role.
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> role = redmine.role.get(4)
-    >>> role
-    <redmine.resources.Role #4 "Waiter">
+   >>> role = redmine.role.get(4)
+   >>> role
+   <redminelib.resources.Role #4 "Waiter">
 
 all
 +++
 
 .. py:method:: all()
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns all role resources from the Redmine.
+   Returns all Role resources from Redmine.
 
-    :param integer limit: (optional). How much resources to return.
-    :param integer offset: (optional). Starting from what resource to return the other resources.
-    :return: ResourceSet object
+   :param int limit: (optional). How much resources to return.
+   :param int offset: (optional). Starting from what resource to return the other resources.
+   :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
-    >>> roles = redmine.role.all()
-    >>> roles
-    <redmine.resultsets.ResourceSet object with Role resources>
+   >>> roles = redmine.role.all()
+   >>> roles
+   <redminelib.resultsets.ResourceSet object with Role resources>
 
 filter
 ++++++
@@ -67,5 +67,10 @@ Not supported by Redmine
 
 Delete methods
 --------------
+
+Not supported by Redmine
+
+Export
+------
 
 Not supported by Redmine

@@ -6,8 +6,8 @@ Supported by Redmine starting from version 1.0
 Manager
 -------
 
-All operations on the project resource are provided via it's manager. To get access to it
-you have to call ``redmine.project`` where ``redmine`` is a configured redmine object.
+All operations on the Project resource are provided by it's manager. To get access to
+it you have to call ``redmine.project`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
 Create methods
@@ -17,59 +17,71 @@ create
 ++++++
 
 .. py:method:: create(**fields)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Creates new project resource with given fields and saves it to the Redmine.
+   Creates new Project resource with given fields and saves it to the Redmine.
 
-    :param string name: (required). Project name.
-    :param string identifier: (required). Project identifier.
-    :param string description: (optional). Project description.
-    :param string homepage: (optional). Project homepage url.
-    :param boolean is_public: (optional). Whether project is public.
-    :param integer parent_id: (optional). Project's parent project id.
-    :param boolean inherit_members: (optional). If project inherits parent project's members.
-    :param list tracker_ids: (optional). The ids of trackers for this project.
-    :param list issue_custom_field_ids: (optional). The ids of issue custom fields for this project.
-    :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
-    :param list enabled_module_names: (optional). The names of enabled modules for this project (Redmine >= 2.6.0 only).
-    :return: Project resource object
+   :param string name: (required). Project name.
+   :param string identifier: (required). Project identifier.
+   :param string description: (optional). Project description.
+   :param string homepage: (optional). Project homepage url.
+   :param bool is_public: (optional). Whether project is public.
+   :param int parent_id: (optional). Project's parent project id.
+   :param bool inherit_members: (optional). Whether to inherit parent project's members.
+   :param list tracker_ids: (optional). The ids of trackers for this project.
+   :param list issue_custom_field_ids: (optional). The ids of issue custom fields for this project.
+   :param list custom_fields: (optional). Custom fields as [{'id': 1, 'value': 'foo'}].
+   :param list enabled_module_names: (optional). The names of enabled modules for this project (Redmine >= 2.6.0 only).
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> project = redmine.project.create(name='Vacation', identifier='vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, tracker_ids=[1, 2], issue_custom_field_ids=[1, 2], custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}], enabled_module_names=['calendar', 'documents', 'files', 'gantt'])
-    >>> project
-    <redmine.resources.Project #123 "Vacation">
+   >>> project = redmine.project.create(
+   ...     name='Vacation',
+   ...     identifier='vacation',
+   ...     description='foo',
+   ...     homepage='http://foo.bar',
+   ...     is_public=True,
+   ...     parent_id=345,
+   ...     inherit_members=True,
+   ...     tracker_ids=[1, 2],
+   ...     issue_custom_field_ids=[1, 2],
+   ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
+   ...     enabled_module_names=['calendar', 'documents', 'files', 'gantt']
+   ... )
+   >>> project
+   <redminelib.resources.Project #123 "Vacation">
 
 new
 +++
 
 .. py:method:: new()
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Creates new empty project resource but doesn't save it to the Redmine. This is useful if
-    you want to set some resource fields later based on some condition(s) and only after
-    that save it to the Redmine. Valid attributes are the same as for ``create`` method above.
+   Creates new empty Project resource but saves it to the Redmine only when ``save()`` is called, also
+   calls ``pre_create()`` and ``post_create()`` methods of the :ref:`Resource` object. Valid attributes
+   are the same as for ``create()`` method above.
 
-    :return: Project resource object
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> project = redmine.project.new()
-    >>> project.name = 'Vacation'
-    >>> project.identifier = 'vacation'
-    >>> project.description = 'foo'
-    >>> project.homepage = 'http://foo.bar'
-    >>> project.is_public = True
-    >>> project.parent_id = 345
-    >>> project.inherit_members = True
-    >>> project.tracker_ids = [1, 2]
-    >>> project.issue_custom_field_ids = [1, 2]
-    >>> project.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
-    >>> project.enabled_module_names = ['calendar', 'documents', 'files', 'gantt']
-    >>> project.save()
-    True
+   >>> project = redmine.project.new()
+   >>> project.name = 'Vacation'
+   >>> project.identifier = 'vacation'
+   >>> project.description = 'foo'
+   >>> project.homepage = 'http://foo.bar'
+   >>> project.is_public = True
+   >>> project.parent_id = 345
+   >>> project.inherit_members = True
+   >>> project.tracker_ids = [1, 2]
+   >>> project.issue_custom_field_ids = [1, 2]
+   >>> project.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
+   >>> project.enabled_module_names = ['calendar', 'documents', 'files', 'gantt']
+   >>> project.save()
+   True
 
 Read methods
 ------------
@@ -78,103 +90,98 @@ get
 +++
 
 .. py:method:: get(resource_id, **params)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns single project resource from the Redmine by it's id or identifier.
+   Returns single Project resource from Redmine by it's id or identifier.
 
-    :param resource_id: (required). Project id or identifier.
-    :type resource_id: integer or string
-    :param string include:
-      .. raw:: html
+   :param resource_id: (required). Project id or identifier.
+   :type resource_id: int or string
+   :param string include:
+    .. raw:: html
 
-          (optional). Can be used to fetch associated data in one call. Accepted values (separated by comma):
+       (optional). Can be used to fetch associated data in one call. Accepted values (separated by
+       <code class="docutils literal"><span class="pre">,</span></code>):
 
-      - trackers
-      - issue_categories
-      - enabled_modules (Redmine >= 2.6.0 only)
+    - trackers
+    - issue_categories
+    - enabled_modules (Redmine >= 2.6.0 only)
 
-    :return: Project resource object
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> project = redmine.project.get('vacation', include='trackers,issue_categories,enabled_modules')
-    >>> project
-    <redmine.resources.Project #123 "Vacation">
+   >>> project = redmine.project.get('vacation', include='trackers,issue_categories,enabled_modules')
+   >>> project
+   <redminelib.resources.Project #123 "Vacation">
 
 .. hint::
 
-    .. versionadded:: 0.4.0
+   Project resource object provides you with on demand includes. On demand includes are the
+   other resource objects wrapped in a :ref:`ResourceSet` which are associated with a Project
+   resource object. Keep in mind that on demand includes are retrieved in a separate request,
+   that means that if the speed is important it is recommended to use ``get()`` method with
+   ``include`` keyword argument. On demand includes provided by the Project resource object
+   are the same as in the ``get()`` method above:
 
-    |
+   .. code-block:: python
 
-    Project resource object provides you with on demand includes. On demand includes are the
-    other resource objects wrapped in a ResourceSet which are associated with a Project
-    resource object. Keep in mind that on demand includes are retrieved in a separate request,
-    that means that if the speed is important it is recommended to use ``get`` method with a
-    ``include`` keyword argument. The on demand includes provided by the Project resource object
-    are the same as in the ``get`` method above:
-
-    .. code-block:: python
-
-        >>> project = redmine.project.get('vacation')
-        >>> project.trackers
-        <redmine.resultsets.ResourceSet object with Tracker resources>
+      >>> project = redmine.project.get('vacation')
+      >>> project.trackers
+      <redminelib.resultsets.ResourceSet object with Tracker resources>
 
 .. hint::
 
-    Project resource object provides you with some relations. Relations are the other
-    resource objects wrapped in a ResourceSet which are somehow related to a Project
-    resource object. The relations provided by the Project resource object are:
+   Project resource object provides you with some relations. Relations are the other
+   resource objects wrapped in a :ref:`ResourceSet` which are somehow related to a Project
+   resource object. The relations provided by the Project resource object are:
 
-    * wiki_pages
-    * memberships
-    * issue_categories
-    * versions
-    * news
-    * issues
-    * time_entries (available from v1.0.0)
-    * deals (available from v1.0.0 and only if `CRM plugin <http://redminecrm.com/projects/
-      crm/pages/1>`_ is installed)
-    * contacts (available from v1.0.0 and only if `CRM plugin <http://redminecrm.com/projects/
-      crm/pages/1>`_ is installed)
-    * deal_categories (available from v1.0.0 and only if `CRM plugin <http://redminecrm.com/projects/
-      crm/pages/1>`_ 3.3.0 and higher is installed)
+   * wiki_pages
+   * memberships
+   * issue_categories
+   * versions
+   * news
+   * issues
+   * time_entries
+   * deals (requires Pro Edition and `CRM plugin <https://www.redmineup.com/pages/plugins/crm>`_)
+   * contacts (requires Pro Edition and `CRM plugin <https://www.redmineup.com/pages/plugins/crm>`_)
+   * deal_categories (requires Pro Edition and `CRM plugin <https://www.redmineup.com/pages/plugins/crm>`_
+     >= 3.3.0)
 
-    .. code-block:: python
+   .. code-block:: python
 
-        >>> project = redmine.project.get('vacation')
-        >>> project.issues
-        <redmine.resultsets.ResourceSet object with Issue resources>
+      >>> project = redmine.project.get('vacation')
+      >>> project.issues
+      <redminelib.resultsets.ResourceSet object with Issue resources>
 
 all
 +++
 
 .. py:method:: all(**params)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns all project resources from the Redmine.
+   Returns all Project resources from Redmine.
 
-    :param integer limit: (optional). How much resources to return.
-    :param integer offset: (optional). Starting from what resource to return the other resources.
-    :param string include:
-      .. raw:: html
+   :param int limit: (optional). How much resources to return.
+   :param int offset: (optional). Starting from what resource to return the other resources.
+   :param string include:
+    .. raw:: html
 
-          (optional). Redmine >= 2.6.0 only. Can be used to fetch associated data in one call. Accepted
-          values (separated by comma):
+       (optional). Redmine >= 2.6.0 only. Can be used to fetch associated data in one call. Accepted
+       values (separated by <code class="docutils literal"><span class="pre">,</span></code>):
 
-      - trackers
-      - issue_categories
-      - enabled_modules
+    - trackers
+    - issue_categories
+    - enabled_modules
 
-    :return: ResourceSet object
+   :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
-    >>> projects = redmine.project.all(offset=10, limit=100)
-    >>> projects
-    <redmine.resultsets.ResourceSet object with Project resources>
+   >>> projects = redmine.project.all(offset=10, limit=100)
+   >>> projects
+   <redminelib.resultsets.ResourceSet object with Project resources>
 
 filter
 ++++++
@@ -188,56 +195,68 @@ update
 ++++++
 
 .. py:method:: update(resource_id, **fields)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Updates values of given fields of a project resource and saves them to the Redmine.
+   Updates values of given fields of a Project resource and saves them to the Redmine.
 
-    :param integer resource_id: (required). Project id.
-    :param string name: (optional). Project name.
-    :param string description: (optional). Project description.
-    :param string homepage: (optional). Project homepage url.
-    :param boolean is_public: (optional). Whether project is public.
-    :param integer parent_id: (optional). Project's parent project id.
-    :param boolean inherit_members: (optional). If project inherits parent project's members.
-    :param list tracker_ids: (optional). The ids of trackers for this project.
-    :param list issue_custom_field_ids: (optional). The ids of issue custom fields for this project.
-    :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
-    :param list enabled_module_names: (optional). The names of enabled modules for this project (Redmine >= 2.6.0 only).
-    :return: True
+   :param int resource_id: (required). Project id.
+   :param string name: (optional). Project name.
+   :param string description: (optional). Project description.
+   :param string homepage: (optional). Project homepage url.
+   :param bool is_public: (optional). Whether project is public.
+   :param int parent_id: (optional). Project's parent project id.
+   :param bool inherit_members: (optional). Whether to inherit parent project's members.
+   :param list tracker_ids: (optional). The ids of trackers for this project.
+   :param list issue_custom_field_ids: (optional). The ids of issue custom fields for this project.
+   :param list custom_fields: (optional). Custom fields as [{'id': 1, 'value': 'foo'}].
+   :param list enabled_module_names: (optional). The names of enabled modules for this project (Redmine >= 2.6.0 only).
+   :return: True
 
 .. code-block:: python
 
-    >>> redmine.project.update(1, name='Vacation', description='foo', homepage='http://foo.bar', is_public=True, parent_id=345, inherit_members=True, tracker_ids=[1, 2], issue_custom_field_ids=[1, 2], custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}], enabled_module_names=['calendar', 'documents', 'files', 'gantt'])
-    True
+   >>> redmine.project.update(
+   ...     1,
+   ...     name='Vacation',
+   ...     description='foo',
+   ...     homepage='http://foo.bar',
+   ...     is_public=True,
+   ...     parent_id=345,
+   ...     inherit_members=True,
+   ...     tracker_ids=[1, 2],
+   ...     issue_custom_field_ids=[1, 2],
+   ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
+   ...     enabled_module_names=['calendar', 'documents', 'files', 'gantt']
+   ... )
+   True
 
 save
 ++++
 
 .. py:method:: save()
-    :module: redmine.resources.Project
-    :noindex:
+   :module: redminelib.resources.Project
+   :noindex:
 
-    Saves the current state of a project resource to the Redmine. Fields that
-    can be changed are the same as for ``update`` method above.
+   Saves the current state of a Project resource to the Redmine. Fields that
+   can be changed are the same as for ``update()`` method above.
 
-    :return: True
+   :return: True
 
 .. code-block:: python
 
-    >>> project = redmine.project.get(1)
-    >>> project.name = 'Vacation'
-    >>> project.description = 'foo'
-    >>> project.homepage = 'http://foo.bar'
-    >>> project.is_public = True
-    >>> project.parent_id = 345
-    >>> project.inherit_members = True
-    >>> project.tracker_ids = [1, 2]
-    >>> project.issue_custom_field_ids = [1, 2]
-    >>> project.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
-    >>> project.enabled_module_names = ['calendar', 'documents', 'files', 'gantt']
-    >>> project.save()
-    True
+   >>> project = redmine.project.get(1)
+   >>> project.name = 'Vacation'
+   >>> project.description = 'foo'
+   >>> project.homepage = 'http://foo.bar'
+   >>> project.is_public = True
+   >>> project.parent_id = 345
+   >>> project.inherit_members = True
+   >>> project.tracker_ids = [1, 2]
+   >>> project.issue_custom_field_ids = [1, 2]
+   >>> project.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
+   >>> project.enabled_module_names = ['calendar', 'documents', 'files', 'gantt']
+   >>> project.save()
+   True
 
 Delete methods
 --------------
@@ -246,16 +265,52 @@ delete
 ++++++
 
 .. py:method:: delete(resource_id)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Deletes single project resource from the Redmine by it's id or identifier.
+   Deletes single Project resource from Redmine by it's id or identifier.
 
-    :param resource_id: (required). Project id or identifier.
-    :type resource_id: integer or string
-    :return: True
+   :param resource_id: (required). Project id or identifier.
+   :type resource_id: int or string
+   :return: True
 
 .. code-block:: python
 
-    >>> redmine.project.delete(1)
-    True
+   >>> redmine.project.delete(1)
+   True
+
+.. py:method:: delete()
+   :module: redminelib.resources.Project
+   :noindex:
+
+   Deletes current Project resource object from Redmine.
+
+   :return: True
+
+.. code-block:: python
+
+   >>> project = redmine.project.get(1)
+   >>> project.delete()
+   True
+
+Export
+------
+
+.. versionadded:: 2.0.0
+
+.. py:method:: export(fmt, savepath=None, filename=None)
+   :module: redminelib.resultsets.ResourceSet
+   :noindex:
+
+   Exports a resource set of Project resources in one of the following formats: atom
+
+   :param string fmt: (required). Format to use for export.
+   :param string savepath: (optional). Path where to save the file.
+   :param string filename: (optional). Name that will be used for the file.
+   :return: String or Object
+
+.. code-block:: python
+
+   >>> projects = redmine.project.all()
+   >>> projects.export('atom', savepath='/home/jsmith', filename='projets.atom')
+   '/home/jsmith/projects.atom'

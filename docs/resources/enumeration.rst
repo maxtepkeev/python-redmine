@@ -6,7 +6,7 @@ Supported by Redmine starting from version 2.2
 Manager
 -------
 
-All operations on the enumeration resource are provided via it's manager. To get access to
+All operations on the Enumeration resource are provided by it's manager. To get access to
 it you have to call ``redmine.enumeration`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -32,29 +32,29 @@ filter
 ++++++
 
 .. py:method:: filter(**filters)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns enumeration resources that match the given lookup parameters.
+   Returns Enumeration resources that match the given lookup parameters.
 
-    :param string resource:
-      .. raw:: html
+   :param string resource:
+    .. raw:: html
 
-          (required). Get enumerations for the requested resource. Available resources are:
+       (required). Get enumerations for the resource. One of:
 
-      - issue_priorities
-      - time_entry_activities
-      - document_categories
+    - issue_priorities
+    - time_entry_activities
+    - document_categories
 
-    :param integer limit: (optional). How much resources to return.
-    :param integer offset: (optional). Starting from what resource to return the other resources.
-    :return: ResourceSet object
+   :param int limit: (optional). How much resources to return.
+   :param int offset: (optional). Starting from what resource to return the other resources.
+   :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
-    >>> enumerations = redmine.enumeration.filter(resource='time_entry_activities')
-    >>> enumerations
-    <redmine.resultsets.ResourceSet object with Enumeration resources>
+   >>> enumerations = redmine.enumeration.filter(resource='time_entry_activities')
+   >>> enumerations
+   <redminelib.resultsets.ResourceSet object with Enumeration resources>
 
 Update methods
 --------------
@@ -63,5 +63,10 @@ Not supported by Redmine
 
 Delete methods
 --------------
+
+Not supported by Redmine
+
+Export
+------
 
 Not supported by Redmine

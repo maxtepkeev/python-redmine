@@ -1,8 +1,8 @@
 Frequently Asked Questions
 ==========================
 
-Create/Update/Delete resource operations doesn't work
------------------------------------------------------
+Create/Update/Delete resource operations don't work
+---------------------------------------------------
 
 Your Redmine server is probably using ``https`` as the primary protocol and you're trying to connect to it
 under ``http`` protocol. Please use the ``https`` protocol and it should work.
@@ -13,9 +13,9 @@ create/update/delete a resource, then ``POST``/``PUT``/``DELETE`` is changing to
 causes the create/update/delete operations to fail.
 
 The detailed explanation about why this happens is available `here <https://github.com/kennethreitz/requests/
-issues/1704>`__.
+issues/1704>`_.
 
-Can I use python-redmine with ChiliProject fork
+Can I use Python-Redmine with ChiliProject fork
 -----------------------------------------------
 
 Yes, you can. But keep in mind that ChiliProject is not actively developed and some features in REST API are

@@ -15,7 +15,7 @@ extensions = ['sphinx.ext.autodoc']
 autodoc_member_order = 'bysource'
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = []
+templates_path = ['_templates']
 
 # The suffix of source filenames.
 source_suffix = '.rst'
@@ -24,8 +24,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Python Redmine'
-copyright = u'2017, Max Tepkeev'
+project = u'Python-Redmine'
+copyright = u'2017, Maxim Tepkeev'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -36,12 +36,30 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+html_theme = 'alabaster'
+
+# Theme options are theme-specific and customize the look and feel of a theme
+# further.  For a list of options available for each theme, see the
+# documentation.
+html_theme_options = {
+    'logo': 'img/logo.png',
+    'github_user': 'maxtepkeev',
+    'github_repo': 'python-redmine',
+    'github_type': 'star',
+    'github_banner': 'true',
+    'show_powered_by': 'false',
+    'page_width': '1008px'
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = []
+html_static_path = ['_static']
+
+# Custom sidebar templates, maps document names to template names.
+html_sidebars = {
+    '**': ['about.html', 'navigation.html', 'searchbox.html']
+}
 
 # If false, no index is generated.
 html_use_index = True
@@ -49,16 +67,10 @@ html_use_index = True
 # If true, links to the reST sources are added to the pages.
 html_show_sourcelink = False
 
-# If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
-html_show_sphinx = False
-
-# If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
-html_show_copyright = True
-
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'PythonRedminedoc'
 
-if not os.environ.get('READTHEDOCS', None) == 'True':
-    import sphinx_rtd_theme
-    html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+
+# Documentation setup
+def setup(app):
+    app.add_stylesheet('css/python-redmine.css')

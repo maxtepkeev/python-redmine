@@ -1,97 +1,92 @@
-Python Redmine
+Python-Redmine
 ==============
 
 .. image:: https://badge.fury.io/py/python-redmine.svg
-    :target: https://badge.fury.io/py/python-redmine
+   :target: https://badge.fury.io/py/python-redmine
 
 .. image:: https://img.shields.io/travis/maxtepkeev/python-redmine/master.svg
-    :target: https://travis-ci.org/maxtepkeev/python-redmine
+   :target: https://travis-ci.org/maxtepkeev/python-redmine
 
 .. image:: https://img.shields.io/coveralls/maxtepkeev/python-redmine/master.svg
-    :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
+   :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
 
-Python Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`_
-project management application. Redmine exposes some of it's data via `REST API
-<http://www.redmine.org/projects/redmine/wiki/Rest_api>`_ for which Python Redmine provides
-a simple but powerful Pythonic API inspired by a well-known `Django ORM
+Python-Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`_
+project management application. Redmine exposes some data via `REST API
+<http://www.redmine.org/projects/redmine/wiki/Rest_api>`_ for which Python-Redmine provides
+simple but powerful Pythonic API inspired by a well-known `Django ORM
 <https://docs.djangoproject.com/en/dev/topics/db/queries/>`_:
 
 .. code-block:: python
 
-    >>> from redminelib import Redmine
+   >>> from redminelib import Redmine
 
-    >>> redmine = Redmine('http://demo.redmine.org', username='foo', password='bar')
-    >>> project = redmine.project.get('vacation')
+   >>> redmine = Redmine('http://demo.redmine.org', username='foo', password='bar')
+   >>> project = redmine.project.get('vacation')
 
-    >>> project.id
-    30404
+   >>> project.id
+   30404
 
-    >>> project.identifier
-    'vacation'
+   >>> project.identifier
+   'vacation'
 
-    >>> project.created_on
-    datetime.datetime(2013, 12, 31, 13, 27, 47)
+   >>> project.created_on
+   datetime.datetime(2013, 12, 31, 13, 27, 47)
 
-    >>> project.issues
-    <redmine.resultsets.ResourceSet object with Issue resources>
+   >>> project.issues
+   <redminelib.resultsets.ResourceSet object with Issue resources>
 
-    >>> project.issues[0]
-    <redmine.resources.Issue #34441 "Vacation">
+   >>> project.issues[0]
+   <redminelib.resources.Issue #34441 "Vacation">
 
-    >>> dir(project.issues[0])
-    ['assigned_to', 'author', 'created_on', 'description', 'done_ratio',
-    'due_date', 'estimated_hours', 'id', 'priority', 'project', 'relations',
-    'start_date', 'status', 'subject', 'time_entries', 'tracker', 'updated_on']
+   >>> dir(project.issues[0])
+   ['assigned_to', 'author', 'created_on', 'description', 'done_ratio',
+   'due_date', 'estimated_hours', 'id', 'priority', 'project', 'relations',
+   'start_date', 'status', 'subject', 'time_entries', 'tracker', 'updated_on']
 
-    >>> project.issues[0].subject
-    'Vacation'
+   >>> project.issues[0].subject
+   'Vacation'
 
-    >>> project.issues[0].time_entries
-    <redmine.resultsets.ResourceSet object with TimeEntry resources>
+   >>> project.issues[0].time_entries
+   <redminelib.resultsets.ResourceSet object with TimeEntry resources>
 
 Features
 --------
 
-* Supports 100% of Redmine API features
+* Supports 100% of Redmine API
+* Supports external Redmine plugins API
 * Supports Python 2.6, 2.7, 3.3 - 3.6, PyPy and PyPy3
+* Supports different request engines
+* Extendable via custom resources and custom request engines
 * Extensively documented
 * Provides ORM-style Pythonic API
+* And many more...
 
 Contacts and Support
 --------------------
 
-I will be glad to get your feedback, `pull requests <https://github.com/maxtepkeev/python-redmine/pulls>`_,
-`issues <https://github.com/maxtepkeev/python-redmine/issues>`_, whatever. Feel free to contact me for any
-questions.
-
-Donations and Sponsorship
--------------------------
-
-If you like this project and want to support it you have 3 options:
-
-#. Just give this project a star at the top of the `GitHub <https://github.com/maxtepkeev/python-redmine>`_
-   repository. That doesn't cost you anything but makes the `author <https://github.com/maxtepkeev>`_ happier.
-#. You can express your gratitude via `Gratipay <https://gratipay.com/maxtepkeev/>`_.
-#. Become a sponsor. Contact me via ``tepkeev at gmail dot com`` if you are interested in becoming a sponsor
-   and we will discuss the terms and conditions.
+Support for Standard Edition is provided via `GitHub <https://github.com/maxtepkeev/python-redmine/issues>`_
+only, while support for Pro Edition is provided both via `GitHub <https://github.com/maxtepkeev/python-redmine/issues>`_
+and support@python-redmine.com. Be sure to write from email that was specified during the purchase procedure.
 
 Copyright and License
 ---------------------
 
-Python Redmine is licensed under Apache 2.0 license. Check the :doc:`license` for details.
+Python-Redmine Standard Edition is licensed under Apache 2.0 license. Python-Redmine Pro Edition is licensed
+under the Python-Redmine Pro Edition 1.0 license. Check the :doc:`license` for details.
 
 Table of contents
 -----------------
 
 .. toctree::
-    :maxdepth: 2
+   :maxdepth: 3
 
-    installation
-    configuration
-    operations
-    resources/index
-    advanced/index
-    FAQ <faq>
-    exceptions
-    license
-    changelog
+   editions
+   installation
+   configuration
+   introduction
+   resources/index
+   advanced/index
+   FAQ <faq>
+   exceptions
+   license
+   changelog

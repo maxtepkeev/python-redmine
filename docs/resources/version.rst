@@ -6,7 +6,7 @@ Supported by Redmine starting from version 1.3
 Manager
 -------
 
-All operations on the version resource are provided via it's manager. To get access
+All operations on the Version resource are provided by it's manager. To get access
 to it you have to call ``redmine.version`` where ``redmine`` is a configured redmine
 object. See the :doc:`../configuration` about how to configure redmine object.
 
@@ -17,71 +17,79 @@ create
 ++++++
 
 .. py:method:: create(**fields)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Creates new version resource with given fields and saves it to the Redmine.
+   Creates new Version resource with given fields and saves it to the Redmine.
 
-    :param project_id: (required). Id or identifier of version's project.
-    :type project_id: integer or string
-    :param string name: (required). Version name.
-    :param string status:
-      .. raw:: html
+   :param project_id: (required). Id or identifier of version's project.
+   :type project_id: int or string
+   :param string name: (required). Version name.
+   :param string status:
+    .. raw:: html
 
-          (optional). Status of the version, available values are:
+       (optional). Status of the version, one of:
 
-      - open (default)
-      - locked
-      - closed
+    - open (default)
+    - locked
+    - closed
 
-    :param string sharing:
-      .. raw:: html
+   :param string sharing:
+    .. raw:: html
 
-          (optional). Version sharing, available values are:
+       (optional). Version sharing, one of:
 
-      - none (default)
-      - descendants
-      - hierarchy
-      - tree
-      - system
+    - none (default)
+    - descendants
+    - hierarchy
+    - tree
+    - system
 
-    :param due_date: (optional). Expiration date.
-    :type due_date: string or date object
-    :param string description: (optional). Version description.
-    :param string wiki_page_title: (optional). Version wiki page title.
-    :return: Version resource object
+   :param due_date: (optional). Expiration date.
+   :type due_date: string or date object
+   :param string description: (optional). Version description.
+   :param string wiki_page_title: (optional). Version wiki page title.
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> version = redmine.version.create(project_id='vacation', name='Vacation', status='open', sharing='none', due_date='2014-01-30', description='my vacation', wiki_page_title='Vacation')
-    >>> version
-    <redmine.resources.Version #235 "Vacation">
+   >>> version = redmine.version.create(
+   ...     project_id='vacation',
+   ...     name='Vacation',
+   ...     status='open',
+   ...     sharing='none',
+   ...     due_date=datetime.date(2014, 1, 30),
+   ...     description='my vacation',
+   ...     wiki_page_title='Vacation'
+   ... )
+   >>> version
+   <redminelib.resources.Version #235 "Vacation">
 
 new
 +++
 
 .. py:method:: new()
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Creates new empty version resource but doesn't save it to the Redmine. This is useful
-    if you want to set some resource fields later based on some condition(s) and only after
-    that save it to the Redmine. Valid attributes are the same as for ``create`` method above.
+   Creates new empty Version resource but saves it to the Redmine only when ``save()`` is called, also
+   calls ``pre_create()`` and ``post_create()`` methods of the :ref:`Resource` object. Valid attributes
+   are the same as for ``create()`` method above.
 
-    :return: Version resource object
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> version = redmine.version.new()
-    >>> version.project_id = 'vacation'
-    >>> version.name = 'Vacation'
-    >>> version.status = 'open'
-    >>> version.sharing = 'none'
-    >>> version.due_date = date(2014, 1, 30)
-    >>> version.description = 'my vacation'
-    >>> version.wiki_page_title = 'Vacation'
-    >>> version.save()
-    True
+   >>> version = redmine.version.new()
+   >>> version.project_id = 'vacation'
+   >>> version.name = 'Vacation'
+   >>> version.status = 'open'
+   >>> version.sharing = 'none'
+   >>> version.due_date = datetime.date(2014, 1, 30)
+   >>> version.description = 'my vacation'
+   >>> version.wiki_page_title = 'Vacation'
+   >>> version.save()
+   True
 
 Read methods
 ------------
@@ -90,19 +98,19 @@ get
 +++
 
 .. py:method:: get(resource_id)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns single version resource from the Redmine by it's id.
+   Returns single Version resource from Redmine by it's id.
 
-    :param integer resource_id: (required). Id of the version.
-    :return: Version resource object
+   :param int resource_id: (required). Id of the version.
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> version = redmine.version.get(1)
-    >>> version
-    <redmine.resources.Version #1 "Release 1">
+   >>> version = redmine.version.get(1)
+   >>> version
+   <redminelib.resources.Version #1 "Release 1">
 
 all
 +++
@@ -113,33 +121,32 @@ filter
 ++++++
 
 .. py:method:: filter(**filters)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns version resources that match the given lookup parameters.
+   Returns Version resources that match the given lookup parameters.
 
-    :param project_id: (required). Id or identifier of version's project.
-    :type project_id: integer or string
-    :param integer limit: (optional). How much resources to return.
-    :param integer offset: (optional). Starting from what resource to return the other resources.
-    :return: ResourceSet object
+   :param project_id: (required). Id or identifier of version's project.
+   :type project_id: int or string
+   :param int limit: (optional). How much resources to return.
+   :param int offset: (optional). Starting from what resource to return the other resources.
+   :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
-    >>> versions = redmine.version.filter(project_id='vacation')
-    >>> versions
-    <redmine.resultsets.ResourceSet object with Versions resources>
+   >>> versions = redmine.version.filter(project_id='vacation')
+   >>> versions
+   <redminelib.resultsets.ResourceSet object with Versions resources>
 
 .. hint::
 
-    You can also get versions from a project resource object directly using
-    ``versions`` relation:
+   You can also get versions from a Project resource object directly using ``versions`` relation:
 
-    .. code-block:: python
+   .. code-block:: python
 
-        >>> project = redmine.project.get('vacation')
-        >>> project.versions
-        <redmine.resultsets.ResourceSet object with Version resources>
+      >>> project = redmine.project.get('vacation')
+      >>> project.versions
+      <redminelib.resultsets.ResourceSet object with Version resources>
 
 Update methods
 --------------
@@ -148,67 +155,75 @@ update
 ++++++
 
 .. py:method:: update(resource_id, **fields)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Updates values of given fields of a version resource and saves them to the Redmine.
+   Updates values of given fields of a Version resource and saves them to the Redmine.
 
-    :param integer resource_id: (required). Version id.
-    :param string name: (optional). Version name.
-    :param string status:
-      .. raw:: html
+   :param int resource_id: (required). Version id.
+   :param string name: (optional). Version name.
+   :param string status:
+    .. raw:: html
 
-          (optional). Status of the version, available values are:
+       (optional). Status of the version, one of:
 
-      - open (default)
-      - locked
-      - closed
+    - open (default)
+    - locked
+    - closed
 
-    :param string sharing:
-      .. raw:: html
+   :param string sharing:
+    .. raw:: html
 
-          (optional). Version sharing, available values are:
+       (optional). Version sharing, one of:
 
-      - none (default)
-      - descendants
-      - hierarchy
-      - tree
-      - system
+    - none (default)
+    - descendants
+    - hierarchy
+    - tree
+    - system
 
-    :param due_date: (optional). Expiration date.
-    :type due_date: string or date object
-    :param string description: (optional). Version description.
-    :param string wiki_page_title: (optional). Version wiki page title.
-    :return: True
+   :param due_date: (optional). Expiration date.
+   :type due_date: string or date object
+   :param string description: (optional). Version description.
+   :param string wiki_page_title: (optional). Version wiki page title.
+   :return: True
 
 .. code-block:: python
 
-    >>> redmine.version.update(1, name='Vacation', status='open', sharing='none', due_date='2014-01-30', description='my vacation', wiki_page_title='Vacation')
-    True
+   >>> redmine.version.update(
+   ...     1,
+   ...     name='Vacation',
+   ...     status='open',
+   ...     sharing='none',
+   ...     due_date=datetime.date(2014, 1, 30),
+   ...     description='my vacation',
+   ...     wiki_page_title='Vacation'
+   ... )
+   True
 
 save
 ++++
 
 .. py:method:: save()
-    :module: redmine.resources.Version
-    :noindex:
+   :module: redminelib.resources.Version
+   :noindex:
 
-    Saves the current state of a version resource to the Redmine. Fields that can
-    be changed are the same as for ``update`` method above.
+   Saves the current state of a Version resource to the Redmine. Fields that can
+   be changed are the same as for ``update()`` method above.
 
-    :return: True
+   :return: True
 
 .. code-block:: python
 
-    >>> version = redmine.version.get(1)
-    >>> version.name = 'Vacation'
-    >>> version.status = 'open'
-    >>> version.sharing = 'none'
-    >>> version.due_date = date(2014, 1, 30)
-    >>> version.description = 'my vacation'
-    >>> version.wiki_page_title = 'Vacation'
-    >>> version.save()
-    True
+   >>> version = redmine.version.get(1)
+   >>> version.name = 'Vacation'
+   >>> version.status = 'open'
+   >>> version.sharing = 'none'
+   >>> version.due_date = datetime.date(2014, 1, 30)
+   >>> version.description = 'my vacation'
+   >>> version.wiki_page_title = 'Vacation'
+   >>> version.save()
+   True
 
 Delete methods
 --------------
@@ -217,15 +232,34 @@ delete
 ++++++
 
 .. py:method:: delete(resource_id)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Deletes single version resource from the Redmine by it's id.
+   Deletes single Version resource from Redmine by it's id.
 
-    :param integer resource_id: (required). Version id.
-    :return: True
+   :param int resource_id: (required). Version id.
+   :return: True
 
 .. code-block:: python
 
-    >>> redmine.version.delete(1)
-    True
+   >>> redmine.version.delete(1)
+   True
+
+.. py:method:: delete()
+   :module: redminelib.resources.Version
+   :noindex:
+
+   Deletes current Version resource object from Redmine.
+
+   :return: True
+
+.. code-block:: python
+
+   >>> version = redmine.version.get(1)
+   >>> version.delete()
+   True
+
+Export
+------
+
+Not supported by Redmine

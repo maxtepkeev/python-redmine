@@ -1,5 +1,5 @@
 Exceptions
 ==========
 
-.. automodule:: redmine.exceptions
-    :members:
+.. automodule:: redminelib.exceptions
+   :members:

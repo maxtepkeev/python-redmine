@@ -1,13 +1,12 @@
 Contact Tag
 ===========
 
-Supported starting from version 1.0.0 and only available if `CRM plugin <http://redminecrm.com/
-projects/crm/pages/1>`_ 3.4.0 and higher is installed.
+Requires Pro Edition and `CRM plugin <https://www.redmineup.com/pages/plugins/crm>`_ >= 3.4.0.
 
 Manager
 -------
 
-All operations on the contact tag resource are provided via it's manager. To get access to
+All operations on the ContactTag resource are provided by it's manager. To get access to
 it you have to call ``redmine.contact_tag`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -28,20 +27,20 @@ all
 +++
 
 .. py:method:: all()
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns all contact tag resources from the CRM plugin.
+   Returns all ContactTag resources from the CRM plugin.
 
-    :param integer limit: (optional). How much resources to return.
-    :param integer offset: (optional). Starting from what resource to return the other resources.
-    :return: ResourceSet object
+   :param int limit: (optional). How much resources to return.
+   :param int offset: (optional). Starting from what resource to return the other resources.
+   :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
-    >>> tags = redmine.contact_tag.all()
-    >>> tags
-    <redmine.resultsets.ResourceSet object with ContactTag resources>
+   >>> tags = redmine.contact_tag.all()
+   >>> tags
+   <redminelib.resultsets.ResourceSet object with ContactTag resources>
 
 filter
 ++++++
@@ -55,5 +54,10 @@ Not supported by CRM plugin
 
 Delete methods
 --------------
+
+Not supported by CRM plugin
+
+Export
+------
 
 Not supported by CRM plugin

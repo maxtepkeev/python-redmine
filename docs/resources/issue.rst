@@ -6,8 +6,8 @@ Supported by Redmine starting from version 1.0
 Manager
 -------
 
-All operations on the issue resource are provided via it's manager. To get access to it
-you have to call ``redmine.issue`` where ``redmine`` is a configured redmine object.
+All operations on the Issue resource are provided by it's manager. To get access to
+it you have to call ``redmine.issue`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
 Create methods
@@ -17,84 +17,98 @@ create
 ++++++
 
 .. py:method:: create(**fields)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Creates new issue resource with given fields and saves it to the Redmine.
+   Creates new Issue resource with given fields and saves it to the Redmine.
 
-    :param project_id: (required). Id or identifier of issue's project.
-    :type project_id: integer or string
-    :param string subject: (required). Issue subject.
-    :param integer tracker_id: (optional). Issue tracker id.
-    :param string description: (optional). Issue description.
-    :param integer status_id: (optional). Issue status id.
-    :param integer priority_id: (optional). Issue priority id.
-    :param integer category_id: (optional). Issue category id.
-    :param integer fixed_version_id: (optional). Issue version id.
-    :param boolean is_private: (optional). Whether issue is private.
-    :param integer assigned_to_id: (optional). Issue will be assigned to this user id.
-    :param watcher_user_ids: (optional). User ids who will be watching this issue.
-    :type watcher_user_ids: list or tuple
-    :param integer parent_issue_id: (optional). Parent issue id.
-    :param start_date: (optional). Issue start date.
-    :type start_date: string or date object
-    :param due_date: (optional). Issue end date.
-    :type due_date: string or date object
-    :param integer estimated_hours: (optional). Issue estimated hours.
-    :param integer done_ratio: (optional). Issue done ratio.
-    :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
-    :param uploads:
-      .. raw:: html
+   :param project_id: (required). Id or identifier of issue's project.
+   :type project_id: int or string
+   :param string subject: (required). Issue subject.
+   :param int tracker_id: (optional). Issue tracker id.
+   :param string description: (optional). Issue description.
+   :param int status_id: (optional). Issue status id.
+   :param int priority_id: (optional). Issue priority id.
+   :param int category_id: (optional). Issue category id.
+   :param int fixed_version_id: (optional). Issue version id.
+   :param bool is_private: (optional). Whether issue is private.
+   :param int assigned_to_id: (optional). Issue will be assigned to this user id.
+   :param list watcher_user_ids: (optional). User ids watching this issue.
+   :param int parent_issue_id: (optional). Parent issue id.
+   :param start_date: (optional). Issue start date.
+   :type start_date: string or date object
+   :param due_date: (optional). Issue end date.
+   :type due_date: string or date object
+   :param int estimated_hours: (optional). Issue estimated hours.
+   :param int done_ratio: (optional). Issue done ratio.
+   :param list custom_fields: (optional). Custom fields as [{'id': 1, 'value': 'foo'}].
+   :param list uploads:
+    .. raw:: html
 
-          (optional). Uploads in the form of [{'': ''}, ...], accepted keys are:
+       (optional). Uploads as [{'': ''}, ...], accepted keys are:
 
-      - path (required). Absolute path to the file that should be uploaded.
-      - filename (optional). Name of the file after upload.
-      - description (optional). Description of the file.
-      - content_type (optional). Content type of the file.
+    - path (required). Absolute path to the file that should be uploaded.
+    - filename (optional). Name of the file after upload.
+    - description (optional). Description of the file.
+    - content_type (optional). Content type of the file.
 
-    :type uploads: list or tuple
-    :return: Issue resource object
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> issue = redmine.issue.create(project_id='vacation', subject='Vacation', tracker_id=8, description='foo', status_id=3, priority_id=7, assigned_to_id=123, watcher_user_ids=[123], parent_issue_id=345, start_date='2014-01-01', due_date='2014-02-01', estimated_hours=4, done_ratio=40, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}], uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}])
-    >>> issue
-    <redmine.resources.Issue #123 "Vacation">
+   >>> issue = redmine.issue.create(
+   ...     project_id='vacation',
+   ...     subject='Vacation',
+   ...     tracker_id=8,
+   ...     description='foo',
+   ...     status_id=3,
+   ...     priority_id=7,
+   ...     assigned_to_id=123,
+   ...     watcher_user_ids=[123],
+   ...     parent_issue_id=345,
+   ...     start_date=datetime.date(2014, 1, 1),
+   ...     due_date=datetime.date(2014, 2, 1),
+   ...     estimated_hours=4,
+   ...     done_ratio=40,
+   ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
+   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
+   ... )
+   >>> issue
+   <redminelib.resources.Issue #123 "Vacation">
 
 new
 +++
 
 .. py:method:: new()
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Creates new empty issue resource but doesn't save it to the Redmine. This is useful if
-    you want to set some resource fields later based on some condition(s) and only after
-    that save it to the Redmine. Valid attributes are the same as for ``create`` method above.
+   Creates new empty Issue resource but saves it to the Redmine only when ``save()`` is called, also
+   calls ``pre_create()`` and ``post_create()`` methods of the :ref:`Resource` object. Valid attributes
+   are the same as for ``create()`` method above.
 
-    :return: Issue resource object
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> issue = redmine.issue.new()
-    >>> issue.project_id = 'vacation'
-    >>> issue.subject = 'Vacation'
-    >>> issue.tracker_id = 8
-    >>> issue.description = 'foo'
-    >>> issue.status_id = 3
-    >>> issue.priority_id = 7
-    >>> issue.assigned_to_id = 123
-    >>> issue.watcher_user_ids = [123]
-    >>> issue.parent_issue_id = 345
-    >>> issue.start_date = date(2014, 1, 1)
-    >>> issue.due_date = date(2014, 2, 1)
-    >>> issue.estimated_hours = 4
-    >>> issue.done_ratio = 40
-    >>> issue.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
-    >>> issue.uploads = [{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
-    >>> issue.save()
-    True
+   >>> issue = redmine.issue.new()
+   >>> issue.project_id = 'vacation'
+   >>> issue.subject = 'Vacation'
+   >>> issue.tracker_id = 8
+   >>> issue.description = 'foo'
+   >>> issue.status_id = 3
+   >>> issue.priority_id = 7
+   >>> issue.assigned_to_id = 123
+   >>> issue.watcher_user_ids = [123]
+   >>> issue.parent_issue_id = 345
+   >>> issue.start_date = datetime.date(2014, 1, 1)
+   >>> issue.due_date = datetime.date(2014, 2, 1)
+   >>> issue.estimated_hours = 4
+   >>> issue.done_ratio = 40
+   >>> issue.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
+   >>> issue.uploads = [{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
+   >>> issue.save()
+   True
 
 Read methods
 ------------
@@ -103,139 +117,147 @@ get
 +++
 
 .. py:method:: get(resource_id, **params)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns single issue resource from the Redmine by it's id.
+   Returns single Issue resource from Redmine by it's id.
 
-    :param integer resource_id: (required). Id of the issue.
-    :param string include:
-      .. raw:: html
+   :param int resource_id: (required). Id of the issue.
+   :param string include:
+    .. raw:: html
 
-          (optional). Can be used to fetch associated data in one call. Accepted values (separated by comma):
+       (optional). Can be used to fetch associated data in one call. Accepted values (separated by
+       <code class="docutils literal"><span class="pre">,</span></code>):
 
-      - children
-      - attachments
-      - relations
-      - changesets
-      - journals
-      - watchers
+    - children
+    - attachments
+    - relations
+    - changesets
+    - journals
+    - watchers
 
-    :return: Issue resource object
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
-    >>> issue = redmine.issue.get(34441, include='children,journals,watchers')
-    >>> issue
-    <redmine.resources.Issue #34441 "Vacation">
+   >>> issue = redmine.issue.get(34441, include='children,journals,watchers')
+   >>> issue
+   <redminelib.resources.Issue #34441 "Vacation">
 
 .. hint::
 
-    .. versionadded:: 0.4.0
+   Issue resource object provides you with on demand includes. On demand includes are the
+   other resource objects wrapped in a :ref:`ResourceSet` which are associated with an Issue
+   resource object. Keep in mind that on demand includes are retrieved in a separate request,
+   that means that if the speed is important it is recommended to use ``get()`` method with
+   ``include`` keyword argument. On demand includes provided by the Issue resource object
+   are the same as in the ``get()`` method above:
 
-    |
+   .. code-block:: python
 
-    Issue resource object provides you with on demand includes. On demand includes are the
-    other resource objects wrapped in a ResourceSet which are associated with an Issue
-    resource object. Keep in mind that on demand includes are retrieved in a separate request,
-    that means that if the speed is important it is recommended to use ``get`` method with a
-    ``include`` keyword argument. The on demand includes provided by the Issue resource object
-    are the same as in the ``get`` method above:
-
-    .. code-block:: python
-
-        >>> issue = redmine.issue.get(34441)
-        >>> issue.journals
-        <redmine.resultsets.ResourceSet object with IssueJournal resources>
+      >>> issue = redmine.issue.get(34441)
+      >>> issue.journals
+      <redminelib.resultsets.ResourceSet object with IssueJournal resources>
 
 .. hint::
 
-    Issue resource object provides you with some relations. Relations are the other
-    resource objects wrapped in a ResourceSet which are somehow related to an Issue
-    resource object. The relations provided by the Issue resource object are:
+   Issue resource object provides you with some relations. Relations are the other
+   resource objects wrapped in a :ref:`ResourceSet` which are somehow related to an Issue
+   resource object. The relations provided by the Issue resource object are:
 
-    * relations
-    * time_entries
+   * relations
+   * time_entries
+   * checklists (requires Pro Edition and `Checklist plugin <https://www.redmineup.com/pages/plugins/checklists>`_)
 
-    .. code-block:: python
+   .. code-block:: python
 
-        >>> issue = redmine.issue.get(34441)
-        >>> issue.time_entries
-        <redmine.resultsets.ResourceSet object with TimeEntry resources>
+      >>> issue = redmine.issue.get(34441)
+      >>> issue.time_entries
+      <redminelib.resultsets.ResourceSet object with TimeEntry resources>
 
 all
 +++
 
 .. py:method:: all(**params)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns all issue resources from the Redmine.
+   Returns all open Issue resources from Redmine, to return all open and closed issues from
+   Redmine use ``filter()`` method below.
 
-    :param string sort: (optional). Column to sort with. Append :desc to invert the order.
-    :param integer limit: (optional). How much resources to return.
-    :param integer offset: (optional). Starting from what resource to return the other resources.
-    :return: ResourceSet object
+   :param string sort: (optional). Column to sort. Append :desc to invert the order.
+   :param int limit: (optional). How much resources to return.
+   :param int offset: (optional). Starting from what resource to return the other resources.
+   :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
-    >>> issues = redmine.issue.all(sort='category:desc')
-    >>> issues
-    <redmine.resultsets.ResourceSet object with Issue resources>
+   >>> issues = redmine.issue.all(sort='category:desc')
+   >>> issues
+   <redminelib.resultsets.ResourceSet object with Issue resources>
 
 filter
 ++++++
 
 .. py:method:: filter(**filters)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Returns issue resources that match the given lookup parameters.
+   Returns Issue resources that match the given lookup parameters.
 
-    :param project_id: (optional). Id or identifier of issue's project.
-    :type project_id: integer or string
-    :param subproject_id: (optional). Get issues from the subproject with the
-      given id. You can use project_id=X, subproject_id=!* to get only the issues of
-      a given project and none of its subprojects.
-    :type subproject_id: integer or string
-    :param integer tracker_id: (optional). Get issues from the tracker with the given id.
-    :param integer query_id: (optional). Get issues for the given query id.
-    :param status_id:
-      .. raw:: html
+   :param issue_id: (optional). Find issue or issues by id (separated by ``,``)
+   :type issue_id: int or string
+   :param project_id: (optional). Id or identifier of issue's project.
+   :type project_id: int or string
+   :param subproject_id: (optional). Get issues from the subproject with the
+    given id. You can use ``project_id=X, subproject_id=!*`` to get only the issues of
+    a given project and none of its subprojects.
+   :type subproject_id: int or string
+   :param int tracker_id: (optional). Get issues from the tracker with given id.
+   :param int query_id: (optional). Get issues for the given query id.
+   :param status_id:
+    .. raw:: html
 
-          (optional). Get issues with the given status id. Possible values are:
+       (optional). Get issues with given status id. One of:
 
-      - open - open issues
-      - closed - closed issues
-      - \* - all issues
-      - id - status id
+    - open - open issues
+    - closed - closed issues
+    - \* - all issues
+    - id - status id
 
-    :type status_id: integer or string
-    :param integer assigned_to_id: (optional). Get issues which are assigned to the given user id.
-      To get the issues assigned to the user whose credentials were used to access the API pass ``me``
-      as a string.
-    :param string cf_x: (optional). Get issues with the given value for custom field with an ID of x.
-    :param string sort: (optional). Column to sort with. Append :desc to invert the order.
-    :param integer limit: (optional). How much resources to return.
-    :param integer offset: (optional). Starting from what resource to return the other resources.
-    :return: ResourceSet object
+   :type status_id: int or string
+   :param int assigned_to_id: (optional). Get issues which are assigned to the given user id.
+    To get the issues assigned to the user whose credentials were used to access the API pass ``me``
+    as a string.
+   :param string cf_x: (optional). Get issues with given value for custom field with an ID of x.
+    The ``~`` sign can be used before the value to find issues containing a string in a custom field.
+   :param string sort: (optional). Column to sort. Append :desc to invert the order.
+   :param int limit: (optional). How much resources to return.
+   :param int offset: (optional). Starting from what resource to return the other resources.
+   :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
-    >>> issues = redmine.issue.filter(project_id='vacation', subproject_id='!*', created_on='><2012-03-01|2012-03-07', sort='category:desc')
-    >>> issues
-    <redmine.resultsets.ResourceSet object with Issue resources>
+   >>> issues = redmine.issue.filter(
+   ...     project_id='vacation',
+   ...     subproject_id='!*',
+   ...     created_on='><2012-03-01|2012-03-07',
+   ...     cf_22='~foo',
+   ...     sort='category:desc'
+   ... )
+   >>> issues
+   <redminelib.resultsets.ResourceSet object with Issue resources>
 
 .. hint::
 
-    You can also get issues from a project, tracker, issue status or user resource objects directly
-    using ``issues`` relation:
+   You can also get issues from a Project, Tracker, IssueStatus or User resource objects directly
+   using ``issues`` relation:
 
-    .. code-block:: python
+   .. code-block:: python
 
-        >>> project = redmine.project.get('vacation')
-        >>> project.issues
-        <redmine.resultsets.ResourceSet object with Issue resources>
+      >>> project = redmine.project.get('vacation')
+      >>> project.issues
+      <redminelib.resultsets.ResourceSet object with Issue resources>
 
 Update methods
 --------------
@@ -244,83 +266,100 @@ update
 ++++++
 
 .. py:method:: update(resource_id, **fields)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Updates values of given fields of an issue resource and saves them to the Redmine.
+   Updates values of given fields of an Issue resource and saves them to the Redmine.
 
-    :param integer resource_id: (required). Issue id.
-    :param integer project_id: (optional). Issue project id.
-    :param string subject: (optional). Issue subject.
-    :param integer tracker_id: (optional). Issue tracker id.
-    :param string description: (optional). Issue description.
-    :param string notes: (optional). Issue journal note.
-    :param boolean private_notes: (optional). Whether notes are private.
-    :param integer status_id: (optional). Issue status id.
-    :param integer priority_id: (optional). Issue priority id.
-    :param integer category_id: (optional). Issue category id.
-    :param integer fixed_version_id: (optional). Issue version id.
-    :param boolean is_private: (optional). Whether issue is private.
-    :param integer assigned_to_id: (optional). Issue will be assigned to this user id.
-    :param integer parent_issue_id: (optional). Parent issue id.
-    :param start_date: (optional). Issue start date.
-    :type start_date: string or date object
-    :param due_date: (optional). Issue end date.
-    :type due_date: string or date object
-    :param integer estimated_hours: (optional). Issue estimated hours.
-    :param integer done_ratio: (optional). Issue done ratio.
-    :param list custom_fields: (optional). Custom fields in the form of [{'id': 1, 'value': 'foo'}].
-    :param uploads:
-      .. raw:: html
+   :param int resource_id: (required). Issue id.
+   :param int project_id: (optional). Issue project id.
+   :param string subject: (optional). Issue subject.
+   :param int tracker_id: (optional). Issue tracker id.
+   :param string description: (optional). Issue description.
+   :param string notes: (optional). Issue journal note.
+   :param bool private_notes: (optional). Whether notes are private.
+   :param int status_id: (optional). Issue status id.
+   :param int priority_id: (optional). Issue priority id.
+   :param int category_id: (optional). Issue category id.
+   :param int fixed_version_id: (optional). Issue version id.
+   :param bool is_private: (optional). Whether issue is private.
+   :param int assigned_to_id: (optional). Issue will be assigned to this user id.
+   :param int parent_issue_id: (optional). Parent issue id.
+   :param start_date: (optional). Issue start date.
+   :type start_date: string or date object
+   :param due_date: (optional). Issue end date.
+   :type due_date: string or date object
+   :param int estimated_hours: (optional). Issue estimated hours.
+   :param int done_ratio: (optional). Issue done ratio.
+   :param list custom_fields: (optional). Custom fields as [{'id': 1, 'value': 'foo'}].
+   :param list uploads:
+    .. raw:: html
 
-          (optional). Uploads in the form of [{'': ''}, ...], accepted keys are:
+       (optional). Uploads as [{'': ''}, ...], accepted keys are:
 
-      - path (required). Absolute path to the file that should be uploaded.
-      - filename (optional). Name of the file after upload.
-      - description (optional). Description of the file.
-      - content_type (optional). Content type of the file.
+    - path (required). Absolute path to the file that should be uploaded.
+    - filename (optional). Name of the file after upload.
+    - description (optional). Description of the file.
+    - content_type (optional). Content type of the file.
 
-    :type uploads: list or tuple
-    :return: True
+   :return: True
 
 .. code-block:: python
 
-    >>> redmine.issue.update(1, project_id=1, subject='Vacation', tracker_id=8, description='foo', notes='A journal note', private_notes=True, status_id=3, priority_id=7, assigned_to_id=123, parent_issue_id=345, start_date='2014-01-01', due_date='2014-02-01', estimated_hours=4, done_ratio=40, custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}], uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}])
-    True
+   >>> redmine.issue.update(
+   ...     1,
+   ...     project_id=1,
+   ...     subject='Vacation',
+   ...     tracker_id=8,
+   ...     description='foo',
+   ...     notes='A journal note',
+   ...     private_notes=True,
+   ...     status_id=3,
+   ...     priority_id=7,
+   ...     assigned_to_id=123,
+   ...     parent_issue_id=345,
+   ...     start_date=datetime.date(2014, 1, 1),
+   ...     due_date=datetime.date(2014, 2, 1),
+   ...     estimated_hours=4,
+   ...     done_ratio=40,
+   ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
+   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
+   ... )
+   True
 
 save
 ++++
 
 .. py:method:: save()
-    :module: redmine.resources.Issue
-    :noindex:
+   :module: redminelib.resources.Issue
+   :noindex:
 
-    Saves the current state of an issue resource to the Redmine. Fields that
-    can be changed are the same as for ``update`` method above.
+   Saves the current state of an Issue resource to the Redmine. Fields that
+   can be changed are the same as for ``update()`` method above.
 
-    :return: True
+   :return: True
 
 .. code-block:: python
 
-    >>> issue = redmine.issue.get(1)
-    >>> issue.project_id = 1
-    >>> issue.subject = 'Vacation'
-    >>> issue.tracker_id = 8
-    >>> issue.description = 'foo'
-    >>> issue.notes = 'A journal note'
-    >>> issue.private_notes = True
-    >>> issue.status_id = 3
-    >>> issue.priority_id = 7
-    >>> issue.assigned_to_id = 123
-    >>> issue.parent_issue_id = 345
-    >>> issue.start_date = date(2014, 1, 1)
-    >>> issue.due_date = date(2014, 2, 1)
-    >>> issue.estimated_hours = 4
-    >>> issue.done_ratio = 40
-    >>> issue.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
-    >>> issue.uploads = [{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
-    >>> issue.save()
-    True
+   >>> issue = redmine.issue.get(1)
+   >>> issue.project_id = 1
+   >>> issue.subject = 'Vacation'
+   >>> issue.tracker_id = 8
+   >>> issue.description = 'foo'
+   >>> issue.notes = 'A journal note'
+   >>> issue.private_notes = True
+   >>> issue.status_id = 3
+   >>> issue.priority_id = 7
+   >>> issue.assigned_to_id = 123
+   >>> issue.parent_issue_id = 345
+   >>> issue.start_date = datetime.date(2014, 1, 1)
+   >>> issue.due_date = datetime.date(2014, 2, 1)
+   >>> issue.estimated_hours = 4
+   >>> issue.done_ratio = 40
+   >>> issue.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
+   >>> issue.uploads = [{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
+   >>> issue.save()
+   True
 
 Delete methods
 --------------
@@ -329,58 +368,154 @@ delete
 ++++++
 
 .. py:method:: delete(resource_id)
-    :module: redmine.managers.ResourceManager
-    :noindex:
+   :module: redminelib.managers.ResourceManager
+   :noindex:
 
-    Deletes single issue resource from the Redmine by it's id.
+   Deletes single Issue resource from Redmine by it's id.
 
-    :param integer resource_id: (required). Issue id.
-    :return: True
+   :param int resource_id: (required). Issue id.
+   :return: True
 
 .. code-block:: python
 
-    >>> redmine.issue.delete(1)
-    True
+   >>> redmine.issue.delete(1)
+   True
+
+.. py:method:: delete()
+   :module: redminelib.resources.Issue
+   :noindex:
+
+   Deletes current Issue resource object from Redmine.
+
+   :return: True
+
+.. code-block:: python
+
+   >>> issue = redmine.issue.get(1)
+   >>> issue.delete()
+   True
+
+Export
+------
+
+.. versionadded:: 2.0.0
+
+.. py:method:: export(fmt, savepath=None, filename=None)
+   :module: redminelib.resources.Issue
+   :noindex:
+
+   Exports Issue resource in one of the following formats: atom, pdf
+
+   :param string fmt: (required). Format to use for export.
+   :param string savepath: (optional). Path where to save the file.
+   :param string filename: (optional). Name that will be used for the file.
+   :return: String or Object
+
+.. code-block:: python
+
+   >>> issue = redmine.issue.get(123)
+   >>> issue.export('pdf', savepath='/home/jsmith')
+   '/home/jsmith/123.pdf'
+
+.. py:method:: export(fmt, savepath=None, filename=None)
+   :module: redminelib.resultsets.ResourceSet
+   :noindex:
+
+   Exports a resource set of Issue resources in one of the following formats: atom, pdf, csv
+
+   :param string fmt: (required). Format to use for export.
+   :param string savepath: (optional). Path where to save the file.
+   :param string filename: (optional). Name that will be used for the file.
+   :return: String or Object
+
+.. code-block:: python
+
+   >>> issues = redmine.issue.all()
+   >>> issues.export('csv', savepath='/home/jsmith', filename='issues.csv')
+   '/home/jsmith/issues.csv'
+
+Journals
+--------
+
+The history of an issue is represented as a :ref:`ResourceSet` of ``IssueJournal`` resources.
+Currently the following operations are possible:
+
+read
+++++
+
+Recommended way to access issue journals is through associated data includes:
+
+.. code-block:: python
+
+   >>> issue = redmine.issue.get(1, include='journals')
+   >>> issue.journals
+   <redminelib.resultsets.ResourceSet object with IssueJournal resources>
+
+But they can also be accessed through on demand includes:
+
+.. code-block:: python
+
+   >>> issue = redmine.issue.get(1)
+   >>> issue.journals
+   <redminelib.resultsets.ResourceSet object with IssueJournal resources>
+
+After that they can be used as usual:
+
+.. code-block:: python
+
+   >>> for journal in issue.journals:
+   ...     print journal.id, journal.notes
+   ...
+   1 foobar
+   2 lalala
+   3 hohoho
+
+create
+++++++
+
+To create a new record in issue history, i.e. new journal:
+
+.. code-block:: python
+
+   redmine.issue.update(1, notes='new note')
 
 Watchers
 --------
 
-.. versionadded:: 0.5.0
-
-Python Redmine provides 2 methods to work with issue watchers: ``add`` and ``remove``.
+Python-Redmine provides 2 methods to work with issue watchers:
 
 add
 +++
 
 .. py:method:: add(user_id)
-    :module: redmine.resources.Issue.Watcher
-    :noindex:
+   :module: redminelib.resources.Issue.Watcher
+   :noindex:
 
-    Adds a user to issue watchers list by it's id.
+   Adds a user to issue watchers list by it's id.
 
-    :param integer user_id: (required). User id.
-    :return: True
+   :param int user_id: (required). User id.
+   :return: True
 
 .. code-block:: python
 
-    >>> issue = redmine.issue.get(1)
-    >>> issue.watcher.add(1)
-    True
+   >>> issue = redmine.issue.get(1)
+   >>> issue.watcher.add(1)
+   True
 
 remove
 ++++++
 
 .. py:method:: remove(user_id)
-    :module: redmine.resources.Issue.Watcher
-    :noindex:
+   :module: redminelib.resources.Issue.Watcher
+   :noindex:
 
-    Removes a user from issue watchers list by it's id.
+   Removes a user from issue watchers list by it's id.
 
-    :param integer user_id: (required). User id.
-    :return: True
+   :param int user_id: (required). User id.
+   :return: True
 
 .. code-block:: python
 
-    >>> issue = redmine.issue.get(1)
-    >>> issue.watcher.remove(1)
-    True
+   >>> issue = redmine.issue.get(1)
+   >>> issue.watcher.remove(1)
+   True
