@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-2.0.0 (2017-04-XX)
+2.0.0 (2017-04-10)
 ++++++++++++++++++
 
 This version brings a lot of new features and changes, some of them are backward-incompatible, so please
