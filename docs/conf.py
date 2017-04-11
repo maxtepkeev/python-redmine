@@ -48,7 +48,8 @@ html_theme_options = {
     'github_type': 'star',
     'github_banner': 'true',
     'show_powered_by': 'false',
-    'page_width': '1008px'
+    'page_width': '1008px',
+    'analytics_id': 'UA-97216617-1',
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
