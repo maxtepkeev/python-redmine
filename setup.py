@@ -35,7 +35,7 @@ setup(
     package_data={'requests': ['*.pem']},
     include_package_data=True,
     url='https://python-redmine.com',
-    license=open('LICENSE').read(),
+    license='Apache 2.0',
     author='Maxim Tepkeev',
     author_email='support@python-redmine.com',
     description='Library for communicating with a Redmine project management application',
