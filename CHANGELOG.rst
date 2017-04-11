@@ -67,7 +67,7 @@ user.
 
 - Renamed package name from ``redmine`` to ``redminelib``
 - Resource class attributes that were previously tuples are now lists
-- ``__Resource`` class renamed to ``Resource``
+- ``_Resource`` class renamed to ``Resource``
 - ``Redmine.custom_resource_paths`` keyword argument renamed to ``resource_paths``
 - ``Redmine.download()`` method now returns a `requests.Response <http://docs.python-requests.org/
   en/latest/api/#requests.Response>`__ object directly instead of ``iter_content()`` method if a ``savepath``
