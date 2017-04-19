@@ -3,10 +3,10 @@ from . import mock, BaseRedmineTestCase
 from redminelib import exceptions
 
 response = {
-    'projects': [
-        {'name': 'Foo', 'identifier': 'foo', 'id': 1},
-        {'name': 'Bar', 'identifier': 'bar', 'id': 2},
-        {'name': 'Baz', 'identifier': 'baz', 'id': 3},
+    'issues': [
+        {'subject': 'Foo', 'id': 1, 'tracker_id': 1},
+        {'subject': 'Bar', 'id': 2, 'tracker_id': 2},
+        {'subject': 'Baz', 'id': 3, 'tracker_id': 3},
     ]
 }
 
@@ -17,159 +17,151 @@ class ResultSetTestCase(BaseRedmineTestCase):
         self.response.json = mock.Mock(return_value=response)
 
     def test_has_custom_repr(self):
-        self.assertEqual(repr(self.redmine.project.all()),
-                         '<redminelib.resultsets.ResourceSet object with Project resources>')
+        self.assertEqual(repr(self.redmine.issue.all()),
+                         '<redminelib.resultsets.ResourceSet object with Issue resources>')
 
     def test_offset_limit_all(self):
         self.response.json.return_value = dict(total_count=3, limit=0, offset=0, **response)
-        projects = self.redmine.project.all()
-        self.assertEqual(projects.limit, 0)
-        self.assertEqual(projects.offset, 0)
-        self.assertEqual(projects[0].id, 1)
-        self.assertEqual(projects[1].id, 2)
-        self.assertEqual(projects[2].id, 3)
+        issues = self.redmine.issue.all()
+        self.assertEqual(issues.limit, 0)
+        self.assertEqual(issues.offset, 0)
+        self.assertEqual(issues[0].id, 1)
+        self.assertEqual(issues[1].id, 2)
+        self.assertEqual(issues[2].id, 3)
 
     def test_offset_limit(self):
         self.response.json.return_value = {
-            'total_count': 2, 'limit': 300, 'offset': 1, 'projects': response['projects'][1:3]}
-        projects = self.redmine.project.all()[1:300]
-        self.assertEqual(projects.limit, 300)
-        self.assertEqual(projects.offset, 1)
-        self.assertEqual(projects[0].id, 2)
-        self.assertEqual(projects[1].id, 3)
-        self.assertEqual(projects[:1][0].id, 2)
-        self.assertEqual(projects[1:][0].id, 3)
-        self.assertEqual(projects[1:1][0].id, 3)
+            'total_count': 2, 'limit': 300, 'offset': 1, 'issues': response['issues'][1:3]}
+        issues = self.redmine.issue.all()[1:300]
+        self.assertEqual(issues.limit, 300)
+        self.assertEqual(issues.offset, 1)
+        self.assertEqual(issues[0].id, 2)
+        self.assertEqual(issues[1].id, 3)
+        self.assertEqual(issues[:1][0].id, 2)
+        self.assertEqual(issues[1:][0].id, 3)
+        self.assertEqual(issues[1:1][0].id, 3)
 
     def test_offset_limit_mimic(self):
-        projects = self.redmine.project.all()[1:3]
-        self.assertEqual(projects.limit, 3)
-        self.assertEqual(projects.offset, 1)
-        self.assertEqual(projects[0].id, 2)
-        self.assertEqual(projects[1].id, 3)
+        issues = self.redmine.issue.all()[1:3]
+        self.assertEqual(issues.limit, 3)
+        self.assertEqual(issues.offset, 1)
+        self.assertEqual(issues[0].id, 2)
+        self.assertEqual(issues[1].id, 3)
 
     def test_total_count(self):
         self.response.json.return_value = dict(total_count=3, limit=0, offset=0, **response)
-        projects = self.redmine.project.all()
-        len(projects)
-        self.assertEqual(projects.total_count, 3)
+        issues = self.redmine.issue.all()
+        len(issues)
+        self.assertEqual(issues.total_count, 3)
 
     def test_total_count_mimic(self):
-        response_with_custom_fields = {'project': dict(response['projects'][0], custom_fields=[{'id': 1, 'value': 0}])}
-        self.response.json.return_value = response_with_custom_fields
-        project = self.redmine.project.get('foo')
-        self.assertEqual(project.custom_fields.total_count, 1)
+        response_with_cf = {'issue': dict(custom_fields=[{'id': 1, 'value': 0}], **response['issues'][0])}
+        self.response.json.return_value = response_with_cf
+        issue = self.redmine.issue.get(1)
+        self.assertEqual(issue.custom_fields.total_count, 1)
 
     def test_total_count_raise_exception_if_not_evaluated(self):
-        self.assertRaises(exceptions.ResultSetTotalCountError, lambda: self.redmine.project.all().total_count)
+        self.assertRaises(exceptions.ResultSetTotalCountError, lambda: self.redmine.issue.all().total_count)
 
     def test_resultset_is_empty(self):
-        self.response.json.return_value = {'limit': 100, 'projects': [], 'total_count': 0, 'offset': 0}
-        projects = self.redmine.project.all()
-        self.assertEqual(len(projects), 0)
-        self.assertEqual(list(projects), [])
+        self.response.json.return_value = {'limit': 100, 'issues': [], 'total_count': 0, 'offset': 0}
+        issues = self.redmine.issue.all()
+        self.assertEqual(len(issues), 0)
+        self.assertEqual(list(issues), [])
 
     def test_sliced_resultset_is_empty(self):
-        self.response.json.return_value = {'limit': 100, 'projects': [], 'total_count': 0, 'offset': 0}
-        projects = self.redmine.project.all()[:200]
-        self.assertEqual(len(projects), 0)
-        self.assertEqual(list(projects), [])
+        self.response.json.return_value = {'limit': 100, 'issues': [], 'total_count': 0, 'offset': 0}
+        issues = self.redmine.issue.all()[:200]
+        self.assertEqual(len(issues), 0)
+        self.assertEqual(list(issues), [])
 
     def test_supports_iteration(self):
-        projects = list(self.redmine.project.all())
-        self.assertEqual(projects[0].name, 'Foo')
-        self.assertEqual(projects[0].identifier, 'foo')
-        self.assertEqual(projects[0].id, 1)
-        self.assertEqual(projects[1].name, 'Bar')
-        self.assertEqual(projects[1].identifier, 'bar')
-        self.assertEqual(projects[1].id, 2)
+        issues = list(self.redmine.issue.all())
+        self.assertEqual(issues[0].subject, 'Foo')
+        self.assertEqual(issues[0].id, 1)
+        self.assertEqual(issues[1].subject, 'Bar')
+        self.assertEqual(issues[1].id, 2)
 
     def test_supports_len(self):
-        self.assertEqual(len(self.redmine.project.all()), 3)
+        self.assertEqual(len(self.redmine.issue.all()), 3)
 
     def test_get_method_resource_found(self):
-        projects = self.redmine.project.all().get(2)
-        self.assertEqual(projects.id, 2)
+        issues = self.redmine.issue.all().get(2)
+        self.assertEqual(issues.id, 2)
 
     def test_get_method_resource_not_found(self):
-        projects = self.redmine.project.all().get(6)
-        self.assertEqual(projects, None)
+        issues = self.redmine.issue.all().get(6)
+        self.assertEqual(issues, None)
 
     def test_filter_method(self):
-        projects = self.redmine.project.all().filter((1, 3))
-        self.assertEqual(projects[0].id, 1)
-        self.assertEqual(projects[1].id, 3)
+        issues = self.redmine.issue.all().filter((1, 3))
+        self.assertEqual(issues[0].id, 1)
+        self.assertEqual(issues[1].id, 3)
 
     def test_update_method(self):
-        projects = self.redmine.project.all().update(name='FooBar')
-        self.assertEqual(projects[0].name, 'FooBar')
-        self.assertEqual(projects[1].name, 'FooBar')
-        self.assertEqual(projects[2].name, 'FooBar')
+        issues = self.redmine.issue.all().update(subject='FooBar')
+        self.assertEqual(issues[0].subject, 'FooBar')
+        self.assertEqual(issues[1].subject, 'FooBar')
+        self.assertEqual(issues[2].subject, 'FooBar')
 
     def test_delete_method(self):
-        self.assertEqual(self.redmine.project.all().delete(), True)
+        self.assertEqual(self.redmine.issue.all().delete(), True)
 
     def test_resourceset_is_picklable(self):
         import pickle
-        projects = self.redmine.project.all()
-        unpickled_projects = pickle.loads(pickle.dumps(projects))
-        self.assertEqual(projects[0]['name'], unpickled_projects[0]['name'])
-        self.assertEqual(projects[1]['name'], unpickled_projects[1]['name'])
-        self.assertEqual(projects[2]['name'], unpickled_projects[2]['name'])
+        issues = self.redmine.issue.all()
+        unpickled_issues = pickle.loads(pickle.dumps(issues))
+        self.assertEqual(issues[0]['subject'], unpickled_issues[0]['subject'])
+        self.assertEqual(issues[1]['subject'], unpickled_issues[1]['subject'])
+        self.assertEqual(issues[2]['subject'], unpickled_issues[2]['subject'])
 
     def test_values_method(self):
-        projects = list(self.redmine.project.all().values())
-        self.assertEqual(projects[0]['name'], 'Foo')
-        self.assertEqual(projects[0]['identifier'], 'foo')
-        self.assertEqual(projects[0]['id'], 1)
-        self.assertEqual(projects[1]['name'], 'Bar')
-        self.assertEqual(projects[1]['identifier'], 'bar')
-        self.assertEqual(projects[1]['id'], 2)
-        self.assertEqual(projects[2]['name'], 'Baz')
-        self.assertEqual(projects[2]['identifier'], 'baz')
-        self.assertEqual(projects[2]['id'], 3)
+        issues = list(self.redmine.issue.all().values())
+        self.assertEqual(issues[0]['subject'], 'Foo')
+        self.assertEqual(issues[0]['id'], 1)
+        self.assertEqual(issues[1]['subject'], 'Bar')
+        self.assertEqual(issues[1]['id'], 2)
+        self.assertEqual(issues[2]['subject'], 'Baz')
+        self.assertEqual(issues[2]['id'], 3)
 
     def test_values_method_with_fields(self):
-        projects = list(self.redmine.project.all().values('name', 'id'))
-        self.assertEqual(len(projects[0]), 2)
-        self.assertEqual(projects[0]['name'], 'Foo')
-        self.assertEqual(projects[0]['id'], 1)
-        self.assertEqual(len(projects[1]), 2)
-        self.assertEqual(projects[1]['name'], 'Bar')
-        self.assertEqual(projects[1]['id'], 2)
-        self.assertEqual(len(projects[2]), 2)
-        self.assertEqual(projects[2]['name'], 'Baz')
-        self.assertEqual(projects[2]['id'], 3)
+        issues = list(self.redmine.issue.all().values('subject', 'id'))
+        self.assertEqual(len(issues[0]), 2)
+        self.assertEqual(issues[0]['subject'], 'Foo')
+        self.assertEqual(issues[0]['id'], 1)
+        self.assertEqual(len(issues[1]), 2)
+        self.assertEqual(issues[1]['subject'], 'Bar')
+        self.assertEqual(issues[1]['id'], 2)
+        self.assertEqual(len(issues[2]), 2)
+        self.assertEqual(issues[2]['subject'], 'Baz')
+        self.assertEqual(issues[2]['id'], 3)
 
     def test_values_list_method(self):
-        projects = list(self.redmine.project.all().values_list())
-        self.assertIn('Foo', projects[0])
-        self.assertIn('foo', projects[0])
-        self.assertIn(1, projects[0])
-        self.assertIn('Bar', projects[1])
-        self.assertIn('bar', projects[1])
-        self.assertIn(2, projects[1])
-        self.assertIn('Baz', projects[2])
-        self.assertIn('baz', projects[2])
-        self.assertIn(3, projects[2])
+        issues = list(self.redmine.issue.all().values_list())
+        self.assertIn('Foo', issues[0])
+        self.assertIn(1, issues[0])
+        self.assertIn('Bar', issues[1])
+        self.assertIn(2, issues[1])
+        self.assertIn('Baz', issues[2])
+        self.assertIn(3, issues[2])
 
     def test_values_list_method_with_fields(self):
-        projects = list(self.redmine.project.all().values_list('id', 'name'))
-        self.assertEqual(len(projects[0]), 2)
-        self.assertEqual(projects[0][0], 1)
-        self.assertEqual(projects[0][1], 'Foo')
-        self.assertEqual(len(projects[1]), 2)
-        self.assertEqual(projects[1][0], 2)
-        self.assertEqual(projects[1][1], 'Bar')
-        self.assertEqual(len(projects[2]), 2)
-        self.assertEqual(projects[2][0], 3)
-        self.assertEqual(projects[2][1], 'Baz')
+        issues = list(self.redmine.issue.all().values_list('id', 'subject'))
+        self.assertEqual(len(issues[0]), 2)
+        self.assertEqual(issues[0][0], 1)
+        self.assertEqual(issues[0][1], 'Foo')
+        self.assertEqual(len(issues[1]), 2)
+        self.assertEqual(issues[1][0], 2)
+        self.assertEqual(issues[1][1], 'Bar')
+        self.assertEqual(len(issues[2]), 2)
+        self.assertEqual(issues[2][0], 3)
+        self.assertEqual(issues[2][1], 'Baz')
 
     def test_values_list_method_flattened(self):
-        projects = list(self.redmine.project.all().values_list('id', flat=True))
-        self.assertEqual(projects[0], 1)
-        self.assertEqual(projects[1], 2)
-        self.assertEqual(projects[2], 3)
+        issues = list(self.redmine.issue.all().values_list('id', flat=True))
+        self.assertEqual(issues[0], 1)
+        self.assertEqual(issues[1], 2)
+        self.assertEqual(issues[2], 3)
 
     @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_export(self):
@@ -191,4 +183,4 @@ class ResultSetTestCase(BaseRedmineTestCase):
         self.assertRaises(exceptions.ResourceSetFilterParamError, lambda: self.redmine.project.all().filter(1))
 
     def test_index_error_exception(self):
-        self.assertRaises(exceptions.ResourceSetIndexError, lambda: self.redmine.project.all()[6])
+        self.assertRaises(exceptions.ResourceSetIndexError, lambda: self.redmine.issue.all()[6])
