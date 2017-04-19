@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+2.0.2 (2017-04-XX)
+++++++++++++++++++
+
+**Bugfixes**:
+
+- Filter doesn't work when there are > 100 resources requested (`Issue #175 <https://github.com/maxtepkeev/
+  python-redmine/pull/175>`__) (thanks to `niwatolli3 <https://github.com/niwatolli3>`__)
+
 2.0.1 (2017-04-10)
 ++++++++++++++++++
 
