@@ -24,7 +24,7 @@ create
 
    :param project_id: (required). Id or identifier of the project.
    :type project_id: int or string
-   :param int user_id: (required). Id of the user to add to the project.
+   :param int user_id: (required). Id of the user or group to add to the project.
    :param list role_ids: (required). Role ids to add to the user in this project.
    :return: :ref:`Resource` object
 
