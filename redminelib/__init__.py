@@ -90,6 +90,23 @@ class Redmine(object):
 
         return response['upload']['token']
 
+    def upload_object(self, fileobj):
+        """
+        Uploads binary file object to Redmine and returns an assigned token.
+
+        :param string fileobj: (required). File object that will be uploaded.
+        """
+        if self.ver is not None and LooseVersion(str(self.ver)) < LooseVersion('1.4.0'):
+            raise exceptions.VersionMismatchError('File uploading')
+
+        if not isinstance(fileobj, file):
+            raise exceptions.NoFileError
+
+        url = '{0}/uploads.json'.format(self.url)
+        headers = {'Content-Type': 'application/octet-stream'}
+        response = self.engine.request('post', url, data=fileobj, headers=headers)
+        return response['upload']['token']
+
     def download(self, url, savepath=None, filename=None, params=None):
         """
         Downloads file from Redmine and saves it to savepath or returns a response directly
