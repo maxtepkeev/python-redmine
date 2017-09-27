@@ -82,7 +82,13 @@ class Redmine(object):
 
         url = '{0}/uploads.json'.format(self.url)
         headers = {'Content-Type': 'application/octet-stream'}
-        if isinstance(filepath_obj, file):
+        try:
+            from StringIO import StringIO
+            filetype = (file, StringIO)
+        except (NameError, ImportError):
+            from io import IOBase
+            filetype = IOBase
+        if isinstance(filepath_obj, filetype):
             response = self.engine.request('post', url, data=filepath_obj, headers=headers)
         else:
             if not os.path.isfile(filepath_obj) or os.path.getsize(filepath_obj) == 0:
