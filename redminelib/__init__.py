@@ -71,22 +71,30 @@ class Redmine(object):
         yield self
         self.engine = engine
 
-    def upload(self, filepath):
+    def upload(self, filepath_obj):
         """
         Uploads file from filepath to Redmine and returns an assigned token.
 
-        :param string filepath: (required). Path to the file that will be uploaded.
+        :param string filepath_obj: (required). Path to the file or filestream that will be uploaded.
         """
         if self.ver is not None and LooseVersion(str(self.ver)) < LooseVersion('1.4.0'):
             raise exceptions.VersionMismatchError('File uploading')
 
-        if not os.path.isfile(filepath) or os.path.getsize(filepath) == 0:
-            raise exceptions.NoFileError
-
-        with open(filepath, 'rb') as stream:
-            url = '{0}/uploads.json'.format(self.url)
-            headers = {'Content-Type': 'application/octet-stream'}
-            response = self.engine.request('post', url, data=stream, headers=headers)
+        url = '{0}/uploads.json'.format(self.url)
+        headers = {'Content-Type': 'application/octet-stream'}
+        try:
+            from StringIO import StringIO
+            filetype = (file, StringIO)
+        except (NameError, ImportError):
+            from io import IOBase
+            filetype = IOBase
+        if isinstance(filepath_obj, filetype):
+            response = self.engine.request('post', url, data=filepath_obj, headers=headers)
+        else:
+            if not os.path.isfile(filepath_obj) or os.path.getsize(filepath_obj) == 0:
+                raise exceptions.NoFileError
+            with open(filepath_obj, 'rb') as stream:
+                response = self.engine.request('post', url, data=stream, headers=headers)
 
         return response['upload']['token']
 
