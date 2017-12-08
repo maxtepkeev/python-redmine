@@ -140,7 +140,7 @@ class BaseEngine(object):
 
         status_code = response.status_code
 
-        if status_code in (200, 201):
+        if status_code in (200, 201, 204):
             if return_raw:
                 return response
             elif not response.content.strip():
