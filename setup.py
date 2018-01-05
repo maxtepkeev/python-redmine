@@ -19,6 +19,7 @@ class NoseTests(test):
         import nose
         nose.run_exit(argv=['nosetests'])
 
+
 tests_require = ['nose', 'coverage']
 
 if sys.version_info[:2] < (3, 3):
