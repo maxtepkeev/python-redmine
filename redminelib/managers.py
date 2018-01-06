@@ -177,7 +177,11 @@ class ResourceManager(object):
                 data['attachments'][index]['token'] = self.redmine.upload(attachment.pop('path', ''))
 
         response = self.redmine.engine.request(self.resource_class.http_method_create, url, data=data)
-        resource = self.to_resource(response[self.container])
+
+        try:
+            resource = self.to_resource(response[self.container])
+        except TypeError:
+            raise exceptions.ValidationError('Resource already exists')  # fix for repeated PUT requests (issue #182)
 
         self.params = formatter.used_kwargs
         self.url = self.redmine.url + self.resource_class.query_one.format(resource.internal_id, **fields)

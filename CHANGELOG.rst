@@ -13,6 +13,8 @@ Changelog
 
 - Support 204 status code when deleting a resource (`Issue #189 <https://github.com/maxtepkeev/python-redmine/
   pull/189>`__) (thanks to `dotSlashLu <https://github.com/dotSlashLu>`__)
+- Raise ``ValidationError`` instead of not helpful ``TypeError`` exception in case of trying to create a WikiPage
+  resource that already exists (`Issue #182 <https://github.com/maxtepkeev/python-redmine/issues/182>`__)
 
 2.0.2 (2017-04-19)
 ++++++++++++++++++
