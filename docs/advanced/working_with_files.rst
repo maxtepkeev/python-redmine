@@ -12,14 +12,14 @@ or ``redmine.download()`` where ``redmine`` is a configured redmine object. See 
 Upload
 ------
 
-.. py:method:: upload(filepath)
+.. py:method:: upload(f, close=True)
    :module: redminelib.Redmine
    :noindex:
 
-   Uploads file from filepath to Redmine and returns an assigned token which can then be used
-   to attach the uploaded file to some resource, e.g. Issue.
+   Uploads file from filepath / filestream to Redmine and returns an assigned token.
 
-   :param string filepath: (optional). Local path to the file which should be uploaded.
+   :param string f: (required). Path to the file / filestream that will be uploaded.
+   :param bool close: (optional). Whether to close the file / filestream after it will be uploaded.
    :return: Token string
 
 .. code-block:: python
@@ -31,16 +31,17 @@ Upload
 Download
 --------
 
-.. py:method:: download(url, savepath=None, filename=None)
+.. py:method:: download(url, savepath=None, filename=None, params=None)
    :module: redminelib.Redmine
    :noindex:
 
-   Downloads file from Redmine and saves it to savepath or returns a response directly for
-   maximum control over file processing.
+   Downloads file from Redmine and saves it to savepath or returns a response directly
+   for maximum control over file processing.
 
-   :param string url: (required). A URL of the file which should be downloaded.
-   :param string savepath: (optional). Local path where file should be saved.
-   :param string filename: (optional). Filename which will be used for a file.
+   :param string url: (required). URL of the file that will be downloaded.
+   :param string savepath: (optional). Path where to save the file.
+   :param string filename: (optional). Name that will be used for the file.
+   :param dict params: (optional). Params to send in the query string.
    :return: string or `requests.Response <http://docs.python-requests.org/en/latest/api/#requests.Response>`_ object
 
 If a ``savepath`` argument is provided, then a file will be saved into the provided path with
@@ -50,7 +51,7 @@ to the file will be returned.
 
 .. code-block:: python
 
-   >>> filepath = redmine.download('https://redmine.url/foobar.jpg', savepath='/usr/local/', filename='image.jpg')
+   >>> filepath = redmine.download('https://redmine.url/foobar.jpg', savepath='/usr/local', filename='image.jpg')
    >>> filepath
    '/usr/local/image.jpg'
 

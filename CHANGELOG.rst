@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+2.1.0 (2018-01-XX)
+++++++++++++++++++
+
+**New Features**:
+
+- Ability to upload file-like objects (`Issue #186 <https://github.com/maxtepkeev/python-redmine/issues/186>`__)
+  (thanks to `hjpotter92 <https://github.com/hjpotter92>`__)
+
 2.0.2 (2017-04-19)
 ++++++++++++++++++
 

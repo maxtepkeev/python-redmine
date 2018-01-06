@@ -101,6 +101,18 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.assertEqual(issue.project_id, 1)
         self.assertEqual(issue.subject, 'Foo')
 
+    def test_create_resource_with_stream_uploads(self):
+        from io import StringIO
+        self.response.status_code = 201
+        self.response.json.return_value = {
+            'upload': {'token': '123456'},
+            'issue': {'subject': 'Foo', 'project_id': 1, 'id': 1}
+        }
+        stream = StringIO(b'\xcf\x86oo'.decode('utf8'))
+        issue = self.redmine.issue.create(project_id=1, subject='Foo', uploads=[{'path': stream}])
+        self.assertEqual(issue.project_id, 1)
+        self.assertEqual(issue.subject, 'Foo')
+
     def test_create_empty_resource(self):
         project = self.redmine.project.new()
         defaults = dict.fromkeys(project._includes + project._relations)
@@ -122,6 +134,15 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
             mock.Mock(status_code=200, history=[], content='')
         ])
         self.assertEqual(self.redmine.issue.update(1, subject='Bar', uploads=[{'path': 'foo'}]), True)
+
+    def test_update_resource_with_stream_uploads(self):
+        from io import StringIO
+        self.set_patch_side_effect([
+            mock.Mock(status_code=201, history=[], **{'json.return_value': {'upload': {'token': '123456'}}}),
+            mock.Mock(status_code=200, history=[], content='')
+        ])
+        stream = StringIO(b'\xcf\x86oo'.decode('utf8'))
+        self.assertEqual(self.redmine.issue.update(1, subject='Bar', uploads=[{'path': stream}]), True)
 
     def test_delete_resource(self):
         self.response.content = ''

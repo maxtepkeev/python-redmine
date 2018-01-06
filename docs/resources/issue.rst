@@ -47,7 +47,7 @@ create
 
        (optional). Uploads as [{'': ''}, ...], accepted keys are:
 
-    - path (required). Absolute path to the file that should be uploaded.
+    - path (required). Absolute file path or file-like object that should be uploaded.
     - filename (optional). Name of the file after upload.
     - description (optional). Description of the file.
     - content_type (optional). Content type of the file.
@@ -56,6 +56,7 @@ create
 
 .. code-block:: python
 
+   >>> from io import StringIO
    >>> issue = redmine.issue.create(
    ...     project_id='vacation',
    ...     subject='Vacation',
@@ -71,7 +72,7 @@ create
    ...     estimated_hours=4,
    ...     done_ratio=40,
    ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
-   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
+   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': StringIO('I am content of file 2')}]
    ... )
    >>> issue
    <redminelib.resources.Issue #123 "Vacation">
@@ -297,7 +298,7 @@ update
 
        (optional). Uploads as [{'': ''}, ...], accepted keys are:
 
-    - path (required). Absolute path to the file that should be uploaded.
+    - path (required). Absolute file path or file-like object that should be uploaded.
     - filename (optional). Name of the file after upload.
     - description (optional). Description of the file.
     - content_type (optional). Content type of the file.
@@ -306,6 +307,7 @@ update
 
 .. code-block:: python
 
+   >>> from io import StringIO
    >>> redmine.issue.update(
    ...     1,
    ...     project_id=1,
@@ -323,7 +325,7 @@ update
    ...     estimated_hours=4,
    ...     done_ratio=40,
    ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
-   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
+   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': StringIO('I am content of file 2')}]
    ... )
    True
 

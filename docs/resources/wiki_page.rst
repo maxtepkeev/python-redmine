@@ -33,7 +33,7 @@ create
 
        (optional). Uploads as [{'': ''}, ...], accepted keys are:
 
-    - path (required). Absolute path to the file that should be uploaded.
+    - path (required). Absolute file path or file-like object that should be uploaded.
     - filename (optional). Name of the file after upload.
     - description (optional). Description of the file.
     - content_type (optional). Content type of the file.
@@ -42,13 +42,14 @@ create
 
 .. code-block:: python
 
+   >>> from io import StringIO
    >>> wiki_page = redmine.wiki_page.create(
    ...     project_id='vacation',
    ...     title='FooBar',
    ...     text='foo',
    ...     parent_title='Yada',
    ...     comments='bar',
-   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
+   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': StringIO('I am content of file 2')}]
    ... )
    >>> wiki_page
    <redminelib.resources.WikiPage "FooBar">
@@ -185,7 +186,7 @@ update
 
        (optional). Uploads as [{'': ''}, ...], accepted keys are:
 
-    - path (required). Absolute path to the file that should be uploaded.
+    - path (required). Absolute file path or file-like object that should be uploaded.
     - filename (optional). Name of the file after upload.
     - description (optional). Description of the file.
     - content_type (optional). Content type of the file.
@@ -194,6 +195,7 @@ update
 
 .. code-block:: python
 
+   >>> from io import StringIO
    >>> redmine.wiki_page.update(
    ...     'Foo',
    ...     project_id='vacation',
@@ -201,7 +203,7 @@ update
    ...     text='foo',
    ...     parent_title='Yada',
    ...     comments='bar',
-   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
+   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': StringIO('I am content of file 2')}]
    ... )
    True
 
