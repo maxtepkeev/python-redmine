@@ -148,6 +148,11 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.response.content = ''
         self.assertEqual(self.redmine.wiki_page.delete(b'\xcf\x86oo'.decode('utf8'), project_id=1), True)
 
+    def test_delete_resource_returns_204(self):
+        self.response.status_code = 204
+        self.response.content = ''
+        self.assertEqual(self.redmine.wiki_page.delete(b'\xcf\x86oo'.decode('utf8'), project_id=1), True)
+
     def test_resource_get_method_unsupported_exception(self):
         self.assertRaises(exceptions.ResourceBadMethodError, lambda: self.redmine.enumeration.get('foo'))
 

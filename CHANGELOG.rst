@@ -9,6 +9,11 @@ Changelog
 - Ability to upload file-like objects (`Issue #186 <https://github.com/maxtepkeev/python-redmine/issues/186>`__)
   (thanks to `hjpotter92 <https://github.com/hjpotter92>`__)
 
+**Bugfixes**:
+
+- Support 204 status code when deleting a resource (`Issue #189 <https://github.com/maxtepkeev/python-redmine/
+  pull/189>`__) (thanks to `dotSlashLu <https://github.com/dotSlashLu>`__)
+
 2.0.2 (2017-04-19)
 ++++++++++++++++++
 
