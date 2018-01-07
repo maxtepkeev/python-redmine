@@ -174,7 +174,7 @@ class ResourceManager(object):
         if 'uploads' in data[self.resource_class.container_one]:
             data['attachments'] = data[self.resource_class.container_one].pop('uploads', [])
             for index, attachment in enumerate(data['attachments']):
-                data['attachments'][index]['token'] = self.redmine.upload(attachment.pop('path', ''))
+                data['attachments'][index]['token'] = self.redmine.upload(attachment.pop('path', ''))['token']
 
         response = self.redmine.engine.request(self.resource_class.http_method_create, url, data=data)
 
@@ -220,7 +220,7 @@ class ResourceManager(object):
         if 'uploads' in data[self.resource_class.container_one]:
             data['attachments'] = data[self.resource_class.container_one].pop('uploads', [])
             for index, attachment in enumerate(data['attachments']):
-                data['attachments'][index]['token'] = self.redmine.upload(attachment.pop('path', ''))
+                data['attachments'][index]['token'] = self.redmine.upload(attachment.pop('path', ''))['token']
 
         return self.redmine.engine.request(self.resource_class.http_method_update, url, data=data)
 

@@ -20,13 +20,13 @@ Upload
 
    :param f: (required). File path / stream that will be uploaded.
    :type f: string or file-like object
-   :return: Token string
+   :return: dict with id and token string (Redmine >= 3.4.0) or dict with token string only (Redmine < 3.4.0)
 
 .. code-block:: python
 
-   >>> token = redmine.upload('/usr/local/image.jpg')
-   >>> token
-   '7167.ed1ccdb093229ca1bd0b043618d88743'
+   >>> data = redmine.upload('/usr/local/image.jpg')
+   >>> data
+   {'id': 7167, 'token': '7167.ed1ccdb093229ca1bd0b043618d88743'}
 
 Download
 --------

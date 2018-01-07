@@ -61,14 +61,14 @@ class RedmineTestCase(BaseRedmineTestCase):
     @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_successful_file_upload(self):
         self.response.status_code = 201
-        self.response.json.return_value = {'upload': {'token': '123456'}}
-        self.assertEqual(self.redmine.upload('foo'), '123456')
+        self.response.json.return_value = {'upload': {'id': 1, 'token': '123456'}}
+        self.assertEqual(self.redmine.upload('foo')['token'], '123456')
 
     def test_successful_filestream_upload(self):
         from io import StringIO
         self.response.status_code = 201
-        self.response.json.return_value = {'upload': {'token': '456789'}}
-        self.assertEqual(self.redmine.upload(StringIO(b'\xcf\x86oo'.decode('utf8'))), '456789')
+        self.response.json.return_value = {'upload': {'id': 1, 'token': '456789'}}
+        self.assertEqual(self.redmine.upload(StringIO(b'\xcf\x86oo'.decode('utf8')))['token'], '456789')
 
     @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_successful_file_download(self):

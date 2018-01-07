@@ -11,6 +11,12 @@ Changelog
 - Support for retrieving project's time entry activities (see `docs <https://python-redmine.com/resources/
   project.html#get>`__ for details)
 
+**Changes**:
+
+- Instead of only returning a token string, ``upload()`` method was modified to return a dict that contains
+  all the data for an upload returned from Redmine, i.e. id and token for Redmine >= 3.4.0, token only for
+  Redmine < 3.4.0
+
 **Bugfixes**:
 
 - Support 204 status code when deleting a resource (`Issue #189 <https://github.com/maxtepkeev/python-redmine/

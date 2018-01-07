@@ -94,7 +94,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
     def test_create_resource_with_uploads(self):
         self.response.status_code = 201
         self.response.json.return_value = {
-            'upload': {'token': '123456'},
+            'upload': {'id': 1, 'token': '123456'},
             'issue': {'subject': 'Foo', 'project_id': 1, 'id': 1}
         }
         issue = self.redmine.issue.create(project_id=1, subject='Foo', uploads=[{'path': 'foo'}])
@@ -105,7 +105,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         from io import StringIO
         self.response.status_code = 201
         self.response.json.return_value = {
-            'upload': {'token': '123456'},
+            'upload': {'id': 1, 'token': '123456'},
             'issue': {'subject': 'Foo', 'project_id': 1, 'id': 1}
         }
         stream = StringIO(b'\xcf\x86oo'.decode('utf8'))
@@ -130,7 +130,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
     @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_update_resource_with_uploads(self):
         self.set_patch_side_effect([
-            mock.Mock(status_code=201, history=[], **{'json.return_value': {'upload': {'token': '123456'}}}),
+            mock.Mock(status_code=201, history=[], **{'json.return_value': {'upload': {'id': 1, 'token': '123456'}}}),
             mock.Mock(status_code=200, history=[], content='')
         ])
         self.assertEqual(self.redmine.issue.update(1, subject='Bar', uploads=[{'path': 'foo'}]), True)
@@ -138,7 +138,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
     def test_update_resource_with_stream_uploads(self):
         from io import StringIO
         self.set_patch_side_effect([
-            mock.Mock(status_code=201, history=[], **{'json.return_value': {'upload': {'token': '123456'}}}),
+            mock.Mock(status_code=201, history=[], **{'json.return_value': {'upload': {'id': 1, 'token': '123456'}}}),
             mock.Mock(status_code=200, history=[], content='')
         ])
         stream = StringIO(b'\xcf\x86oo'.decode('utf8'))

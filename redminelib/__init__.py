@@ -104,7 +104,7 @@ class Redmine(object):
         if close:
             stream.close()
 
-        return response['upload']['token']
+        return response['upload']
 
     def download(self, url, savepath=None, filename=None, params=None):
         """
