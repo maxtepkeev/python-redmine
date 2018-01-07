@@ -12,14 +12,14 @@ or ``redmine.download()`` where ``redmine`` is a configured redmine object. See 
 Upload
 ------
 
-.. py:method:: upload(f, close=True)
+.. py:method:: upload(f)
    :module: redminelib.Redmine
    :noindex:
 
-   Uploads file from filepath / filestream to Redmine and returns an assigned token.
+   Uploads file from file path / file stream to Redmine and returns an assigned token.
 
-   :param string f: (required). Path to the file / filestream that will be uploaded.
-   :param bool close: (optional). Whether to close the file / filestream after it will be uploaded.
+   :param f: (required). File path / stream that will be uploaded.
+   :type f: string or file-like object
    :return: Token string
 
 .. code-block:: python

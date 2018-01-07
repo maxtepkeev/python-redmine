@@ -71,12 +71,12 @@ class Redmine(object):
         yield self
         self.engine = engine
 
-    def upload(self, f, close=True):
+    def upload(self, f):
         """
-        Uploads file from filepath / filestream to Redmine and returns an assigned token.
+        Uploads file from file path / file stream to Redmine and returns an assigned token.
 
-        :param string f: (required). Path to the file / filestream that will be uploaded.
-        :param bool close: (optional). Whether to close the file / filestream after it will be uploaded.
+        :param f: (required). File path / stream that will be uploaded.
+        :type f: string or file-like object
         """
         if self.ver is not None and LooseVersion(str(self.ver)) < LooseVersion('1.4.0'):
             raise exceptions.VersionMismatchError('File uploading')
@@ -84,13 +84,20 @@ class Redmine(object):
         url = '{0}/uploads.json'.format(self.url)
         headers = {'Content-Type': 'application/octet-stream'}
 
+        # There're myriads of file-like object implementations here and there and some of them don't have
+        # a "read" method, which is wrong, but that's what we have, on the other hand it looks like all of
+        # them implement a "close" method, that's why we check for it here. Also we don't want to close the
+        # stream ourselves as we have no idea of what the client is going to do with it afterwards, so we
+        # leave the closing part to the client or to the garbage collector
         if hasattr(f, 'close'):
             stream = f
+            close = False
         else:
             if not os.path.isfile(f) or os.path.getsize(f) == 0:
                 raise exceptions.NoFileError
 
             stream = open(f, 'rb')
+            close = True
 
         response = self.engine.request('post', url, data=stream, headers=headers)
 
