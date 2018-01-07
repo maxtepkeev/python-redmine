@@ -6,17 +6,22 @@ Changelog
 
 **New Features**:
 
-- Ability to upload file-like objects (`Issue #186 <https://github.com/maxtepkeev/python-redmine/issues/186>`__)
-  (thanks to `hjpotter92 <https://github.com/hjpotter92>`__)
-- Support for retrieving project's time entry activities (see `docs <https://python-redmine.com/resources/project.html#get>`__
-  for details)
+- Ability to upload file-like objects (`Issue #186 <https://github.com/maxtepkeev/python-redmine/issues/
+  186>`__) (thanks to `hjpotter92 <https://github.com/hjpotter92>`__)
+- Support for retrieving project's time entry activities (see `docs <https://python-redmine.com/resources/
+  project.html#get>`__ for details)
 
 **Bugfixes**:
 
 - Support 204 status code when deleting a resource (`Issue #189 <https://github.com/maxtepkeev/python-redmine/
   pull/189>`__) (thanks to `dotSlashLu <https://github.com/dotSlashLu>`__)
-- Raise ``ValidationError`` instead of not helpful ``TypeError`` exception in case of trying to create a WikiPage
+- Raise ``ValidationError`` instead of not helpful ``TypeError`` exception when trying to create a WikiPage
   resource that already exists (`Issue #182 <https://github.com/maxtepkeev/python-redmine/issues/182>`__)
+
+**Documentation**:
+
+- Mentioned support for ``generate_password`` and ``send_information`` in User's resource create/update
+  methods, ``parent_id`` in Issue's filter method and ``include`` in Issue's all method
 
 2.0.2 (2017-04-19)
 ++++++++++++++++++

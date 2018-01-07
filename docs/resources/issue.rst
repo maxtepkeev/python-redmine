@@ -189,6 +189,15 @@ all
    :param string sort: (optional). Column to sort. Append :desc to invert the order.
    :param int limit: (optional). How much resources to return.
    :param int offset: (optional). Starting from what resource to return the other resources.
+   :param string include:
+    .. raw:: html
+
+       (optional). Can be used to fetch associated data in one call. Accepted values (separated by
+       <code class="docutils literal"><span class="pre">,</span></code>):
+
+    - relations
+    - attachments (requires Redmine >= 3.4.0)
+
    :return: :ref:`ResourceSet` object
 
 .. code-block:: python
@@ -208,6 +217,7 @@ filter
 
    :param issue_id: (optional). Find issue or issues by id (separated by ``,``)
    :type issue_id: int or string
+   :param int parent_id: (optional). Get issues whose parent issue is given id.
    :param project_id: (optional). Id or identifier of issue's project.
    :type project_id: int or string
    :param subproject_id: (optional). Get issues from the subproject with the

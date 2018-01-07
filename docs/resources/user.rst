@@ -42,6 +42,8 @@ create
 
    :param list notified_project_ids: (optional). Project IDs for a "selected" mail notification type.
    :param bool must_change_passwd: (optional). Whether user must change password.
+   :param bool generate_password: (optional). Whether to generate password for the user.
+   :param bool send_information: (optional). Whether to send account information to the user.
    :param list custom_fields: (optional). Custom fields as [{'id': 1, 'value': 'foo'}].
    :return: :ref:`Resource` object
 
@@ -258,6 +260,8 @@ update
 
    :param list notified_project_ids: (optional). Project IDs for a "selected" mail notification type.
    :param bool must_change_passwd: (optional). Whether user must change password.
+   :param bool generate_password: (optional). Whether to generate password for the user.
+   :param bool send_information: (optional). Whether to send account information to the user.
    :param list custom_fields: (optional). Custom fields as [{'id': 1, 'value': 'foo'}].
    :return: True
 
