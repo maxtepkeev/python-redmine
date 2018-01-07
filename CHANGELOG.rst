@@ -8,6 +8,8 @@ Changelog
 
 - Ability to upload file-like objects (`Issue #186 <https://github.com/maxtepkeev/python-redmine/issues/186>`__)
   (thanks to `hjpotter92 <https://github.com/hjpotter92>`__)
+- Support for retrieving project's time entry activities (see `docs <https://python-redmine.com/resources/project.html#get>`__
+  for details)
 
 **Bugfixes**:
 

@@ -106,12 +106,13 @@ get
     - trackers
     - issue_categories
     - enabled_modules (Redmine >= 2.6.0 only)
+    - time_entry_activities (Redmine >= 3.4.0 only)
 
    :return: :ref:`Resource` object
 
 .. code-block:: python
 
-   >>> project = redmine.project.get('vacation', include='trackers,issue_categories,enabled_modules')
+   >>> project = redmine.project.get('vacation', include='trackers,issue_categories,enabled_modules,time_entry_activities')
    >>> project
    <redminelib.resources.Project #123 "Vacation">
 
@@ -174,12 +175,13 @@ all
     - trackers
     - issue_categories
     - enabled_modules
+    - time_entry_activities
 
    :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
-   >>> projects = redmine.project.all(offset=10, limit=100)
+   >>> projects = redmine.project.all(offset=10, limit=100, include='trackers,issue_categories,enabled_modules,time_entry_activities')
    >>> projects
    <redminelib.resultsets.ResourceSet object with Project resources>
 

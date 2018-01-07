@@ -28,7 +28,8 @@ create
    :param spent_on: (optional). The date the time was spent (current date if not set).
    :type spent_on: string or date object
    :param int activity_id: (optional). The id of the time activity. This parameter is required unless
-    a default activity is defined in Redmine.
+    a default activity is defined in Redmine. Available activity ids can be retrieved per project
+    using ``include='time_entry_activities'``, requires Redmine >= 3.4.0.
    :param string comments: (optional). Short description for the entry (255 characters max).
    :return: :ref:`Resource` object
 
@@ -166,7 +167,8 @@ update
    :param int hours: (optional). The number of spent hours.
    :param spent_on: (optional). The date the time was spent.
    :type spent_on: string or date object
-   :param int activity_id: (optional). The id of the time activity.
+   :param int activity_id: (optional). The id of the time activity. Available activity ids can
+    be retrieved per project using ``include='time_entry_activities'``, requires Redmine >= 3.4.0.
    :param string comments: (optional). Short description for the entry (255 characters max).
    :return: True
 

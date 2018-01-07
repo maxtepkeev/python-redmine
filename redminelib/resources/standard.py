@@ -23,7 +23,7 @@ class Project(BaseResource):
     search_hints = ['project']
 
     _repr = [['id', 'name'], ['title']]
-    _includes = ['trackers', 'issue_categories', 'enabled_modules']
+    _includes = ['trackers', 'issue_categories', 'enabled_modules', 'time_entry_activities']
     _relations = ['wiki_pages', 'memberships', 'issue_categories', 'time_entries', 'versions', 'news', 'issues']
     _unconvertible = BaseResource._unconvertible + ['identifier', 'status']
     _update_readonly = BaseResource._update_readonly + ['identifier']
