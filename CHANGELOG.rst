@@ -17,6 +17,8 @@ Changelog
   pull/189>`__) (thanks to `dotSlashLu <https://github.com/dotSlashLu>`__)
 - Raise ``ValidationError`` instead of not helpful ``TypeError`` exception when trying to create a WikiPage
   resource that already exists (`Issue #182 <https://github.com/maxtepkeev/python-redmine/issues/182>`__)
+- Enumeration, Version, Group and Notes ``custom_fields`` attribute was returned as a list of dicts instead
+  of being converted to ``ResourceSet`` object
 
 **Documentation**:
 

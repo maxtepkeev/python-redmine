@@ -191,6 +191,8 @@ class Enumeration(BaseResource):
     container_many = '{resource}'
     query_filter = '/enumerations/{resource}.json'
 
+    _resource_set_map = {'custom_fields': 'CustomField'}
+
     @property
     def url(self):
         return '{0}/enumerations/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
@@ -338,6 +340,7 @@ class Version(BaseResource):
 
     _unconvertible = ['status']
     _resource_map = {'project': 'Project'}
+    _resource_set_map = {'custom_fields': 'CustomField'}
     _single_attr_id_map = {'project_id': 'project'}
 
 
@@ -388,7 +391,7 @@ class Group(BaseResource):
     query_delete = '/groups/{0}.json'
 
     _includes = ['memberships', 'users']
-    _resource_set_map = {'memberships': 'ProjectMembership', 'users': 'User'}
+    _resource_set_map = {'memberships': 'ProjectMembership', 'users': 'User', 'custom_fields': 'CustomField'}
     _multiple_attr_id_map = {'user_ids': 'users'}
 
     class User:
