@@ -237,6 +237,13 @@ class BaseResource(utilities.with_metaclass(Registrar)):
         elif type_ is datetime:
             return attr, value.strftime(manager.redmine.datetime_format)
 
+        if attr == 'uploads':
+            for index, attachment in enumerate(value):
+                if 'token' not in attachment:
+                    value[index]['token'] = manager.redmine.upload(attachment.pop('path', ''))['token']
+
+            return attr, value
+
         return attr, value
 
     @classmethod

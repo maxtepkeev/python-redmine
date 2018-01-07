@@ -170,12 +170,6 @@ class ResourceManager(object):
 
         self.container = self.resource_class.container_one
         data = {self.resource_class.container_one: self.resource_class.bulk_decode(formatter.unused_kwargs, self)}
-
-        if 'uploads' in data[self.resource_class.container_one]:
-            data['attachments'] = data[self.resource_class.container_one].pop('uploads', [])
-            for index, attachment in enumerate(data['attachments']):
-                data['attachments'][index]['token'] = self.redmine.upload(attachment.pop('path', ''))['token']
-
         response = self.redmine.engine.request(self.resource_class.http_method_create, url, data=data)
 
         try:
@@ -216,12 +210,6 @@ class ResourceManager(object):
 
         url = self.redmine.url + query_update
         data = {self.resource_class.container_one: self.resource_class.bulk_decode(formatter.unused_kwargs, self)}
-
-        if 'uploads' in data[self.resource_class.container_one]:
-            data['attachments'] = data[self.resource_class.container_one].pop('uploads', [])
-            for index, attachment in enumerate(data['attachments']):
-                data['attachments'][index]['token'] = self.redmine.upload(attachment.pop('path', ''))['token']
-
         return self.redmine.engine.request(self.resource_class.http_method_update, url, data=data)
 
     def delete(self, resource_id, **params):

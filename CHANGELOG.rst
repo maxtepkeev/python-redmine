@@ -15,7 +15,9 @@ Changelog
 
 - Instead of only returning a token string, ``upload()`` method was modified to return a dict that contains
   all the data for an upload returned from Redmine, i.e. id and token for Redmine >= 3.4.0, token only for
-  Redmine < 3.4.0
+  Redmine < 3.4.0. Also it is now possible to use this token and pass it using a ``token`` key instead of the
+  ``path`` key with path to the file in ``uploads`` parameter when doing an upload, this gives more control
+  over the uploading process if needed
 
 **Bugfixes**:
 
