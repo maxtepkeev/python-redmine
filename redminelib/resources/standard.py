@@ -152,8 +152,7 @@ class Issue(BaseResource):
     def decode(cls, attr, value, manager):
         if attr == 'version_id':
             return 'fixed_version_id', value
-
-        if attr == 'checklists':
+        elif attr == 'checklists':
             return 'checklists_attributes', value
 
         return super(Issue, cls).decode(attr, value, manager)
