@@ -201,7 +201,9 @@ class Attachment(BaseResource):
     redmine_version = '1.3'
     container_one = 'attachment'
     query_one = '/attachments/{0}.json'
+    query_update = '/attachments/{0}.json'
     query_delete = '/attachments/{0}.json'
+    http_method_update = 'patch'
 
     _repr = [['id', 'filename'], ['id']]
     _resource_map = {'author': 'User'}

@@ -552,6 +552,12 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(attachment.id, 1)
         self.assertEqual(attachment.filename, 'foo.jpg')
 
+    def test_attachment_update(self):
+        self.response.json.return_value = responses['attachment']['get']
+        attachment = self.redmine.attachment.get(1)
+        attachment.filename = 'bar.jpg'
+        self.assertEqual(attachment.save(), True)
+
     def test_attachment_delete(self):
         self.response.json.return_value = responses['attachment']['get']
         attachment = self.redmine.attachment.get(1)

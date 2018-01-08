@@ -63,7 +63,55 @@ Not supported by Redmine
 Update methods
 --------------
 
-Not supported by Redmine
+.. versionadded:: 2.1.0
+
+Requires Redmine >= 3.4.0
+
+update
+++++++
+
+.. py:method:: update(resource_id, **fields)
+   :module: redminelib.managers.ResourceManager
+   :noindex:
+
+   Updates values of given fields of an Attachment resource and saves them to the Redmine.
+
+   :param int resource_id: (required). Attachment id.
+   :param string filename: (optional). File name.
+   :param string description: (optional). File description.
+   :param string content_type: (optional). File content-type.
+   :return: True
+
+.. code-block:: python
+
+   >>> redmine.attachment.update(
+   ...     1,
+   ...     filename='foo.txt',
+   ...     description='foobar',
+   ...     content_type='text/plain'
+   ... )
+   True
+
+save
+++++
+
+.. py:method:: save()
+   :module: redminelib.resources.Attachment
+   :noindex:
+
+   Saves the current state of an Attachment resource to the Redmine. Fields that can
+   be changed are the same as for ``update()`` method above.
+
+   :return: True
+
+.. code-block:: python
+
+   >>> attachment = redmine.attachment.get(1)
+   >>> attachment.filename = 'foo.txt'
+   >>> attachment.description = 'foobar'
+   >>> attachment.content_type = 'text/plain'
+   >>> attachment.save()
+   True
 
 Delete methods
 --------------
@@ -71,6 +119,9 @@ Delete methods
 .. versionadded:: 2.0.0
 
 Requires Redmine >= 3.3.0
+
+delete
+++++++
 
 .. py:method:: delete(resource_id)
    :module: redminelib.managers.ResourceManager

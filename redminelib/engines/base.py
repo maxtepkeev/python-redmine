@@ -53,7 +53,7 @@ class BaseEngine(object):
         """
         kwargs = {'data': data or {}, 'params': params or {}, 'headers': headers or {}}
 
-        if method in ('post', 'put') and 'Content-Type' not in kwargs['headers']:
+        if method in ('post', 'put', 'patch') and 'Content-Type' not in kwargs['headers']:
             kwargs['data'] = json.dumps(data)
             kwargs['headers']['Content-Type'] = 'application/json'
 
