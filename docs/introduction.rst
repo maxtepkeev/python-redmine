@@ -212,7 +212,7 @@ only if there is a need to somehow limit search results. To revert the effect of
    [<redminelib.resources.Issue "#123 (New): Romul">,
     <redminelib.resources.Issue "#456 (In Progress): From Russia with Love">]
 
-   >>> list(redmine.search('rom', resources=['issues', 'projects']))
+   >>> redmine.search('rom', resources=['issues', 'projects'])
    {'issues': <redminelib.resultsets.ResourceSet object with Issue resources>,
     'projects': <redminelib.resultsets.ResourceSet object with Project resources>}
 
