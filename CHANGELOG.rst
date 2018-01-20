@@ -32,7 +32,8 @@ Changelog
 **Documentation**:
 
 - Mentioned support for ``generate_password`` and ``send_information`` in User's resource create/update
-  methods, ``parent_id`` in Issue's filter method and ``include`` in Issue's all method
+  methods, ``status`` in User's resource update method, ``parent_id`` in Issue's filter method and ``include``
+  in Issue's all method
 
 2.0.2 (2017-04-19)
 ++++++++++++++++++

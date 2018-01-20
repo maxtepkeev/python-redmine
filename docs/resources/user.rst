@@ -245,6 +245,15 @@ update
    :param string firstname: (optional). User name.
    :param string lastname: (optional). User surname.
    :param string mail: (optional). User email.
+   :param int status:
+    .. raw:: html
+
+       (optional). User status, one of:
+
+    - 1 - active
+    - 2 - registered
+    - 3 - locked
+
    :param int auth_source_id: (optional). Authentication mode id.
    :param string mail_notification:
     .. raw:: html
@@ -274,6 +283,7 @@ update
    ...     firstname='John',
    ...     lastname='Smith',
    ...     mail='john@smith.com',
+   ...     status=3,
    ...     auth_source_id=1,
    ...     mail_notification='selected',
    ...     notified_project_ids=[1, 2],
@@ -302,6 +312,7 @@ save
    >>> user.firstname = 'John'
    >>> user.lastname = 'Smith'
    >>> user.mail = 'john@smith.com'
+   >>> user.status = 3
    >>> user.auth_source_id = 1
    >>> user.mail_notification = 'selected'
    >>> user.notified_project_ids = [1, 2]
