@@ -181,8 +181,7 @@ class ResourceSet(BaseResourceSet):
             for field in fields:
                 setattr(resource, field, fields[field])
 
-            resource.save()
-            resources.append(resource.raw())
+            resources.append(resource.save().raw())
 
         return self._resource_cls(ResourceSet, resources)
 

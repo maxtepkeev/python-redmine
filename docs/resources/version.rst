@@ -89,7 +89,7 @@ new
    >>> version.description = 'my vacation'
    >>> version.wiki_page_title = 'Vacation'
    >>> version.save()
-   True
+   <redminelib.resources.Version #235 "Vacation">
 
 Read methods
 ------------
@@ -204,14 +204,14 @@ update
 save
 ++++
 
-.. py:method:: save()
+.. py:method:: save(**attrs)
    :module: redminelib.resources.Version
    :noindex:
 
-   Saves the current state of a Version resource to the Redmine. Fields that can
+   Saves the current state of a Version resource to the Redmine. Attrs that can
    be changed are the same as for ``update()`` method above.
 
-   :return: True
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
@@ -223,7 +223,22 @@ save
    >>> version.description = 'my vacation'
    >>> version.wiki_page_title = 'Vacation'
    >>> version.save()
-   True
+   <redminelib.resources.Version #1 "Vacation">
+
+.. versionadded:: 2.1.0 Alternative syntax was introduced.
+
+.. code-block:: python
+
+   >>> version = redmine.version.get(1).save(
+   ...     name='Vacation',
+   ...     status='open',
+   ...     sharing='none',
+   ...     due_date=datetime.date(2014, 1, 30),
+   ...     description='my vacation',
+   ...     wiki_page_title='Vacation'
+   ... )
+   >>> version
+   <redminelib.resources.Version #1 "Vacation">
 
 Delete methods
 --------------

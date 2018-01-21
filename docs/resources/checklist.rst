@@ -53,7 +53,7 @@ new
    >>> checklist.subject = 'FooBar'
    >>> checklist.is_done = False
    >>> checklist.save()
-   True
+   <redminelib.resources.Checklist #1>
 
 .. hint::
 
@@ -150,14 +150,14 @@ update
 save
 ++++
 
-.. py:method:: save()
+.. py:method:: save(**attrs)
    :module: redminelib.resources.Checklist
    :noindex:
 
-   Saves the current state of a Checklist item resource to the Checklist plugin. Fields that
+   Saves the current state of a Checklist item resource to the Checklist plugin. Attrs that
    can be changed are the same as for ``update()`` method above.
 
-   :return: True
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
@@ -167,7 +167,20 @@ save
    >>> checklist.is_done = False
    >>> checklist.position = 1
    >>> checklist.save()
-   True
+   <redminelib.resources.Checklist #123>
+
+.. versionadded:: 2.1.0 Alternative syntax was introduced.
+
+.. code-block:: python
+
+   >>> checklist = redmine.checklist.get(123).save(
+   ...     issue_id=1,
+   ...     subject='Foobar',
+   ...     is_done=False,
+   ...     position=1
+   ... )
+   >>> checklist
+   <redminelib.resources.Checklist #123>
 
 Delete methods
 --------------

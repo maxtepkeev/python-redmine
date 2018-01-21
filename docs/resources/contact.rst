@@ -121,7 +121,7 @@ new
    >>> contact.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
    >>> contact.visibility = 0
    >>> contact.save()
-   True
+   <redminelib.resources.Contact #1 "Ivan Ivanov">
 
 Read methods
 ------------
@@ -153,7 +153,7 @@ get
 
    >>> contact = redmine.contact.get(12345, include='notes,contacts,deals,issues')
    >>> contact
-   <redminelib.resources.Contact #1 "Ivan Ivanov">
+   <redminelib.resources.Contact #12345 "Ivan Ivanov">
 
 .. hint::
 
@@ -303,14 +303,14 @@ update
 save
 ++++
 
-.. py:method:: save()
+.. py:method:: save(**attrs)
    :module: redminelib.resources.Contact
    :noindex:
 
-   Saves the current state of a Contact resource to the CRM plugin. Fields that
+   Saves the current state of a Contact resource to the CRM plugin. Attrs that
    can be changed are the same as for ``update()`` method above.
 
-   :return: True
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
@@ -332,7 +332,32 @@ save
    >>> contact.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
    >>> contact.visibility = 0
    >>> contact.save()
-   True
+   <redminelib.resources.Contact #12345 "Ivan Ivanov">
+
+.. versionadded:: 2.1.0 Alternative syntax was introduced.
+
+.. code-block:: python
+
+   >>> contact = redmine.contact.get(12345).save(
+   ...     first_name='Ivan',
+   ...     last_name='Ivanov',
+   ...     middle_name='Ivanovich',
+   ...     company='Ivan Gmbh',
+   ...     phones=['1234567'],
+   ...     emails=['ivan@ivanov.com'],
+   ...     website='ivanov.com',
+   ...     skype_name='ivan.ivanov',
+   ...     birthday=datetime.date(1980, 10, 21),
+   ...     background='some background here',
+   ...     job_title='CEO',
+   ...     tag_list=['vip', 'online'],
+   ...     is_company=False,
+   ...     address_attributes={'street1': 'foo', 'street2': 'bar', 'city': 'Moscow', 'postcode': '111111', 'country_code': 'RU'},
+   ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
+   ...     visibility = 0
+   ... )
+   >>> contact
+   <redminelib.resources.Contact #12345 "Ivan Ivanov">
 
 Delete methods
 --------------

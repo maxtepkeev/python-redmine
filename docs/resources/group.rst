@@ -51,7 +51,7 @@ new
    >>> group.name = 'Developers'
    >>> group.user_ids = [13, 15, 25]
    >>> group.save()
-   True
+   <redminelib.resources.Group #8 "Developers">
 
 Read methods
 ------------
@@ -147,14 +147,14 @@ update
 save
 ++++
 
-.. py:method:: save()
+.. py:method:: save(**attrs)
    :module: redminelib.resources.Group
    :noindex:
 
-   Saves current state of a Group resource to the Redmine. Fields that can be
+   Saves current state of a Group resource to the Redmine. Attrs that can be
    changed are the same as for ``update()`` method above.
 
-   :return: True
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
@@ -162,7 +162,18 @@ save
    >>> group.name = 'Developers'
    >>> group.user_ids = [13, 15, 25]
    >>> group.save()
-   True
+   <redminelib.resources.Group #1 "Developers">
+
+.. versionadded:: 2.1.0 Alternative syntax was introduced.
+
+.. code-block:: python
+
+   >>> group = redmine.group.get(1).save(
+   ...     name='Developers',
+   ...     user_ids=[13, 15, 25]
+   ... )
+   >>> group
+   <redminelib.resources.Group #1 "Developers">
 
 Delete methods
 --------------

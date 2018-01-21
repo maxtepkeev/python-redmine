@@ -98,14 +98,17 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = responses['project']['get']
         project = self.redmine.project.new()
         project.name = 'Foo'
-        self.assertEqual(project.save(), True)
+        self.assertIsInstance(project.save(), resources.Project)
+        self.assertEqual(project.id, 1)
+        project = self.redmine.project.new().save(name='Foo')
+        self.assertIsInstance(project, resources.Project)
         self.assertEqual(project.id, 1)
 
     def test_saving_existing_resource_updates_it(self):
         self.response.json.return_value = responses['project']['get']
         project = self.redmine.project.get(1)
         project.name = 'Bar'
-        self.assertEqual(project.save(), True)
+        self.assertIsInstance(project.save(), resources.Project)
         self.response.json.return_value = {'project': {'id': 1, 'name': 'Bar'}}
         project.refresh()
         self.assertEqual(project.name, 'Bar')
@@ -227,7 +230,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         project.homepage = 'http://foo.bar'
         project.parent_id = 3
         project.custom_fields = [{'id': 1, 'value': 'bar'}]
-        self.assertEqual(project.save(), True)
+        self.assertIsInstance(project.save(), resources.Project)
         self.assertEqual(project.custom_fields[0].value, 'bar')
 
     def test_project_relations(self):
@@ -331,7 +334,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         issue.subject = 'Foo'
         issue.description = 'foobar'
         issue.custom_fields = [{'id': 1, 'value': 'bar'}]
-        self.assertEqual(issue.save(), True)
+        self.assertIsInstance(issue.save(), resources.Issue)
         self.assertEqual(issue.custom_fields[0].value, 'bar')
 
     def test_issue_relations(self):
@@ -493,7 +496,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         time_entry.hours = 3
         time_entry.issue_id = 2
         time_entry.activity_id = 2
-        self.assertEqual(time_entry.save(), True)
+        self.assertIsInstance(time_entry.save(), resources.TimeEntry)
 
     def test_time_entry_translate_params(self):
         manager = self.redmine.time_entry
@@ -556,7 +559,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = responses['attachment']['get']
         attachment = self.redmine.attachment.get(1)
         attachment.filename = 'bar.jpg'
-        self.assertEqual(attachment.save(), True)
+        self.assertIsInstance(attachment.save(), resources.Attachment)
 
     def test_attachment_delete(self):
         self.response.json.return_value = responses['attachment']['get']
@@ -629,7 +632,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
             {'wiki_page': {'title': 'Foo', 'version': 1, 'created_on': '2012-06-27T12:48:15Z'}}
         wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
         wiki_page.text = 'Foo'
-        self.assertEqual(wiki_page.save(), True)
+        self.assertIsInstance(wiki_page.save(), resources.WikiPage)
         self.assertEqual(wiki_page.version, 2)
 
     def test_wiki_page_refresh_by_title(self):
@@ -726,7 +729,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = responses['project_membership']['get']
         membership = self.redmine.project_membership.get(1)
         membership.role_ids = [1, 2]
-        self.assertEqual(membership.save(), True)
+        self.assertIsInstance(membership.save(), resources.ProjectMembership)
         self.assertEqual(membership.roles[0].id, 1)
         self.assertEqual(membership.roles[1].id, 2)
 
@@ -782,7 +785,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = responses['issue_category']['get']
         category = self.redmine.issue_category.get(1)
         category.name = 'Bar'
-        self.assertEqual(category.save(), True)
+        self.assertIsInstance(category.save(), resources.IssueCategory)
 
     def test_issue_category_is_new(self):
         category = self.redmine.issue_category.new()
@@ -873,7 +876,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = responses['version']['get']
         version = self.redmine.version.get(1)
         version.name = 'Bar'
-        self.assertEqual(version.save(), True)
+        self.assertIsInstance(version.save(), resources.Version)
 
     def test_version_returns_status_without_conversion(self):
         self.response.json.return_value = {'version': {'id': 1, 'name': 'Foo', 'status': 'foo'}}
@@ -934,7 +937,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         user = self.redmine.user.get(1)
         user.lastname = 'Foo'
         user.firstname = 'Bar'
-        self.assertEqual(user.save(), True)
+        self.assertIsInstance(user.save(), resources.User)
 
     def test_user_custom_str(self):
         self.response.json.return_value = responses['user']['get']
@@ -1010,7 +1013,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = responses['group']['get']
         group = self.redmine.group.get(1)
         group.name = 'Bar'
-        self.assertEqual(group.save(), True)
+        self.assertIsInstance(group.save(), resources.Group)
 
     def test_group_includes(self):
         response_includes = responses['group']['get']

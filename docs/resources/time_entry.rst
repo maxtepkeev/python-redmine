@@ -67,7 +67,7 @@ new
    >>> time_entry.activity_id = 10
    >>> time_entry.comments = 'hello'
    >>> time_entry.save()
-   True
+   <redminelib.resources.TimeEntry #12345>
 
 Read methods
 ------------
@@ -187,14 +187,14 @@ update
 save
 ++++
 
-.. py:method:: save()
+.. py:method:: save(**attrs)
    :module: redminelib.resources.TimeEntry
    :noindex:
 
-   Saves the current state of a TimeEntry resource to the Redmine. Fields that
+   Saves the current state of a TimeEntry resource to the Redmine. Attrs that
    can be changed are the same as for ``update()`` method above.
 
-   :return: True
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
@@ -205,7 +205,21 @@ save
    >>> time_entry.activity_id = 10
    >>> time_entry.comments = 'hello'
    >>> time_entry.save()
-   True
+   <redminelib.resources.TimeEntry #1>
+
+.. versionadded:: 2.1.0 Alternative syntax was introduced.
+
+.. code-block:: python
+
+   >>> time_entry = redmine.time_entry.get(1).save(
+   ...     issue_id=123,
+   ...     spent_on=datetime.date(2014, 1, 14),
+   ...     hours=3,
+   ...     activity_id=10,
+   ...     comments='hello'
+   ... )
+   >>> time_entry
+   <redminelib.resources.TimeEntry #1>
 
 Delete methods
 --------------

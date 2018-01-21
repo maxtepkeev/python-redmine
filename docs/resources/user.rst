@@ -91,7 +91,7 @@ new
    >>> user.must_change_passwd = True
    >>> user.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
    >>> user.save()
-   True
+   <redminelib.resources.User #32 "John Smith">
 
 Read methods
 ------------
@@ -295,14 +295,14 @@ update
 save
 ++++
 
-.. py:method:: save()
+.. py:method:: save(**attrs)
    :module: redminelib.resources.User
    :noindex:
 
-   Saves the current state of a User resource to the Redmine. Fields that
+   Saves the current state of a User resource to the Redmine. Attrs that
    can be changed are the same as for ``update()`` method above.
 
-   :return: True
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
@@ -319,7 +319,27 @@ save
    >>> user.must_change_passwd = True
    >>> user.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
    >>> user.save()
-   True
+   <redminelib.resources.User #1 "John Smith">
+
+.. versionadded:: 2.1.0 Alternative syntax was introduced.
+
+.. code-block:: python
+
+   >>> user = redmine.user.get(1).save(
+   ...     login='jsmith',
+   ...     password='qwerty',
+   ...     firstname='John',
+   ...     lastname='Smith',
+   ...     mail='john@smith.com',
+   ...     status=3,
+   ...     auth_source_id=1,
+   ...     mail_notification='selected',
+   ...     notified_project_ids=[1, 2],
+   ...     must_change_passwd=True,
+   ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
+   ... )
+   >>> user
+   <redminelib.resources.User #1 "John Smith">
 
 Delete methods
 --------------

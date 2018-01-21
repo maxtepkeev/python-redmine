@@ -349,10 +349,15 @@ class BaseResource(utilities.with_metaclass(Registrar)):
         """
         pass
 
-    def save(self):
+    def save(self, **attrs):
         """
         Creates or updates a Resource.
+
+        :param dict attrs: (optional). Attrs to be set for a resource before create/update operation.
         """
+        for attr in attrs:
+            setattr(self, attr, attrs[attr])
+
         if not self.is_new():
             self.pre_update()
             self.manager.update(self.internal_id, **self._changes)
@@ -364,7 +369,7 @@ class BaseResource(utilities.with_metaclass(Registrar)):
             self.post_create()
 
         self._changes = {}
-        return True
+        return self
 
     def delete(self, **params):
         """

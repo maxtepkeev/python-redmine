@@ -86,7 +86,7 @@ new
    >>> deal.assigned_to_id = 12
    >>> deal.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
    >>> deal.save()
-   True
+   <redminelib.resources.Deal #123>
 
 Read methods
 ------------
@@ -235,14 +235,14 @@ update
 save
 ++++
 
-.. py:method:: save()
+.. py:method:: save(**attrs)
    :module: redminelib.resources.Deal
    :noindex:
 
-   Saves the current state of a Deal resource to the CRM plugin. Fields that
+   Saves the current state of a Deal resource to the CRM plugin. Attrs that
    can be changed are the same as for ``update()`` method above.
 
-   :return: True
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
@@ -259,7 +259,26 @@ save
    >>> deal.assigned_to_id = 12
    >>> deal.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
    >>> deal.save()
-   True
+   <redminelib.resources.Deal #123>
+
+.. versionadded:: 2.1.0 Alternative syntax was introduced.
+
+.. code-block:: python
+
+   >>> deal = redmine.deal.get(123).save(
+   ...     contact_id=1,
+   ...     price=1000,
+   ...     currency='EUR',
+   ...     probability=80,
+   ...     due_date=datetime.date(2014, 12, 12),
+   ...     background='some deal background',
+   ...     status_id=1,
+   ...     category_id=1,
+   ...     assigned_to_id=12,
+   ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
+   ... )
+   >>> deal
+   <redminelib.resources.Deal #123>
 
 Delete methods
 --------------

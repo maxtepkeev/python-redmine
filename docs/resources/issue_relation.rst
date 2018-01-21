@@ -74,7 +74,7 @@ new
     >>> relation.relation_type = 'precedes'
     >>> relation.delay = 5
     >>> relation.save()
-    True
+   <redminelib.resources.IssueRelation #667>
 
 Read methods
 ------------

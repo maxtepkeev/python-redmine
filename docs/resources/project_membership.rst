@@ -54,7 +54,7 @@ new
    >>> membership.user_id = 1
    >>> membership.role_ids = [1, 2]
    >>> membership.save()
-   True
+   <redminelib.resources.ProjectMembership #123>
 
 Read methods
 ------------
@@ -138,21 +138,29 @@ update
 save
 ++++
 
-.. py:method:: save()
+.. py:method:: save(**attrs)
    :module: redminelib.resources.ProjectMembership
    :noindex:
 
-   Saves the current state of a ProjectMembership resource to the Redmine. Fields that can
+   Saves the current state of a ProjectMembership resource to the Redmine. Attrs that can
    be changed are the same as for ``update()`` method above.
 
-   :return: True
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
    >>> membership = redmine.project_membership.get(1)
    >>> membership.role_ids = [1, 2]
    >>> membership.save()
-   True
+   <redminelib.resources.ProjectMembership #1>
+
+.. versionadded:: 2.1.0 Alternative syntax was introduced.
+
+.. code-block:: python
+
+   >>> membership = redmine.project_membership.get(1).save(role_ids=[1, 2])
+   >>> membership
+   <redminelib.resources.ProjectMembership #1>
 
 Delete methods
 --------------

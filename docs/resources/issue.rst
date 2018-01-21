@@ -109,7 +109,7 @@ new
    >>> issue.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
    >>> issue.uploads = [{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
    >>> issue.save()
-   True
+   <redminelib.resources.Issue #123 "Vacation">
 
 Read methods
 ------------
@@ -342,14 +342,14 @@ update
 save
 ++++
 
-.. py:method:: save()
+.. py:method:: save(**attrs)
    :module: redminelib.resources.Issue
    :noindex:
 
-   Saves the current state of an Issue resource to the Redmine. Fields that
+   Saves the current state of an Issue resource to the Redmine. Attrs that
    can be changed are the same as for ``update()`` method above.
 
-   :return: True
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
@@ -371,7 +371,32 @@ save
    >>> issue.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
    >>> issue.uploads = [{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
    >>> issue.save()
-   True
+   <redminelib.resources.Issue #1 "Vacation">
+
+.. versionadded:: 2.1.0 Alternative syntax was introduced.
+
+.. code-block:: python
+
+   >>> issue = redmine.issue.get(1).save(
+   ...     project_id=1,
+   ...     subject='Vacation',
+   ...     tracker_id=8,
+   ...     description='foo',
+   ...     notes='A journal note',
+   ...     private_notes=True,
+   ...     status_id=3,
+   ...     priority_id=7,
+   ...     assigned_to_id=123,
+   ...     parent_issue_id=345,
+   ...     start_date=datetime.date(2014, 1, 1),
+   ...     due_date=datetime.date(2014, 2, 1),
+   ...     estimated_hours=4,
+   ...     done_ratio=40,
+   ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
+   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
+   ... )
+   >>> issue
+   <redminelib.resources.Issue #1 "Vacation">
 
 Delete methods
 --------------

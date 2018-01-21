@@ -81,7 +81,7 @@ new
    >>> project.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
    >>> project.enabled_module_names = ['calendar', 'documents', 'files', 'gantt']
    >>> project.save()
-   True
+   <redminelib.resources.Project #123 "Vacation">
 
 Read methods
 ------------
@@ -235,14 +235,14 @@ update
 save
 ++++
 
-.. py:method:: save()
+.. py:method:: save(**attrs)
    :module: redminelib.resources.Project
    :noindex:
 
-   Saves the current state of a Project resource to the Redmine. Fields that
+   Saves the current state of a Project resource to the Redmine. Attrs that
    can be changed are the same as for ``update()`` method above.
 
-   :return: True
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
@@ -258,7 +258,26 @@ save
    >>> project.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
    >>> project.enabled_module_names = ['calendar', 'documents', 'files', 'gantt']
    >>> project.save()
-   True
+   <redminelib.resources.Project #1 "Vacation">
+
+.. versionadded:: 2.1.0 Alternative syntax was introduced.
+
+.. code-block:: python
+
+   >>> project = redmine.project.get(1).save(
+   ...     name='Vacation',
+   ...     description='foo',
+   ...     homepage='http://foo.bar',
+   ...     is_public=True,
+   ...     parent_id=345,
+   ...     inherit_members=True,
+   ...     tracker_ids=[1, 2],
+   ...     issue_custom_field_ids=[1, 2],
+   ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
+   ...     enabled_module_names=['calendar', 'documents', 'files', 'gantt']
+   ... )
+   >>> project
+   <redminelib.resources.Project #1 "Vacation">
 
 Delete methods
 --------------

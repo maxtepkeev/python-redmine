@@ -55,7 +55,7 @@ new
    >>> category.name = 'woohoo'
    >>> category.assigned_to_id = 13
    >>> category.save()
-   True
+   <redminelib.resources.IssueCategory #810 "woohoo">
 
 Read methods
 ------------
@@ -142,14 +142,14 @@ update
 save
 ++++
 
-.. py:method:: save()
+.. py:method:: save(**attrs)
    :module: redminelib.resources.IssueCategory
    :noindex:
 
-   Saves the current state of an IssueCategory resource to the Redmine. Fields that
+   Saves the current state of an IssueCategory resource to the Redmine. Attrs that
    can be changed are the same as for ``update()`` method above.
 
-   :return: True
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
@@ -157,7 +157,18 @@ save
    >>> category.name = 'woohoo'
    >>> category.assigned_to_id = 13
    >>> category.save()
-   True
+   <redminelib.resources.IssueCategory #1 "woohoo">
+
+.. versionadded:: 2.1.0 Alternative syntax was introduced.
+
+.. code-block:: python
+
+   >>> category = redmine.issue_category.get(1).save(
+   ...     name='woohoo',
+   ...     assigned_to_id=13
+   ... )
+   >>> category
+   <redminelib.resources.IssueCategory #1 "woohoo">
 
 Delete methods
 --------------

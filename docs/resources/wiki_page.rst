@@ -77,7 +77,7 @@ new
    >>> wiki_page.comments = 'bar'
    >>> wiki_page.uploads = [{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
    >>> wiki_page.save()
-   True
+   <redminelib.resources.WikiPage "FooBar">
 
 Read methods
 ------------
@@ -210,14 +210,14 @@ update
 save
 ++++
 
-.. py:method:: save()
+.. py:method:: save(**attrs)
    :module: redminelib.resources.WikiPage
    :noindex:
 
-   Saves the current state of a WikiPage resource to the Redmine. Fields that can
+   Saves the current state of a WikiPage resource to the Redmine. Attrs that can
    be changed are the same as for ``update()`` method above.
 
-   :return: True
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
@@ -228,7 +228,21 @@ save
    >>> wiki_page.comments = 'changed foo to bar'
    >>> wiki_page.uploads = [{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
    >>> wiki_page.save()
-   True
+   <redminelib.resources.WikiPage "Bar">
+
+.. versionadded:: 2.1.0 Alternative syntax was introduced.
+
+.. code-block:: python
+
+   >>> wiki_page = redmine.wiki_page.get('Foo', project_id='vacation').save(
+   ...     title='Bar',
+   ...     text='bar',
+   ...     parent_title='Yada',
+   ...     comments='changed foo to bar',
+   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': '/absolute/path/to/file2'}]
+   ... )
+   >>> wiki_page
+   <redminelib.resources.WikiPage "Bar">
 
 Delete methods
 --------------

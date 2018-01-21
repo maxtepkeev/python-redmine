@@ -95,14 +95,14 @@ update
 save
 ++++
 
-.. py:method:: save()
+.. py:method:: save(**attrs)
    :module: redminelib.resources.Attachment
    :noindex:
 
-   Saves the current state of an Attachment resource to the Redmine. Fields that can
+   Saves the current state of an Attachment resource to the Redmine. Attrs that can
    be changed are the same as for ``update()`` method above.
 
-   :return: True
+   :return: :ref:`Resource` object
 
 .. code-block:: python
 
@@ -111,7 +111,19 @@ save
    >>> attachment.description = 'foobar'
    >>> attachment.content_type = 'text/plain'
    >>> attachment.save()
-   True
+   <redminelib.resources.Attachment #1 "foo.txt">
+
+.. versionadded:: 2.1.0 Alternative syntax was introduced.
+
+.. code-block:: python
+
+   >>> attachment = redmine.attachment.get(1).save(
+   ...     filename='foo.txt',
+   ...     description='foobar',
+   ...     content_type='text/plain'
+   ... )
+   >>> attachment
+   <redminelib.resources.Attachment #1 "foo.txt">
 
 Delete methods
 --------------
