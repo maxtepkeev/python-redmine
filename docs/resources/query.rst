@@ -21,7 +21,22 @@ Read methods
 get
 +++
 
-Not supported by Redmine
+.. versionadded:: 2.1.0
+
+.. py:method:: get(resource_id)
+   :module: redminelib.managers.ResourceManager
+   :noindex:
+
+   Returns single Query resource from Redmine by it's id.
+
+   :param int resource_id: (required). Id of the query.
+   :return: :ref:`Resource` object
+
+.. code-block:: python
+
+   >>> query = redmine.query.get(654)
+   >>> query
+   <redminelib.resources.Query #654 "Done">
 
 all
 +++

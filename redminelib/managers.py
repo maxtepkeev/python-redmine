@@ -103,7 +103,13 @@ class ResourceManager(object):
         :param dict params: (optional). Parameters used for resource retrieval.
         """
         if self.resource_class.query_one is None or self.resource_class.container_one is None:
-            raise exceptions.ResourceBadMethodError
+            operation = self.all if self.resource_class.query_all else self.filter
+            resource = operation(**params).get(resource_id, None)
+
+            if resource is None:
+                raise exceptions.ResourceNotFoundError
+
+            return resource
 
         try:
             self.url = self.redmine.url + self.resource_class.query_one.format(resource_id, **params)

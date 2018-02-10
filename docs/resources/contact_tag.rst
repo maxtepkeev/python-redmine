@@ -21,7 +21,22 @@ Read methods
 get
 +++
 
-Not supported by CRM plugin
+.. versionadded:: 2.1.0
+
+.. py:method:: get(resource_id)
+   :module: redminelib.managers.ResourceManager
+   :noindex:
+
+   Returns single ContactTag resource from the CRM plugin by it's id.
+
+   :param int resource_id: (required). Id of the contact tag.
+   :return: :ref:`Resource` object
+
+.. code-block:: python
+
+   >>> tag = redmine.contact_tag.get(1)
+   >>> tag
+   <redminelib.resources.ContactTag #1 "Online">
 
 all
 +++

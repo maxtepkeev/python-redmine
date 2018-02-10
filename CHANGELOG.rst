@@ -10,10 +10,12 @@ Changelog
   186>`__) (thanks to `hjpotter92 <https://github.com/hjpotter92>`__)
 - Support for retrieving project's time entry activities (see `docs <https://python-redmine.com/resources/
   project.html#get>`__ for details)
-- Attachment ``update()`` method support (requires Redmine >= 3.4.0)
+- Attachment ``update()`` operation support (requires Redmine >= 3.4.0)
 - ``Resource.save()`` now accepts ``**attrs`` that need to be changed/set and returns ``self`` instead of a
   boolean ``True``, which makes it chainable, so you can now do something like ``project.save(name='foo',
   description='bar').export('txt', '/home/foo')``
+- ``get`` operation support for News, Query, Enumeration, IssueStatus, Tracker, CustomField, ContactTag,
+  DealStatus, DealCategory and CRMQuery resources
 
 **Changes**:
 

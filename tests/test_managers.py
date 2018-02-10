@@ -50,6 +50,18 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.assertEqual(project.identifier, 'foo')
         self.assertEqual(project.id, 1)
 
+    def test_get_single_resource_via_all(self):
+        self.response.json.return_value = responses['tracker']['all']
+        tracker = self.redmine.tracker.get(1)
+        self.assertEqual(tracker.id, 1)
+        self.assertEqual(tracker.name, 'Foo')
+
+    def test_get_single_resource_via_filter(self):
+        self.response.json.return_value = responses['enumeration']['filter']
+        enumeration = self.redmine.enumeration.get(1, resource='time_entry_activities')
+        self.assertEqual(enumeration.id, 1)
+        self.assertEqual(enumeration.name, 'Foo')
+
     def test_get_unicode_resource(self):
         unicode_name = b'\xcf\x86oo'.decode('utf8')
         self.response.json.return_value = {'project': {'name': unicode_name, 'identifier': unicode_name, 'id': 1}}
@@ -154,7 +166,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.assertEqual(self.redmine.wiki_page.delete(b'\xcf\x86oo'.decode('utf8'), project_id=1), True)
 
     def test_resource_get_method_unsupported_exception(self):
-        self.assertRaises(exceptions.ResourceBadMethodError, lambda: self.redmine.enumeration.get('foo'))
+        self.assertRaises(exceptions.ResourceBadMethodError, lambda: self.redmine.issue_journal.get(1))
 
     def test_resource_all_method_unsupported_exception(self):
         self.assertRaises(exceptions.ResourceBadMethodError, lambda: self.redmine.attachment.all())
@@ -188,6 +200,10 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
 
     def test_get_validation_exception(self):
         self.assertRaises(exceptions.ValidationError, lambda: self.redmine.wiki_page.get('foo'))
+
+    def test_get_notfound_exception(self):
+        self.response.json.return_value = responses['tracker']['all']
+        self.assertRaises(exceptions.ResourceNotFoundError, lambda: self.redmine.tracker.get(999))
 
     def test_create_validation_exception(self):
         self.assertRaises(exceptions.ValidationError, lambda: self.redmine.issue_category.create(foo='bar'))

@@ -21,7 +21,30 @@ Read methods
 get
 +++
 
-Not supported by CRM plugin
+.. versionadded:: 2.1.0
+
+.. py:method:: get(resource_id, **params)
+   :module: redminelib.managers.ResourceManager
+   :noindex:
+
+   Returns single CrmQuery resource from the CRM plugin by it's id.
+
+   :param int resource_id: (required). Id of the crm query.
+   :param string resource:
+    .. raw:: html
+
+       (required). Get crm query for the resource. One of:
+
+    - contact
+    - deal
+
+   :return: :ref:`Resource` object
+
+.. code-block:: python
+
+   >>> query = redmine.crm_query.get(1, resource='contact')
+   >>> query
+   <redminelib.resources.CrmQuery #1 "By companies">
 
 all
 +++

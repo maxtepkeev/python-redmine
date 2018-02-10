@@ -21,7 +21,22 @@ Read methods
 get
 +++
 
-Not supported by CRM plugin
+.. versionadded:: 2.1.0
+
+.. py:method:: get(resource_id)
+   :module: redminelib.managers.ResourceManager
+   :noindex:
+
+   Returns single DealStatus resource from the CRM plugin by it's id.
+
+   :param int resource_id: (required). Id of the deal status.
+   :return: :ref:`Resource` object
+
+.. code-block:: python
+
+   >>> status = redmine.deal_status.get(1)
+   >>> status
+   <redminelib.resources.DealStatus #1 "Lost">
 
 all
 +++

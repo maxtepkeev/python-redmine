@@ -21,7 +21,22 @@ Read methods
 get
 +++
 
-Not supported by Redmine
+.. versionadded:: 2.1.0
+
+.. py:method:: get(resource_id)
+   :module: redminelib.managers.ResourceManager
+   :noindex:
+
+   Returns single Tracker resource from Redmine by it's id.
+
+   :param int resource_id: (required). Id of the tracker.
+   :return: :ref:`Resource` object
+
+.. code-block:: python
+
+   >>> tracker = redmine.tracker.get(1)
+   >>> tracker
+   <redminelib.resources.Tracker #1 "Task">
 
 all
 +++

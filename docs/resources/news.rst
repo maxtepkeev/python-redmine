@@ -21,7 +21,22 @@ Read methods
 get
 +++
 
-Not supported by Redmine
+.. versionadded:: 2.1.0
+
+.. py:method:: get(resource_id)
+   :module: redminelib.managers.ResourceManager
+   :noindex:
+
+   Returns single News resource from Redmine by it's id.
+
+   :param int resource_id: (required). News id.
+   :return: :ref:`Resource` object
+
+.. code-block:: python
+
+   >>> news = redmine.news.get(123)
+   >>> news
+   <redminelib.resources.News #123 "Vacation">
 
 all
 +++

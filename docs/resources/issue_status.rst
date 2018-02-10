@@ -21,7 +21,22 @@ Read methods
 get
 +++
 
-Not supported by Redmine
+.. versionadded:: 2.1.0
+
+.. py:method:: get(resource_id)
+   :module: redminelib.managers.ResourceManager
+   :noindex:
+
+   Returns single IssueStatus resource from Redmine by it's id.
+
+   :param int resource_id: (required). Id of the issue status.
+   :return: :ref:`Resource` object
+
+.. code-block:: python
+
+   >>> status = redmine.issue_status.get(1)
+   >>> status
+   <redminelib.resources.IssueStatus #1 "Rejected">
 
 all
 +++

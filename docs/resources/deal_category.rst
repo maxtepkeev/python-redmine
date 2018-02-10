@@ -21,7 +21,25 @@ Read methods
 get
 +++
 
-Not supported by CRM plugin
+.. versionadded:: 2.1.0
+
+.. py:method:: get(resource_id, **params)
+   :module: redminelib.managers.ResourceManager
+   :noindex:
+
+   Returns single DealCategory resource from the CRM plugin by it's id.
+
+   :param int resource_id: (required). Id of the deal category.
+   :param project_id: (required). Id or identifier of deal category's project.
+   :type project_id: int or string
+
+   :return: :ref:`Resource` object
+
+.. code-block:: python
+
+   >>> category = redmine.deal_category.get(1, project_id='vacation')
+   >>> category
+   <redminelib.resources.DealCategory #1 "Design">
 
 all
 +++

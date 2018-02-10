@@ -21,7 +21,22 @@ Read methods
 get
 +++
 
-Not supported by Redmine
+.. versionadded:: 2.1.0
+
+.. py:method:: get(resource_id)
+   :module: redminelib.managers.ResourceManager
+   :noindex:
+
+   Returns single CustomField resource from Redmine by it's id.
+
+   :param int resource_id: (required). Id of the custom field.
+   :return: :ref:`Resource` object
+
+.. code-block:: python
+
+   >>> field = redmine.custom_field.get(1)
+   >>> field
+   <redminelib.resources.CustomField #1 "Vendor">
 
 all
 +++

@@ -21,7 +21,31 @@ Read methods
 get
 +++
 
-Not supported by Redmine
+.. versionadded:: 2.1.0
+
+.. py:method:: get(resource_id, **params)
+   :module: redminelib.managers.ResourceManager
+   :noindex:
+
+   Returns single Enumeration resource from Redmine by it's id.
+
+   :param int resource_id: (required). Enumeration id.
+   :param string resource:
+    .. raw:: html
+
+       (required). Get enumeration for the resource. One of:
+
+    - issue_priorities
+    - time_entry_activities
+    - document_categories
+
+   :return: :ref:`Resource` object
+
+.. code-block:: python
+
+   >>> enumeration = redmine.enumeration.get(1, resource='time_entry_activities')
+   >>> enumeration
+   <redminelib.resources.Enumeration #1 "Documenting">
 
 all
 +++

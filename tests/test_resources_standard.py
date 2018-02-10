@@ -531,6 +531,12 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_enumeration_version(self):
         self.assertEqual(self.redmine.enumeration.resource_class.redmine_version, '2.2')
 
+    def test_enumeration_get(self):
+        self.response.json.return_value = responses['enumeration']['filter']
+        enumeration = self.redmine.enumeration.get(1, resource='time_entry_activities')
+        self.assertEqual(enumeration.id, 1)
+        self.assertEqual(enumeration.name, 'Foo')
+
     def test_enumeration_filter(self):
         self.response.json.return_value = responses['enumeration']['filter']
         enumerations = self.redmine.enumeration.filter(resource='time_entry_activities')
@@ -1072,6 +1078,12 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_news_version(self):
         self.assertEqual(self.redmine.news.resource_class.redmine_version, '1.1')
 
+    def test_news_get(self):
+        self.response.json.return_value = responses['news']['all']
+        news = self.redmine.news.get(1)
+        self.assertEqual(news.id, 1)
+        self.assertEqual(news.title, 'Foo')
+
     def test_news_all(self):
         self.response.json.return_value = responses['news']['all']
         news = self.redmine.news.all()
@@ -1109,6 +1121,12 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_issue_status_version(self):
         self.assertEqual(self.redmine.issue_status.resource_class.redmine_version, '1.3')
 
+    def test_issue_status_get(self):
+        self.response.json.return_value = responses['issue_status']['all']
+        status = self.redmine.issue_status.get(1)
+        self.assertEqual(status.id, 1)
+        self.assertEqual(status.name, 'Foo')
+
     def test_issue_status_all(self):
         self.response.json.return_value = responses['issue_status']['all']
         statuses = self.redmine.issue_status.all()
@@ -1123,6 +1141,12 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
 
     def test_tracker_version(self):
         self.assertEqual(self.redmine.tracker.resource_class.redmine_version, '1.3')
+
+    def test_tracker_get(self):
+        self.response.json.return_value = responses['tracker']['all']
+        tracker = self.redmine.tracker.get(1)
+        self.assertEqual(tracker.id, 1)
+        self.assertEqual(tracker.name, 'Foo')
 
     def test_tracker_all(self):
         self.response.json.return_value = responses['tracker']['all']
@@ -1139,6 +1163,12 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_query_version(self):
         self.assertEqual(self.redmine.query.resource_class.redmine_version, '1.3')
 
+    def test_query_get(self):
+        self.response.json.return_value = responses['query']['all']
+        query = self.redmine.query.get(1)
+        self.assertEqual(query.id, 1)
+        self.assertEqual(query.name, 'Foo')
+
     def test_query_all(self):
         self.response.json.return_value = responses['query']['all']
         queries = self.redmine.query.all()
@@ -1153,6 +1183,12 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
 
     def test_custom_field_version(self):
         self.assertEqual(self.redmine.custom_field.resource_class.redmine_version, '2.4')
+
+    def test_custom_field_get(self):
+        self.response.json.return_value = responses['custom_field']['all']
+        field = self.redmine.custom_field.get(1)
+        self.assertEqual(field.id, 1)
+        self.assertEqual(field.name, 'Foo')
 
     def test_custom_field_all(self):
         self.response.json.return_value = responses['custom_field']['all']
