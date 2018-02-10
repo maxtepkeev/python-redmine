@@ -1,4 +1,5 @@
 from . import mock, BaseRedmineTestCase
+from .responses import responses
 
 from redminelib import managers, resources, resultsets, exceptions
 
@@ -9,8 +10,7 @@ class FooResource(resources.Project):
 
 class ResourceManagerTestCase(BaseRedmineTestCase):
     def test_has_custom_repr(self):
-        self.assertEqual(repr(self.redmine.project),
-                         '<redminelib.managers.ResourceManager object for Project resource>')
+        self.assertEqual(repr(self.redmine.user), '<redminelib.managers.ResourceManager object for User resource>')
 
     def test_supports_additional_resources(self):
         self.redmine.resource_paths = (__name__,)
@@ -24,7 +24,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.assertRaises(exceptions.ResourceVersionMismatchError, lambda: self.redmine.project)
 
     def test_convert_dict_to_resource_object(self):
-        project = self.redmine.project.to_resource({'name': 'Foo', 'identifier': 'foo', 'id': 1})
+        project = self.redmine.project.to_resource(responses['project']['get']['project'])
         self.assertIsInstance(project, resources.Project)
         self.assertEqual(project.name, 'Foo')
         self.assertEqual(project.identifier, 'foo')
@@ -44,7 +44,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.assertEqual(resourceset[1].id, 2)
 
     def test_get_single_resource(self):
-        self.response.json.return_value = {'project': {'name': 'Foo', 'identifier': 'foo', 'id': 1}}
+        self.response.json.return_value = responses['project']['get']
         project = self.redmine.project.get('foo')
         self.assertEqual(project.name, 'Foo')
         self.assertEqual(project.identifier, 'foo')
@@ -75,7 +75,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
 
     def test_create_resource(self):
         self.response.status_code = 201
-        self.response.json.return_value = {'user': {'firstname': 'John', 'lastname': 'Smith', 'id': 1}}
+        self.response.json.return_value = responses['user']['get']
         user = self.redmine.user.create(firstname='John', lastname='Smith')
         self.assertEqual(user.firstname, 'John')
         self.assertEqual(user.lastname, 'Smith')
