@@ -19,6 +19,8 @@ Changelog
 
 **Changes**:
 
+- Issue ``all`` operation now really returns all issues, i.e. both open and closed, instead of only returning
+  open issues in previous versions due to the respect to Redmine's standard behaviour
 - Instead of only returning a token string, ``upload()`` method was modified to return a dict that contains
   all the data for an upload returned from Redmine, i.e. id and token for Redmine >= 3.4.0, token only for
   Redmine < 3.4.0. Also it is now possible to use this token and pass it using a ``token`` key instead of the

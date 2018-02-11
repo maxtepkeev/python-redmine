@@ -59,7 +59,7 @@ class Issue(BaseResource):
     container_one = 'issue'
     query_all_export = '/issues.{format}'
     query_one_export = '/issues/{0}.{format}'
-    query_all = '/issues.json'
+    query_all = '/issues.json?status_id=*'
     query_one = '/issues/{0}.json'
     query_filter = '/issues.json'
     query_create = '/projects/{project_id}/issues.json'
