@@ -163,7 +163,7 @@ class ResourceSet(BaseResourceSet):
         :param resource_ids: (required). Resource ids.
         :type resource_ids: list or tuple
         """
-        if not isinstance(resource_ids, (tuple, list)):
+        if not isinstance(resource_ids, (list, tuple)):
             raise exceptions.ResourceSetFilterParamError
 
         return self._resource_cls(ResourceSet, [resource for resource in super(
