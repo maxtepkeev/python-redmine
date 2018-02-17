@@ -201,7 +201,7 @@ class ResourceRequirementsError(BaseRedmineError):
     def __init__(self, requirements):
         super(ResourceRequirementsError, self).__init__(
             'The following requirements must be installed for resource to function: {0}'.format(
-                ', '.join(' >= '.join(req) if isinstance(req, tuple) else req for req in requirements)))
+                ', '.join(' >= '.join(req) if isinstance(req, (list, tuple)) else req for req in requirements)))
 
 
 class FileUrlError(BaseRedmineError):
