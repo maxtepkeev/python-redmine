@@ -101,11 +101,10 @@ get
    Returns single Deal resource from the CRM plugin by it's id.
 
    :param int resource_id: (required). Id of the deal.
-   :param string include:
+   :param list include:
     .. raw:: html
 
-       (optional). Can be used to fetch associated data in one call. Accepted values (separated by
-       <code class="docutils literal"><span class="pre">,</span></code>):
+       (optional). Fetches associated data in one call. Accepted values:
 
     - notes
 
@@ -113,7 +112,7 @@ get
 
 .. code-block:: python
 
-   >>> deal = redmine.deal.get(123, include='notes')
+   >>> deal = redmine.deal.get(123, include=['notes'])
    >>> deal
    <redminelib.resources.Deal #123>
 

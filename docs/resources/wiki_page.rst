@@ -95,11 +95,10 @@ get
    :param project_id: (required). Id or identifier of wiki page's project.
    :type project_id: int or string
    :param int version: (optional). Version of the wiki page.
-   :param string include:
+   :param list include:
     .. raw:: html
 
-       (optional). Can be used to fetch associated data in one call. Accepted values (separated by
-       <code class="docutils literal"><span class="pre">,</span></code>):
+       (optional). Fetches associated data in one call. Accepted values:
 
     - attachments
 
@@ -107,7 +106,7 @@ get
 
 .. code-block:: python
 
-   >>> wiki_page = redmine.wiki_page.get('Photos', project_id='vacation', version=12, include='attachments')
+   >>> wiki_page = redmine.wiki_page.get('Photos', project_id='vacation', version=12, include=['attachments'])
    >>> wiki_page
    <redminelib.resources.WikiPage "Photos">
 

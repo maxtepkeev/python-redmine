@@ -137,10 +137,11 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
 
     def test_bulk_decode(self):
         from datetime import date, datetime
-        encoded = {'start_date': date(2014, 3, 9), 'created_at': datetime(2014, 3, 9, 20, 2, 2)}
+        encoded = {'start_date': date(2014, 3, 9), 'created_at': datetime(2014, 3, 9, 20, 2, 2), 'include': ['a', 'b']}
         decoded = self.redmine.project.resource_class.bulk_decode(encoded, self.redmine.project)
         self.assertEqual(decoded['start_date'], '2014-03-09')
         self.assertEqual(decoded['created_at'], '2014-03-09T20:02:02Z')
+        self.assertEqual(decoded['include'], 'a,b')
 
     def test_bulk_encode(self):
         from datetime import date, datetime

@@ -106,11 +106,10 @@ get
    Returns single User resource from Redmine by it's id.
 
    :param int resource_id: (required). Id of the user.
-   :param string include:
+   :param list include:
     .. raw:: html
 
-       (optional). Can be used to fetch associated data in one call. Accepted values (separated by
-       <code class="docutils literal"><span class="pre">,</span></code>):
+       (optional). Fetches associated data in one call. Accepted values:
 
     - memberships
     - groups
@@ -119,7 +118,7 @@ get
 
 .. code-block:: python
 
-   >>> user = redmine.user.get(17, include='memberships,groups')
+   >>> user = redmine.user.get(17, include=['memberships', 'groups'])
    >>> user
    <redminelib.resources.User #17 "John Smith">
 

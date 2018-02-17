@@ -124,11 +124,10 @@ get
    Returns single Issue resource from Redmine by it's id.
 
    :param int resource_id: (required). Id of the issue.
-   :param string include:
+   :param list include:
     .. raw:: html
 
-       (optional). Can be used to fetch associated data in one call. Accepted values (separated by
-       <code class="docutils literal"><span class="pre">,</span></code>):
+       (optional). Fetches associated data in one call. Accepted values:
 
     - children
     - attachments
@@ -141,7 +140,7 @@ get
 
 .. code-block:: python
 
-   >>> issue = redmine.issue.get(34441, include='children,journals,watchers')
+   >>> issue = redmine.issue.get(34441, include=['children', 'journals', 'watchers'])
    >>> issue
    <redminelib.resources.Issue #34441 "Vacation">
 
@@ -189,11 +188,10 @@ all
    :param string sort: (optional). Column to sort. Append :desc to invert the order.
    :param int limit: (optional). How much resources to return.
    :param int offset: (optional). Starting from what resource to return the other resources.
-   :param string include:
+   :param list include:
     .. raw:: html
 
-       (optional). Can be used to fetch associated data in one call. Accepted values (separated by
-       <code class="docutils literal"><span class="pre">,</span></code>):
+       (optional). Fetches associated data in one call. Accepted values:
 
     - relations
     - attachments (requires Redmine >= 3.4.0)
@@ -202,7 +200,7 @@ all
 
 .. code-block:: python
 
-   >>> issues = redmine.issue.all(sort='category:desc')
+   >>> issues = redmine.issue.all(sort='category:desc', include=['relations', 'attachments'])
    >>> issues
    <redminelib.resultsets.ResourceSet object with Issue resources>
 
@@ -245,6 +243,14 @@ filter
    :param string sort: (optional). Column to sort. Append :desc to invert the order.
    :param int limit: (optional). How much resources to return.
    :param int offset: (optional). Starting from what resource to return the other resources.
+   :param list include:
+    .. raw:: html
+
+       (optional). Fetches associated data in one call. Accepted values:
+
+    - relations
+    - attachments (requires Redmine >= 3.4.0)
+
    :return: :ref:`ResourceSet` object
 
 .. code-block:: python
@@ -484,7 +490,7 @@ Recommended way to access issue journals is through associated data includes:
 
 .. code-block:: python
 
-   >>> issue = redmine.issue.get(1, include='journals')
+   >>> issue = redmine.issue.get(1, include=['journals'])
    >>> issue.journals
    <redminelib.resultsets.ResourceSet object with IssueJournal resources>
 

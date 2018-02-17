@@ -136,11 +136,10 @@ get
    Returns single Contact resource from the CRM plugin by it's id.
 
    :param int resource_id: (required). Id of the contact.
-   :param string include:
+   :param list include:
     .. raw:: html
 
-       (optional). Can be used to fetch associated data in one call. Accepted values (separated by
-       <code class="docutils literal"><span class="pre">,</span></code>):
+       (optional). Fetches associated data in one call. Accepted values:
 
     - notes
     - contacts
@@ -151,7 +150,7 @@ get
 
 .. code-block:: python
 
-   >>> contact = redmine.contact.get(12345, include='notes,contacts,deals,issues')
+   >>> contact = redmine.contact.get(12345, include=['notes', 'contacts', 'deals', 'issues'])
    >>> contact
    <redminelib.resources.Contact #12345 "Ivan Ivanov">
 

@@ -16,6 +16,9 @@ Changelog
   description='bar').export('txt', '/home/foo')``
 - ``get`` operation support for News, Query, Enumeration, IssueStatus, Tracker, CustomField, ContactTag,
   DealStatus, DealCategory and CRMQuery resources
+- ``include`` param in ``get``, ``all`` and ``filter`` operations now accepts lists and tuples instead of
+  comma-separated string which is still accepted for backward compatibility reasons, i.e. one can use
+  ``include=['foo', 'bar']`` instead of ``include='foo,bar'``
 
 **Changes**:
 

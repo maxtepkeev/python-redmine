@@ -66,11 +66,10 @@ get
    Returns single group resource from Redmine by it's id.
 
    :param int resource_id: (required). Id of the group.
-   :param string include:
+   :param list include:
     .. raw:: html
 
-       (optional). Can be used to fetch associated data in one call. Accepted values (separated by
-       <code class="docutils literal"><span class="pre">,</span></code>):
+       (optional). Fetches associated data in one call. Accepted values:
 
     - memberships
     - users
@@ -79,7 +78,7 @@ get
 
 .. code-block:: python
 
-   >>> group = redmine.group.get(524, include='memberships,users')
+   >>> group = redmine.group.get(524, include=['memberships', 'users'])
    >>> group
    <redminelib.resources.Group #524 "DESIGN">
 

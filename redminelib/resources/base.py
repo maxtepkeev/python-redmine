@@ -243,6 +243,8 @@ class BaseResource(utilities.with_metaclass(Registrar)):
                     value[index]['token'] = manager.redmine.upload(attachment.pop('path', ''))['token']
 
             return attr, value
+        elif attr == 'include' and isinstance(value, (list, tuple)):
+            return attr, ','.join(value)
 
         return attr, value
 

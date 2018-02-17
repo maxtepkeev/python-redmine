@@ -97,11 +97,10 @@ get
 
    :param resource_id: (required). Project id or identifier.
    :type resource_id: int or string
-   :param string include:
+   :param list include:
     .. raw:: html
 
-       (optional). Can be used to fetch associated data in one call. Accepted values (separated by
-       <code class="docutils literal"><span class="pre">,</span></code>):
+       (optional). Fetches associated data in one call. Accepted values:
 
     - trackers
     - issue_categories
@@ -112,7 +111,7 @@ get
 
 .. code-block:: python
 
-   >>> project = redmine.project.get('vacation', include='trackers,issue_categories,enabled_modules,time_entry_activities')
+   >>> project = redmine.project.get('vacation', include=['trackers', 'issue_categories', 'enabled_modules', 'time_entry_activities'])
    >>> project
    <redminelib.resources.Project #123 "Vacation">
 
@@ -166,11 +165,11 @@ all
 
    :param int limit: (optional). How much resources to return.
    :param int offset: (optional). Starting from what resource to return the other resources.
-   :param string include:
+   :param list include:
     .. raw:: html
 
-       (optional). Redmine >= 2.6.0 only. Can be used to fetch associated data in one call. Accepted
-       values (separated by <code class="docutils literal"><span class="pre">,</span></code>):
+       (optional). Redmine >= 2.6.0 only. Fetches associated data in one call. Accepted
+       values:
 
     - trackers
     - issue_categories
@@ -181,7 +180,7 @@ all
 
 .. code-block:: python
 
-   >>> projects = redmine.project.all(offset=10, limit=100, include='trackers,issue_categories,enabled_modules,time_entry_activities')
+   >>> projects = redmine.project.all(offset=10, limit=100, include=['trackers', 'issue_categories', 'enabled_modules', 'time_entry_activities'])
    >>> projects
    <redminelib.resultsets.ResourceSet object with Project resources>
 
