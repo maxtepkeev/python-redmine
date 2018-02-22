@@ -24,8 +24,8 @@ create
 
    :param project_id: (required). Id or identifier of wiki page's project.
    :type project_id: int or string
-   :param string title: (required). Title of the wiki page.
    :param string text: (required). Text of the wiki page.
+   :param string title: (required). Title of the wiki page.
    :param string parent_title: (optional). Title of parent wiki page.
    :param string comments: (optional). Comments of the wiki page.
    :param list uploads:
@@ -176,8 +176,8 @@ update
    :param string resource_id: (required). Title of the wiki page.
    :param project_id: (required). Id or identifier of wiki page's project.
    :type project_id: int or string
+   :param string text: (required). Text of the wiki page.
    :param string title: (optional). Title of the wiki page.
-   :param string text: (optional). Text of the wiki page.
    :param string parent_title: (optional). Title of parent wiki page.
    :param string comments: (optional). Comments of the wiki page.
    :param list uploads:
