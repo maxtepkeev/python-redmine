@@ -13,7 +13,6 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.assertEqual(repr(self.redmine.user), '<redminelib.managers.ResourceManager object for User resource>')
 
     def test_supports_additional_resources(self):
-        self.redmine.resource_paths = (__name__,)
         self.assertIsInstance(self.redmine.foo_resource, managers.ResourceManager)
 
     def test_not_supported_resource_exception(self):
@@ -234,7 +233,6 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
     def test_resource_requirements_exception(self):
         FooResource.requirements = ('foo plugin', ('bar plugin', '1.2.3'),)
         self.response.status_code = 404
-        self.redmine.resource_paths = (__name__,)
         self.assertRaises(exceptions.ResourceRequirementsError, lambda: self.redmine.foo_resource.get(1))
 
     def test_search(self):

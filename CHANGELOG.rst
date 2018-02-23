@@ -29,6 +29,8 @@ Changelog
   Redmine < 3.4.0. Also it is now possible to use this token and pass it using a ``token`` key instead of the
   ``path`` key with path to the file in ``uploads`` parameter when doing an upload, this gives more control
   over the uploading process if needed
+- Removed ``resource_paths`` argument from Redmine object since ``ResourceManager`` now uses a special resource
+  registry, to which, all resources that inherit from any Python-Redmine resource are being automatically added
 
 **Bugfixes**:
 

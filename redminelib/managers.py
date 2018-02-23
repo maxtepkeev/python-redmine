@@ -2,11 +2,9 @@
 Defines manager classes.
 """
 
-import sys
-
 from distutils.version import LooseVersion
 
-from . import utilities, resultsets, exceptions
+from . import utilities, resources, resultsets, exceptions
 
 
 class ResourceManager(object):
@@ -19,18 +17,11 @@ class ResourceManager(object):
         :param string resource_name: (required). Resource name.
         :param dict params: (optional). Parameters used for resources retrieval.
         """
-        resource_class = None
         resource_name = ''.join(word[0].upper() + word[1:] for word in str(resource_name).split('_'))
-        resource_paths = tuple(redmine.resource_paths) + (sys.modules[self.__module__].__package__ + '.resources',)
 
-        for path in resource_paths:
-            try:
-                resource_class = getattr(__import__(path, fromlist=[resource_name]), resource_name)
-                break
-            except (ImportError, AttributeError):
-                continue
-
-        if resource_class is None:
+        try:
+            resource_class = resources.registry[resource_name]['class']
+        except KeyError:
             raise exceptions.ResourceError
 
         if redmine.ver is not None and LooseVersion(str(redmine.ver)) < LooseVersion(resource_class.redmine_version):

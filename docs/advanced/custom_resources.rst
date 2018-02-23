@@ -3,28 +3,7 @@ Custom Resources
 
 Sometimes there is a need to redefine a resource behaviour to achieve the needed goal.
 Python-Redmine provides a feature for such a case called custom resources. Basically this
-is just a normal class inheritance made especially for Python-Redmine.
-
-Configuration
--------------
-
-To take advantage of this feature you need to tell Python-Redmine where to search for your
-custom resources. This should be done with a ``resource_paths`` argument passed to
-the Redmine object which accepts a list or tuple of module paths which contain your custom
-resources:
-
-.. code-block:: python
-
-   redmine = Redmine('https://redmine.url', resource_paths=('foo.bar', 'bar.baz', 'foo.baz'))
-
-.. note::
-
-   The ordering is very important. Python-Redmine will search for the resources in this order:
-
-   #. foo.bar
-   #. bar.baz
-   #. foo.baz
-   #. redminelib.resources
+is just a normal class inheritance made specifically for Python-Redmine.
 
 Existing Resources
 ------------------
@@ -53,8 +32,9 @@ that it is important to follow this convention to make everything work properly,
 
    custom_wiki_page = redmine.custom_wiki_page.get('Foo')
 
-Python-Redmine is searching for a resource class named CustomWikiPage in the modules defined via
-the ``resource_paths`` argument on Redmine object instantiation.
+Python-Redmine is searching for a resource class named CustomWikiPage. The location of the class
+doesn't matter since all classes that inherit from any Python-Redmine resource class are automatically
+added to the special resource registry.
 
 Methods and Attributes
 ----------------------
@@ -64,6 +44,6 @@ directly unless you want to add support for a new resource which Python-Redmine 
 Below you will find methods and attributes which can be redefined in your custom resource:
 
 .. autoclass:: redminelib.resources.BaseResource
-   :members: __getattr__, __setattr__, decode, encode, bulk_decode, bulk_encode, raw, refresh, pre_create, post_create, pre_update, post_update, pre_delete, post_delete, save, delete, export
+   :members: __getattr__, __setattr__, decode, encode, bulk_decode, bulk_encode, raw, refresh, pre_create, post_create, pre_update, post_update, pre_delete, post_delete, save, delete, export, export_url, is_new
    :undoc-members:
    :private-members:

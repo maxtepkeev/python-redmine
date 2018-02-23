@@ -10,19 +10,17 @@ class RedmineTestCase(BaseRedmineTestCase):
         self.assertEqual(self.redmine.date_format, '%Y-%m-%d')
         self.assertEqual(self.redmine.datetime_format, '%Y-%m-%dT%H:%M:%SZ')
         self.assertEqual(self.redmine.raise_attr_exception, True)
-        self.assertEqual(self.redmine.resource_paths, ())
         self.assertEqual(self.redmine.engine.__class__, engines.DefaultEngine)
 
     def test_set_attributes_through_kwargs(self):
         FooEngine = type('FooEngine', (engines.BaseEngine,), {'create_session': lambda obj, **kwargs: None})
         redmine = Redmine(self.url, version='1.0', date_format='format', datetime_format='format',
-                          raise_attr_exception=False, resource_paths='foo.bar.baz', engine=FooEngine)
+                          raise_attr_exception=False, engine=FooEngine)
         self.assertEqual(redmine.url, self.url)
         self.assertEqual(redmine.ver, '1.0')
         self.assertEqual(redmine.date_format, 'format')
         self.assertEqual(redmine.datetime_format, 'format')
         self.assertEqual(redmine.raise_attr_exception, False)
-        self.assertEqual(redmine.resource_paths, 'foo.bar.baz')
         self.assertEqual(redmine.engine.__class__, FooEngine)
 
     def test_engine_class_exception(self):
@@ -139,4 +137,3 @@ class RedmineTestCase(BaseRedmineTestCase):
         self.assertEqual(redmine.date_format, self.redmine.date_format)
         self.assertEqual(redmine.datetime_format, self.redmine.datetime_format)
         self.assertEqual(redmine.raise_attr_exception, self.redmine.raise_attr_exception)
-        self.assertEqual(redmine.resource_paths, self.redmine.resource_paths)

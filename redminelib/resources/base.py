@@ -14,14 +14,14 @@ registry = {}
 
 class Registrar(type):
     """
-    A resource that implements this metaclass, e.g. all resources that inherit from BaseResource,
-    will be added to resource registry if it defines at least one container_* attribute, otherwise
-    it will be treated as a base (abstract) resource and won't be registered.
+    A resource that implements this metaclass, i.e. all resources that inherit from BaseResource,
+    will be added to a resource registry to be managed by it's ResourceManager. Resource classes
+    which name starts with Base are considered base classes and not added to the registry.
     """
     def __new__(mcs, name, bases, attrs):
         cls = super(Registrar, mcs).__new__(mcs, name, bases, attrs)
 
-        if attrs.get('container_one') is None and attrs.get('container_many') is None:  # this is a base class
+        if name.startswith('Base'):  # base classes shouldn't be added to the registry
             return cls
 
         if name not in registry:  # a name maybe already added to registry by other classes
