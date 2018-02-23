@@ -39,6 +39,7 @@ Changelog
 - Enumeration, Version, Group and Notes ``custom_fields`` attribute was returned as a list of dicts instead
   of being converted to ``ResourceSet`` object
 - ``ResourceRequirementsError`` exception was broken since v2.0.0
+- RedmineUP CRM Contact and Deal resources sometimes weren't converted to Resource objects using Search API
 
 **Documentation**:
 
