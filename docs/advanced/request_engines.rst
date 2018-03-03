@@ -6,7 +6,9 @@ Request Engines
 Python-Redmine has an extensible and customizable request engine system that allows to define
 how requests to Redmine are made. Basically a request engine is a Python class that inherits
 from :class:`redminelib.engines.BaseEngine` class and redefines a few methods to achieve the
-needed behaviour.
+needed behaviour. Engine can be set while configuring a ``redmine`` object, after it's set,
+there is nothing else to be done to use it, i.e. it will be used by Python-Redmine automatically
+while making requests to Redmine.
 
 Engines
 -------
