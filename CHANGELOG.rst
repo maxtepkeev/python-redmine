@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-2.1.0 (2018-01-XX)
+2.1.0 (2018-03-XX)
 ++++++++++++++++++
 
 **Improvements**:
@@ -19,6 +19,8 @@ Changelog
 - ``include`` param in ``get``, ``all`` and ``filter`` operations now accepts lists and tuples instead of
   comma-separated string which is still accepted for backward compatibility reasons, i.e. one can use
   ``include=['foo', 'bar']`` instead of ``include='foo,bar'``
+- It is now possible to use ``None`` and ``0`` in addition to ``''`` in ``assigned_to_id`` attribute in
+  Issue resource if an assignee needs to be removed from an issue
 
 **Changes**:
 

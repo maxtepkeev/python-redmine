@@ -427,6 +427,18 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         issue.version_id = 1
         self.assertEqual(issue.fixed_version.id, 1)
 
+    def test_issue_assigned_to_id_can_be_removed_via_none(self):
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        issue.assigned_to_id = None
+        self.assertEqual(issue.assigned_to_id, '')
+
+    def test_issue_assigned_to_id_can_be_removed_via_zero(self):
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        issue.assigned_to_id = 0
+        self.assertEqual(issue.assigned_to_id, '')
+
     def test_issue_is_new(self):
         issue = self.redmine.issue.new()
         self.assertEqual(int(issue), 0)
