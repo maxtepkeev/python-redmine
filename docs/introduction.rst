@@ -471,19 +471,56 @@ Methods
 
 :ref:`ResourceSet` object provides several helper methods:
 
-* **get()**. Returns a single resource from the :ref:`ResourceSet` by resource id:
+* **get()**
+
+  Returns a single resource from the :ref:`ResourceSet` by resource id:
 
   .. code-block:: python
 
      redmine.project.all().get(30404, None)  # Returns None if a Resource is not found
 
-* **filter()**. Returns a :ref:`ResourceSet` with requested resource ids:
+* **filter()**
+
+  .. versionchanged:: 2.1.0
+
+  Returns a :ref:`ResourceSet` object filtered on a requested :ref:`Resource` object's attributes values:
 
   .. code-block:: python
 
-     redmine.project.all().filter((30404, 30405, 30406, 30407))
+     redmine.project.all().filter(is_public=True, status=1)
 
-* **update()**. Updates fields of all resources in a resource set with given values and returns
+  It is also possible to follow resource relationships using a double underscore ``__``:
+
+  .. code-block:: python
+
+     redmine.issue.all().filter(author__id=1, status__name='New')
+
+  Finally it is possible to apply ``lookups`` to an attribute using a double underscore ``__``:
+
+  .. code-block:: python
+
+     redmine.issue.all().filter(status__name__in=('New', 'Closed'))
+
+  If a lookup isn't defined an ``exact`` lookup will be used. The following lookups are available:
+
+  * exact (exact match)
+  * in (in a given iterable)
+
+  Due to the fact that Redmine may return resources with different attributes, for example some resources
+  may and some may not have a ``version`` attribute defined, one should be very careful with correctly
+  applying filters. For example in a case of typo in one of the attribute names an empty :ref:`ResourceSet`
+  will be returned as there is no way for Python-Redmine to know whether it was a typo or there was just
+  really no resources that could satisfy the filtering conditions.
+
+  Also keep in mind that filtering a :ref:`ResourceSet` is implemented in Python-Redmine and not in the
+  Redmine itself. It is advised to apply all possible filters on the Redmine side first, i.e. using a
+  ``filter()`` method of a :ref:`ResourceManager <ResourceManager>` and then filter everything else
+  using a ``filter()`` method of a :ref:`ResourceSet` object. This strategy will ensure that filtering
+  is done in the fastest and most optimized way.
+
+* **update()**
+
+  Updates fields of all resources in a resource set with given values and returns
   an updated :ref:`ResourceSet` object, e.g., the following assigns issues of a project *vacation* with
   ids of *30404* and *30405* to the user with id of *547*:
 
@@ -496,7 +533,9 @@ Methods
      This method will also call ``pre_update()`` and ``post_update()`` methods for each :ref:`Resource` object
      in a :ref:`ResourceSet`.
 
-* **delete()**. Deletes all resources in a :ref:`ResourceSet`, e.g. the following deletes all issues from
+* **delete()**
+
+  Deletes all resources in a :ref:`ResourceSet`, e.g. the following deletes all issues from
   the *vacation* project:
 
   .. code-block:: python
@@ -508,7 +547,9 @@ Methods
      This method will also call ``pre_delete()`` and ``post_delete()`` methods for each :ref:`Resource` object
      in a :ref:`ResourceSet`.
 
-* **values()**. Returns an iterable of dictionaries rather than resource-instance objects. Each of those
+* **values()**
+
+  Returns an iterable of dictionaries rather than resource-instance objects. Each of those
   dictionaries represents a resource with the keys corresponding to the attribute names of resource objects.
   This example compares the dictionaries of ``values()`` with the normal resource objects:
 
@@ -531,11 +572,13 @@ Methods
      >>> list(redmine.issue_status.all(limit=1).values('id', 'name'))
      [{'id': 1, 'name': 'New'}]
 
-* **values_list()**. Returns an iterable of tuples rather than resource-instance objects. Each of those
-  tuples represents a resource without keys but with ordered values. This example compares the tuples
-  of ``values_list()`` with the normal resource objects:
+* **values_list()**
 
   .. versionadded:: 2.0.0
+
+  Returns an iterable of tuples rather than resource-instance objects. Each of those
+  tuples represents a resource without keys but with ordered values. This example compares the tuples
+  of ``values_list()`` with the normal resource objects:
 
   .. code-block:: python
 

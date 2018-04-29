@@ -104,12 +104,13 @@ class ResourceSetIndexError(BaseRedmineError):
         super(ResourceSetIndexError, self).__init__('Resource not available by requested index')
 
 
-class ResourceSetFilterParamError(BaseRedmineError):
+class ResourceSetFilterLookupError(BaseRedmineError):
     """
-    Resource set filter method expects to receive either a list or tuple.
+    Resource set filter method received an invalid lookup in one of the filters.
     """
-    def __init__(self):
-        super(ResourceSetFilterParamError, self).__init__('Method expects to receive either a list or tuple of ids')
+    def __init__(self, lookup, f):
+        super(ResourceSetFilterLookupError, self).__init__(
+            'Received an invalid lookup "{0}" in "{1}" filter'.format(lookup, f))
 
 
 class ResourceBadMethodError(BaseRedmineError):

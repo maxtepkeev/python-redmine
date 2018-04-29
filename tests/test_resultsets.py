@@ -93,10 +93,20 @@ class ResultSetTestCase(BaseRedmineTestCase):
         issues = self.redmine.issue.all().get(6)
         self.assertEqual(issues, None)
 
-    def test_filter_method(self):
-        issues = self.redmine.issue.all().filter((1, 3))
+    def test_filter_method_nonexistant_attributes(self):
+        issues = self.redmine.issue.all().filter(id=1, foo__exact=1)
+        self.assertEqual(len(issues), 0)
+
+    def test_filter_exact_lookup(self):
+        issues = self.redmine.issue.all().filter(id=1, tracker_id__exact=1)
+        self.assertEqual(issues[0].id, 1)
+        self.assertEqual(len(issues), 1)
+
+    def test_filter_in_lookup(self):
+        issues = self.redmine.issue.all().filter(id__in=(1, 3))
         self.assertEqual(issues[0].id, 1)
         self.assertEqual(issues[1].id, 3)
+        self.assertEqual(len(issues), 2)
 
     def test_update_method(self):
         issues = self.redmine.issue.all().update(subject='FooBar')
@@ -179,8 +189,17 @@ class ResultSetTestCase(BaseRedmineTestCase):
         self.response.status_code = 999
         self.assertRaises(exceptions.UnknownError, lambda: self.redmine.issue.all().export('foo'))
 
-    def test_filter_param_exception(self):
-        self.assertRaises(exceptions.ResourceSetFilterParamError, lambda: self.redmine.project.all().filter(1))
+    def test_filter_no_filters_exception(self):
+        self.assertRaises(exceptions.ResourceNoFiltersProvidedError, lambda: self.redmine.issue.all().filter())
+
+    def test_filter_lookup_exception(self):
+        self.assertRaises(exceptions.ResourceSetFilterLookupError, lambda: self.redmine.issue.all().filter(id__bar=1))
+
+    def test_filter_bad_lookup_class_definition(self):
+        from redminelib import lookups
+        type('Foo', (lookups.Lookup,), {'lookup_name': 'foo'})
+        self.assertRaises(NotImplementedError, lambda: self.redmine.issue.all().filter(id__foo=1))
+        del lookups.registry['foo']
 
     def test_index_error_exception(self):
         self.assertRaises(exceptions.ResourceSetIndexError, lambda: self.redmine.issue.all()[6])

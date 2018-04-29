@@ -1,11 +1,14 @@
 Changelog
 ---------
 
-2.1.0 (2018-03-XX)
+2.1.0 (2018-05-XX)
 ++++++++++++++++++
 
 **Improvements**:
 
+- ResourceSet's ``filter()`` method became more advanced. It is now possible to filter on all available
+  resource attributes, to follow resource relationships and apply lookups to the filters (see
+  `docs <https://python-redmine.com/introduction.html#methods>`__ for details)
 - Ability to upload file-like objects (`Issue #186 <https://github.com/maxtepkeev/python-redmine/issues/
   186>`__) (thanks to `hjpotter92 <https://github.com/hjpotter92>`__)
 - Support for retrieving project's time entry activities (see `docs <https://python-redmine.com/resources/

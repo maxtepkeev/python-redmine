@@ -2,9 +2,11 @@
 Defines ResourceSet objects that can be used to represent a set of resources.
 """
 
+import operator
+import functools
 import itertools
 
-from . import utilities, exceptions
+from . import lookups, utilities, exceptions
 
 
 class BaseResourceSet(object):
@@ -23,7 +25,6 @@ class BaseResourceSet(object):
         self.manager = manager
         self.limit = limit
         self.offset = offset
-        self.resource_id_key = manager.resource_class.internal_id_key
         self._resources = resources
         self._total_count = total_count
         self._is_sliced = False
@@ -151,23 +152,55 @@ class ResourceSet(BaseResourceSet):
         :param none default: (optional). What to return if Resource wasn't found.
         """
         for resource in super(ResourceSet, self).__iter__():
-            if resource_id == resource[self.resource_id_key]:
+            if resource_id == resource[self.manager.resource_class.internal_id_key]:
                 return self.manager.to_resource(resource)
 
         return default
 
-    def filter(self, resource_ids):
+    def filter(self, **filters):
         """
-        Returns a ResourceSet with requested resource ids.
+        Returns a new filtered ResourceSet with requested filters applied.
 
-        :param resource_ids: (required). Resource ids.
-        :type resource_ids: list or tuple
+        :param dict filters: (required). Filters used for resources retrieval.
         """
-        if not isinstance(resource_ids, (list, tuple)):
-            raise exceptions.ResourceSetFilterParamError
+        if not filters:
+            raise exceptions.ResourceNoFiltersProvidedError
 
-        return self._resource_cls(ResourceSet, [resource for resource in super(
-            ResourceSet, self).__iter__() if resource[self.resource_id_key] in resource_ids])
+        reducers = []
+
+        for f in filters:
+            fields = f.split('__')
+            lookup = fields[-1]
+
+            reducer = {
+                'fields': fields,
+                'value': filters[f],
+                'lookup': lookups.registry['exact'],
+                'lookup_name': lookup,
+                'filter_name': f,
+            }
+
+            if lookup in lookups.registry:
+                reducer['fields'] = fields[:-1]
+                reducer['lookup'] = lookups.registry[lookup]
+
+            reducers.append(reducer)
+
+        resources = []
+
+        for resource in super(ResourceSet, self).__iter__():
+            for r in reducers:
+                try:
+                    if not r['lookup'](functools.reduce(operator.getitem, r['fields'], resource), r['value']):
+                        break
+                except KeyError:
+                    break
+                except TypeError:
+                    raise exceptions.ResourceSetFilterLookupError(r['lookup_name'], r['filter_name'])
+            else:
+                resources.append(resource)
+
+        return self._resource_cls(ResourceSet, resources)
 
     def update(self, **fields):
         """
