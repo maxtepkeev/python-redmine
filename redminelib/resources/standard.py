@@ -7,7 +7,7 @@ from __future__ import unicode_literals
 from distutils.version import LooseVersion
 
 from . import BaseResource
-from .. import exceptions
+from .. import managers, exceptions
 
 
 class Project(BaseResource):
@@ -246,6 +246,7 @@ class WikiPage(BaseResource):
     query_delete = '/projects/{project_id}/wiki/{0}.json'
     search_hints = ['wiki-page']
     http_method_create = 'put'
+    manager_class = managers.WikiPageManager
 
     _repr = [['title']]
     _includes = ['attachments']

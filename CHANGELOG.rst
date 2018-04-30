@@ -9,6 +9,15 @@ Changelog
 - ResourceSet's ``filter()`` method became more advanced. It is now possible to filter on all available
   resource attributes, to follow resource relationships and apply lookups to the filters (see
   `docs <https://python-redmine.com/introduction.html#methods>`__ for details)
+- ResourceManager class has been refactored:
+
+  * ``manager_class`` attribute on the ``Resource`` class can now be used to assign a separate
+    ``ResourceManager`` to a resource, that allows outsourcing a resource specific functionality to a
+    separate manager class (see ``WikiPageManager`` as an example)
+  * ``request()`` method has been removed
+  * ``_construct_*_url()``, ``_prepare_*_request()``, ``_process_*_response()`` methods have been added
+    for create, update and delete methods to allow a fine-grained control over these operations
+
 - Ability to upload file-like objects (`Issue #186 <https://github.com/maxtepkeev/python-redmine/issues/
   186>`__) (thanks to `hjpotter92 <https://github.com/hjpotter92>`__)
 - Support for retrieving project's time entry activities (see `docs <https://python-redmine.com/resources/

@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 
 from datetime import date, datetime
 
-from .. import utilities, exceptions
+from .. import managers, utilities, exceptions
 
 
 registry = {}
@@ -100,6 +100,7 @@ class BaseResource(utilities.with_metaclass(Registrar)):
     http_method_create = 'post'
     http_method_update = 'put'
     http_method_delete = 'delete'
+    manager_class = managers.ResourceManager
 
     _repr = [['id', 'name']]
     _includes = []

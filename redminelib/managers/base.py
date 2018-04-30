@@ -1,57 +1,24 @@
 """
-Defines manager classes.
+Defines base Redmine resource manager class and it's infrastructure.
 """
 
-from distutils.version import LooseVersion
-
-from . import utilities, resources, resultsets, exceptions
+from .. import utilities, resultsets, exceptions
 
 
 class ResourceManager(object):
     """
-    Manages Redmine resource defined by the resource_name with the help of redmine object.
+    Manages given Redmine resource class with the help of redmine object.
     """
-    def __init__(self, redmine, resource_name, **params):
+    def __init__(self, redmine, resource_class):
         """
         :param redmine.Redmine redmine: (required). Redmine object.
-        :param string resource_name: (required). Resource name.
-        :param dict params: (optional). Parameters used for resources retrieval.
+        :param resources.BaseResource resource_class: (required). Resource class.
         """
-        resource_name = ''.join(word[0].upper() + word[1:] for word in str(resource_name).split('_'))
-
-        try:
-            resource_class = resources.registry[resource_name]['class']
-        except KeyError:
-            raise exceptions.ResourceError
-
-        if redmine.ver is not None and LooseVersion(str(redmine.ver)) < LooseVersion(resource_class.redmine_version):
-            raise exceptions.ResourceVersionMismatchError
-
         self.url = ''
+        self.params = {}
         self.container = None
-        self.params = params
         self.redmine = redmine
         self.resource_class = resource_class
-
-    def request(self, is_bulk, **params):
-        """
-        Makes request(s) and additionally checks for resource specific stuff.
-
-        :param bool is_bulk: (required). Whether this is a bulk or single request.
-        :param dict params: (optional). Parameters used for resource retrieval.
-        """
-        try:
-            if not is_bulk:
-                return self.redmine.engine.request('get', self.url, params=params)[self.container]
-            else:
-                return self.redmine.engine.bulk_request('get', self.url, self.container, **self.params)
-        except exceptions.ResourceNotFoundError as e:
-            # This is the only place we're checking for ResourceRequirementsError
-            # because for some POST/PUT/DELETE requests Redmine may also return 404
-            # status code instead of 405 which can lead us to improper decisions
-            if self.resource_class.requirements:
-                raise exceptions.ResourceRequirementsError(self.resource_class.requirements)
-            raise e
 
     def to_resource(self, resource):
         """
@@ -83,7 +50,9 @@ class ResourceManager(object):
         :param string resource_name: (required). Resource name.
         :param dict params: (optional). Parameters used for resources retrieval.
         """
-        return ResourceManager(self.redmine, resource_name, **params)
+        manager = getattr(self.redmine, resource_name)
+        manager.params = params
+        return manager
 
     def get(self, resource_id, **params):
         """
@@ -109,7 +78,13 @@ class ResourceManager(object):
 
         self.params = self.resource_class.bulk_decode(params, self)
         self.container = self.resource_class.container_one
-        return self.to_resource(self.request(False, **self.params))
+
+        try:
+            return self.to_resource(self.redmine.engine.request('get', self.url, params=self.params)[self.container])
+        except exceptions.ResourceNotFoundError as e:
+            if self.resource_class.requirements:
+                raise exceptions.ResourceRequirementsError(self.resource_class.requirements)
+            raise e
 
     def all(self, **params):
         """
@@ -146,6 +121,22 @@ class ResourceManager(object):
         self.params = self.resource_class.bulk_decode(filters, self)
         return resultsets.ResourceSet(self)
 
+    def _construct_create_url(self, path):
+        """
+        Constructs URL for create method.
+
+        :param string path: absolute URL path.
+        """
+        return self.redmine.url + path
+
+    def _prepare_create_request(self, request):
+        """
+        Makes the necessary preparations for create request data.
+
+        :param dict request: Request data.
+        """
+        return {self.container: self.resource_class.bulk_decode(request, self)}
+
     def create(self, **fields):
         """
         Creates a new resource in Redmine and returns created Resource object on success.
@@ -161,22 +152,42 @@ class ResourceManager(object):
         formatter = utilities.MemorizeFormatter()
 
         try:
-            url = self.redmine.url + formatter.format(self.resource_class.query_create, **fields)
-        except KeyError as exception:
-            raise exceptions.ValidationError('{0} field is required'.format(exception))
-
-        self.container = self.resource_class.container_create
-        data = {self.resource_class.container_create: self.resource_class.bulk_decode(formatter.unused_kwargs, self)}
-        response = self.redmine.engine.request(self.resource_class.http_method_create, url, data=data)
-
-        try:
-            resource = self.to_resource(response[self.container])
-        except TypeError:
-            raise exceptions.ValidationError('Resource already exists')  # fix for repeated PUT requests (issue #182)
+            url = self._construct_create_url(formatter.format(self.resource_class.query_create, **fields))
+        except KeyError as e:
+            raise exceptions.ValidationError('{0} field is required'.format(e))
 
         self.params = formatter.used_kwargs
+        self.container = self.resource_class.container_create
+        request = self._prepare_create_request(formatter.unused_kwargs)
+        response = self.redmine.engine.request(self.resource_class.http_method_create, url, data=request)
+        resource = self._process_create_response(request, response)
         self.url = self.redmine.url + self.resource_class.query_one.format(resource.internal_id, **fields)
         return resource
+
+    def _process_create_response(self, request, response):
+        """
+        Processes create response and constructs resource object.
+
+        :param dict request: Original request data.
+        :param any response: Response received from Redmine for this request data.
+        """
+        return self.to_resource(response[self.container])
+
+    def _construct_update_url(self, path):
+        """
+        Constructs URL for update method.
+
+        :param string path: absolute URL path.
+        """
+        return self.redmine.url + path
+
+    def _prepare_update_request(self, request):
+        """
+        Makes the necessary preparations for update request data.
+
+        :param dict request: Request data.
+        """
+        return {self.resource_class.container_update: self.resource_class.bulk_decode(request, self)}
 
     def update(self, resource_id, **fields):
         """
@@ -184,7 +195,7 @@ class ResourceManager(object):
 
         :param resource_id: (required). Resource id.
         :type resource_id: int or string
-        :param dict fields: (optional). Fields which will be updated for the resource.
+        :param dict fields: (optional). Fields that will be updated for the resource.
         """
         if self.resource_class.query_update is None or self.resource_class.container_update is None:
             raise exceptions.ResourceBadMethodError
@@ -196,18 +207,44 @@ class ResourceManager(object):
 
         try:
             query_update = formatter.format(self.resource_class.query_update, resource_id, **fields)
-        except KeyError as exception:
-            param = exception.args[0]
+        except KeyError as e:
+            param = e.args[0]
 
             if param in self.params:
                 fields[param] = self.params[param]
                 query_update = formatter.format(self.resource_class.query_update, resource_id, **fields)
             else:
-                raise exceptions.ValidationError('{0} argument is required'.format(exception))
+                raise exceptions.ValidationError('{0} argument is required'.format(e))
 
-        url = self.redmine.url + query_update
-        data = {self.resource_class.container_update: self.resource_class.bulk_decode(formatter.unused_kwargs, self)}
-        return self.redmine.engine.request(self.resource_class.http_method_update, url, data=data)
+        url = self._construct_update_url(query_update)
+        request = self._prepare_update_request(formatter.unused_kwargs)
+        response = self.redmine.engine.request(self.resource_class.http_method_update, url, data=request)
+        return self._process_update_response(request, response)
+
+    def _process_update_response(self, request, response):
+        """
+        Processes update response.
+
+        :param dict request: Original request data.
+        :param any response: Response received from Redmine for this request data.
+        """
+        return response
+
+    def _construct_delete_url(self, path):
+        """
+        Constructs URL for delete method.
+
+        :param string path: absolute URL path.
+        """
+        return self.redmine.url + path
+
+    def _prepare_delete_request(self, request):
+        """
+        Makes the necessary preparations for delete request data.
+
+        :param dict request: Request data.
+        """
+        return self.resource_class.bulk_decode(request, self)
 
     def delete(self, resource_id, **params):
         """
@@ -221,12 +258,22 @@ class ResourceManager(object):
             raise exceptions.ResourceBadMethodError
 
         try:
-            url = self.redmine.url + self.resource_class.query_delete.format(resource_id, **params)
-        except KeyError as exception:
-            raise exceptions.ValidationError('{0} argument is required'.format(exception))
+            url = self._construct_delete_url(self.resource_class.query_delete.format(resource_id, **params))
+        except KeyError as e:
+            raise exceptions.ValidationError('{0} argument is required'.format(e))
 
-        return self.redmine.engine.request(
-            self.resource_class.http_method_delete, url, params=self.resource_class.bulk_decode(params, self))
+        request = self._prepare_delete_request(params)
+        response = self.redmine.engine.request(self.resource_class.http_method_delete, url, params=request)
+        return self._process_delete_response(request, response)
+
+    def _process_delete_response(self, request, response):
+        """
+        Processes delete response.
+
+        :param dict request: Original request data.
+        :param any response: Response received from Redmine for this request data.
+        """
+        return response
 
     def search(self, query, **options):
         """
@@ -246,5 +293,5 @@ class ResourceManager(object):
         """
         Official representation of a ResourceManager object.
         """
-        return '<{0}.{1} object for {2} resource>'.format(
-            self.__class__.__module__, self.__class__.__name__, self.resource_class.__name__)
+        return '<redminelib.managers.{0} object for {1} resource>'.format(
+            self.__class__.__name__, self.resource_class.__name__)

@@ -53,7 +53,17 @@ class Redmine(object):
         if resource_name.startswith('_'):
             raise AttributeError
 
-        return managers.ResourceManager(self, resource_name)
+        resource_name = ''.join(word[0].upper() + word[1:] for word in str(resource_name).split('_'))
+
+        try:
+            resource_class = resources.registry[resource_name]['class']
+        except KeyError:
+            raise exceptions.ResourceError
+
+        if self.ver is not None and LooseVersion(str(self.ver)) < LooseVersion(resource_class.redmine_version):
+            raise exceptions.ResourceVersionMismatchError
+
+        return resource_class.manager_class(self, resource_class)
 
     @contextlib.contextmanager
     def session(self, **options):

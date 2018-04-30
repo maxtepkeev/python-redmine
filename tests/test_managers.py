@@ -229,11 +229,13 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
     def test_reraises_not_found_exception(self):
         self.response.status_code = 404
         self.assertRaises(exceptions.ResourceNotFoundError, lambda: self.redmine.project.get('non-existent-project'))
+        self.assertRaises(exceptions.ResourceNotFoundError, lambda: list(self.redmine.project.all()))
 
     def test_resource_requirements_exception(self):
         FooResource.requirements = ('foo plugin', ('bar plugin', '1.2.3'),)
         self.response.status_code = 404
         self.assertRaises(exceptions.ResourceRequirementsError, lambda: self.redmine.foo_resource.get(1))
+        self.assertRaises(exceptions.ResourceRequirementsError, lambda: list(self.redmine.foo_resource.all()))
 
     def test_search(self):
         self.response.json.return_value = {'total_count': 1, 'offset': 0, 'limit': 0, 'results': [

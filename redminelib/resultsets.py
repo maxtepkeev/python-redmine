@@ -105,7 +105,15 @@ class BaseResourceSet(object):
         if self._resources is None:
             self.manager.params.setdefault('limit', self.limit)
             self.manager.params.setdefault('offset', self.offset)
-            self._resources, self._total_count = self.manager.request(True)
+
+            try:
+                self._resources, self._total_count = self.manager.redmine.engine.bulk_request(
+                    'get', self.manager.url, self.manager.container, **self.manager.params)
+            except exceptions.ResourceNotFoundError as e:
+                if self.manager.resource_class.requirements:
+                    raise exceptions.ResourceRequirementsError(self.manager.resource_class.requirements)
+                raise e
+
             resources = self._resources
         # Otherwise ResourceSet object should handle slicing by itself
         elif self._is_sliced:
