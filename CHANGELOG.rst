@@ -36,6 +36,8 @@ Changelog
   over the uploading process if needed
 - Removed ``resource_paths`` argument from Redmine object since ``ResourceManager`` now uses a special resource
   registry, to which, all resources that inherit from any Python-Redmine resource are being automatically added
+- Removed ``container_many`` in favor of ``container_filter``, ``container_create`` and ``container_update``
+  attributes on ``Resource`` object to allow more fine-grained resource setup
 
 **Bugfixes**:
 

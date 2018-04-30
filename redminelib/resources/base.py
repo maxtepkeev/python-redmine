@@ -83,8 +83,11 @@ class BaseResource(utilities.with_metaclass(Registrar)):
     internal_id_key = 'id'
     redmine_version = None
     requirements = []
-    container_many = None
+    container_all = None
     container_one = None
+    container_filter = None
+    container_create = None
+    container_update = None
     query_all_export = None
     query_one_export = None
     query_all = None

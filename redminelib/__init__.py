@@ -164,10 +164,12 @@ class Redmine(object):
 
         for name, details in resources.registry.items():
             if details['class'].search_hints is not None:
-                for hint in details['class'].search_hints:
-                    container_map[hint] = details['class'].container_many
+                container = details['class'].container_all or details['class'].container_filter
 
-                manager_map[details['class'].container_many] = getattr(self, name)
+                for hint in details['class'].search_hints:
+                    container_map[hint] = container
+
+                manager_map[container] = getattr(self, name)
 
         raw_resources, _ = self.engine.bulk_request('get', '{0}/search.json'.format(self.url), 'results', **options)
 

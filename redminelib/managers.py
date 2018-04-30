@@ -117,12 +117,12 @@ class ResourceManager(object):
 
         :param dict params: (optional). Parameters used for resources retrieval.
         """
-        if self.resource_class.query_all is None or self.resource_class.container_many is None:
+        if self.resource_class.query_all is None or self.resource_class.container_all is None:
             raise exceptions.ResourceBadMethodError
 
         self.url = self.redmine.url + self.resource_class.query_all
         self.params = self.resource_class.bulk_decode(params, self)
-        self.container = self.resource_class.container_many
+        self.container = self.resource_class.container_all
         return resultsets.ResourceSet(self)
 
     def filter(self, **filters):
@@ -131,7 +131,7 @@ class ResourceManager(object):
 
         :param dict filters: (optional). Filters used for resources retrieval.
         """
-        if self.resource_class.query_filter is None or self.resource_class.container_many is None:
+        if self.resource_class.query_filter is None or self.resource_class.container_filter is None:
             raise exceptions.ResourceBadMethodError
 
         if not filters:
@@ -139,7 +139,7 @@ class ResourceManager(object):
 
         try:
             self.url = self.redmine.url + self.resource_class.query_filter.format(**filters)
-            self.container = self.resource_class.container_many.format(**filters)
+            self.container = self.resource_class.container_filter.format(**filters)
         except KeyError:
             raise exceptions.ResourceFilterError
 
@@ -152,7 +152,7 @@ class ResourceManager(object):
 
         :param dict fields: (optional). Fields used for resource creation.
         """
-        if self.resource_class.query_create is None or self.resource_class.container_one is None:
+        if self.resource_class.query_create is None or self.resource_class.container_create is None:
             raise exceptions.ResourceBadMethodError
 
         if not fields:
@@ -165,8 +165,8 @@ class ResourceManager(object):
         except KeyError as exception:
             raise exceptions.ValidationError('{0} field is required'.format(exception))
 
-        self.container = self.resource_class.container_one
-        data = {self.resource_class.container_one: self.resource_class.bulk_decode(formatter.unused_kwargs, self)}
+        self.container = self.resource_class.container_create
+        data = {self.resource_class.container_create: self.resource_class.bulk_decode(formatter.unused_kwargs, self)}
         response = self.redmine.engine.request(self.resource_class.http_method_create, url, data=data)
 
         try:
@@ -186,7 +186,7 @@ class ResourceManager(object):
         :type resource_id: int or string
         :param dict fields: (optional). Fields which will be updated for the resource.
         """
-        if self.resource_class.query_update is None or self.resource_class.container_one is None:
+        if self.resource_class.query_update is None or self.resource_class.container_update is None:
             raise exceptions.ResourceBadMethodError
 
         if not fields:
@@ -206,7 +206,7 @@ class ResourceManager(object):
                 raise exceptions.ValidationError('{0} argument is required'.format(exception))
 
         url = self.redmine.url + query_update
-        data = {self.resource_class.container_one: self.resource_class.bulk_decode(formatter.unused_kwargs, self)}
+        data = {self.resource_class.container_update: self.resource_class.bulk_decode(formatter.unused_kwargs, self)}
         return self.redmine.engine.request(self.resource_class.http_method_update, url, data=data)
 
     def delete(self, resource_id, **params):
@@ -235,11 +235,12 @@ class ResourceManager(object):
         :param string query: (required). What to search.
         :param dict options: (optional). Dictionary of search options.
         """
-        if self.resource_class.search_hints is None or self.resource_class.container_many is None:
+        if self.resource_class.search_hints is None:
             raise exceptions.ResourceBadMethodError
 
-        results = self.redmine.search(query, **dict(resources=[self.resource_class.container_many], **options))
-        return results.get(self.resource_class.container_many) if results is not None else results
+        container = self.resource_class.container_all or self.resource_class.container_filter
+        results = self.redmine.search(query, **dict(resources=[container], **options))
+        return results.get(container) if results is not None else results
 
     def __repr__(self):
         """
