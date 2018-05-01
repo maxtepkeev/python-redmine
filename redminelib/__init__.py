@@ -30,6 +30,7 @@ class Redmine(object):
         :param raise_attr_exception: (optional). Control over resource attribute access exception raising.
         :type raise_attr_exception: bool or tuple
         :param cls engine: (optional). Engine that will be used to make requests to Redmine.
+        :param bool return_raw_response (optional). Whether engine should return raw or json encoded responses.
         """
         self.url = url.rstrip('/')
         self.ver = kwargs.get('version', None)
@@ -123,7 +124,8 @@ class Redmine(object):
         :param string filename: (optional). Name that will be used for the file.
         :param dict params: (optional). Params to send in the query string.
         """
-        response = self.engine.request('get', url, params=dict(params or {}, **{'stream': True}), return_raw=True)
+        with self.session(return_raw_response=True):
+            response = self.engine.request('get', url, params=dict(params or {}, **{'stream': True}))
 
         # If a savepath wasn't provided we return a response directly
         # so a user can have maximum control over response data

@@ -17,7 +17,9 @@ class BaseEngine(object):
         :param string password: (optional). Password used for authentication.
         :param dict requests: (optional). Connection options.
         :param string impersonate: (optional). Username to impersonate.
+        :param bool return_raw_response (optional). Whether to return raw or json encoded responses.
         """
+        self.return_raw_response = options.pop('return_raw_response', False)
         self.requests = dict(dict(headers={}, params={}, data={}), **options.get('requests', {}))
 
         if options.get('impersonate') is not None:
@@ -59,7 +61,7 @@ class BaseEngine(object):
 
         return kwargs
 
-    def request(self, method, url, headers=None, params=None, data=None, return_raw=False):
+    def request(self, method, url, headers=None, params=None, data=None):
         """
         Makes a single request to Redmine and returns processed response.
 
@@ -69,10 +71,9 @@ class BaseEngine(object):
         :param dict params: (optional). Params to send in the query string.
         :param data: (optional). Data to send in the body of the request.
         :type data: dict, bytes or file-like object
-        :param bool return_raw: (optional). Whether to return raw or json encoded response.
         """
         kwargs = self.construct_request_kwargs(method, headers, params, data)
-        return self.process_response(self.session.request(method, url, **kwargs), return_raw)
+        return self.process_response(self.session.request(method, url, **kwargs))
 
     def bulk_request(self, method, url, container, **params):
         """
@@ -125,13 +126,11 @@ class BaseEngine(object):
         """
         raise NotImplementedError
 
-    @staticmethod
-    def process_response(response, return_raw=False):
+    def process_response(self, response):
         """
         Processes response received from Redmine.
 
         :param obj response: (required). Response object with response details.
-        :param bool return_raw: (optional). Whether to return raw or json encoded response.
         """
         if response.history:
             r = response.history[0]
@@ -141,7 +140,7 @@ class BaseEngine(object):
         status_code = response.status_code
 
         if status_code in (200, 201, 204):
-            if return_raw:
+            if self.return_raw_response:
                 return response
             elif not response.content.strip():
                 return True

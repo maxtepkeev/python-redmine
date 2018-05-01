@@ -47,6 +47,8 @@ Changelog
   registry, to which, all resources that inherit from any Python-Redmine resource are being automatically added
 - Removed ``container_many`` in favor of ``container_filter``, ``container_create`` and ``container_update``
   attributes on ``Resource`` object to allow more fine-grained resource setup
+- ``return_raw`` parameter on ``engine.request()`` and ``engine.process_response()`` methods has been removed
+  in favor of ``return_raw_response`` attribute on engine object
 
 **Bugfixes**:
 
