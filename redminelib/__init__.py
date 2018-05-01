@@ -124,8 +124,8 @@ class Redmine(object):
         :param string filename: (optional). Name that will be used for the file.
         :param dict params: (optional). Params to send in the query string.
         """
-        with self.session(return_raw_response=True):
-            response = self.engine.request('get', url, params=dict(params or {}, **{'stream': True}))
+        with self.session(requests={'stream': True}, return_raw_response=True):
+            response = self.engine.request('get', url, params=params or {})
 
         # If a savepath wasn't provided we return a response directly
         # so a user can have maximum control over response data

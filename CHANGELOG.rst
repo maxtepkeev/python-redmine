@@ -58,6 +58,7 @@ Changelog
   resource that already exists (`Issue #182 <https://github.com/maxtepkeev/python-redmine/issues/182>`__)
 - Enumeration, Version, Group and Notes ``custom_fields`` attribute was returned as a list of dicts instead
   of being converted to ``ResourceSet`` object
+- Downloads were downloaded fully into memory instead of being streamed as needed
 - ``ResourceRequirementsError`` exception was broken since v2.0.0
 - RedmineUP CRM Contact and Deal resources sometimes weren't converted to Resource objects using Search API
 
