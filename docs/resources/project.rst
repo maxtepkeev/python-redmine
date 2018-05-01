@@ -141,6 +141,7 @@ get
    * issue_categories
    * versions
    * news
+   * files
    * issues
    * time_entries
    * deals (requires Pro Edition and `CRM plugin <https://www.redmineup.com/pages/plugins/crm>`_)

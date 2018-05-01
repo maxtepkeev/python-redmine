@@ -43,7 +43,7 @@ new
 
    Creates new empty ProjectMembership resource but saves it to the Redmine only when ``save()`` is
    called, also calls ``pre_create()`` and ``post_create()`` methods of the :ref:`Resource` object.
-   Valid attributes are the same as for ``create()`` method above.bove.
+   Valid attributes are the same as for ``create()`` method above.
 
    :return: :ref:`Resource` object
 

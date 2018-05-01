@@ -17,7 +17,7 @@ create
 ++++++
 
 .. py:method:: create(**fields)
-   :module: redminelib.managers.ResourceManager
+   :module: redminelib.managers.WikiPageManager
    :noindex:
 
    Creates new WikiPage resource with given fields and saves it to the Redmine.
@@ -58,7 +58,7 @@ new
 +++
 
 .. py:method:: new()
-   :module: redminelib.managers.ResourceManager
+   :module: redminelib.managers.WikiPageManager
    :noindex:
 
    Creates new empty WikiPage resource but saves it to the Redmine only when ``save()`` is called, also
@@ -86,7 +86,7 @@ get
 +++
 
 .. py:method:: get(resource_id, **params)
-   :module: redminelib.managers.ResourceManager
+   :module: redminelib.managers.WikiPageManager
    :noindex:
 
    Returns single WikiPage resource from Redmine by it's title.
@@ -134,7 +134,7 @@ filter
 ++++++
 
 .. py:method:: filter(**filters)
-   :module: redminelib.managers.ResourceManager
+   :module: redminelib.managers.WikiPageManager
    :noindex:
 
    Returns WikiPage resources that match the given lookup parameters.
@@ -168,7 +168,7 @@ update
 ++++++
 
 .. py:method:: update(resource_id, **fields)
-   :module: redminelib.managers.ResourceManager
+   :module: redminelib.managers.WikiPageManager
    :noindex:
 
    Updates values of given fields of a WikiPage resource and saves them to the Redmine.
@@ -250,7 +250,7 @@ delete
 ++++++
 
 .. py:method:: delete(resource_id, **params)
-   :module: redminelib.managers.ResourceManager
+   :module: redminelib.managers.WikiPageManager
    :noindex:
 
    Deletes single WikiPage resource from Redmine by it's title.

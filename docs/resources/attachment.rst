@@ -141,7 +141,7 @@ delete
 
    Deletes single Attachment resource from Redmine by it's id.
 
-   :param int resource_id: (required). Version id.
+   :param int resource_id: (required). Attachment id.
    :return: True
 
 .. code-block:: python
@@ -166,4 +166,4 @@ delete
 Export
 ------
 
-Not supported by Redmine
+Export functionality doesn't make sense for attachments as they can be downloaded

@@ -144,7 +144,7 @@ filter
 
    :param project_id: (optional). Get files from the project with given id.
    :type project_id: int or string
-   :return: ResourceSet object
+   :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 

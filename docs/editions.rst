@@ -208,6 +208,19 @@ between these editions:
        <td class="implemented">YES</td>
      </tr>
      <tr>
+       <td class="group" colspan="3">Lookups</td>
+     </tr>
+     <tr>
+       <td class="feature">Exact</td>
+       <td class="implemented">YES</td>
+       <td class="implemented">YES</td>
+     </tr>
+     <tr>
+       <td class="feature">In</td>
+       <td class="implemented">YES</td>
+       <td class="implemented">YES</td>
+     </tr>
+     <tr>
        <td class="group" colspan="3">Advanced features</td>
      </tr>
      <tr>

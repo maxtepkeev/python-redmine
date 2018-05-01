@@ -54,7 +54,7 @@ new
 
    Creates new empty TimeEntry resource but saves it to the Redmine only when ``save()`` is called, also
    calls ``pre_create()`` and ``post_create()`` methods of the :ref:`Resource` object. Valid attributes
-   are the same as for ``create()`` method above.bove.
+   are the same as for ``create()`` method above.
 
    :return: :ref:`Resource` object
 
@@ -131,7 +131,7 @@ filter
    :param string hours: (optional). Get only time entries that are =, >=, <= hours.
    :param int limit: (optional). How much resources to return.
    :param int offset: (optional). Starting from what resource to return the other resources.
-   :return: ResourceSet object
+   :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
