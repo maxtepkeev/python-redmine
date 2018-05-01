@@ -4,6 +4,10 @@ Changelog
 2.1.0 (2018-05-XX)
 ++++++++++++++++++
 
+**New Features**:
+
+- Files API support (`Issue #117 <https://github.com/maxtepkeev/python-redmine/issues/117>`__)
+
 **Improvements**:
 
 - ResourceSet's ``filter()`` method became more advanced. It is now possible to filter on all available

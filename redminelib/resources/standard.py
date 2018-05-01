@@ -26,7 +26,8 @@ class Project(BaseResource):
 
     _repr = [['id', 'name'], ['title']]
     _includes = ['trackers', 'issue_categories', 'enabled_modules', 'time_entry_activities']
-    _relations = ['wiki_pages', 'memberships', 'issue_categories', 'time_entries', 'versions', 'news', 'issues']
+    _relations = ['wiki_pages', 'memberships', 'issue_categories', 'time_entries', 'versions',
+                  'news', 'issues', 'files']
     _unconvertible = BaseResource._unconvertible + ['identifier', 'status']
     _update_readonly = BaseResource._update_readonly + ['identifier']
     _resource_set_map = {
@@ -39,6 +40,7 @@ class Project(BaseResource):
         'versions': 'Version',
         'news': 'News',
         'issues': 'Issue',
+        'files': 'File',
     }
     _single_attr_id_map = {'parent_id': 'parent'}
     _multiple_attr_id_map = {'tracker_ids': 'trackers'}
@@ -221,6 +223,24 @@ class Attachment(BaseResource):
 
     def download(self, savepath=None, filename=None):
         return self.manager.redmine.download(self.content_url, savepath, filename)
+
+
+class File(Attachment):
+    redmine_version = '3.4'
+    container_filter = 'files'
+    container_create = 'file'
+    query_filter = '/projects/{project_id}/files.json'
+    query_create = '/projects/{project_id}/files.json'
+    manager_class = managers.FileManager
+
+    _resource_map = {'author': 'User', 'version': 'Version'}
+
+    @classmethod
+    def decode(cls, attr, value, manager):
+        if attr == 'path':
+            return 'token', manager.redmine.upload(value)['token']
+
+        return super(File, cls).decode(attr, value, manager)
 
 
 class IssueJournal(BaseResource):

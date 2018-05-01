@@ -244,6 +244,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertIsInstance(project.versions, resultsets.ResourceSet)
         self.assertIsInstance(project.news, resultsets.ResourceSet)
         self.assertIsInstance(project.issues, resultsets.ResourceSet)
+        self.assertIsInstance(project.files, resultsets.ResourceSet)
 
     def test_project_includes(self):
         response_includes = responses['project']['get']
@@ -618,6 +619,80 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = response
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
         self.assertEqual(self.redmine.attachment.get(1).download('/some/path'), '/some/path/bar.txt')
+
+    def test_file_version(self):
+        self.assertEqual(self.redmine.file.resource_class.redmine_version, '3.4')
+
+    def test_file_get(self):
+        self.response.json.return_value = responses['attachment']['get']
+        f = self.redmine.file.get(1)
+        self.assertEqual(f.id, 1)
+        self.assertEqual(f.filename, 'foo.jpg')
+
+    def test_file_filter(self):
+        self.response.json.return_value = responses['file']['filter']
+        files = self.redmine.file.filter(project_id=1)
+        self.assertEqual(files[0].id, 1)
+        self.assertEqual(files[0].filename, 'foo.jpg')
+        self.assertEqual(files[1].id, 2)
+        self.assertEqual(files[1].filename, 'bar.jpg')
+
+    @mock.patch('os.path.isfile', mock.Mock())
+    @mock.patch('os.path.getsize', mock.Mock())
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
+    def test_file_create(self):
+        self.set_patch_side_effect([
+            mock.Mock(status_code=201, history=[], **{'json.return_value': {'upload': {'id': 1, 'token': '1.1234'}}}),
+            mock.Mock(status_code=200, history=[], content='')
+        ])
+        f = self.redmine.file.create(project_id=1, filename='foo.jpg', path='foo', return_complete=False)
+        self.assertEqual(f.id, 1)
+        self.assertRaises(exceptions.ResourceAttrError, lambda: f.filename)
+
+    def test_file_update(self):
+        self.response.json.return_value = responses['attachment']['get']
+        f = self.redmine.file.get(1)
+        f.filename = 'bar.jpg'
+        self.assertIsInstance(f.save(), resources.File)
+
+    def test_file_delete(self):
+        self.response.json.return_value = responses['attachment']['get']
+        f = self.redmine.file.get(1)
+        self.response.content = ''
+        self.assertEqual(f.delete(), True)
+        self.assertEqual(self.redmine.file.delete(1), True)
+
+    def test_file_custom_str(self):
+        self.response.json.return_value = responses['attachment']['get']
+        self.assertEqual(str(self.redmine.file.get(1)), 'foo.jpg')
+
+    def test_file_custom_str_without_filename(self):
+        self.response.json.return_value = responses['attachment']['get']
+        f = self.redmine.file.get(1)
+        del f['_decoded_attrs']['filename']
+        self.assertEqual(str(f), '1')
+
+    def test_file_custom_repr(self):
+        self.response.json.return_value = responses['attachment']['get']
+        self.assertEqual(repr(self.redmine.file.get(1)), '<redminelib.resources.File #1 "foo.jpg">')
+
+    def test_file_custom_repr_without_subject(self):
+        self.response.json.return_value = responses['attachment']['get']
+        f = self.redmine.file.get(1)
+        del f['_decoded_attrs']['filename']
+        self.assertEqual(repr(f), '<redminelib.resources.File #1>')
+
+    def test_file_url(self):
+        self.response.json.return_value = responses['attachment']['get']
+        self.assertEqual(self.redmine.file.get(1).url, '{0}/attachments/1'.format(self.url))
+
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
+    def test_file_download(self):
+        response = responses['attachment']['get']
+        response['attachment']['content_url'] = 'http://foo/bar.txt'
+        self.response.json.return_value = response
+        self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
+        self.assertEqual(self.redmine.file.get(1).download('/some/path'), '/some/path/bar.txt')
 
     def test_wiki_page_version(self):
         self.assertEqual(self.redmine.wiki_page.resource_class.redmine_version, '2.2')

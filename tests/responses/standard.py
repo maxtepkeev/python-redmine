@@ -19,6 +19,9 @@ responses = {
     'attachment': {
         'get': {'attachment': {'filename': 'foo.jpg', 'id': 1}},
     },
+    'file': {
+        'filter': {'files': [{'filename': 'foo.jpg', 'id': 1}, {'filename': 'bar.jpg', 'id': 2}]},
+    },
     'wiki_page': {
         'get': {'wiki_page': {'title': 'Foo', 'version': 1}},
         'filter': {'wiki_pages': [{'title': 'Foo', 'version': 1}, {'title': 'Bar', 'version': 2}]},

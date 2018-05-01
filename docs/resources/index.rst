@@ -17,6 +17,7 @@ Redmine
    version
    wiki_page
    query
+   file
    attachment
    issue_status
    tracker
