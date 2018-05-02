@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-2.1.0 (2018-05-XX)
+2.1.0 (2018-05-02)
 ++++++++++++++++++
 
 This release concentrates mostly on stability and adds small features here and there. Some of them
