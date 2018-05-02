@@ -13,13 +13,13 @@ Python-Redmine
 .. tip::
 
    Until the end of May 2018 - Pro Edition for 14.99$ instead of 24.99$, more info
-   `here <https://python-redmine.com/editions.html#pro-edition>`_
+   `here <https://python-redmine.com/editions.html#pro-edition>`__
 
-Python-Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`_
+Python-Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`__
 project management application. Redmine exposes some data via `REST API
-<http://www.redmine.org/projects/redmine/wiki/Rest_api>`_ for which Python-Redmine provides
+<http://www.redmine.org/projects/redmine/wiki/Rest_api>`__ for which Python-Redmine provides
 a simple but powerful Pythonic API inspired by a well-known `Django ORM
-<https://docs.djangoproject.com/en/dev/topics/db/queries/>`_:
+<https://docs.djangoproject.com/en/dev/topics/db/queries/>`__:
 
 .. code-block:: python
 
@@ -69,8 +69,8 @@ Features
 Contacts and Support
 --------------------
 
-Support for Standard Edition is provided via `GitHub <https://github.com/maxtepkeev/python-redmine/issues>`_
-only, while support for Pro Edition is provided both via `GitHub <https://github.com/maxtepkeev/python-redmine/issues>`_
+Support for Standard Edition is provided via `GitHub <https://github.com/maxtepkeev/python-redmine/issues>`__
+only, while support for Pro Edition is provided both via `GitHub <https://github.com/maxtepkeev/python-redmine/issues>`__
 and support@python-redmine.com. Be sure to write from email that was specified during the purchase procedure.
 
 Copyright and License

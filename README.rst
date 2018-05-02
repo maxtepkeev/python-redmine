@@ -13,13 +13,13 @@ Python-Redmine
 |
 
 **!!!** Until the end of May 2018 - Pro Edition for **14.99$** instead of *24.99$*, more
-info `here <https://python-redmine.com/editions.html#pro-edition>`_ **!!!**
+info `here <https://python-redmine.com/editions.html#pro-edition>`__ **!!!**
 
-Python-Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`_
+Python-Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`__
 project management application. Redmine exposes some of it's data via `REST API
-<http://www.redmine.org/projects/redmine/wiki/Rest_api>`_ for which Python-Redmine provides
+<http://www.redmine.org/projects/redmine/wiki/Rest_api>`__ for which Python-Redmine provides
 a simple but powerful Pythonic API inspired by a well-known `Django ORM
-<https://docs.djangoproject.com/en/dev/topics/db/queries/>`_:
+<https://docs.djangoproject.com/en/dev/topics/db/queries/>`__:
 
 .. code-block:: python
 
@@ -72,7 +72,7 @@ Installation
 Standard Edition
 ++++++++++++++++
 
-The recommended way to install is from Python Package Index (PyPI) with `pip <http://www.pip-installer.org>`_:
+The recommended way to install is from Python Package Index (PyPI) with `pip <http://www.pip-installer.org>`__:
 
 .. code-block:: bash
 
@@ -82,7 +82,7 @@ Pro Edition
 +++++++++++
 
 License for a Pro Edition can be bought
-`here <https://secure.avangate.com/order/checkout.php?PRODS=4708754&QTY=1&CART=1&CARD=1&DISABLE_SHORT_FORM_MOBILE=1>`_.
+`here <https://secure.avangate.com/order/checkout.php?PRODS=4708754&QTY=1&CART=1&CARD=1&DISABLE_SHORT_FORM_MOBILE=1>`__.
 You will receive an email with all the details regarding Pro Edition installation process.
 
 Documentation
@@ -101,5 +101,5 @@ Copyright and License
 ---------------------
 
 Python-Redmine Standard Edition is licensed under Apache 2.0 license. Python-Redmine Pro Edition is licensed
-under the Python-Redmine Pro Edition 1.0 license. Check the `License <https://python-redmine.com/license.html>`_
+under the Python-Redmine Pro Edition 1.0 license. Check the `License <https://python-redmine.com/license.html>`__
 for details.
