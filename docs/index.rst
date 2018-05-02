@@ -10,10 +10,15 @@ Python-Redmine
 .. image:: https://img.shields.io/coveralls/maxtepkeev/python-redmine/master.svg
    :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
 
+.. tip::
+
+   Until the end of May 2018 - Pro Edition for 14.99$ instead of 24.99$, more info
+   `here <https://python-redmine.com/editions.html#pro-edition>`_
+
 Python-Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`_
 project management application. Redmine exposes some data via `REST API
 <http://www.redmine.org/projects/redmine/wiki/Rest_api>`_ for which Python-Redmine provides
-simple but powerful Pythonic API inspired by a well-known `Django ORM
+a simple but powerful Pythonic API inspired by a well-known `Django ORM
 <https://docs.djangoproject.com/en/dev/topics/db/queries/>`_:
 
 .. code-block:: python

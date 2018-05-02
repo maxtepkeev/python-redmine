@@ -2,13 +2,18 @@ Python-Redmine
 ==============
 
 .. image:: https://badge.fury.io/py/python-redmine.svg
-    :target: https://badge.fury.io/py/python-redmine
+   :target: https://badge.fury.io/py/python-redmine
 
 .. image:: https://img.shields.io/travis/maxtepkeev/python-redmine/master.svg
-    :target: https://travis-ci.org/maxtepkeev/python-redmine
+   :target: https://travis-ci.org/maxtepkeev/python-redmine
 
 .. image:: https://img.shields.io/coveralls/maxtepkeev/python-redmine/master.svg
-    :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
+   :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
+
+.. tip::
+
+   Until the end of May 2018 - Pro Edition for 14.99$ instead of 24.99$, more info
+   `here <https://python-redmine.com/editions.html#pro-edition>`_
 
 Python-Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`_
 project management application. Redmine exposes some of it's data via `REST API
@@ -18,36 +23,36 @@ a simple but powerful Pythonic API inspired by a well-known `Django ORM
 
 .. code-block:: python
 
-    >>> from redminelib import Redmine
+   >>> from redminelib import Redmine
 
-    >>> redmine = Redmine('http://demo.redmine.org', username='foo', password='bar')
-    >>> project = redmine.project.get('vacation')
+   >>> redmine = Redmine('http://demo.redmine.org', username='foo', password='bar')
+   >>> project = redmine.project.get('vacation')
 
-    >>> project.id
-    30404
+   >>> project.id
+   30404
 
-    >>> project.identifier
-    'vacation'
+   >>> project.identifier
+   'vacation'
 
-    >>> project.created_on
-    datetime.datetime(2013, 12, 31, 13, 27, 47)
+   >>> project.created_on
+   datetime.datetime(2013, 12, 31, 13, 27, 47)
 
-    >>> project.issues
-    <redminelib.resultsets.ResourceSet object with Issue resources>
+   >>> project.issues
+   <redminelib.resultsets.ResourceSet object with Issue resources>
 
-    >>> project.issues[0]
-    <redminelib.resources.Issue #34441 "Vacation">
+   >>> project.issues[0]
+   <redminelib.resources.Issue #34441 "Vacation">
 
-    >>> dir(project.issues[0])
-    ['assigned_to', 'author', 'created_on', 'description', 'done_ratio',
-    'due_date', 'estimated_hours', 'id', 'priority', 'project', 'relations',
-    'start_date', 'status', 'subject', 'time_entries', 'tracker', 'updated_on']
+   >>> dir(project.issues[0])
+   ['assigned_to', 'author', 'created_on', 'description', 'done_ratio',
+   'due_date', 'estimated_hours', 'id', 'priority', 'project', 'relations',
+   'start_date', 'status', 'subject', 'time_entries', 'tracker', 'updated_on']
 
-    >>> project.issues[0].subject
-    'Vacation'
+   >>> project.issues[0].subject
+   'Vacation'
 
-    >>> project.issues[0].time_entries
-    <redminelib.resultsets.ResourceSet object with TimeEntry resources>
+   >>> project.issues[0].time_entries
+   <redminelib.resultsets.ResourceSet object with TimeEntry resources>
 
 Features
 --------
@@ -71,7 +76,7 @@ The recommended way to install is from Python Package Index (PyPI) with `pip <ht
 
 .. code-block:: bash
 
-    $ pip install python-redmine
+   $ pip install python-redmine
 
 Pro Edition
 +++++++++++

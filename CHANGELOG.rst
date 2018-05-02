@@ -4,21 +4,30 @@ Changelog
 2.1.0 (2018-05-XX)
 ++++++++++++++++++
 
+This release concentrates mostly on stability and adds small features here and there. Some of them
+are backwards incompatible and are marked as such. They shouldn't affect many users since most of
+them were used internally by Python-Redmine. A support for the Files API has been finally added, but
+please be sure to check it's documentation as the implementation on the Redmine side is horrible and
+there are things to keep in mind while working with Files API. Lastly, only until the end of May 2018
+there is a chance to buy a Pro Edition for only 14.99$ instead of the usual 24.99$, this is your
+chance to get an edition with additional features for a good price and to support the further development
+of Python-Redmine, more info `here <https://python-redmine.com/editions.html#pro-edition>`_.
+
 **New Features**:
 
 - Files API support (`Issue #117 <https://github.com/maxtepkeev/python-redmine/issues/117>`__)
 
 **Improvements**:
 
-- ResourceSet's ``filter()`` method became more advanced. It is now possible to filter on all available
-  resource attributes, to follow resource relationships and apply lookups to the filters (see
-  `docs <https://python-redmine.com/introduction.html#methods>`__ for details)
+- *Backwards Incompatible:* ResourceSet's ``filter()`` method became more advanced. It is now possible
+  to filter on all available resource attributes, to follow resource relationships and apply lookups to
+  the filters (see `docs <https://python-redmine.com/introduction.html#methods>`__ for details)
 - ResourceManager class has been refactored:
 
   * ``manager_class`` attribute on the ``Resource`` class can now be used to assign a separate
     ``ResourceManager`` to a resource, that allows outsourcing a resource specific functionality to a
     separate manager class (see ``WikiPageManager`` as an example)
-  * ``request()`` method has been removed
+  * *Backwards Incompatible:* ``request()`` method has been removed
   * ``_construct_*_url()``, ``_prepare_*_request()``, ``_process_*_response()`` methods have been added
     for create, update and delete methods to allow a fine-grained control over these operations
 
@@ -40,19 +49,20 @@ Changelog
 
 **Changes**:
 
-- Issue ``all`` operation now really returns all issues, i.e. both open and closed, instead of only returning
-  open issues in previous versions due to the respect to Redmine's standard behaviour
-- Instead of only returning a token string, ``upload()`` method was modified to return a dict that contains
-  all the data for an upload returned from Redmine, i.e. id and token for Redmine >= 3.4.0, token only for
-  Redmine < 3.4.0. Also it is now possible to use this token and pass it using a ``token`` key instead of the
-  ``path`` key with path to the file in ``uploads`` parameter when doing an upload, this gives more control
-  over the uploading process if needed
-- Removed ``resource_paths`` argument from Redmine object since ``ResourceManager`` now uses a special resource
-  registry, to which, all resources that inherit from any Python-Redmine resource are being automatically added
-- Removed ``container_many`` in favor of ``container_filter``, ``container_create`` and ``container_update``
-  attributes on ``Resource`` object to allow more fine-grained resource setup
-- ``return_raw`` parameter on ``engine.request()`` and ``engine.process_response()`` methods has been removed
-  in favor of ``return_raw_response`` attribute on engine object
+- *Backwards Incompatible:* Issue ``all`` operation now really returns all issues, i.e. both open and closed,
+  instead of only returning open issues in previous versions due to the respect to Redmine's standard behaviour
+- *Backwards Incompatible:* Instead of only returning a token string, ``upload()`` method was modified to return
+  a dict that contains all the data for an upload returned from Redmine, i.e. id and token for Redmine >= 3.4.0,
+  token only for Redmine < 3.4.0. Also it is now possible to use this token and pass it using a ``token`` key
+  instead of the ``path`` key with path to the file in ``uploads`` parameter when doing an upload, this gives
+  more control over the uploading process if needed
+- *Backwards Incompatible:* Removed ``resource_paths`` argument from Redmine object since ``ResourceManager``
+  now uses a special resource registry, to which, all resources that inherit from any Python-Redmine resource
+  are being automatically added
+- *Backwards Incompatible:* Removed ``container_many`` in favor of ``container_filter``, ``container_create``
+  and ``container_update`` attributes on ``Resource`` object to allow more fine-grained resource setup
+- *Backwards Incompatible:* ``return_raw`` parameter on ``engine.request()`` and ``engine.process_response()``
+  methods has been removed in favor of ``return_raw_response`` attribute on engine object
 - Updated bundled requests library to v2.15.1
 
 **Bugfixes**:
@@ -121,8 +131,9 @@ user.
     ``pre_*()`` and ``post_*()`` methods
   * ``ResourceSet`` object's ``get()`` and ``filter()`` methods now supports non-integer id's, e.g.
     WikiPage's title can now be used with it
-  * ``ValuesResourceSet`` class has been removed
-  * ``ResourceSet.values()`` method now returns an iterable of dicts instead of ``ValuesResourceSet`` object
+  * *Backwards Incompatible:* ``ValuesResourceSet`` class has been removed
+  * *Backwards Incompatible:* ``ResourceSet.values()`` method now returns an iterable of dicts instead of
+    ``ValuesResourceSet`` object
   * ``ResourceSet.values_list()`` method has been added which returns an iterable of tuples with Resource
     values or single values if flattened, i.e. ``flat=True``
 
@@ -146,21 +157,23 @@ user.
 
 **Changes**:
 
-- Renamed package name from ``redmine`` to ``redminelib``
+- *Backwards Incompatible:* Renamed package name from ``redmine`` to ``redminelib``
 - Resource class attributes that were previously tuples are now lists
-- ``_Resource`` class renamed to ``Resource``
-- ``Redmine.custom_resource_paths`` keyword argument renamed to ``resource_paths``
-- ``Redmine.download()`` method now returns a `requests.Response <http://docs.python-requests.org/
-  en/latest/api/#requests.Response>`__ object directly instead of ``iter_content()`` method if a ``savepath``
-  param wasn't provided, this gives user even more control over response data
-- ``Resource.refresh()`` now really refreshes itself instead of returning a new refreshed
-  resource, to get the previous behaviour use ``itself`` param, e.g. ``Resource.refresh(itself=False)``
-- Removed Python 3.2 support
-- Removed ``container_filter``, ``container_create`` and ``container_update`` attributes on ``Resource``
-  object in favor of ``container_many`` attribute
-- Removed ``Resource.translate_params()`` and ``ResourceManager.prepare_params()`` in favor of
-  ``Resource.bulk_decode()``
-- Removed ``is_unicode()``, ``is_string()`` and ``to_string()`` from ``redminelib.utilities``
+- *Backwards Incompatible:* ``_Resource`` class renamed to ``Resource``
+- *Backwards Incompatible:* ``Redmine.custom_resource_paths`` keyword argument renamed to ``resource_paths``
+- *Backwards Incompatible:* ``Redmine.download()`` method now returns a `requests.Response
+  <http://docs.python-requests.org/en/latest/api/#requests.Response>`__ object directly instead of
+  ``iter_content()`` method if a ``savepath`` param wasn't provided, this gives user even more control over
+  response data
+- *Backwards Incompatible:* ``Resource.refresh()`` now really refreshes itself instead of returning a new
+  refreshed resource, to get the previous behaviour use ``itself`` param, e.g. ``Resource.refresh(itself=False)``
+- *Backwards Incompatible:* Removed Python 3.2 support
+- *Backwards Incompatible:* Removed ``container_filter``, ``container_create`` and ``container_update`` attributes
+  on ``Resource`` object in favor of ``container_many`` attribute
+- *Backwards Incompatible:* Removed ``Resource.translate_params()`` and ``ResourceManager.prepare_params()`` in
+  favor of ``Resource.bulk_decode()``
+- *Backwards Incompatible:* Removed ``is_unicode()``, ``is_string()`` and ``to_string()`` from
+  ``redminelib.utilities``
 - Updated bundled requests library to v2.13.0
 
 **Bugfixes**:
