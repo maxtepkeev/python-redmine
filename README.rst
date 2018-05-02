@@ -10,7 +10,7 @@ Python-Redmine
 .. image:: https://img.shields.io/coveralls/maxtepkeev/python-redmine/master.svg
    :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
 
-.. tip::
+.. code-block::
 
    Until the end of May 2018 - Pro Edition for 14.99$ instead of 24.99$, more info
    `here <https://python-redmine.com/editions.html#pro-edition>`_
