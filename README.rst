@@ -10,10 +10,8 @@ Python-Redmine
 .. image:: https://img.shields.io/coveralls/maxtepkeev/python-redmine/master.svg
    :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
 
-::
-
-   Until the end of May 2018 - Pro Edition for 14.99$ instead of 24.99$, more info
-   `here <https://python-redmine.com/editions.html#pro-edition>`_
+**!!!** Until the end of May 2018 - Pro Edition for **14.99$** instead of *24.99$*, more
+info `here <https://python-redmine.com/editions.html#pro-edition>`_ **!!!**
 
 Python-Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`_
 project management application. Redmine exposes some of it's data via `REST API
