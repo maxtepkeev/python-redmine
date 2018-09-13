@@ -76,8 +76,12 @@ class Redmine(object):
         engine = self.engine
         self.engine = engine.__class__(
             requests=utilities.merge_dicts(engine.requests, options.pop('requests', {})), **options)
-        yield self
-        self.engine = engine
+        try:
+            yield self
+        except exceptions.BaseRedmineError as e:
+            raise e
+        finally:
+            self.engine = engine
 
     def upload(self, f):
         """
