@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+2.1.2 (2019-XX-XX)
+++++++++++++++++++
+
+**Bugfixes**:
+
+- ``session()`` doesn't restore previous engine if fails (`Issue #211 <https://github.com/maxtepkeev/
+  python-redmine/issues/211>`__) (thanks to `Dmitry Logvinenko <https://github.com/dm-logv>`__)
+
 2.1.1 (2018-05-02)
 ++++++++++++++++++
 
