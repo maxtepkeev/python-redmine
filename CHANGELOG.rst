@@ -4,9 +4,16 @@ Changelog
 2.1.2 (2019-XX-XX)
 ++++++++++++++++++
 
+**Improvements**:
+
+- ``PerformanceWarning`` will be issued when Python-Redmine does some unnecessary work under the hood to fix the
+  clients code problems
+
 **Bugfixes**:
 
-- ``session()`` doesn't restore previous engine if fails (`Issue #211 <https://github.com/maxtepkeev/
+- ``Redmine.upload()`` fails under certain circumstances when used with a file-like object and it contains unicode
+  instead of bytes (`Issue #216 <https://github.com/maxtepkeev/python-redmine/issues/216>`__)
+- ``Redmine.session()`` doesn't restore previous engine if fails (`Issue #211 <https://github.com/maxtepkeev/
   python-redmine/issues/211>`__) (thanks to `Dmitry Logvinenko <https://github.com/dm-logv>`__)
 
 2.1.1 (2018-05-02)

@@ -3,7 +3,10 @@ Provides public API.
 """
 
 import os
+import io
+import sys
 import inspect
+import warnings
 import contextlib
 
 from distutils.version import LooseVersion
@@ -103,6 +106,19 @@ class Redmine(object):
         # stream ourselves as we have no idea of what the client is going to do with it afterwards, so we
         # leave the closing part to the client or to the garbage collector
         if hasattr(f, 'close'):
+            try:
+                c = f.read(0)
+            except (AttributeError, TypeError):
+                raise exceptions.FileObjectError
+
+            # We need to send bytes over the socket, so in case a file-like object contains a unicode
+            # object underneath, we need to convert it to bytes, otherwise we'll get an exception
+            if isinstance(c, str if sys.version_info[0] >= 3 else unicode):
+                warnings.warn("File-like object contains unicode, hence an additional step is performed to convert "
+                              "it's content to bytes, please consider switching to bytes to eliminate this warning",
+                              exceptions.PerformanceWarning)
+                f = io.BytesIO(f.read().encode('utf-8'))
+
             stream = f
             close = False
         else:

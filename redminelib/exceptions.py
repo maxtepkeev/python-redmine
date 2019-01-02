@@ -1,9 +1,22 @@
 """
 Python-Redmine tries it's best to provide human readable errors in all situations.
-This is a list of all exceptions that Python-Redmine can throw.
+This is a list of all exceptions or warnings that Python-Redmine can throw/raise.
 """
 
 from . import utilities
+
+
+@utilities.fix_unicode
+class BaseRedmineWarning(Warning):
+    """
+    Base warning class for Redmine warnings.
+    """
+
+
+class PerformanceWarning(BaseRedmineWarning):
+    """
+    Warning raised when there's a possible performance impact.
+    """
 
 
 @utilities.fix_unicode
@@ -27,6 +40,14 @@ class NoFileError(BaseRedmineError):
     """
     def __init__(self):
         super(NoFileError, self).__init__("Can't upload a file that doesn't exist or is empty")
+
+
+class FileObjectError(BaseRedmineError):
+    """
+    File-like object isn't supported as it doesn't support the read(size) method.
+    """
+    def __init__(self):
+        super(FileObjectError, self).__init__("File-like object doesn't support the read(size) method")
 
 
 class ResourceNotFoundError(BaseRedmineError):

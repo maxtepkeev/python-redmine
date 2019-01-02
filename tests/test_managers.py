@@ -1,3 +1,5 @@
+import warnings
+
 from . import mock, BaseRedmineTestCase
 from .responses import responses
 
@@ -120,7 +122,11 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
             'issue': {'subject': 'Foo', 'project_id': 1, 'id': 1}
         }
         stream = StringIO(b'\xcf\x86oo'.decode('utf8'))
-        issue = self.redmine.issue.create(project_id=1, subject='Foo', uploads=[{'path': stream}])
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+            issue = self.redmine.issue.create(project_id=1, subject='Foo', uploads=[{'path': stream}])
+            self.assertEquals(len(w), 1)
+            self.assertIs(w[0].category, exceptions.PerformanceWarning)
         self.assertEqual(issue.project_id, 1)
         self.assertEqual(issue.subject, 'Foo')
 
@@ -153,7 +159,11 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
             mock.Mock(status_code=200, history=[], content='')
         ])
         stream = StringIO(b'\xcf\x86oo'.decode('utf8'))
-        self.assertEqual(self.redmine.issue.update(1, subject='Bar', uploads=[{'path': stream}]), True)
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+            self.assertEqual(self.redmine.issue.update(1, subject='Bar', uploads=[{'path': stream}]), True)
+            self.assertEquals(len(w), 1)
+            self.assertIs(w[0].category, exceptions.PerformanceWarning)
 
     def test_delete_resource(self):
         self.response.content = ''

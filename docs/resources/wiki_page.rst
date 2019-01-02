@@ -42,14 +42,14 @@ create
 
 .. code-block:: python
 
-   >>> from io import StringIO
+   >>> from io import BytesIO
    >>> wiki_page = redmine.wiki_page.create(
    ...     project_id='vacation',
    ...     title='FooBar',
    ...     text='foo',
    ...     parent_title='Yada',
    ...     comments='bar',
-   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': StringIO('I am content of file 2')}]
+   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': BytesIO(b'I am content of file 2')}]
    ... )
    >>> wiki_page
    <redminelib.resources.WikiPage "FooBar">
@@ -194,7 +194,7 @@ update
 
 .. code-block:: python
 
-   >>> from io import StringIO
+   >>> from io import BytesIO
    >>> redmine.wiki_page.update(
    ...     'Foo',
    ...     project_id='vacation',
@@ -202,7 +202,7 @@ update
    ...     text='foo',
    ...     parent_title='Yada',
    ...     comments='bar',
-   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': StringIO('I am content of file 2')}]
+   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': BytesIO(b'I am content of file 2')}]
    ... )
    True
 

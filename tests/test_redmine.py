@@ -1,3 +1,5 @@
+import warnings
+
 from . import mock, BaseRedmineTestCase, Redmine
 
 from redminelib import engines, resultsets, exceptions
@@ -66,7 +68,11 @@ class RedmineTestCase(BaseRedmineTestCase):
         from io import StringIO
         self.response.status_code = 201
         self.response.json.return_value = {'upload': {'id': 1, 'token': '456789'}}
-        self.assertEqual(self.redmine.upload(StringIO(b'\xcf\x86oo'.decode('utf8')))['token'], '456789')
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+            self.assertEqual(self.redmine.upload(StringIO(b'\xcf\x86oo'.decode('utf8')))['token'], '456789')
+            self.assertEquals(len(w), 1)
+            self.assertIs(w[0].category, exceptions.PerformanceWarning)
 
     @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_successful_file_download(self):
@@ -85,6 +91,10 @@ class RedmineTestCase(BaseRedmineTestCase):
 
     def test_file_upload_no_file_exception(self):
         self.assertRaises(exceptions.NoFileError, lambda: self.redmine.upload('foo',))
+
+    def test_file_upload_file_object_exception(self):
+        f = type('FileObject', (), {'close': lambda obj: None})()
+        self.assertRaises(exceptions.FileObjectError, lambda: self.redmine.upload(f))
 
     def test_file_upload_not_supported_exception(self):
         self.redmine.ver = '1.0.0'

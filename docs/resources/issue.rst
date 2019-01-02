@@ -56,7 +56,7 @@ create
 
 .. code-block:: python
 
-   >>> from io import StringIO
+   >>> from io import BytesIO
    >>> issue = redmine.issue.create(
    ...     project_id='vacation',
    ...     subject='Vacation',
@@ -72,7 +72,7 @@ create
    ...     estimated_hours=4,
    ...     done_ratio=40,
    ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
-   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': StringIO('I am content of file 2')}]
+   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': BytesIO(b'I am content of file 2')}]
    ... )
    >>> issue
    <redminelib.resources.Issue #123 "Vacation">
@@ -323,7 +323,7 @@ update
 
 .. code-block:: python
 
-   >>> from io import StringIO
+   >>> from io import BytesIO
    >>> redmine.issue.update(
    ...     1,
    ...     project_id=1,
@@ -341,7 +341,7 @@ update
    ...     estimated_hours=4,
    ...     done_ratio=40,
    ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
-   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': StringIO('I am content of file 2')}]
+   ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': BytesIO(b'I am content of file 2')}]
    ... )
    True
 
