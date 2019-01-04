@@ -116,7 +116,6 @@ class BaseResource(utilities.with_metaclass(Registrar)):
     _resource_set_map = {}  # Resources that should become a ResourceSet object
     _single_attr_id_map = {}  # Resource attributes that should set another resource id to its value
     _multiple_attr_id_map = {}  # Resource attributes should set another resource ids to their value
-    __length_hint__ = None  # fixes Python 2.6 list() call on resource object
 
     def __init__(self, manager, attributes):
         """
@@ -199,7 +198,7 @@ class BaseResource(utilities.with_metaclass(Registrar)):
             raise exceptions.ReadonlyAttrError
         elif attr == 'custom_fields':
             try:
-                new = dict((field['id'], self.bulk_decode(field, self.manager)) for field in value)
+                new = {field['id']: self.bulk_decode(field, self.manager) for field in value}
             except (TypeError, KeyError):
                 raise exceptions.CustomFieldValueError
 

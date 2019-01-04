@@ -245,7 +245,7 @@ class ResourceSet(BaseResourceSet):
         """
         if fields:
             for resource in super(ResourceSet, self).__iter__():
-                yield dict((field, resource[field]) for field in fields if field in resource)
+                yield {field: resource[field] for field in fields if field in resource}
         else:
             for resource in super(ResourceSet, self).__iter__():
                 yield resource

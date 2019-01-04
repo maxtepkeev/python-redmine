@@ -9,6 +9,10 @@ Changelog
 - ``PerformanceWarning`` will be issued when Python-Redmine does some unnecessary work under the hood to fix the
   clients code problems
 
+**Changes**:
+
+- *Backwards Incompatible:* Removed Python 2.6 and 3.3 support
+
 **Bugfixes**:
 
 - ``Redmine.upload()`` fails under certain circumstances when used with a file-like object and it contains unicode
