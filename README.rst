@@ -10,10 +10,6 @@ Python-Redmine
 .. image:: https://img.shields.io/coveralls/maxtepkeev/python-redmine/master.svg
    :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
 
-.. image:: https://python-redmine.com/_static/img/banner.png
-   :target: https://python-redmine.com/editions.html#pro-edition
-   :align: center
-
 Python-Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`__
 project management application. Redmine exposes some of it's data via `REST API
 <http://www.redmine.org/projects/redmine/wiki/Rest_api>`__ for which Python-Redmine provides
@@ -81,7 +77,7 @@ Pro Edition
 +++++++++++
 
 License for a Pro Edition can be bought
-`here <https://secure.avangate.com/order/checkout.php?PRODS=4708754&QTY=1&CART=1&CARD=1&DISABLE_SHORT_FORM_MOBILE=1>`__.
+`here <https://secure.2checkout.com/order/checkout.php?PRODS=4708754&QTY=1&CART=1&CARD=1&DISABLE_SHORT_FORM_MOBILE=1>`__.
 You will receive an email with all the details regarding Pro Edition installation process.
 
 Documentation

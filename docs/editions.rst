@@ -11,18 +11,14 @@ for details.
 Pro Edition
 -----------
 
-.. role:: strike
-   :class: strike
-
 Supports additional features like async requests to Redmine, additional Redmine plugins and
 so on. Licensed under `Python-Redmine Pro Edition License Version 1.0
 <https://python-redmine.com/license.html#pro-edition>`_. License can be bought `here
-<https://secure.avangate.com/order/checkout.php?PRODS=4708754&QTY=1&CART=1&CARD=1&DISABLE_SHORT_FORM_MOBILE=1>`_
-for :strike:`24.99$` **14.99$ until the end of May 2018** (additional taxes and/or charges may apply (will be
-shown before the purchase) depending on the country of purchase and payment method used), doesn't expire and is
-valid for the current major Python-Redmine version, e.g. if at the time of purchase current Python-Redmine
-version is 2.0.1 then license will be valid for all 2.x.x versions. Below you can find a feature matrix which
-shows all the differences between these editions:
+<https://secure.2checkout.com/order/checkout.php?PRODS=4708754&QTY=1&CART=1&CARD=1&DISABLE_SHORT_FORM_MOBILE=1>`_
+for 24.99$ (additional taxes and/or charges may apply (will be shown before the purchase) depending on the
+country of purchase and payment method used), doesn't expire and is valid for the current major Python-Redmine
+version, e.g. if at the time of purchase current Python-Redmine version is 2.0.1 then license will be valid for
+all 2.x.x versions. Below you can find a feature matrix which shows all the differences between these editions:
 
 .. Sphinx and our current theme don't provide a way to create a table in the needed
    format, that is why we are using the raw html with redefined theme stylesheet here.

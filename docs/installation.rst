@@ -59,7 +59,7 @@ Pro Edition
 -----------
 
 License for a Pro Edition can be bought
-`here <https://secure.avangate.com/order/checkout.php?PRODS=4708754&QTY=1&CART=1&CARD=1&DISABLE_SHORT_FORM_MOBILE=1>`_.
+`here <https://secure.2checkout.com/order/checkout.php?PRODS=4708754&QTY=1&CART=1&CARD=1&DISABLE_SHORT_FORM_MOBILE=1>`_.
 You will receive an email with all the details regarding Pro Edition installation process. In case of any
 problems support is provided via support@python-redmine.com. Please be sure to write from email that was
 specified during the purchase procedure.
