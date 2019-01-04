@@ -28,6 +28,10 @@ Upload
    >>> data
    {'id': 7167, 'token': '7167.ed1ccdb093229ca1bd0b043618d88743'}
 
+If a file-like object is provided, be sure that it contains ``str`` and not ``unicode`` under Python 2, and
+``bytes`` and not ``str`` under Python 3, otherwise Python-Redmine will have to make an additional conversion,
+which will affect performance.
+
 Download
 --------
 
