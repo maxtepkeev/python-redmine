@@ -64,7 +64,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.assertEqual(enumeration.name, 'Foo')
 
     def test_get_unicode_resource(self):
-        unicode_name = b'\xcf\x86oo'.decode('utf8')
+        unicode_name = b'\xcf\x86oo'.decode('utf-8')
         self.response.json.return_value = {'project': {'name': unicode_name, 'identifier': unicode_name, 'id': 1}}
         project = self.redmine.project.get(unicode_name)
         self.assertEqual(project.name, unicode_name)
@@ -94,7 +94,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.assertEqual(user.lastname, 'Smith')
 
     def test_create_unicode_resource(self):
-        unicode_name = b'\xcf\x86oo'.decode('utf8')
+        unicode_name = b'\xcf\x86oo'.decode('utf-8')
         self.response.status_code = 201
         self.response.json.return_value = {'wiki_page': {'title': unicode_name, 'project_id': 1}}
         wiki_page = self.redmine.wiki_page.create(title=unicode_name, project_id=1)
@@ -121,7 +121,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
             'upload': {'id': 1, 'token': '123456'},
             'issue': {'subject': 'Foo', 'project_id': 1, 'id': 1}
         }
-        stream = StringIO(b'\xcf\x86oo'.decode('utf8'))
+        stream = StringIO(b'\xcf\x86oo'.decode('utf-8'))
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter('always')
             issue = self.redmine.issue.create(project_id=1, subject='Foo', uploads=[{'path': stream}])
@@ -140,7 +140,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.response.content = ''
         manager = self.redmine.wiki_page
         manager.params['project_id'] = 1
-        self.assertEqual(manager.update(b'\xcf\x86oo'.decode('utf8'), title='Bar'), True)
+        self.assertEqual(manager.update(b'\xcf\x86oo'.decode('utf-8'), title='Bar'), True)
 
     @mock.patch('os.path.isfile', mock.Mock())
     @mock.patch('os.path.getsize', mock.Mock())
@@ -158,7 +158,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
             mock.Mock(status_code=201, history=[], **{'json.return_value': {'upload': {'id': 1, 'token': '123456'}}}),
             mock.Mock(status_code=200, history=[], content='')
         ])
-        stream = StringIO(b'\xcf\x86oo'.decode('utf8'))
+        stream = StringIO(b'\xcf\x86oo'.decode('utf-8'))
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter('always')
             self.assertEqual(self.redmine.issue.update(1, subject='Bar', uploads=[{'path': stream}]), True)
@@ -167,12 +167,12 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
 
     def test_delete_resource(self):
         self.response.content = ''
-        self.assertEqual(self.redmine.wiki_page.delete(b'\xcf\x86oo'.decode('utf8'), project_id=1), True)
+        self.assertEqual(self.redmine.wiki_page.delete(b'\xcf\x86oo'.decode('utf-8'), project_id=1), True)
 
     def test_delete_resource_returns_204(self):
         self.response.status_code = 204
         self.response.content = ''
-        self.assertEqual(self.redmine.wiki_page.delete(b'\xcf\x86oo'.decode('utf8'), project_id=1), True)
+        self.assertEqual(self.redmine.wiki_page.delete(b'\xcf\x86oo'.decode('utf-8'), project_id=1), True)
 
     def test_resource_get_method_unsupported_exception(self):
         self.assertRaises(exceptions.ResourceBadMethodError, lambda: self.redmine.issue_journal.get(1))

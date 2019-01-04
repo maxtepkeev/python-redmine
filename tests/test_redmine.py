@@ -70,7 +70,7 @@ class RedmineTestCase(BaseRedmineTestCase):
         self.response.json.return_value = {'upload': {'id': 1, 'token': '456789'}}
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter('always')
-            self.assertEqual(self.redmine.upload(StringIO(b'\xcf\x86oo'.decode('utf8')))['token'], '456789')
+            self.assertEqual(self.redmine.upload(StringIO(b'\xcf\x86oo'.decode('utf-8')))['token'], '456789')
             self.assertEquals(len(w), 1)
             self.assertIs(w[0].category, exceptions.PerformanceWarning)
 
