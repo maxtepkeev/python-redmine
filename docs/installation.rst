@@ -5,21 +5,7 @@ Dependencies
 ------------
 
 Python-Redmine relies heavily on great `Requests <http://docs.python-requests.org>`_ library by Kenneth Reitz
-for all the http(s) calls. To provide better user experience, Python-Redmine vendors Requests (i.e. embeds it
-inside itself) and uses a so-called "smart imports" strategy to identify whether it should use the vendored
-version or the global one. It works like this, at the first import time Python-Redmine checks if there is a
-global Requests installed and if it's version is greater than the vendored Requests, Python-Redmine will use
-global Requests and if not, the vendored one. This strategy provides you with the following benefits:
-
-* no external dependencies are installed together with Python-Redmine
-* no more conflicts with other libraries that depend on other version of Requests
-* always the latest version of Requests available at the release time of Python-Redmine
-* use newer versions of Requests in case of the immediate upgrade need absolutely automatically
-
-.. versionadded:: 2.0.0
-
-If for some reason there is a need to use a global Requests library even if it's version is lower than the
-bundled one, one can set a REDMINE_USE_EXTERNAL_REQUESTS environmental variable to force this behaviour.
+for all the http(s) calls.
 
 Standard Edition
 ----------------

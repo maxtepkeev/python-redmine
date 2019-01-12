@@ -2,8 +2,9 @@
 Synchronous blocking engine that processes requests one by one.
 """
 
+import requests
+
 from . import BaseEngine
-from ..packages import requests
 
 
 class SyncEngine(BaseEngine):

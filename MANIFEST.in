@@ -1,2 +1,2 @@
 recursive-include tests *.py
-include .coveragerc README.rst CHANGELOG.rst LICENSE NOTICE redminelib/packages/requests/cacert.pem
+include .coveragerc README.rst CHANGELOG.rst LICENSE NOTICE

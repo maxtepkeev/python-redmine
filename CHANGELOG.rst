@@ -11,7 +11,9 @@ Changelog
 
 **Changes**:
 
-- *Backwards Incompatible:* Removed Python 2.6 and 3.3 support
+- *Backwards Incompatible:* Removed vendored Requests package and make it an external dependency as Requests did
+  the same with it's own dependencies
+- *Backwards Incompatible:* Removed Python 2.6 and 3.3 support as they're not supported by Requests anymore
 
 **Bugfixes**:
 
