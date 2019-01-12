@@ -16,7 +16,7 @@ Engines
 Sync
 ++++
 
-Default engine in Standard Edition. Requests are made in a sequantial fashion, i.e. ony by one. There
+Default engine in Standard Edition. Requests are made in a sequential fashion, i.e. one by one. There
 is nothing to do to use it, but just for the purpose of example, this is how we can explicitly ask
 Python-Redmine to use it:
 
