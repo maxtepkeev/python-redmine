@@ -333,7 +333,7 @@ class ProjectMembership(BaseResource):
     _repr = [['id']]
     _create_readonly = BaseResource._create_readonly + ['user', 'roles']
     _update_readonly = _create_readonly[:]
-    _resource_map = {'project': 'Project', 'user': 'User'}
+    _resource_map = {'project': 'Project', 'user': 'User', 'group': 'Group'}
     _resource_set_map = {'roles': 'Role'}
     _single_attr_id_map = {'project_id': 'project', 'user_id': 'users'}
     _multiple_attr_id_map = {'role_ids': 'roles'}

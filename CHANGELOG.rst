@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+2.2.1 (2019-02-XX)
+++++++++++++++++++
+
+**Bugfixes**:
+
+- ProjectMembership resource ``group`` attribute was returned as a dict instead of being converted to
+  Resource object (`Issue #220 <https://github.com/maxtepkeev/python-redmine/issues/220>`__) (thanks
+  to `Samuel Harmer <https://github.com/samuelharmer>`__)
+
 2.2.0 (2019-01-13)
 ++++++++++++++++++
 
