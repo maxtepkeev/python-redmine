@@ -53,7 +53,7 @@ class BaseResourceSet(object):
         if self.manager.resource_class.query_all_export is None:
             raise exceptions.ExportNotSupported
 
-        formatter = utilities.MemorizeFormatter()
+        formatter = utilities.MemorizeURIFormatter()
 
         url = self.manager.redmine.url + formatter.format(
             self.manager.resource_class.query_all_export, format=fmt, **self.manager.params)

@@ -8,6 +8,7 @@ from distutils.version import LooseVersion
 
 from . import BaseResource
 from .. import managers, exceptions
+from ..utilities import URITemplate
 
 
 class Project(BaseResource):
@@ -258,12 +259,12 @@ class WikiPage(BaseResource):
     container_one = 'wiki_page'
     container_create = 'wiki_page'
     container_update = 'wiki_page'
-    query_one_export = '/projects/{project_id}/wiki/{0}.{format}'
+    query_one_export = URITemplate('/projects/{project_id}/wiki/{0}.{format}')
     query_filter = '/projects/{project_id}/wiki/index.json'
-    query_one = '/projects/{project_id}/wiki/{0}.json'
-    query_create = '/projects/{project_id}/wiki/{title}.json'
-    query_update = '/projects/{project_id}/wiki/{0}.json'
-    query_delete = '/projects/{project_id}/wiki/{0}.json'
+    query_one = URITemplate('/projects/{project_id}/wiki/{0}.json')
+    query_create = URITemplate('/projects/{project_id}/wiki/{title}.json')
+    query_update = URITemplate('/projects/{project_id}/wiki/{0}.json')
+    query_delete = URITemplate('/projects/{project_id}/wiki/{0}.json')
     search_hints = ['wiki-page']
     http_method_create = 'put'
     manager_class = managers.WikiPageManager

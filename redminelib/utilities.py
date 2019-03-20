@@ -6,6 +6,10 @@ import sys
 import copy
 import string
 import functools
+try:
+    from urllib.parse import quote
+except ImportError:
+    from urllib import quote
 
 
 def fix_unicode(cls):
@@ -65,7 +69,16 @@ def merge_dicts(a, b):
     return result
 
 
-class MemorizeFormatter(string.Formatter):
+class URIFormatter(string.Formatter):
+    """
+    Passes all arguments through urllib.parse.quote.
+    """
+    def format_field(self, value, format_spec):
+        retval = super(URIFormatter, self).format_field(value, format_spec)
+        return quote(retval.encode('utf-8'))
+
+
+class MemorizeURIFormatter(URIFormatter):
     """
     Memorizes all arguments, used during string formatting.
     """
@@ -79,3 +92,10 @@ class MemorizeFormatter(string.Formatter):
                 self.used_kwargs[item] = kwargs.pop(item)
 
         self.unused_kwargs = kwargs
+
+
+class URITemplate(str):
+    formatter = URIFormatter()
+
+    def format(self, *args, **kwargs):
+        return URIFormatter().format(self, *args, **kwargs)

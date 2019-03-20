@@ -149,7 +149,7 @@ class ResourceManager(object):
         if not fields:
             raise exceptions.ResourceNoFieldsProvidedError
 
-        formatter = utilities.MemorizeFormatter()
+        formatter = utilities.MemorizeURIFormatter()
 
         try:
             url = self._construct_create_url(formatter.format(self.resource_class.query_create, **fields))
@@ -203,7 +203,7 @@ class ResourceManager(object):
         if not fields:
             raise exceptions.ResourceNoFieldsProvidedError
 
-        formatter = utilities.MemorizeFormatter()
+        formatter = utilities.MemorizeURIFormatter()
 
         try:
             query_update = formatter.format(self.resource_class.query_update, resource_id, **fields)
