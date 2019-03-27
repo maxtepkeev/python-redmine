@@ -460,7 +460,7 @@ Export
    >>> issue.export('pdf', savepath='/home/jsmith')
    '/home/jsmith/123.pdf'
 
-.. py:method:: export(fmt, savepath=None, filename=None)
+.. py:method:: export(fmt, savepath=None, filename=None, columns=None)
    :module: redminelib.resultsets.ResourceSet
    :noindex:
 
@@ -469,12 +469,14 @@ Export
    :param string fmt: (required). Format to use for export.
    :param string savepath: (optional). Path where to save the file.
    :param string filename: (optional). Name that will be used for the file.
+   :param columns: (optional). Iterable of column names or "all" for all columns.
+   :type columns: iterable or string
    :return: String or Object
 
 .. code-block:: python
 
    >>> issues = redmine.issue.all()
-   >>> issues.export('csv', savepath='/home/jsmith', filename='issues.csv')
+   >>> issues.export('csv', savepath='/home/jsmith', filename='issues.csv', columns='all')
    '/home/jsmith/issues.csv'
 
 Journals

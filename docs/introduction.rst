@@ -463,8 +463,8 @@ formats of each resource in its documentation.
 .. code-block:: python
 
    >>> issues = redmine.issue.filter(project_id='vacation', status_id='*')
-   >>> issues.export('pdf', savepath='/home/jsmith')
-   '/home/jsmith/issues.pdf'
+   >>> issues.export('csv', savepath='/home/jsmith', columns='all')
+   '/home/jsmith/issues.csv'
 
 Methods
 +++++++
