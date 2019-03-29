@@ -121,7 +121,7 @@ get
 
    .. code-block:: python
 
-      >>> wiki_page = redmine.wiki_page.get(524)
+      >>> wiki_page = redmine.wiki_page.get('Photos', project_id='vacation')
       >>> wiki_page.attachments
       <redminelib.resultsets.ResourceSet object with Attachment resources>
 
