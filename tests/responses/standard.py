@@ -24,6 +24,7 @@ responses = {
     },
     'wiki_page': {
         'get': {'wiki_page': {'title': 'Foo', 'version': 1}},
+        'get_special': {'wiki_page': {'title': 'Foo%Bar', 'version': 1}},
         'filter': {'wiki_pages': [{'title': 'Foo', 'version': 1}, {'title': 'Bar', 'version': 2}]},
     },
     'project_membership': {

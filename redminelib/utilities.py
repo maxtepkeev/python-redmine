@@ -7,6 +7,13 @@ import copy
 import string
 import functools
 
+try:
+    # Python 3
+    from urllib.parse import quote
+except ImportError:
+    # Python 2
+    from urllib import quote
+
 
 def fix_unicode(cls):
     """
@@ -65,9 +72,9 @@ def merge_dicts(a, b):
     return result
 
 
-class MemorizeFormatter(string.Formatter):
+class ResourceQueryFormatter(string.Formatter):
     """
-    Memorizes all arguments, used during string formatting.
+    Quotes query and memorizes all arguments, used during string formatting.
     """
     def __init__(self):
         self.used_kwargs = {}
@@ -79,3 +86,13 @@ class MemorizeFormatter(string.Formatter):
                 self.used_kwargs[item] = kwargs.pop(item)
 
         self.unused_kwargs = kwargs
+
+    def format_field(self, value, format_spec):
+        return quote(super(ResourceQueryFormatter, self).format_field(value, format_spec).encode('utf-8'))
+
+
+class ResourceQueryStr(str):
+    formatter = ResourceQueryFormatter()
+
+    def format(self, *args, **kwargs):
+        return self.formatter.format(self, *args, **kwargs)

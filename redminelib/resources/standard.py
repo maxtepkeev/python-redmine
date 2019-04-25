@@ -201,12 +201,13 @@ class Enumeration(BaseResource):
     redmine_version = '2.2'
     container_filter = '{resource}'
     query_filter = '/enumerations/{resource}.json'
+    query_url = '/enumerations/{0}/edit'
 
     _resource_set_map = {'custom_fields': 'CustomField'}
 
     @property
     def url(self):
-        return '{0}/enumerations/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
+        return self.manager.redmine.url + self.query_url.format(self.internal_id)
 
 
 class Attachment(BaseResource):
@@ -489,6 +490,7 @@ class News(BaseResource):
     query_all_export = '/news.{format}'
     query_all = '/news.json'
     query_filter = '/news.json'
+    query_url = '/news/{0}'
     search_hints = ['news']
 
     _repr = [['id', 'title']]
@@ -496,13 +498,14 @@ class News(BaseResource):
 
     @property
     def url(self):
-        return '{0}/news/{1}'.format(self.manager.redmine.url, self.internal_id)
+        return self.manager.redmine.url + self.query_url.format(self.internal_id)
 
 
 class IssueStatus(BaseResource):
     redmine_version = '1.3'
     container_all = 'issue_statuses'
     query_all = '/issue_statuses.json'
+    query_url = '/issue_statuses/{0}/edit'
 
     _relations = ['issues']
     _relations_name = 'status'
@@ -510,37 +513,40 @@ class IssueStatus(BaseResource):
 
     @property
     def url(self):
-        return '{0}/issue_statuses/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
+        return self.manager.redmine.url + self.query_url.format(self.internal_id)
 
 
 class Tracker(BaseResource):
     redmine_version = '1.3'
     container_all = 'trackers'
     query_all = '/trackers.json'
+    query_url = '/trackers/{0}/edit'
 
     _relations = ['issues']
     _resource_set_map = {'issues': 'Issue'}
 
     @property
     def url(self):
-        return '{0}/trackers/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
+        return self.manager.redmine.url + self.query_url.format(self.internal_id)
 
 
 class Query(BaseResource):
     redmine_version = '1.3'
     container_all = 'queries'
     query_all = '/queries.json'
+    query_url = '/projects/{0}/issues?query_id={1}'
 
     @property
     def url(self):
-        return '{0}/projects/{1}/issues?query_id={2}'.format(
-            self.manager.redmine.url, self._decoded_attrs.get('project_id', 0), self.internal_id)
+        return self.manager.redmine.url + self.query_url.format(
+            self._decoded_attrs.get('project_id', 0), self.internal_id)
 
 
 class CustomField(BaseResource):
     redmine_version = '2.4'
     container_all = 'custom_fields'
     query_all = '/custom_fields.json'
+    query_url = '/custom_fields/{0}/edit'
 
     _resource_set_map = {'trackers': 'Tracker', 'roles': 'Role'}
 
@@ -566,4 +572,4 @@ class CustomField(BaseResource):
 
     @property
     def url(self):
-        return '{0}/custom_fields/{1}/edit'.format(self.manager.redmine.url, self.internal_id)
+        return self.manager.redmine.url + self.query_url.format(self.internal_id)

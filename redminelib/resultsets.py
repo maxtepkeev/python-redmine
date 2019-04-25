@@ -6,7 +6,7 @@ import operator
 import functools
 import itertools
 
-from . import lookups, utilities, exceptions
+from . import lookups, exceptions
 
 
 class BaseResourceSet(object):
@@ -55,12 +55,10 @@ class BaseResourceSet(object):
         if self.manager.resource_class.query_all_export is None:
             raise exceptions.ExportNotSupported
 
-        formatter = utilities.MemorizeFormatter()
+        url = self.manager.redmine.url + self.manager.resource_class.query_all_export.format(
+                format=fmt, **self.manager.params)
 
-        url = self.manager.redmine.url + formatter.format(
-            self.manager.resource_class.query_all_export, format=fmt, **self.manager.params)
-
-        params = formatter.unused_kwargs
+        params = self.manager.resource_class.query_all_export.formatter.unused_kwargs
 
         if columns is not None:
             if columns == 'all':

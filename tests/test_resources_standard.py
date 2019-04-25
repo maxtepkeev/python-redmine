@@ -702,6 +702,17 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
         self.assertEqual(wiki_page.title, 'Foo')
 
+    def test_wiki_page_get_special(self):
+        """Test getting a wiki page with special char in title."""
+        self.response.json.return_value = responses['wiki_page']['get_special']
+        wiki_page = self.redmine.wiki_page.get('Foo%Bar', project_id=1)
+        self.assertEqual(
+            self.patch_requests.call_args[0][1],
+            '{0}/projects/1/wiki/Foo%25Bar.json'.format(self.url)
+        )
+        self.assertEqual(wiki_page.title, 'Foo%Bar')
+        self.assertEqual(wiki_page.url, 'http://foo.bar/projects/1/wiki/Foo%25Bar')
+
     def test_wiki_page_filter(self):
         self.response.json.return_value = responses['wiki_page']['filter']
         wiki_pages = self.redmine.wiki_page.filter(project_id=1)
@@ -713,6 +724,17 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = responses['wiki_page']['get']
         wiki_page = self.redmine.wiki_page.create(project_id='foo', title='Foo')
         self.assertEqual(wiki_page.title, 'Foo')
+
+    def test_wiki_page_create_special(self):
+        """Test creating a wiki page with special char in title."""
+        self.response.status_code = 201
+        self.response.json.return_value = responses['wiki_page']['get_special']
+        wiki_page = self.redmine.wiki_page.create(project_id='foo', title='Foo%Bar')
+        self.assertEqual(
+            self.patch_requests.call_args[0][1],
+            '{0}/projects/foo/wiki/Foo%25Bar.json'.format(self.url)
+        )
+        self.assertEqual(wiki_page.title, 'Foo%Bar')
 
     def test_wiki_page_delete(self):
         self.response.json.return_value = responses['wiki_page']['get']
