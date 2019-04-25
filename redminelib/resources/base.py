@@ -19,6 +19,8 @@ class Registrar(type):
     which name starts with Base are considered base classes and not added to the registry.
     """
     def __new__(mcs, name, bases, attrs):
+        mcs.update_query_strings(attrs)
+
         cls = super(Registrar, mcs).__new__(mcs, name, bases, attrs)
 
         if name.startswith('Base'):  # base classes shouldn't be added to the registry
@@ -52,6 +54,16 @@ class Registrar(type):
                     mcs.update_cls_attr(registry[resource_name]['class'], '_resource_set_map', {value: name})
 
         return registry[name].setdefault('class', cls)
+
+    @staticmethod
+    def update_query_strings(attrs):
+        """
+        Updates all `query_*` string attributes to use ResourceQueryFormatter by defalt.
+        """
+        for k, v in attrs.items():
+            if k.startswith('query_') and isinstance(v, utilities.text_type):
+                attrs[k] = utilities.ResourceQueryStr(v)
+        return attrs
 
     @staticmethod
     def update_cls_attr(cls, name, value):

@@ -6,7 +6,7 @@ import operator
 import functools
 import itertools
 
-from . import lookups, utilities, exceptions
+from . import lookups, exceptions
 
 
 class BaseResourceSet(object):
@@ -53,13 +53,11 @@ class BaseResourceSet(object):
         if self.manager.resource_class.query_all_export is None:
             raise exceptions.ExportNotSupported
 
-        formatter = utilities.MemorizeURIFormatter()
-
-        url = self.manager.redmine.url + formatter.format(
-            self.manager.resource_class.query_all_export, format=fmt, **self.manager.params)
+        url = self.manager.redmine.url + self.manager.resource_class.query_all_export.format(
+                format=fmt, **self.manager.params)
 
         try:
-            return self.manager.redmine.download(url, savepath, filename, params=formatter.unused_kwargs)
+            return self.manager.redmine.download(url, savepath, filename, params=self.manager.resource_class.query_all_export.formatter.unused_kwargs)
         except exceptions.UnknownError as e:
             if e.status_code == 406:
                 raise exceptions.ExportFormatNotSupportedError

@@ -2,7 +2,7 @@
 Defines base Redmine resource manager class and it's infrastructure.
 """
 
-from .. import utilities, resultsets, exceptions
+from .. import resultsets, exceptions
 
 
 class ResourceManager(object):
@@ -149,16 +149,14 @@ class ResourceManager(object):
         if not fields:
             raise exceptions.ResourceNoFieldsProvidedError
 
-        formatter = utilities.MemorizeURIFormatter()
-
         try:
-            url = self._construct_create_url(formatter.format(self.resource_class.query_create, **fields))
+            url = self._construct_create_url(self.resource_class.query_create.format(**fields))
         except KeyError as e:
             raise exceptions.ValidationError('{0} field is required'.format(e))
 
-        self.params = formatter.used_kwargs
+        self.params = self.resource_class.query_create.formatter.used_kwargs
         self.container = self.resource_class.container_create
-        request = self._prepare_create_request(formatter.unused_kwargs)
+        request = self._prepare_create_request(self.resource_class.query_create.formatter.unused_kwargs)
         response = self.redmine.engine.request(self.resource_class.http_method_create, url, data=request)
         resource = self._process_create_response(request, response)
         self.url = self.redmine.url + self.resource_class.query_one.format(resource.internal_id, **fields)
@@ -203,21 +201,19 @@ class ResourceManager(object):
         if not fields:
             raise exceptions.ResourceNoFieldsProvidedError
 
-        formatter = utilities.MemorizeURIFormatter()
-
         try:
-            query_update = formatter.format(self.resource_class.query_update, resource_id, **fields)
+            query_update = self.resource_class.query_update.format(resource_id, **fields)
         except KeyError as e:
             param = e.args[0]
 
             if param in self.params:
                 fields[param] = self.params[param]
-                query_update = formatter.format(self.resource_class.query_update, resource_id, **fields)
+                query_update = self.resource_class.query_update.format(resource_id, **fields)
             else:
                 raise exceptions.ValidationError('{0} argument is required'.format(e))
 
         url = self._construct_update_url(query_update)
-        request = self._prepare_update_request(formatter.unused_kwargs)
+        request = self._prepare_update_request(self.resource_class.query_update.formatter.unused_kwargs)
         response = self.redmine.engine.request(self.resource_class.http_method_update, url, data=request)
         return self._process_update_response(request, response)
 

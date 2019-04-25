@@ -7,9 +7,13 @@ import copy
 import string
 import functools
 try:
+    # Python 3
     from urllib.parse import quote
+    text_type = str
 except ImportError:
+    # Python 2
     from urllib import quote
+    text_type = unicode
 
 
 def fix_unicode(cls):
@@ -69,18 +73,9 @@ def merge_dicts(a, b):
     return result
 
 
-class URIFormatter(string.Formatter):
+class ResourceQueryFormatter(string.Formatter):
     """
-    Passes all arguments through urllib.parse.quote.
-    """
-    def format_field(self, value, format_spec):
-        retval = super(URIFormatter, self).format_field(value, format_spec)
-        return quote(retval.encode('utf-8'))
-
-
-class MemorizeURIFormatter(URIFormatter):
-    """
-    Memorizes all arguments, used during string formatting.
+    Quotes query and memorizes all arguments, used during string formatting.
     """
     def __init__(self):
         self.used_kwargs = {}
@@ -93,9 +88,12 @@ class MemorizeURIFormatter(URIFormatter):
 
         self.unused_kwargs = kwargs
 
+    def format_field(self, value, format_spec):
+        return quote(super(ResourceQueryFormatter, self).format_field(value, format_spec).encode('utf-8'))
 
-class URITemplate(str):
-    formatter = URIFormatter()
+
+class ResourceQueryStr(str):
+    formatter = ResourceQueryFormatter()
 
     def format(self, *args, **kwargs):
-        return URIFormatter().format(self, *args, **kwargs)
+        return self.formatter.format(self, *args, **kwargs)
