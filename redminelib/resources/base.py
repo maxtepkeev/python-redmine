@@ -58,10 +58,10 @@ class Registrar(type):
     @staticmethod
     def update_query_strings(attrs):
         """
-        Updates all `query_*` string attributes to use ResourceQueryFormatter by defalt.
+        Updates all `query_*` string attributes to use ResourceQueryFormatter by default.
         """
         for k, v in attrs.items():
-            if k.startswith('query_') and isinstance(v, utilities.text_type):
+            if k.startswith('query_') and v is not None:
                 attrs[k] = utilities.ResourceQueryStr(v)
         return attrs
 

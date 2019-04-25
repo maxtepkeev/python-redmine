@@ -6,14 +6,13 @@ import sys
 import copy
 import string
 import functools
+
 try:
     # Python 3
     from urllib.parse import quote
-    text_type = str
 except ImportError:
     # Python 2
     from urllib import quote
-    text_type = unicode
 
 
 def fix_unicode(cls):
