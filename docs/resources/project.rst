@@ -333,5 +333,5 @@ Export
 .. code-block:: python
 
    >>> projects = redmine.project.all()
-   >>> projects.export('atom', savepath='/home/jsmith', filename='projets.atom')
+   >>> projects.export('atom', savepath='/home/jsmith', filename='projects.atom')
    '/home/jsmith/projects.atom'

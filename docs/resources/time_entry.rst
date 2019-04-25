@@ -260,7 +260,7 @@ Export
 
 .. versionadded:: 2.0.0
 
-.. py:method:: export(fmt, savepath=None, filename=None)
+.. py:method:: export(fmt, savepath=None, filename=None, columns=None)
    :module: redminelib.resultsets.ResourceSet
    :noindex:
 
@@ -269,10 +269,12 @@ Export
    :param string fmt: (required). Format to use for export.
    :param string savepath: (optional). Path where to save the file.
    :param string filename: (optional). Name that will be used for the file.
+   :param columns: (optional). Iterable of column names or "all" for all columns.
+   :type columns: iterable or string
    :return: String or Object
 
 .. code-block:: python
 
    >>> entries = redmine.time_entry.all()
-   >>> entries.export('csv', savepath='/home/jsmith', filename='entries.csv')
+   >>> entries.export('csv', savepath='/home/jsmith', filename='entries.csv', columns='all')
    '/home/jsmith/entries.csv'

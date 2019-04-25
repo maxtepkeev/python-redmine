@@ -178,6 +178,16 @@ class ResultSetTestCase(BaseRedmineTestCase):
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
         self.assertEqual(self.redmine.issue.all().export('txt', '/foo/bar'), '/foo/bar/issues.txt')
 
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
+    def test_export_with_all_columns(self):
+        self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
+        self.assertEqual(self.redmine.issue.all().export('txt', '/foo/bar', columns='all'), '/foo/bar/issues.txt')
+
+    @mock.patch('redminelib.open', mock.mock_open(), create=True)
+    def test_export_with_custom_columns(self):
+        self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
+        self.assertEqual(self.redmine.issue.all().export('txt', '/foo/bar', columns=['status']), '/foo/bar/issues.txt')
+
     def test_export_not_supported_exception(self):
         self.assertRaises(exceptions.ExportNotSupported, lambda: self.redmine.custom_field.all().export('pdf'))
 

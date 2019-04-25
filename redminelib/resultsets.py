@@ -42,13 +42,15 @@ class BaseResourceSet(object):
 
         return self._total_count
 
-    def export(self, fmt, savepath=None, filename=None):
+    def export(self, fmt, savepath=None, filename=None, columns=None):
         """
         Exports all resources from resource set to requested format if Resource supports that.
 
         :param string fmt: (required). Format to use for export, e.g. atom, csv, txt, pdf, html etc.
         :param string savepath: (optional). Path where to save the file.
         :param string filename: (optional). Name that will be used for the file.
+        :param columns: (optional). Iterable of column names or "all" for all columns.
+        :type columns: iterable or string
         """
         if self.manager.resource_class.query_all_export is None:
             raise exceptions.ExportNotSupported
@@ -56,8 +58,16 @@ class BaseResourceSet(object):
         url = self.manager.redmine.url + self.manager.resource_class.query_all_export.format(
                 format=fmt, **self.manager.params)
 
+        params = self.manager.resource_class.query_all_export.formatter.unused_kwargs
+
+        if columns is not None:
+            if columns == 'all':
+                columns = 'all_inline'
+
+            params.update({'c[]': columns, 'encoding': 'UTF-8'})
+
         try:
-            return self.manager.redmine.download(url, savepath, filename, params=self.manager.resource_class.query_all_export.formatter.unused_kwargs)
+            return self.manager.redmine.download(url, savepath, filename, params=params)
         except exceptions.UnknownError as e:
             if e.status_code == 406:
                 raise exceptions.ExportFormatNotSupportedError

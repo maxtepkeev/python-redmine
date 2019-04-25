@@ -1,6 +1,14 @@
 Changelog
 ---------
 
+2.2.2 (2019-04-XX)
+++++++++++++++++++
+
+**Improvements**:
+
+- ResourceSet's ``export()`` method now supports ``columns`` keyword argument which can be either an iterable
+  of column names or an "all" string which tells Python-Redmine to export all available columns
+
 2.2.1 (2019-02-28)
 ++++++++++++++++++
 
