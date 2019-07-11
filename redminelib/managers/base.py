@@ -17,6 +17,7 @@ class ResourceManager(object):
         self.url = ''
         self.params = {}
         self.container = None
+        self.noncontainer = []
         self.redmine = redmine
         self.resource_class = resource_class
 
@@ -129,13 +130,21 @@ class ResourceManager(object):
         """
         return self.redmine.url + path
 
-    def _prepare_create_request(self, request):
+    def _prepare_create_update_request(self, request):
         """
-        Makes the necessary preparations for create request data.
+        Makes the necessary preparations for create/update request data.
 
         :param dict request: Request data.
         """
-        return {self.container: self.resource_class.bulk_decode(request, self)}
+        container_dict = dict(request)
+        whole_dict = {
+            key: container_dict.pop(key)
+            for key, value in request.items()
+            if key in self.noncontainer
+        }
+        whole_dict = self.resource_class.bulk_decode(whole_dict, self)
+        whole_dict[self.container] = self.resource_class.bulk_decode(container_dict, self)
+        return whole_dict
 
     def create(self, **fields):
         """
@@ -156,7 +165,8 @@ class ResourceManager(object):
 
         self.params = self.resource_class.query_create.formatter.used_kwargs
         self.container = self.resource_class.container_create
-        request = self._prepare_create_request(self.resource_class.query_create.formatter.unused_kwargs)
+        self.noncontainer = self.resource_class.noncontainer_create
+        request = self._prepare_create_update_request(self.resource_class.query_create.formatter.unused_kwargs)
         response = self.redmine.engine.request(self.resource_class.http_method_create, url, data=request)
         resource = self._process_create_response(request, response)
         self.url = self.redmine.url + self.resource_class.query_one.format(resource.internal_id, **fields)
@@ -178,14 +188,6 @@ class ResourceManager(object):
         :param string path: absolute URL path.
         """
         return self.redmine.url + path
-
-    def _prepare_update_request(self, request):
-        """
-        Makes the necessary preparations for update request data.
-
-        :param dict request: Request data.
-        """
-        return {self.resource_class.container_update: self.resource_class.bulk_decode(request, self)}
 
     def update(self, resource_id, **fields):
         """
@@ -213,7 +215,9 @@ class ResourceManager(object):
                 raise exceptions.ValidationError('{0} argument is required'.format(e))
 
         url = self._construct_update_url(query_update)
-        request = self._prepare_update_request(self.resource_class.query_update.formatter.unused_kwargs)
+        self.container = self.resource_class.container_update
+        self.noncontainer = self.resource_class.noncontainer_update
+        request = self._prepare_create_update_request(self.resource_class.query_update.formatter.unused_kwargs)
         response = self.redmine.engine.request(self.resource_class.http_method_update, url, data=request)
         return self._process_update_response(request, response)
 

@@ -393,7 +393,9 @@ class User(BaseResource):
     container_one = 'user'
     container_filter = 'users'
     container_create = 'user'
+    noncontainer_create = ["send_information"]
     container_update = 'user'
+    noncontainer_update = ["send_information"]
     query_all = '/users.json'
     query_one = '/users/{0}.json'
     query_filter = '/users.json'

@@ -99,7 +99,9 @@ class BaseResource(utilities.with_metaclass(Registrar)):
     container_one = None
     container_filter = None
     container_create = None
+    noncontainer_create = []
     container_update = None
+    noncontainer_update = []
     query_all_export = None
     query_one_export = None
     query_all = None
