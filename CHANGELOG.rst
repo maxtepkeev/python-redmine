@@ -8,6 +8,8 @@ Changelog
 
 - ResourceSet's ``export()`` method now supports ``columns`` keyword argument which can be either an iterable
   of column names or an "all" string which tells Python-Redmine to export all available columns
+- Added support for special characters in WikiPage titles (`Issue #222 <https://github.com/maxtepkeev/python-redmine/
+  issues/222>`__) (thanks to `Radek Czajka <https://github.com/rczajka>`__)
 
 **Documentation**:
 
