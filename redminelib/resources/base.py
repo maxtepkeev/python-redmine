@@ -63,6 +63,7 @@ class Registrar(type):
         for k, v in attrs.items():
             if k.startswith('query_') and v is not None:
                 attrs[k] = utilities.ResourceQueryStr(v)
+
         return attrs
 
     @staticmethod

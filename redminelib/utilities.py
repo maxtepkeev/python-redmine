@@ -8,10 +8,8 @@ import string
 import functools
 
 try:
-    # Python 3
     from urllib.parse import quote
 except ImportError:
-    # Python 2
     from urllib import quote
 
 
@@ -92,6 +90,9 @@ class ResourceQueryFormatter(string.Formatter):
 
 
 class ResourceQueryStr(str):
+    """
+    Extends default string with additional formatting capabilities.
+    """
     formatter = ResourceQueryFormatter()
 
     def format(self, *args, **kwargs):
