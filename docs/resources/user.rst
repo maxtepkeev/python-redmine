@@ -45,6 +45,7 @@ create
    :param bool generate_password: (optional). Whether to generate password for the user.
    :param bool send_information: (optional). Whether to send account information to the user.
    :param list custom_fields: (optional). Custom fields as [{'id': 1, 'value': 'foo'}].
+   :param bool admin: (optional). Whether to give admin privileges to the user, requires Redmine >= 4.0.0.
    :return: :ref:`Resource` object
 
 .. code-block:: python
@@ -271,6 +272,7 @@ update
    :param bool generate_password: (optional). Whether to generate password for the user.
    :param bool send_information: (optional). Whether to send account information to the user.
    :param list custom_fields: (optional). Custom fields as [{'id': 1, 'value': 'foo'}].
+   :param bool admin: (optional). Whether to give admin privileges to the user, requires Redmine >= 4.0.0.
    :return: True
 
 .. code-block:: python
