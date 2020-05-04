@@ -11,6 +11,11 @@ Changelog
 - Added support for special characters in WikiPage titles (`Issue #222 <https://github.com/maxtepkeev/python-redmine/
   issues/222>`__) (thanks to `Radek Czajka <https://github.com/rczajka>`__)
 
+**Bugfixes**:
+
+- Project resource ``default_version`` attribute was returned as a dict instead of being converted to
+  Resource object
+
 **Documentation**:
 
 - Mentioned support for ``admin`` in User's resource create/update
