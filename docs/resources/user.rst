@@ -379,4 +379,26 @@ delete
 Export
 ------
 
-Not supported by Redmine
+.. versionadded:: 2.3.0
+
+.. py:method:: export(fmt, savepath=None, filename=None, columns=None, encoding='UTF-8')
+   :module: redminelib.resultsets.ResourceSet
+   :noindex:
+
+   Exports a resource set of User resources in one of the following formats: csv
+
+   :param string fmt: (required). Format to use for export.
+   :param string savepath: (optional). Path where to save the file.
+   :param string filename: (optional). Name that will be used for the file.
+   :param columns: (optional). Iterable of column names or "all" string for all available columns
+    or "all_gui" string for GUI like behaviour or iterable of elements with "all_gui" string and
+    additional columns to export.
+   :type columns: iterable or string
+   :param encoding: (optional). Encoding that will be used for the result file.
+   :return: String or Object
+
+.. code-block:: python
+
+   >>> users = redmine.user.all()
+   >>> users.export('csv', savepath='/home/jsmith', filename='users.csv', columns='all')
+   '/home/jsmith/users.csv'

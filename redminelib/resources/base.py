@@ -110,6 +110,7 @@ class BaseResource(utilities.with_metaclass(Registrar)):
     query_update = None
     query_delete = None
     search_hints = None
+    extra_export_columns = []
     http_method_create = 'post'
     http_method_update = 'put'
     http_method_delete = 'delete'

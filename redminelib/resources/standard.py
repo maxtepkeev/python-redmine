@@ -74,6 +74,7 @@ class Issue(BaseResource):
     query_update = '/issues/{0}.json'
     query_delete = '/issues/{0}.json'
     search_hints = ['issue', 'issue closed']
+    extra_export_columns = ['description', 'last_notes']
 
     _repr = [['id', 'subject'], ['title'], ['id']]
     _includes = ['children', 'attachments', 'relations', 'changesets', 'journals', 'watchers']
@@ -395,6 +396,7 @@ class User(BaseResource):
     container_filter = 'users'
     container_create = 'user'
     container_update = 'user'
+    query_all_export = '/users.{format}'
     query_all = '/users.json'
     query_one = '/users/{0}.json'
     query_filter = '/users.json'

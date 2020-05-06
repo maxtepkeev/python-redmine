@@ -6,6 +6,8 @@ import operator
 import functools
 import itertools
 
+from distutils.version import LooseVersion
+
 from . import lookups, exceptions
 
 
@@ -42,14 +44,15 @@ class BaseResourceSet(object):
 
         return self._total_count
 
-    def export(self, fmt, savepath=None, filename=None, columns=None):
+    def export(self, fmt, savepath=None, filename=None, columns=None, encoding='UTF-8'):
         """
         Exports all resources from resource set to requested format if Resource supports that.
 
         :param string fmt: (required). Format to use for export, e.g. atom, csv, txt, pdf, html etc.
         :param string savepath: (optional). Path where to save the file.
         :param string filename: (optional). Name that will be used for the file.
-        :param columns: (optional). Iterable of column names or "all" for all columns.
+        :param columns: (optional). Iterable of column names, "all_gui" for GUI behaviour or "all" for all columns.
+        :param encoding: (optional). Encoding that will be used by Redmine for the result file.
         :type columns: iterable or string
         """
         if self.manager.resource_class.query_all_export is None:
@@ -58,13 +61,29 @@ class BaseResourceSet(object):
         url = self.manager.redmine.url + self.manager.resource_class.query_all_export.format(
                 format=fmt, **self.manager.params)
 
-        params = self.manager.resource_class.query_all_export.formatter.unused_kwargs
+        params = dict(self.manager.resource_class.query_all_export.formatter.unused_kwargs, encoding=encoding)
 
         if columns is not None:
             if columns == 'all':
-                columns = 'all_inline'
+                columns = ['all', 'all_inline'] + self.manager.resource_class.extra_export_columns
 
-            params.update({'c[]': columns, 'encoding': 'UTF-8'})
+                if self.manager.redmine.ver is not None and LooseVersion(str(self.manager.redmine.ver)) < '3.4.0':
+                    params.update(dict.fromkeys(self.manager.resource_class.extra_export_columns, 1), columns='all')
+            elif 'all_gui' in columns:
+                if columns == 'all_gui':
+                    columns = ['all', 'all_inline']
+
+                    if self.manager.redmine.ver is not None and LooseVersion(str(self.manager.redmine.ver)) < '3.4.0':
+                        params['columns'] = 'all'
+                else:
+                    if self.manager.redmine.ver is not None and LooseVersion(str(self.manager.redmine.ver)) < '3.4.0':
+                        params.update(dict.fromkeys(columns, 1), columns='all')
+
+                    columns = list(columns) + ['all', 'all_inline']
+
+            # Redmine >= 3.4.0 happily accepts c[] array with column names
+            # for older versions the above hack with params is being used
+            params['c[]'] = columns
 
         try:
             return self.manager.redmine.download(url, savepath, filename, params=params)
