@@ -12,6 +12,10 @@ Changelog
 - Added support for special characters in WikiPage titles (`Issue #222 <https://github.com/maxtepkeev/python-redmine/
   issues/222>`__) (thanks to `Radek Czajka <https://github.com/rczajka>`__)
 
+**Changes**:
+
+- *Backwards Incompatible:* Removed Python 3.4 support as it's not supported by Requests anymore
+
 **Bugfixes**:
 
 - Project resource ``default_version`` attribute was returned as a dict instead of being converted to

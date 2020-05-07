@@ -54,7 +54,7 @@ Features
 
 * Supports 100% of Redmine API
 * Supports external Redmine plugins API
-* Supports Python 2.7, 3.4 - 3.8, PyPy and PyPy3
+* Supports Python 2.7, 3.5 - 3.8, PyPy and PyPy3
 * Supports different request engines
 * Extendable via custom resources and custom request engines
 * Extensively documented

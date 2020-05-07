@@ -22,7 +22,7 @@ class NoseTests(test):
 
 tests_require = ['nose', 'coverage']
 
-if sys.version_info[:2] < (3, 3):
+if sys.version_info[:2] == (2, 7):
     tests_require.append('mock')
 
 exec(open('redminelib/version.py').read())
@@ -41,8 +41,8 @@ setup(
     description='Library for communicating with a Redmine project management application',
     long_description=open('README.rst').read() + '\n\n' + open('CHANGELOG.rst').read(),
     keywords='redmine redmineup redminecrm redminelib easyredmine',
-    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
-    install_requires=['requests>=2.20.0'],
+    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*',
+    install_requires=['requests>=2.23.0'],
     tests_require=tests_require,
     cmdclass={'test': NoseTests},
     zip_safe=False,
@@ -57,7 +57,6 @@ setup(
         'Environment :: Web Environment',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
