@@ -25,7 +25,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Python-Redmine'
-copyright = u'2019, Maxim Tepkeev'
+copyright = u'2020, Maxim Tepkeev'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
