@@ -20,3 +20,11 @@ class FileManager(ResourceManager):
             response = {self.container: {'id': int(request[self.container]['token'].split('.')[0])}}
 
         return super(FileManager, self)._process_create_response(request, response)
+
+
+class NewsManager(ResourceManager):
+    def _process_create_response(self, request, response):
+        if response is True:
+            response = {self.container: self.redmine.news.filter(**self.params)[0].raw()}
+
+        return super(NewsManager, self)._process_create_response(request, response)

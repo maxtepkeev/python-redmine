@@ -57,8 +57,9 @@ responses = {
         'all': {'roles': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]},
     },
     'news': {
-        'all': {'news': [{'title': 'Foo', 'id': 1}, {'title': 'Bar', 'id': 2}]},
-        'filter': {'news': [{'title': 'Foo', 'id': 1}, {'title': 'Bar', 'id': 2}]},
+        'get': {'news': {'title': 'Foo', 'id': 1}},
+        'all': {'news': [{'title': 'Foo', 'id': 2}, {'title': 'Bar', 'id': 1}]},
+        'filter': {'news': [{'title': 'Foo', 'id': 2}, {'title': 'Bar', 'id': 1}]},
     },
     'issue_status': {
         'all': {'issue_statuses': [{'name': 'Foo', 'id': 1}, {'name': 'Bar', 'id': 2}]},

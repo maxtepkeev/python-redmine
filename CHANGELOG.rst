@@ -1,11 +1,12 @@
 Changelog
 ---------
 
-2.2.2 (2019-08-XX)
+2.3.0 (2020-06-XX)
 ++++++++++++++++++
 
 **Improvements**:
 
+- News ``create()``, ``update()``, ``delete()`` operations support (requires Redmine >= 4.1.0)
 - ResourceSet's ``export()`` method now supports ``columns`` keyword argument which can be either an iterable
   of column names, an "all" string which tells Python-Redmine to export all available columns, "all_gui" string
   for GUI like behaviour or iterable of elements with "all_gui" string and additional columns to export

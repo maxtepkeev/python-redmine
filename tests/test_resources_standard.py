@@ -1189,7 +1189,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(self.redmine.news.resource_class.redmine_version, '1.1')
 
     def test_news_get(self):
-        self.response.json.return_value = responses['news']['all']
+        self.response.json.return_value = responses['news']['get']
         news = self.redmine.news.get(1)
         self.assertEqual(news.id, 1)
         self.assertEqual(news.title, 'Foo')
@@ -1197,22 +1197,49 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_news_all(self):
         self.response.json.return_value = responses['news']['all']
         news = self.redmine.news.all()
-        self.assertEqual(news[0].id, 1)
+        self.assertEqual(news[0].id, 2)
         self.assertEqual(news[0].title, 'Foo')
-        self.assertEqual(news[1].id, 2)
+        self.assertEqual(news[1].id, 1)
         self.assertEqual(news[1].title, 'Bar')
 
     def test_news_filter(self):
         self.response.json.return_value = responses['news']['filter']
         news = self.redmine.news.filter(project_id=1)
-        self.assertEqual(news[0].id, 1)
+        self.assertEqual(news[0].id, 2)
         self.assertEqual(news[0].title, 'Foo')
-        self.assertEqual(news[1].id, 2)
+        self.assertEqual(news[1].id, 1)
         self.assertEqual(news[1].title, 'Bar')
+
+    def test_news_create(self):
+        self.response.status_code = 201
+        self.response.json.return_value = responses['news']['get']
+        news = self.redmine.news.create(project_id=1, title='Foo')
+        self.assertEqual(news.title, 'Foo')
+
+    def test_news_create_empty_response(self):
+        self.set_patch_side_effect([
+            mock.Mock(status_code=204, history=[], content=''),
+            mock.Mock(status_code=201, history=[], **{'json.return_value': responses['news']['filter']})
+        ])
+        news = self.redmine.news.create(project_id=1, title='Foo')
+        self.assertEqual(news.title, 'Foo')
+
+    def test_news_delete(self):
+        self.response.json.return_value = responses['news']['get']
+        news = self.redmine.news.get(1)
+        self.response.content = ''
+        self.assertEqual(news.delete(), True)
+        self.assertEqual(self.redmine.news.delete(1), True)
+
+    def test_news_update(self):
+        self.response.json.return_value = responses['news']['get']
+        news = self.redmine.news.get(1)
+        news.title = 'Bar'
+        self.assertIsInstance(news.save(), resources.News)
 
     def test_news_url(self):
         self.response.json.return_value = responses['news']['filter']
-        self.assertEqual(self.redmine.news.filter(project_id=1)[0].url, '{0}/news/1'.format(self.url))
+        self.assertEqual(self.redmine.news.filter(project_id=1)[0].url, '{0}/news/2'.format(self.url))
 
     @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_news_export(self):
@@ -1226,7 +1253,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
 
     def test_news_repr(self):
         self.response.json.return_value = responses['news']['filter']
-        self.assertEqual(repr(self.redmine.news.filter(project_id=1)[0]), '<redminelib.resources.News #1 "Foo">')
+        self.assertEqual(repr(self.redmine.news.filter(project_id=1)[0]), '<redminelib.resources.News #2 "Foo">')
 
     def test_issue_status_version(self):
         self.assertEqual(self.redmine.issue_status.resource_class.redmine_version, '1.3')

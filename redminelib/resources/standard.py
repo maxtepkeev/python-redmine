@@ -489,12 +489,20 @@ class Role(BaseResource):
 class News(BaseResource):
     redmine_version = '1.1'
     container_all = 'news'
+    container_one = 'news'
     container_filter = 'news'
+    container_create = 'news'
+    container_update = 'news'
     query_all_export = '/news.{format}'
     query_all = '/news.json'
+    query_one = '/news/{0}.json'
     query_filter = '/news.json'
+    query_create = '/projects/{project_id}/news.json'
+    query_update = '/news/{0}.json'
+    query_delete = '/news/{0}.json'
     query_url = '/news/{0}'
     search_hints = ['news']
+    manager_class = managers.NewsManager
 
     _repr = [['id', 'title']]
     _resource_map = {'project': 'Project', 'author': 'User'}
