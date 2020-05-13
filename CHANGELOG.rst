@@ -21,6 +21,8 @@ Changelog
 
 - Project resource ``default_version`` attribute was returned as a dict instead of being converted to
   Resource object
+- Resource object was leaking memory during initialization (`Issue #257 <https://github.com/maxtepkeev/python-redmine/
+  issues/257>`__) (thanks to `yihli <https://github.com/qianyi3210>`__)
 
 **Documentation**:
 

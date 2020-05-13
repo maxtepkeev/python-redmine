@@ -139,8 +139,8 @@ class BaseResource(utilities.with_metaclass(Registrar)):
         relations_includes = self._relations + self._includes
 
         self.manager = manager
-        self._create_readonly += relations_includes
-        self._update_readonly += relations_includes
+        self._create_readonly = self._create_readonly[:] + relations_includes
+        self._update_readonly = self._update_readonly[:] + relations_includes
         self._decoded_attrs = dict(dict.fromkeys(relations_includes), **attributes)
         self._encoded_attrs = {}
         self._changes = {}
