@@ -68,6 +68,21 @@ new
    >>> news.save()
    <redminelib.resources.News #8 "Foo">
 
+.. warning::
+
+   Redmine's News API doesn't return a news object after create operation. Due to the fact that it goes
+   against the behaviour of all other API endpoints, Python-Redmine has to do some tricks under the hood
+   to return a resource object which involve an additional API request. If that isn't desired one should
+   use the following technique:
+
+   .. code-block:: python
+
+      with redmine.session(return_response=False):
+          news = redmine.news.new()
+          news.title = 'Foo'
+          news.description = 'foobar'
+          news.save()
+
 Read methods
 ------------
 
