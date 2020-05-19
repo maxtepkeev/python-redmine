@@ -66,7 +66,17 @@ Session
 
 Sometimes there is a need to change engine/connection options only for one or few requests.
 Python-Redmine provides a convenient ``session()`` context manager for that. Options that can
-be redefined are all keyword arguments accepted by ``Redmine`` class:
+be redefined are as follows:
+
+* **key**. API key used for authentication.
+* **username**. Username used for authentication.
+* **password**. Password used for authentication.
+* **requests**. Connection options.
+* **impersonate**. Username to impersonate.
+* **ignore_response**. If True no response processing will be done at all.
+* **return_response**. Whether to return response or None.
+* **return_raw_response**. Whether to return raw or json encoded response.
+* **workers**. How many workers to use. *Available only in Pro Edition*.
 
 .. code-block:: python
 

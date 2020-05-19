@@ -158,6 +158,10 @@ class ResourceManager(object):
         self.container = self.resource_class.container_create
         request = self._prepare_create_request(self.resource_class.query_create.formatter.unused_kwargs)
         response = self.redmine.engine.request(self.resource_class.http_method_create, url, data=request)
+
+        if response is None:
+            return None
+
         resource = self._process_create_response(request, response)
         self.url = self.redmine.url + self.resource_class.query_one.format(resource.internal_id, **fields)
         return resource
@@ -215,6 +219,10 @@ class ResourceManager(object):
         url = self._construct_update_url(query_update)
         request = self._prepare_update_request(self.resource_class.query_update.formatter.unused_kwargs)
         response = self.redmine.engine.request(self.resource_class.http_method_update, url, data=request)
+
+        if response is None:
+            return None
+
         return self._process_update_response(request, response)
 
     def _process_update_response(self, request, response):
@@ -260,6 +268,10 @@ class ResourceManager(object):
 
         request = self._prepare_delete_request(params)
         response = self.redmine.engine.request(self.resource_class.http_method_delete, url, params=request)
+
+        if response is None:
+            return None
+
         return self._process_delete_response(request, response)
 
     def _process_delete_response(self, request, response):

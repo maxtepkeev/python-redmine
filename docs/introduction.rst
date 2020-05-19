@@ -96,6 +96,25 @@ a request to Redmine will be made to actually save the resource and finally a ``
 will be executed to run post create tasks if any. You can use any method you like, though it is
 recommended to use a ``new()`` method as the most advanced one.
 
+.. hint::
+
+   If there's no need to process response, one can use a ``redmine.session`` with either a ``return_response=False``
+   which doesn't return any response in a form of Resource object, but still validates it in case there were any
+   errors and raises an exception if needed or a ``ignore_response=True`` which totally ignores response even
+   if there were any errors. These attributes can save quite some processing time and if a response isn't needed
+   one is highly encouraged to use on of them:
+
+   .. code-block:: python
+
+      with redmine.session(return_response=False):
+          redmine.issue.create(project_id=123, subject='Vacation')
+
+      with redmine.session(return_response=False):
+          issue = redmine.issue.new()
+          issue.project_id = 123
+          issue.subject = 'Vacation'
+          issue.save()
+
 read
 ++++
 

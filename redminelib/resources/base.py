@@ -384,7 +384,11 @@ class BaseResource(utilities.with_metaclass(Registrar)):
             self.post_update()
         else:
             self.pre_create()
-            self._decoded_attrs = self.manager.create(**self._changes).raw()
+            resource = self.manager.create(**self._changes)
+
+            if resource is not None:
+                self._decoded_attrs = resource.raw()
+
             self.post_create()
 
         self._changes = {}

@@ -29,6 +29,17 @@ class BaseEngineTestCase(BaseRedmineTestCase):
         self.response.content = ''
         self.assertEqual(self.redmine.engine.request('put', self.url), True)
 
+    def test_returns_none_with_ignore_response_true(self):
+        with self.redmine.session(ignore_response=True):
+            self.assertEqual(self.redmine.engine.ignore_response, True)
+            self.assertEqual(self.redmine.engine.requests['stream'], True)
+            self.assertEqual(self.redmine.engine.request('post', self.url), None)
+
+    def test_returns_none_with_return_response_false(self):
+        with self.redmine.session(return_response=False):
+            self.assertEqual(self.redmine.engine.return_response, False)
+            self.assertEqual(self.redmine.engine.request('post', self.url), None)
+
     def test_session_not_implemented_exception(self):
         self.assertRaises(NotImplementedError, lambda: engines.BaseEngine())
 

@@ -136,6 +136,10 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.assertEqual(project._decoded_attrs, defaults)
         self.assertEqual(repr(project), '<redminelib.resources.Project #0 "">')
 
+    def test_create_resource_returns_none(self):
+        with self.redmine.session(return_response=False):
+            self.assertEqual(self.redmine.user.create(firstname='John', lastname='Smith'), None)
+
     def test_update_resource(self):
         self.response.content = ''
         manager = self.redmine.wiki_page
@@ -165,6 +169,10 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
             self.assertEquals(len(w), 1)
             self.assertIs(w[0].category, exceptions.PerformanceWarning)
 
+    def test_update_resource_returns_none(self):
+        with self.redmine.session(return_response=False):
+            self.assertEqual(self.redmine.issue.update(1, subject='Bar'), None)
+
     def test_delete_resource(self):
         self.response.content = ''
         self.assertEqual(self.redmine.wiki_page.delete(b'\xcf\x86oo'.decode('utf-8'), project_id=1), True)
@@ -173,6 +181,10 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.response.status_code = 204
         self.response.content = ''
         self.assertEqual(self.redmine.wiki_page.delete(b'\xcf\x86oo'.decode('utf-8'), project_id=1), True)
+
+    def test_delete_resource_returns_none(self):
+        with self.redmine.session(return_response=False):
+            self.assertEqual(self.redmine.user.delete(1), None)
 
     def test_resource_get_method_unsupported_exception(self):
         self.assertRaises(exceptions.ResourceBadMethodError, lambda: self.redmine.issue_journal.get(1))

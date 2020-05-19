@@ -12,6 +12,9 @@ Changelog
   for GUI like behaviour or iterable of elements with "all_gui" string and additional columns to export
 - Added support for special characters in WikiPage titles (`Issue #222 <https://github.com/maxtepkeev/python-redmine/
   issues/222>`__) (thanks to `Radek Czajka <https://github.com/rczajka>`__)
+- Added ``return_response`` and ``ignore_response`` parameters to engine which allow to skip response processing
+  and speed up the create/update/delete operation in case response body isn't needed (see
+  `docs <https://python-redmine.com/advanced/request_engines.html#session>`__ for details)
 
 **Changes**:
 
@@ -26,6 +29,7 @@ Changelog
 
 **Documentation**:
 
+- Introduced detailed parameter list for ``redmine.session``
 - Mentioned support for ``admin`` in User's resource create/update
 
 2.2.1 (2019-02-28)

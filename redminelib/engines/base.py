@@ -17,10 +17,17 @@ class BaseEngine(object):
         :param string password: (optional). Password used for authentication.
         :param dict requests: (optional). Connection options.
         :param string impersonate: (optional). Username to impersonate.
+        :param bool ignore_response (optional). If True no response processing will be done at all.
+        :param bool return_response (optional). Whether to return response or None.
         :param bool return_raw_response (optional). Whether to return raw or json encoded responses.
         """
+        self.ignore_response = options.pop('ignore_response', False)
+        self.return_response = options.pop('return_response', True)
         self.return_raw_response = options.pop('return_raw_response', False)
         self.requests = dict(dict(headers={}, params={}, data={}), **options.get('requests', {}))
+
+        if self.ignore_response:
+            self.requests['stream'] = True
 
         if options.get('impersonate') is not None:
             self.requests['headers']['X-Redmine-Switch-User'] = options['impersonate']
@@ -132,6 +139,9 @@ class BaseEngine(object):
 
         :param obj response: (required). Response object with response details.
         """
+        if self.ignore_response:
+            return None
+
         if response.history:
             r = response.history[0]
             if r.is_redirect and r.request.url.startswith('http://') and response.request.url.startswith('https://'):
@@ -140,7 +150,9 @@ class BaseEngine(object):
         status_code = response.status_code
 
         if status_code in (200, 201, 204):
-            if self.return_raw_response:
+            if not self.return_response:
+                return None
+            elif self.return_raw_response:
                 return response
             elif not response.content.strip():
                 return True
