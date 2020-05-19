@@ -33,15 +33,14 @@ class Redmine(object):
         :param raise_attr_exception: (optional). Control over resource attribute access exception raising.
         :type raise_attr_exception: bool or tuple
         :param cls engine: (optional). Engine that will be used to make requests to Redmine.
-        :param bool return_raw_response (optional). Whether engine should return raw or json encoded responses.
         """
         self.url = url.rstrip('/')
-        self.ver = kwargs.get('version', None)
-        self.date_format = kwargs.get('date_format', '%Y-%m-%d')
-        self.datetime_format = kwargs.get('datetime_format', '%Y-%m-%dT%H:%M:%SZ')
-        self.raise_attr_exception = kwargs.get('raise_attr_exception', True)
+        self.ver = kwargs.pop('version', None)
+        self.date_format = kwargs.pop('date_format', '%Y-%m-%d')
+        self.datetime_format = kwargs.pop('datetime_format', '%Y-%m-%dT%H:%M:%SZ')
+        self.raise_attr_exception = kwargs.pop('raise_attr_exception', True)
 
-        engine = kwargs.get('engine', engines.DefaultEngine)
+        engine = kwargs.pop('engine', engines.DefaultEngine)
 
         if not inspect.isclass(engine) or not issubclass(engine, engines.BaseEngine):
             raise exceptions.EngineClassError
