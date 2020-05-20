@@ -6,6 +6,14 @@ from . import ResourceManager
 from .. import exceptions
 
 
+class FileManager(ResourceManager):
+    def _process_create_response(self, request, response):
+        if response is True:
+            response = {self.container: {'id': int(request[self.container]['token'].split('.')[0])}}
+
+        return super(FileManager, self)._process_create_response(request, response)
+
+
 class WikiPageManager(ResourceManager):
     def _process_create_response(self, request, response):
         if response is True:
@@ -14,12 +22,16 @@ class WikiPageManager(ResourceManager):
         return super(WikiPageManager, self)._process_create_response(request, response)
 
 
-class FileManager(ResourceManager):
-    def _process_create_response(self, request, response):
-        if response is True:
-            response = {self.container: {'id': int(request[self.container]['token'].split('.')[0])}}
+class UserManager(ResourceManager):
+    def _prepare_create_request(self, request):
+        request = super(UserManager, self)._prepare_create_request(request)
+        request['send_information'] = request[self.container].pop('send_information', False)
+        return request
 
-        return super(FileManager, self)._process_create_response(request, response)
+    def _prepare_update_request(self, request):
+        request = super(UserManager, self)._prepare_update_request(request)
+        request['send_information'] = request[self.resource_class.container_update].pop('send_information', False)
+        return request
 
 
 class NewsManager(ResourceManager):

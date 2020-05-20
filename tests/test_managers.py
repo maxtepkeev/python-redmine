@@ -12,7 +12,7 @@ class FooResource(resources.Project):
 
 class ResourceManagerTestCase(BaseRedmineTestCase):
     def test_has_custom_repr(self):
-        self.assertEqual(repr(self.redmine.user), '<redminelib.managers.ResourceManager object for User resource>')
+        self.assertEqual(repr(self.redmine.issue), '<redminelib.managers.ResourceManager object for Issue resource>')
 
     def test_supports_additional_resources(self):
         self.assertIsInstance(self.redmine.foo_resource, managers.ResourceManager)

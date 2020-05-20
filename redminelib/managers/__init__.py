@@ -3,4 +3,4 @@ Defines manager classes.
 """
 
 from .base import ResourceManager
-from .standard import WikiPageManager, FileManager, NewsManager
+from .standard import FileManager, WikiPageManager, UserManager, NewsManager

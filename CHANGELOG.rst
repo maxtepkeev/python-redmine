@@ -22,6 +22,9 @@ Changelog
 
 **Bugfixes**:
 
+- User's ``send_information`` field wasn't sent correctly to Redmine so account information emails were
+  never sent (`Issue #227 <https://github.com/maxtepkeev/python-redmine/pull/227>`__) (thanks to
+  `wodny <https://github.com/wodny>`__)
 - Project resource ``default_version`` attribute was returned as a dict instead of being converted to
   Resource object
 - Resource object was leaking memory during initialization (`Issue #257 <https://github.com/maxtepkeev/python-redmine/

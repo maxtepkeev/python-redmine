@@ -403,6 +403,7 @@ class User(BaseResource):
     query_create = '/users.json'
     query_update = '/users/{0}.json'
     query_delete = '/users/{0}.json'
+    manager_class = managers.UserManager
 
     _repr = [['id', 'firstname', 'lastname'], ['id', 'name']]
     _includes = ['memberships', 'groups']
