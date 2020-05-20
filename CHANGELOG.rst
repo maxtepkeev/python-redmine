@@ -6,6 +6,9 @@ Changelog
 
 **Improvements**:
 
+- Support for ``get()`` and ``update()`` operations for ``/my/account`` endpoint which doesn't require admin
+  privileges by using ``me`` as an id, i.e. ``redmine.user.get('me')`` or ``redmine.user.update('me',firstname='John')``
+  (requires Redmine >= 4.1.0)
 - News ``create()``, ``update()``, ``delete()`` operations support (requires Redmine >= 4.1.0)
 - ResourceSet's ``export()`` method now supports ``columns`` keyword argument which can be either an iterable
   of column names, an "all" string which tells Python-Redmine to export all available columns, "all_gui" string

@@ -23,10 +23,23 @@ class WikiPageManager(ResourceManager):
 
 
 class UserManager(ResourceManager):
+    @staticmethod
+    def _check_custom_url(path):
+        if path.endswith('/me.json'):
+            path = '/my/account.json'
+
+        return path
+
+    def _construct_get_url(self, path):
+        return super(UserManager, self)._construct_get_url(self._check_custom_url(path))
+
     def _prepare_create_request(self, request):
         request = super(UserManager, self)._prepare_create_request(request)
         request['send_information'] = request[self.container].pop('send_information', False)
         return request
+
+    def _construct_update_url(self, path):
+        return super(UserManager, self)._construct_update_url(self._check_custom_url(path))
 
     def _prepare_update_request(self, request):
         request = super(UserManager, self)._prepare_update_request(request)

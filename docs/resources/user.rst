@@ -293,6 +293,16 @@ update
    ... )
    True
 
+.. hint::
+
+   By default Python-Redmine uses ``/users/ID`` API endpoint which requires admin privileges, it is also
+   possible to use ``/my/account`` endpoint which doesn't by using ``me`` as an ID (requires Redmine >= 4.1.0):
+
+   .. code-block:: python
+
+      >>> redmine.user.update('me', firstname='John')
+      True
+
 save
 ++++
 

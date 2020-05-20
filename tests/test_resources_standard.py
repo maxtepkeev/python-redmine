@@ -1018,6 +1018,12 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(user.id, 1)
         self.assertEqual(user.firstname, 'John')
 
+    def test_user_get_account(self):
+        self.response.json.return_value = responses['user']['get']
+        user = self.redmine.user.get('me')
+        self.assertEqual(user.firstname, 'John')
+        self.assertTrue(self.patch_requests.call_args[0][1].endswith('/my/account.json'))
+
     def test_user_all(self):
         self.response.json.return_value = responses['user']['all']
         users = self.redmine.user.all()
@@ -1061,6 +1067,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         user.lastname = 'Foo'
         user.firstname = 'Bar'
         self.assertIsInstance(user.save(), resources.User)
+
+    def test_user_update_account(self):
+        self.redmine.user.update('me', lastname='Foo', firstname='Bar')
+        self.assertTrue(self.patch_requests.call_args[0][1].endswith('/my/account.json'))
 
     def test_user_update_with_send_information(self):
         import json
