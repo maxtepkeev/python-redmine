@@ -54,6 +54,22 @@ class ResourceManager(object):
         manager.params = params
         return manager
 
+    def _construct_get_url(self, path):
+        """
+        Constructs URL for get method.
+
+        :param string path: absolute URL path.
+        """
+        return self.redmine.url + path
+
+    def _prepare_get_request(self, request):
+        """
+        Makes the necessary preparations for get request data.
+
+        :param dict request: Request data.
+        """
+        return self.resource_class.bulk_decode(request, self)
+
     def get(self, resource_id, **params):
         """
         Returns a Resource object from Redmine by resource id.
@@ -72,19 +88,30 @@ class ResourceManager(object):
             return resource
 
         try:
-            self.url = self.redmine.url + self.resource_class.query_one.format(resource_id, **params)
-        except KeyError as exception:
-            raise exceptions.ValidationError('{0} argument is required'.format(exception))
+            self.url = self._construct_get_url(self.resource_class.query_one.format(resource_id, **params))
+        except KeyError as e:
+            raise exceptions.ValidationError('{0} argument is required'.format(e))
 
-        self.params = self.resource_class.bulk_decode(params, self)
+        self.params = self._prepare_get_request(params)
         self.container = self.resource_class.container_one
 
         try:
-            return self.to_resource(self.redmine.engine.request('get', self.url, params=self.params)[self.container])
+            response = self.redmine.engine.request('get', self.url, params=self.params)
         except exceptions.ResourceNotFoundError as e:
             if self.resource_class.requirements:
                 raise exceptions.ResourceRequirementsError(self.resource_class.requirements)
             raise e
+
+        return self._process_get_response(self.params, response)
+
+    def _process_get_response(self, request, response):
+        """
+        Processes get response and constructs resource object.
+
+        :param dict request: Original request data.
+        :param any response: Response received from Redmine for this request data.
+        """
+        return self.to_resource(response[self.container])
 
     def all(self, **params):
         """
