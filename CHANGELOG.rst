@@ -22,6 +22,7 @@ Changelog
 
 **Changes**:
 
+- *Backwards Incompatible:* Requests version required >= 2.23.0
 - *Backwards Incompatible:* Removed Python 3.4 support as it's not supported by Requests anymore
 
 **Bugfixes**:
