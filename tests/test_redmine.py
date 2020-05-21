@@ -62,7 +62,7 @@ class RedmineTestCase(BaseRedmineTestCase):
     def test_successful_file_upload(self):
         self.response.status_code = 201
         self.response.json.return_value = {'upload': {'id': 1, 'token': '123456'}}
-        self.assertEqual(self.redmine.upload('foo')['token'], '123456')
+        self.assertEqual(self.redmine.upload('foo', filename='foo.jpg')['token'], '123456')
 
     def test_successful_filestream_upload(self):
         from io import StringIO

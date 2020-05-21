@@ -86,18 +86,20 @@ class Redmine(object):
         finally:
             self.engine = engine
 
-    def upload(self, f):
+    def upload(self, f, filename=None):
         """
         Uploads file from file path / file stream to Redmine and returns an assigned token.
 
         :param f: (required). File path / stream that will be uploaded.
         :type f: string or file-like object
+        :param filename: (optional). Filename for the file that will be uploaded.
         """
         if self.ver is not None and LooseVersion(str(self.ver)) < LooseVersion('1.4.0'):
             raise exceptions.VersionMismatchError('File uploading')
 
         url = '{0}/uploads.json'.format(self.url)
         headers = {'Content-Type': 'application/octet-stream'}
+        params = {'filename': filename or ''}
 
         # There're myriads of file-like object implementations here and there and some of them don't have
         # a "read" method, which is wrong, but that's what we have, on the other hand it looks like all of
@@ -127,7 +129,7 @@ class Redmine(object):
             stream = open(f, 'rb')
             close = True
 
-        response = self.engine.request('post', url, data=stream, headers=headers)
+        response = self.engine.request('post', url, params=params, data=stream, headers=headers)
 
         if close:
             stream.close()

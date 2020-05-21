@@ -257,7 +257,8 @@ class BaseResource(utilities.with_metaclass(Registrar)):
         if attr == 'uploads':
             for index, attachment in enumerate(value):
                 if 'token' not in attachment:
-                    value[index]['token'] = manager.redmine.upload(attachment.pop('path', ''))['token']
+                    value[index]['token'] = manager.redmine.upload(
+                        attachment.pop('path', ''), filename=attachment.get('filename'))['token']
 
             return attr, value
         elif attr == 'include' and isinstance(value, (list, tuple)):
