@@ -567,7 +567,7 @@ class CustomField(BaseResource):
         # i.e. project, and it's not used in the resource, there will be
         # no value attribute defined, that is why we need to return '' or
         # we'll get an exception
-        if attr == 'value' and attr not in self._decoded_attrs:
+        if attr == 'value' and not self._decoded_attrs.get(attr, ""):
             return ''
 
         return super(CustomField, self).__getattr__(attr)
