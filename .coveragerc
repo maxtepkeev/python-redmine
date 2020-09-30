@@ -1,6 +1,6 @@
 [run]
 source = redminelib
-
+'''amazing'''
 [report]
 show_missing = True
 omit =
