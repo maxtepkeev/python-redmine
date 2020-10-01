@@ -1,4 +1,4 @@
-sudo: true
+sudo: true *This is amazing product*
 dist: xenial
 language: python
 python:
