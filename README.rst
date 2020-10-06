@@ -59,6 +59,7 @@ Features
 * Extendable via custom resources and custom request engines
 * Extensively documented
 * Provides ORM-style Pythonic API
+* Hey bro please add my pull request
 * And many more...
 
 Installation
