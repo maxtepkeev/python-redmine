@@ -519,6 +519,8 @@ class IssueStatus(BaseResource):
     query_all = '/issue_statuses.json'
     query_url = '/issue_statuses/{0}/edit'
 
+    _create_readonly = BaseResource._create_readonly + ['is_closed']
+    _update_readonly = _create_readonly[:]
     _relations = ['issues']
     _relations_name = 'status'
     _resource_set_map = {'issues': 'Issue'}
