@@ -35,7 +35,7 @@ class BaseEngine(object):
         # We would like to be authenticated by API key by default
         if options.get('key') is not None:
             self.requests['params']['key'] = options['key']
-        elif options.get('username') is not None and options.get('password') is not None:
+        elif 'auth' not in self.requests.keys() and options.get('username') is not None and options.get('password') is not None:
             self.requests['auth'] = (options['username'], options['password'])
 
         self.session = self.create_session(**self.requests)
