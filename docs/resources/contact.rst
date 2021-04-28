@@ -145,12 +145,13 @@ get
     - contacts
     - deals
     - issues
+    - projects
 
    :return: :ref:`Resource` object
 
 .. code-block:: python
 
-   >>> contact = redmine.contact.get(12345, include=['notes', 'contacts', 'deals', 'issues'])
+   >>> contact = redmine.contact.get(12345, include=['notes', 'contacts', 'deals', 'issues', 'projects'])
    >>> contact
    <redminelib.resources.Contact #12345 "Ivan Ivanov">
 
