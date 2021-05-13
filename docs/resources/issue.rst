@@ -182,8 +182,8 @@ all
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Returns all open Issue resources from Redmine, to return all open and closed issues from
-   Redmine use ``filter()`` method below.
+   Returns all Issue resources (both open and closed) from Redmine, to return issues with specific
+   status from Redmine use ``filter()`` method below.
 
    :param string sort: (optional). Column to sort. Append :desc to invert the order.
    :param int limit: (optional). How much resources to return.
