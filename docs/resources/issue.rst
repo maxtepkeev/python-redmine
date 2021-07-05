@@ -223,7 +223,7 @@ filter
     a given project and none of its subprojects.
    :type subproject_id: int or string
    :param int tracker_id: (optional). Get issues from the tracker with given id.
-   :param int query_id: (optional). Get issues for the given query id.
+   :param int query_id: (optional). Get issues for the given query id if the project_id is given.
    :param status_id:
     .. raw:: html
 
@@ -261,6 +261,15 @@ filter
    ...     created_on='><2012-03-01|2012-03-07',
    ...     cf_22='~foo',
    ...     sort='category:desc'
+   ... )
+   >>> issues
+   <redminelib.resultsets.ResourceSet object with Issue resources>
+   
+.. code-block:: python
+
+   >>> issues = redmine.issue.filter(
+   ...     project_id='vacation',
+   ...     query_id=326
    ... )
    >>> issues
    <redminelib.resultsets.ResourceSet object with Issue resources>
