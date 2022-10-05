@@ -13,7 +13,7 @@ your users if they provide the same login/password they use to login to Redmine:
    user = Redmine('https://redmine.url', username=username, password=password).auth()
 
 If authentication succeeded, ``user`` variable will contain details about the current user, if
-there was an error during authentication proccess, an ``AuthError`` exception will be thrown.
+there was an error during authentication process, an ``AuthError`` exception will be thrown.
 
 If you need more control, for example you want to return your own error message, you can
 intercept ``AuthError`` exception and do what you need, for example:

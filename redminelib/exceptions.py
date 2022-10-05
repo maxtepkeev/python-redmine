@@ -111,7 +111,7 @@ class UnknownError(BaseRedmineError):
 
 class ValidationError(BaseRedmineError):
     """
-    Redmine validation errors occured on create/update resource.
+    Redmine validation errors occurred on create/update resource.
     """
     def __init__(self, error):
         super(ValidationError, self).__init__(error)
