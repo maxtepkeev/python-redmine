@@ -5,8 +5,11 @@ python:
   - 3.7
   - 3.8
   - 3.9
+  - 3.10
+  - 3.11
   - pypy3.7-7.3.9
   - pypy3.8-7.3.9
+  - pypy3.9-7.3.9
 install:
   - pip install -r tests/requirements.txt
   - pip install coveralls

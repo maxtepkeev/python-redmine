@@ -9,6 +9,10 @@ X.X.X (XXXX-XX-XX)
 - Requests version required >= 2.28.1
 - Removed Python 2.7, 3.5, 3.6 support as it's not supported by Requests anymore
 
+**Improvements**:
+
+- Added support for Python 3.10, 3.11 and latest PyPy
+
 2.3.0 (2020-05-21)
 ++++++++++++++++++
 
