@@ -4,11 +4,11 @@ Python-Redmine
 .. image:: https://badge.fury.io/py/python-redmine.svg
    :target: https://badge.fury.io/py/python-redmine
 
-.. image:: https://img.shields.io/travis/maxtepkeev/python-redmine/master.svg
-   :target: https://travis-ci.org/maxtepkeev/python-redmine
+.. image:: https://img.shields.io/travis/com/maxtepkeev/python-redmine/master
+   :target: https://app.travis-ci.com/maxtepkeev/python-redmine
 
-.. image:: https://img.shields.io/coveralls/maxtepkeev/python-redmine/master.svg
-   :target: https://coveralls.io/r/maxtepkeev/python-redmine?branch=master
+.. image:: https://img.shields.io/coverallsCoverage/github/maxtepkeev/python-redmine?branch=master
+   :target: https://coveralls.io/github/maxtepkeev/python-redmine?branch=master
 
 Python-Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`__
 project management application. Redmine exposes some of it's data via `REST API
