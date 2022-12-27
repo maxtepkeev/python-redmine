@@ -32,7 +32,7 @@ setup(
     long_description=open('README.rst').read() + '\n\n' + open('CHANGELOG.rst').read(),
     keywords='redmine redmineup redminecrm redminelib easyredmine',
     python_requires='>=3.7, <4',
-    install_requires=['requests>=2.23.0'],
+    install_requires=['requests>=2.28.1'],
     tests_require=tests_require,
     cmdclass={'test': NoseTests},
     zip_safe=False,
