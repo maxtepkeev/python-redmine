@@ -8,6 +8,7 @@ X.X.X (XXXX-XX-XX)
 
 - Requests version required >= 2.28.1
 - Removed Python 2.7, 3.5, 3.6 support as it's not supported by Requests anymore
+- Removed support for ``python setup.py test`` as it became deprecated by setuptools
 
 **Improvements**:
 
@@ -15,8 +16,11 @@ X.X.X (XXXX-XX-XX)
 
 **Changes**:
 
+- *Backwards Incompatible:* Switched to pytest instead of nose as nose project is dead
+  (`Issue #312 <https://github.com/maxtepkeev/python-redmine/issues/312>`__)
 - *Backwards Incompatible:* Removed usage of distutils.LooseVersion internally since it became deprecated and
-  caused warnings, because of that all version info is now being represented as tuples and not strings as before
+  caused warnings, because of that all version info internally is now being represented as tuples and not strings
+  as before
 
 2.3.0 (2020-05-21)
 ++++++++++++++++++
