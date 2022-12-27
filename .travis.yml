@@ -2,14 +2,11 @@ os: linux
 dist: xenial
 language: python
 python:
-  - 2.7
-  - 3.5
-  - 3.6
   - 3.7
   - 3.8
   - 3.9
-  - pypy2.7-6.0
-  - pypy3.5-6.0
+  - pypy3.7-7.3.9
+  - pypy3.8-7.3.9
 install:
   - pip install -r tests/requirements.txt
   - pip install coveralls

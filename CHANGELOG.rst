@@ -1,8 +1,20 @@
 Changelog
 ---------
 
+X.X.X (XXXX-XX-XX)
+++++++++++++++++++
+
+**Deprecations**:
+
+- Removed Python 2.7, 3.5, 3.6 support as it's not supported by Requests anymore
+
 2.3.0 (2020-05-21)
 ++++++++++++++++++
+
+**Deprecations**:
+
+- Requests version required >= 2.23.0
+- Removed Python 3.4 support as it's not supported by Requests anymore
 
 **Improvements**:
 
@@ -19,11 +31,6 @@ Changelog
 - Added ``return_response`` and ``ignore_response`` parameters to engine which allow to skip response processing
   and speed up the create/update/delete operation in case response body isn't needed (see
   `docs <https://python-redmine.com/advanced/request_engines.html#session>`__ for details)
-
-**Changes**:
-
-- *Backwards Incompatible:* Requests version required >= 2.23.0
-- *Backwards Incompatible:* Removed Python 3.4 support as it's not supported by Requests anymore
 
 **Bugfixes**:
 
@@ -52,16 +59,16 @@ Changelog
 2.2.0 (2019-01-13)
 ++++++++++++++++++
 
+**Deprecations**:
+
+- Removed vendored Requests package and make it an external dependency as Requests did
+  the same with it's own dependencies
+- Removed Python 2.6 and 3.3 support as they're not supported by Requests anymore
+
 **Improvements**:
 
 - ``PerformanceWarning`` will be issued when Python-Redmine does some unnecessary work under the hood to fix the
   clients code problems
-
-**Changes**:
-
-- *Backwards Incompatible:* Removed vendored Requests package and make it an external dependency as Requests did
-  the same with it's own dependencies
-- *Backwards Incompatible:* Removed Python 2.6 and 3.3 support as they're not supported by Requests anymore
 
 **Bugfixes**:
 

@@ -1,12 +1,5 @@
-import sys
-
 from setuptools import setup, find_packages
 from setuptools.command.test import test
-
-try:
-    import multiprocessing  # https://bugs.python.org/issue15881
-except ImportError:
-    pass
 
 
 class NoseTests(test):
@@ -21,9 +14,6 @@ class NoseTests(test):
 
 
 tests_require = ['nose', 'coverage']
-
-if sys.version_info[:2] == (2, 7):
-    tests_require.append('mock')
 
 exec(open('redminelib/version.py').read())
 
@@ -41,7 +31,7 @@ setup(
     description='Library for communicating with a Redmine project management application',
     long_description=open('README.rst').read() + '\n\n' + open('CHANGELOG.rst').read(),
     keywords='redmine redmineup redminecrm redminelib easyredmine',
-    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*',
+    python_requires='>=3.7, <4',
     install_requires=['requests>=2.23.0'],
     tests_require=tests_require,
     cmdclass={'test': NoseTests},
@@ -56,12 +46,10 @@ setup(
         'Environment :: Console',
         'Environment :: Web Environment',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3 :: Only',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy'
     ],

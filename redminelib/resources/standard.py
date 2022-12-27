@@ -2,8 +2,6 @@
 Defines standard Redmine resources and resource mappings.
 """
 
-from __future__ import unicode_literals
-
 from distutils.version import LooseVersion
 
 from . import BaseResource
@@ -18,10 +16,10 @@ class Project(BaseResource):
     container_update = 'project'
     query_all_export = '/projects.{format}'
     query_all = '/projects.json'
-    query_one = '/projects/{0}.json'
+    query_one = '/projects/{}.json'
     query_create = '/projects.json'
-    query_update = '/projects/{0}.json'
-    query_delete = '/projects/{0}.json'
+    query_update = '/projects/{}.json'
+    query_delete = '/projects/{}.json'
     search_hints = ['project']
 
     _repr = [['id', 'name'], ['title']]
@@ -55,7 +53,7 @@ class Project(BaseResource):
         if attr == 'enabled_modules':
             return attr, [module['name'] for module in value]
 
-        return super(Project, cls).encode(attr, value, manager)
+        return super().encode(attr, value, manager)
 
 
 class Issue(BaseResource):
@@ -66,13 +64,13 @@ class Issue(BaseResource):
     container_create = 'issue'
     container_update = 'issue'
     query_all_export = '/issues.{format}'
-    query_one_export = '/issues/{0}.{format}'
+    query_one_export = '/issues/{}.{format}'
     query_all = '/issues.json?status_id=*'
-    query_one = '/issues/{0}.json'
+    query_one = '/issues/{}.json'
     query_filter = '/issues.json'
     query_create = '/projects/{project_id}/issues.json'
-    query_update = '/issues/{0}.json'
-    query_delete = '/issues/{0}.json'
+    query_update = '/issues/{}.json'
+    query_delete = '/issues/{}.json'
     search_hints = ['issue', 'issue closed']
     extra_export_columns = ['description', 'last_notes']
 
@@ -130,7 +128,7 @@ class Issue(BaseResource):
 
             :param int user_id: (required). User id.
             """
-            url = '{0}/issues/{1}/watchers.json'.format(self._redmine.url, self._issue_id)
+            url = f'{self._redmine.url}/issues/{self._issue_id}/watchers.json'
             return self._redmine.engine.request('post', url, data={'user_id': user_id})
 
         def remove(self, user_id):
@@ -139,7 +137,7 @@ class Issue(BaseResource):
 
             :param int user_id: (required). User id.
             """
-            url = '{0}/issues/{1}/watchers/{2}.json'.format(self._redmine.url, self._issue_id, user_id)
+            url = f'{self._redmine.url}/issues/{self._issue_id}/watchers/{user_id}.json'
             return self._redmine.engine.request('delete', url)
 
     def __getattr__(self, attr):
@@ -149,13 +147,13 @@ class Issue(BaseResource):
         if attr == 'version':
             attr = 'fixed_version'
 
-        return super(Issue, self).__getattr__(attr)
+        return super().__getattr__(attr)
 
     def __setattr__(self, attr, value):
         if attr == 'version_id':
             attr = 'fixed_version_id'
 
-        super(Issue, self).__setattr__(attr, value)
+        super().__setattr__(attr, value)
 
     @classmethod
     def decode(cls, attr, value, manager):
@@ -166,7 +164,7 @@ class Issue(BaseResource):
         elif attr == 'checklists':
             return 'checklists_attributes', value
 
-        return super(Issue, cls).decode(attr, value, manager)
+        return super().decode(attr, value, manager)
 
 
 class TimeEntry(BaseResource):
@@ -178,11 +176,11 @@ class TimeEntry(BaseResource):
     container_update = 'time_entry'
     query_all_export = '/time_entries.{format}'
     query_all = '/time_entries.json'
-    query_one = '/time_entries/{0}.json'
+    query_one = '/time_entries/{}.json'
     query_filter = '/time_entries.json'
     query_create = '/time_entries.json'
-    query_update = '/time_entries/{0}.json'
-    query_delete = '/time_entries/{0}.json'
+    query_update = '/time_entries/{}.json'
+    query_delete = '/time_entries/{}.json'
 
     _repr = [['id']]
     _resource_map = {'project': 'Project', 'issue': 'Issue', 'user': 'User', 'activity': 'Enumeration'}
@@ -196,14 +194,14 @@ class TimeEntry(BaseResource):
         elif attr == 'to_date':
             attr = 'to'
 
-        return super(TimeEntry, cls).decode(attr, value, manager)
+        return super().decode(attr, value, manager)
 
 
 class Enumeration(BaseResource):
     redmine_version = '2.2'
     container_filter = '{resource}'
     query_filter = '/enumerations/{resource}.json'
-    query_url = '/enumerations/{0}/edit'
+    query_url = '/enumerations/{}/edit'
 
     _resource_set_map = {'custom_fields': 'CustomField'}
 
@@ -216,9 +214,9 @@ class Attachment(BaseResource):
     redmine_version = '1.3'
     container_one = 'attachment'
     container_update = 'attachment'
-    query_one = '/attachments/{0}.json'
-    query_update = '/attachments/{0}.json'
-    query_delete = '/attachments/{0}.json'
+    query_one = '/attachments/{}.json'
+    query_update = '/attachments/{}.json'
+    query_delete = '/attachments/{}.json'
     http_method_update = 'patch'
 
     _repr = [['id', 'filename'], ['id']]
@@ -243,7 +241,7 @@ class File(Attachment):
         if attr == 'path':
             return 'token', manager.redmine.upload(value)['token']
 
-        return super(File, cls).decode(attr, value, manager)
+        return super().decode(attr, value, manager)
 
 
 class IssueJournal(BaseResource):
@@ -261,12 +259,12 @@ class WikiPage(BaseResource):
     container_one = 'wiki_page'
     container_create = 'wiki_page'
     container_update = 'wiki_page'
-    query_one_export = '/projects/{project_id}/wiki/{0}.{format}'
+    query_one_export = '/projects/{project_id}/wiki/{}.{format}'
     query_filter = '/projects/{project_id}/wiki/index.json'
-    query_one = '/projects/{project_id}/wiki/{0}.json'
+    query_one = '/projects/{project_id}/wiki/{}.json'
     query_create = '/projects/{project_id}/wiki/{title}.json'
-    query_update = '/projects/{project_id}/wiki/{0}.json'
-    query_delete = '/projects/{project_id}/wiki/{0}.json'
+    query_update = '/projects/{project_id}/wiki/{}.json'
+    query_delete = '/projects/{project_id}/wiki/{}.json'
     search_hints = ['wiki-page']
     http_method_create = 'put'
     manager_class = managers.WikiPageManager
@@ -286,16 +284,16 @@ class WikiPage(BaseResource):
             value = manager.new_manager(cls.__name__, project_id=manager.params.get('project_id', 0)).to_resource(value)
             return attr, value
 
-        return super(WikiPage, cls).encode(attr, value, manager)
+        return super().encode(attr, value, manager)
 
     def refresh(self, **params):
-        return super(WikiPage, self).refresh(**dict(params, project_id=self.project_id))
+        return super().refresh(**dict(params, project_id=self.project_id))
 
     def post_update(self):
         self._encoded_attrs['version'] = self._decoded_attrs['version'] = self._decoded_attrs.get('version', 0) + 1
 
     def delete(self, **params):
-        return super(WikiPage, self).delete(**dict(params, project_id=self.project_id))
+        return super().delete(**dict(params, project_id=self.project_id))
 
     def export_url(self, fmt):
         return self.manager.redmine.url + self.query_one_export.format(
@@ -315,7 +313,7 @@ class WikiPage(BaseResource):
         if attr == 'text' and attr not in self._decoded_attrs:
             self._decoded_attrs[attr] = self.refresh(itself=False).raw()[attr]
 
-        return super(WikiPage, self).__getattr__(attr)
+        return super().__getattr__(attr)
 
     def __int__(self):
         return self.version
@@ -328,10 +326,10 @@ class ProjectMembership(BaseResource):
     container_update = 'membership'
     container_create = 'membership'
     query_filter = '/projects/{project_id}/memberships.json'
-    query_one = '/memberships/{0}.json'
+    query_one = '/memberships/{}.json'
     query_create = '/projects/{project_id}/memberships.json'
-    query_update = '/memberships/{0}.json'
-    query_delete = '/memberships/{0}.json'
+    query_update = '/memberships/{}.json'
+    query_delete = '/memberships/{}.json'
 
     _repr = [['id']]
     _create_readonly = BaseResource._create_readonly + ['user', 'roles']
@@ -349,10 +347,10 @@ class IssueCategory(BaseResource):
     container_update = 'issue_category'
     container_create = 'issue_category'
     query_filter = '/projects/{project_id}/issue_categories.json'
-    query_one = '/issue_categories/{0}.json'
+    query_one = '/issue_categories/{}.json'
     query_create = '/projects/{project_id}/issue_categories.json'
-    query_update = '/issue_categories/{0}.json'
-    query_delete = '/issue_categories/{0}.json'
+    query_update = '/issue_categories/{}.json'
+    query_delete = '/issue_categories/{}.json'
 
     _resource_map = {'project': 'Project', 'assigned_to': 'User'}
 
@@ -363,9 +361,9 @@ class IssueRelation(BaseResource):
     container_one = 'relation'
     container_create = 'relation'
     query_filter = '/issues/{issue_id}/relations.json'
-    query_one = '/relations/{0}.json'
+    query_one = '/relations/{}.json'
     query_create = '/issues/{issue_id}/relations.json'
-    query_delete = '/relations/{0}.json'
+    query_delete = '/relations/{}.json'
 
     _repr = [['id']]
     _single_attr_id_map = {'issue_id': 'issue'}
@@ -378,10 +376,10 @@ class Version(BaseResource):
     container_create = 'version'
     container_update = 'version'
     query_filter = '/projects/{project_id}/versions.json'
-    query_one = '/versions/{0}.json'
+    query_one = '/versions/{}.json'
     query_create = '/projects/{project_id}/versions.json'
-    query_update = '/versions/{0}.json'
-    query_delete = '/versions/{0}.json'
+    query_update = '/versions/{}.json'
+    query_delete = '/versions/{}.json'
 
     _unconvertible = ['status']
     _resource_map = {'project': 'Project'}
@@ -398,11 +396,11 @@ class User(BaseResource):
     container_update = 'user'
     query_all_export = '/users.{format}'
     query_all = '/users.json'
-    query_one = '/users/{0}.json'
+    query_one = '/users/{}.json'
     query_filter = '/users.json'
     query_create = '/users.json'
-    query_update = '/users/{0}.json'
-    query_delete = '/users/{0}.json'
+    query_update = '/users/{}.json'
+    query_delete = '/users/{}.json'
     manager_class = managers.UserManager
 
     _repr = [['id', 'firstname', 'lastname'], ['id', 'name']]
@@ -423,11 +421,11 @@ class User(BaseResource):
     def __getattr__(self, attr):
         if attr == 'time_entries' and attr not in self._encoded_attrs:
             self._relations_name = 'user'
-            value = super(User, self).__getattr__(attr)
+            value = super().__getattr__(attr)
             self._relations_name = 'assigned_to'
             return value
 
-        return super(User, self).__getattr__(attr)
+        return super().__getattr__(attr)
 
 
 class Group(BaseResource):
@@ -437,10 +435,10 @@ class Group(BaseResource):
     container_create = 'group'
     container_update = 'group'
     query_all = '/groups.json'
-    query_one = '/groups/{0}.json'
+    query_one = '/groups/{}.json'
     query_create = '/groups.json'
-    query_update = '/groups/{0}.json'
-    query_delete = '/groups/{0}.json'
+    query_update = '/groups/{}.json'
+    query_delete = '/groups/{}.json'
 
     _includes = ['memberships', 'users']
     _resource_set_map = {'memberships': 'ProjectMembership', 'users': 'User', 'custom_fields': 'CustomField'}
@@ -460,7 +458,7 @@ class Group(BaseResource):
 
             :param int user_id: (required). User id.
             """
-            url = '{0}/groups/{1}/users.json'.format(self._redmine.url, self._group_id)
+            url = f'{self._redmine.url}/groups/{self._group_id}/users.json'
             return self._redmine.engine.request('post', url, data={'user_id': user_id})
 
         def remove(self, user_id):
@@ -469,14 +467,14 @@ class Group(BaseResource):
 
             :param int user_id: (required). User id.
             """
-            url = '{0}/groups/{1}/users/{2}.json'.format(self._redmine.url, self._group_id, user_id)
+            url = f'{self._redmine.url}/groups/{self._group_id}/users/{user_id}.json'
             return self._redmine.engine.request('delete', url)
 
     def __getattr__(self, attr):
         if attr == 'user':
             return Group.User(self)
 
-        return super(Group, self).__getattr__(attr)
+        return super().__getattr__(attr)
 
 
 class Role(BaseResource):
@@ -484,7 +482,7 @@ class Role(BaseResource):
     container_all = 'roles'
     container_one = 'role'
     query_all = '/roles.json'
-    query_one = '/roles/{0}.json'
+    query_one = '/roles/{}.json'
 
 
 class News(BaseResource):
@@ -496,12 +494,12 @@ class News(BaseResource):
     container_update = 'news'
     query_all_export = '/news.{format}'
     query_all = '/news.json'
-    query_one = '/news/{0}.json'
+    query_one = '/news/{}.json'
     query_filter = '/news.json'
     query_create = '/projects/{project_id}/news.json'
-    query_update = '/news/{0}.json'
-    query_delete = '/news/{0}.json'
-    query_url = '/news/{0}'
+    query_update = '/news/{}.json'
+    query_delete = '/news/{}.json'
+    query_url = '/news/{}'
     search_hints = ['news']
     manager_class = managers.NewsManager
 
@@ -517,7 +515,7 @@ class IssueStatus(BaseResource):
     redmine_version = '1.3'
     container_all = 'issue_statuses'
     query_all = '/issue_statuses.json'
-    query_url = '/issue_statuses/{0}/edit'
+    query_url = '/issue_statuses/{}/edit'
 
     _relations = ['issues']
     _relations_name = 'status'
@@ -532,7 +530,7 @@ class Tracker(BaseResource):
     redmine_version = '1.3'
     container_all = 'trackers'
     query_all = '/trackers.json'
-    query_url = '/trackers/{0}/edit'
+    query_url = '/trackers/{}/edit'
 
     _relations = ['issues']
     _resource_set_map = {'issues': 'Issue'}
@@ -546,7 +544,7 @@ class Query(BaseResource):
     redmine_version = '1.3'
     container_all = 'queries'
     query_all = '/queries.json'
-    query_url = '/projects/{0}/issues?query_id={1}'
+    query_url = '/projects/{}/issues?query_id={}'
 
     @property
     def url(self):
@@ -558,7 +556,7 @@ class CustomField(BaseResource):
     redmine_version = '2.4'
     container_all = 'custom_fields'
     query_all = '/custom_fields.json'
-    query_url = '/custom_fields/{0}/edit'
+    query_url = '/custom_fields/{}/edit'
 
     _resource_set_map = {'trackers': 'Tracker', 'roles': 'Role'}
 
@@ -570,7 +568,7 @@ class CustomField(BaseResource):
         if attr == 'value' and attr not in self._decoded_attrs:
             return ''
 
-        return super(CustomField, self).__getattr__(attr)
+        return super().__getattr__(attr)
 
     @classmethod
     def encode(cls, attr, value, manager):
@@ -580,7 +578,7 @@ class CustomField(BaseResource):
         if attr == 'trackers' and 'tracker' in value:
             value = [value['tracker']]
 
-        return super(CustomField, cls).encode(attr, value, manager)
+        return super().encode(attr, value, manager)
 
     @property
     def url(self):

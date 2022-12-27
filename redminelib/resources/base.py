@@ -2,12 +2,9 @@
 Defines base Redmine resource class and it's infrastructure.
 """
 
-from __future__ import unicode_literals
-
 from datetime import date, datetime
 
 from .. import managers, utilities, exceptions
-
 
 registry = {}
 
@@ -21,7 +18,7 @@ class Registrar(type):
     def __new__(mcs, name, bases, attrs):
         mcs.update_query_strings(attrs)
 
-        cls = super(Registrar, mcs).__new__(mcs, name, bases, attrs)
+        cls = super().__new__(mcs, name, bases, attrs)
 
         if name.startswith('Base'):  # base classes shouldn't be added to the registry
             return cls
@@ -88,8 +85,7 @@ class Registrar(type):
         setattr(cls, name, value)
 
 
-@utilities.fix_unicode
-class BaseResource(utilities.with_metaclass(Registrar)):
+class BaseResource(metaclass=Registrar):
     """
     Implementation of Redmine resource.
     """
@@ -177,7 +173,7 @@ class BaseResource(utilities.with_metaclass(Registrar)):
         if decoded is not None:
             attr, encoded = self.encode(attr, decoded, self.manager)
         elif attr in self._relations:
-            filters = {'{0}_id'.format(self._relations_name): self.internal_id}
+            filters = {f'{self._relations_name}_id': self.internal_id}
             encoded = self.manager.new_manager(self._resource_set_map[attr]).filter(**filters)
         elif attr in self._includes:
             attr, encoded = self.encode(attr, self.refresh(itself=False, include=attr).raw()[attr] or [], self.manager)
@@ -205,7 +201,7 @@ class BaseResource(utilities.with_metaclass(Registrar)):
         Sets the requested attribute.
         """
         if attr in self._members or attr.startswith('_'):
-            return super(BaseResource, self).__setattr__(attr, value)
+            return super().__setattr__(attr, value)
         elif attr in self._create_readonly and self.is_new():
             raise exceptions.ReadonlyAttrError
         elif attr in self._update_readonly and not self.is_new():
@@ -517,12 +513,12 @@ class BaseResource(utilities.with_metaclass(Registrar)):
         Official representation of a Resource object.
         """
         values = self._representation('repr')
-        view = '<redminelib.resources.{0.__class__.__name__}'.format(self)
+        view = f'<redminelib.resources.{self.__class__.__name__}'
 
         if isinstance(values[0], int):
-            view += ' #{0}'.format(values.pop(0))
+            view += f' #{values.pop(0)}'
 
         if len(values) > 0:
-            view += ' "{0}"'.format(' '.join(values))
+            view += f" \"{' '.join(values)}\""
 
         return view + '>'

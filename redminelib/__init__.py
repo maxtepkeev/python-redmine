@@ -4,7 +4,6 @@ Provides public API.
 
 import os
 import io
-import sys
 import inspect
 import warnings
 import contextlib
@@ -15,7 +14,7 @@ from . import managers, exceptions, engines, utilities, resources
 from .version import __version__
 
 
-class Redmine(object):
+class Redmine:
     """
     Entry point for all requests.
     """
@@ -97,7 +96,7 @@ class Redmine(object):
         if self.ver is not None and LooseVersion(str(self.ver)) < LooseVersion('1.4.0'):
             raise exceptions.VersionMismatchError('File uploading')
 
-        url = '{0}/uploads.json'.format(self.url)
+        url = f'{self.url}/uploads.json'
         headers = {'Content-Type': 'application/octet-stream'}
         params = {'filename': filename or ''}
 
@@ -114,7 +113,7 @@ class Redmine(object):
 
             # We need to send bytes over the socket, so in case a file-like object contains a unicode
             # object underneath, we need to convert it to bytes, otherwise we'll get an exception
-            if isinstance(c, str if sys.version_info[0] >= 3 else unicode):
+            if isinstance(c, str):
                 warnings.warn("File-like object contains unicode, hence an additional step is performed to convert "
                               "it's content to bytes, please consider switching to bytes to eliminate this warning",
                               exceptions.PerformanceWarning)
@@ -154,10 +153,7 @@ class Redmine(object):
         if savepath is None:
             return response
 
-        try:
-            from urlparse import urlsplit
-        except ImportError:
-            from urllib.parse import urlsplit
+        from urllib.parse import urlsplit
 
         if filename is None:
             filename = urlsplit(url)[2].split('/')[-1]
@@ -205,7 +201,7 @@ class Redmine(object):
 
                 manager_map[container] = getattr(self, name)
 
-        raw_resources, _ = self.engine.bulk_request('get', '{0}/search.json'.format(self.url), 'results', **options)
+        raw_resources, _ = self.engine.bulk_request('get', f'{self.url}/search.json', 'results', **options)
 
         for resource in raw_resources:
             if resource['type'] in container_map:

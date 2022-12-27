@@ -1,2 +1,2 @@
 recursive-include tests *.py
-include .coveragerc README.rst CHANGELOG.rst LICENSE NOTICE
+include .coveragerc README.rst CHANGELOG.rst LICENSE

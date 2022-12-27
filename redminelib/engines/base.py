@@ -7,7 +7,7 @@ import json
 from .. import exceptions
 
 
-class BaseEngine(object):
+class BaseEngine:
     chunk = 100
 
     def __init__(self, **options):

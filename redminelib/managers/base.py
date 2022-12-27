@@ -5,7 +5,7 @@ Defines base Redmine resource manager class and it's infrastructure.
 from .. import resultsets, exceptions
 
 
-class ResourceManager(object):
+class ResourceManager:
     """
     Manages given Redmine resource class with the help of redmine object.
     """
@@ -90,7 +90,7 @@ class ResourceManager(object):
         try:
             self.url = self._construct_get_url(self.resource_class.query_one.format(resource_id, **params))
         except KeyError as e:
-            raise exceptions.ValidationError('{0} argument is required'.format(e))
+            raise exceptions.ValidationError(f'{e} argument is required')
 
         self.params = self._prepare_get_request(params)
         self.container = self.resource_class.container_one
@@ -179,7 +179,7 @@ class ResourceManager(object):
         try:
             url = self._construct_create_url(self.resource_class.query_create.format(**fields))
         except KeyError as e:
-            raise exceptions.ValidationError('{0} field is required'.format(e))
+            raise exceptions.ValidationError(f'{e} field is required')
 
         self.params = self.resource_class.query_create.formatter.used_kwargs
         self.container = self.resource_class.container_create
@@ -241,7 +241,7 @@ class ResourceManager(object):
                 fields[param] = self.params[param]
                 query_update = self.resource_class.query_update.format(resource_id, **fields)
             else:
-                raise exceptions.ValidationError('{0} argument is required'.format(e))
+                raise exceptions.ValidationError(f'{e} argument is required')
 
         url = self._construct_update_url(query_update)
         request = self._prepare_update_request(self.resource_class.query_update.formatter.unused_kwargs)
@@ -291,7 +291,7 @@ class ResourceManager(object):
         try:
             url = self._construct_delete_url(self.resource_class.query_delete.format(resource_id, **params))
         except KeyError as e:
-            raise exceptions.ValidationError('{0} argument is required'.format(e))
+            raise exceptions.ValidationError(f'{e} argument is required')
 
         request = self._prepare_delete_request(params)
         response = self.redmine.engine.request(self.resource_class.http_method_delete, url, params=request)
@@ -328,5 +328,4 @@ class ResourceManager(object):
         """
         Official representation of a ResourceManager object.
         """
-        return '<redminelib.managers.{0} object for {1} resource>'.format(
-            self.__class__.__name__, self.resource_class.__name__)
+        return f'<redminelib.managers.{self.__class__.__name__} object for {self.resource_class.__name__} resource>'

@@ -13,7 +13,7 @@ response = {
 
 class ResultSetTestCase(BaseRedmineTestCase):
     def setUp(self):
-        super(ResultSetTestCase, self).setUp()
+        super().setUp()
         self.response.json = mock.Mock(return_value=response)
 
     def test_has_custom_repr(self):
