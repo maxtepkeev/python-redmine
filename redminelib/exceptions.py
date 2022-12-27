@@ -1,5 +1,5 @@
 """
-Python-Redmine tries it's best to provide human readable errors in all situations.
+Python-Redmine tries its best to provide human-readable errors in all situations.
 This is a list of all exceptions or warnings that Python-Redmine can throw/raise.
 """
 
@@ -220,7 +220,7 @@ class CustomFieldValueError(BaseRedmineError):
 
 class ResourceRequirementsError(BaseRedmineError):
     """
-    Resource requires specified Redmine plugin(s) to function.
+    Resource requires specific Redmine plugin(s) to function.
     """
     def __init__(self, requirements):
         super().__init__('The following requirements must be installed for resource to function: {}'.format(

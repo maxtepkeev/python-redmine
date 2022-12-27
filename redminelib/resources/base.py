@@ -12,7 +12,7 @@ registry = {}
 class Registrar(type):
     """
     A resource that implements this metaclass, i.e. all resources that inherit from BaseResource,
-    will be added to a resource registry to be managed by it's ResourceManager. Resource classes
+    will be added to a resource registry to be managed by its ResourceManager. Resource classes
     which name starts with Base are considered base classes and not added to the registry.
     """
     def __new__(mcs, name, bases, attrs):
@@ -146,7 +146,7 @@ class BaseResource(metaclass=Registrar):
 
     def __getitem__(self, item):
         """
-        Provides a dictionary-like access to Resource attributes.
+        Provides dictionary-like access to Resource attributes.
         """
         return getattr(self, item)
 
@@ -452,7 +452,7 @@ class BaseResource(metaclass=Registrar):
 
     def is_new(self):
         """
-        Checks if Resource was just created and not yet saved to Redmine or it is an existing Resource.
+        Checks if Resource was just created and not yet saved to Redmine, or it is an existing Resource.
         """
         return False if 'id' in self._decoded_attrs or 'created_on' in self._decoded_attrs else True
 

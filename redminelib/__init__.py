@@ -102,9 +102,9 @@ class Redmine:
         headers = {'Content-Type': 'application/octet-stream'}
         params = {'filename': filename or ''}
 
-        # There're myriads of file-like object implementations here and there and some of them don't have
+        # There are myriads of file-like object implementations here and there and some of them don't have
         # a "read" method, which is wrong, but that's what we have, on the other hand it looks like all of
-        # them implement a "close" method, that's why we check for it here. Also we don't want to close the
+        # them implement a "close" method, that's why we check for it here. Also, we don't want to close the
         # stream ourselves as we have no idea of what the client is going to do with it afterwards, so we
         # leave the closing part to the client or to the garbage collector
         if hasattr(f, 'close'):
@@ -219,7 +219,7 @@ class Redmine:
 
                 results['unknown'][resource['type']].append(resource)
 
-            del resource['type']  # all resources are already sorted by type so we don't need it
+            del resource['type']  # all resources are already sorted by type, so we don't need it
 
         if not results['unknown']:
             del results['unknown']
