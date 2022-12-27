@@ -21,7 +21,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         self.assertRaises(exceptions.ResourceError, lambda: self.redmine.foobar)
 
     def test_not_supported_version_exception(self):
-        self.redmine.ver = '0.0.1'
+        self.redmine.ver = (0, 0, 1)
         self.assertRaises(exceptions.ResourceVersionMismatchError, lambda: self.redmine.project)
 
     def test_convert_dict_to_resource_object(self):

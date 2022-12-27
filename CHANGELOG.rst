@@ -13,6 +13,11 @@ X.X.X (XXXX-XX-XX)
 
 - Added support for Python 3.10, 3.11 and latest PyPy
 
+**Changes**:
+
+- *Backwards Incompatible:* Removed usage of distutils.LooseVersion internally since it became deprecated and
+  caused warnings, because of that all version info is now being represented as tuples and not strings as before
+
 2.3.0 (2020-05-21)
 ++++++++++++++++++
 

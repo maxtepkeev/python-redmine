@@ -176,6 +176,15 @@ class ReadonlyAttrError(BaseRedmineError):
         super().__init__("Can't set read only attribute")
 
 
+class VersionFormatError(BaseRedmineError):
+    """
+    Version format provided isn't supported. SemVer is the only format accepted.
+    """
+    def __init__(self, version):
+        super().__init__(
+            f"Version in the {version} format isn't supported, please provide numeric version in the form of X.X.X")
+
+
 class VersionMismatchError(BaseRedmineError):
     """
     Feature isn't supported on specified Redmine version.

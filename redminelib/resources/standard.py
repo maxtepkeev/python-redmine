@@ -2,14 +2,12 @@
 Defines standard Redmine resources and resource mappings.
 """
 
-from distutils.version import LooseVersion
-
 from . import BaseResource
 from .. import managers, exceptions
 
 
 class Project(BaseResource):
-    redmine_version = '1.0'
+    redmine_version = (1, 0, 0)
     container_all = 'projects'
     container_one = 'project'
     container_create = 'project'
@@ -57,7 +55,7 @@ class Project(BaseResource):
 
 
 class Issue(BaseResource):
-    redmine_version = '1.0'
+    redmine_version = (1, 0, 0)
     container_all = 'issues'
     container_one = 'issue'
     container_filter = 'issues'
@@ -119,7 +117,7 @@ class Issue(BaseResource):
             self._redmine = issue.manager.redmine
             self._issue_id = issue.internal_id
 
-            if self._redmine.ver is not None and LooseVersion(str(self._redmine.ver)) < LooseVersion('2.3'):
+            if self._redmine.ver is not None and self._redmine.ver < (2, 3, 0):
                 raise exceptions.ResourceVersionMismatchError
 
         def add(self, user_id):
@@ -168,7 +166,7 @@ class Issue(BaseResource):
 
 
 class TimeEntry(BaseResource):
-    redmine_version = '1.1'
+    redmine_version = (1, 1, 0)
     container_all = 'time_entries'
     container_one = 'time_entry'
     container_filter = 'time_entries'
@@ -198,7 +196,7 @@ class TimeEntry(BaseResource):
 
 
 class Enumeration(BaseResource):
-    redmine_version = '2.2'
+    redmine_version = (2, 2, 0)
     container_filter = '{resource}'
     query_filter = '/enumerations/{resource}.json'
     query_url = '/enumerations/{}/edit'
@@ -211,7 +209,7 @@ class Enumeration(BaseResource):
 
 
 class Attachment(BaseResource):
-    redmine_version = '1.3'
+    redmine_version = (1, 3, 0)
     container_one = 'attachment'
     container_update = 'attachment'
     query_one = '/attachments/{}.json'
@@ -227,7 +225,7 @@ class Attachment(BaseResource):
 
 
 class File(Attachment):
-    redmine_version = '3.4'
+    redmine_version = (3, 4, 0)
     container_filter = 'files'
     container_create = 'file'
     query_filter = '/projects/{project_id}/files.json'
@@ -245,7 +243,7 @@ class File(Attachment):
 
 
 class IssueJournal(BaseResource):
-    redmine_version = '1.0'
+    redmine_version = (1, 0, 0)
 
     _repr = [['id']]
     _unconvertible = ['notes']
@@ -254,7 +252,7 @@ class IssueJournal(BaseResource):
 
 class WikiPage(BaseResource):
     internal_id_key = 'title'
-    redmine_version = '2.2'
+    redmine_version = (2, 2, 0)
     container_filter = 'wiki_pages'
     container_one = 'wiki_page'
     container_create = 'wiki_page'
@@ -320,7 +318,7 @@ class WikiPage(BaseResource):
 
 
 class ProjectMembership(BaseResource):
-    redmine_version = '1.4'
+    redmine_version = (1, 4, 0)
     container_filter = 'memberships'
     container_one = 'membership'
     container_update = 'membership'
@@ -341,7 +339,7 @@ class ProjectMembership(BaseResource):
 
 
 class IssueCategory(BaseResource):
-    redmine_version = '1.3'
+    redmine_version = (1, 3, 0)
     container_filter = 'issue_categories'
     container_one = 'issue_category'
     container_update = 'issue_category'
@@ -356,7 +354,7 @@ class IssueCategory(BaseResource):
 
 
 class IssueRelation(BaseResource):
-    redmine_version = '1.3'
+    redmine_version = (1, 3, 0)
     container_filter = 'relations'
     container_one = 'relation'
     container_create = 'relation'
@@ -370,7 +368,7 @@ class IssueRelation(BaseResource):
 
 
 class Version(BaseResource):
-    redmine_version = '1.3'
+    redmine_version = (1, 3, 0)
     container_filter = 'versions'
     container_one = 'version'
     container_create = 'version'
@@ -388,7 +386,7 @@ class Version(BaseResource):
 
 
 class User(BaseResource):
-    redmine_version = '1.1'
+    redmine_version = (1, 1, 0)
     container_all = 'users'
     container_one = 'user'
     container_filter = 'users'
@@ -429,7 +427,7 @@ class User(BaseResource):
 
 
 class Group(BaseResource):
-    redmine_version = '2.1'
+    redmine_version = (2, 1, 0)
     container_all = 'groups'
     container_one = 'group'
     container_create = 'group'
@@ -478,7 +476,7 @@ class Group(BaseResource):
 
 
 class Role(BaseResource):
-    redmine_version = '1.4'
+    redmine_version = (1, 4, 0)
     container_all = 'roles'
     container_one = 'role'
     query_all = '/roles.json'
@@ -486,7 +484,7 @@ class Role(BaseResource):
 
 
 class News(BaseResource):
-    redmine_version = '1.1'
+    redmine_version = (1, 1, 0)
     container_all = 'news'
     container_one = 'news'
     container_filter = 'news'
@@ -512,7 +510,7 @@ class News(BaseResource):
 
 
 class IssueStatus(BaseResource):
-    redmine_version = '1.3'
+    redmine_version = (1, 3, 0)
     container_all = 'issue_statuses'
     query_all = '/issue_statuses.json'
     query_url = '/issue_statuses/{}/edit'
@@ -527,7 +525,7 @@ class IssueStatus(BaseResource):
 
 
 class Tracker(BaseResource):
-    redmine_version = '1.3'
+    redmine_version = (1, 3, 0)
     container_all = 'trackers'
     query_all = '/trackers.json'
     query_url = '/trackers/{}/edit'
@@ -541,7 +539,7 @@ class Tracker(BaseResource):
 
 
 class Query(BaseResource):
-    redmine_version = '1.3'
+    redmine_version = (1, 3, 0)
     container_all = 'queries'
     query_all = '/queries.json'
     query_url = '/projects/{}/issues?query_id={}'
@@ -553,7 +551,7 @@ class Query(BaseResource):
 
 
 class CustomField(BaseResource):
-    redmine_version = '2.4'
+    redmine_version = (2, 4, 0)
     container_all = 'custom_fields'
     query_all = '/custom_fields.json'
     query_url = '/custom_fields/{}/edit'

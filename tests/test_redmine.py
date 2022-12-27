@@ -16,10 +16,10 @@ class RedmineTestCase(BaseRedmineTestCase):
 
     def test_set_attributes_through_kwargs(self):
         FooEngine = type('FooEngine', (engines.BaseEngine,), {'create_session': lambda obj, **kwargs: None})
-        redmine = Redmine(self.url, version='1.0', date_format='format', datetime_format='format',
+        redmine = Redmine(self.url, version='1.0.0', date_format='format', datetime_format='format',
                           raise_attr_exception=False, engine=FooEngine)
         self.assertEqual(redmine.url, self.url)
-        self.assertEqual(redmine.ver, '1.0')
+        self.assertEqual(redmine.ver, (1, 0, 0))
         self.assertEqual(redmine.date_format, 'format')
         self.assertEqual(redmine.datetime_format, 'format')
         self.assertEqual(redmine.raise_attr_exception, False)
@@ -97,7 +97,7 @@ class RedmineTestCase(BaseRedmineTestCase):
         self.assertRaises(exceptions.FileObjectError, lambda: self.redmine.upload(f))
 
     def test_file_upload_not_supported_exception(self):
-        self.redmine.ver = '1.0.0'
+        self.redmine.ver = (1, 0, 0)
         self.assertRaises(exceptions.VersionMismatchError, lambda: self.redmine.upload('foo',))
 
     def test_auth(self):
@@ -135,8 +135,11 @@ class RedmineTestCase(BaseRedmineTestCase):
         self.assertIsInstance(results['issues'], resultsets.ResourceSet)
         self.assertEqual(len(results['issues']), 1)
 
+    def test_unsupported_version_format_exception(self):
+        self.assertRaises(exceptions.VersionFormatError, lambda: Redmine(self.url, version='4.1'))
+
     def test_search_not_supported_exception(self):
-        self.redmine.ver = '1.0.0'
+        self.redmine.ver = (1, 0, 0)
         self.assertRaises(exceptions.VersionMismatchError, lambda: self.redmine.search('foo'))
 
     def test_redmine_is_picklable(self):

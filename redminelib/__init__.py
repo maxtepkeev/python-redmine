@@ -8,8 +8,6 @@ import inspect
 import warnings
 import contextlib
 
-from distutils.version import LooseVersion
-
 from . import managers, exceptions, engines, utilities, resources
 from .version import __version__
 
@@ -35,6 +33,10 @@ class Redmine:
         """
         self.url = url.rstrip('/')
         self.ver = kwargs.pop('version', None)
+
+        if self.ver is not None:
+            self.ver = utilities.versiontuple(self.ver)
+
         self.date_format = kwargs.pop('date_format', '%Y-%m-%d')
         self.datetime_format = kwargs.pop('datetime_format', '%Y-%m-%dT%H:%M:%SZ')
         self.raise_attr_exception = kwargs.pop('raise_attr_exception', True)
@@ -62,7 +64,7 @@ class Redmine:
         except KeyError:
             raise exceptions.ResourceError
 
-        if self.ver is not None and LooseVersion(str(self.ver)) < LooseVersion(resource_class.redmine_version):
+        if self.ver is not None and self.ver < resource_class.redmine_version:
             raise exceptions.ResourceVersionMismatchError
 
         return resource_class.manager_class(self, resource_class)
@@ -93,7 +95,7 @@ class Redmine:
         :type f: string or file-like object
         :param filename: (optional). Filename for the file that will be uploaded.
         """
-        if self.ver is not None and LooseVersion(str(self.ver)) < LooseVersion('1.4.0'):
+        if self.ver is not None and self.ver < (1, 4, 0):
             raise exceptions.VersionMismatchError('File uploading')
 
         url = f'{self.url}/uploads.json'
@@ -182,7 +184,7 @@ class Redmine:
         :param string query: (required). What to search.
         :param dict options: (optional). Dictionary of search options.
         """
-        if self.ver is not None and LooseVersion(str(self.ver)) < LooseVersion('3.0.0'):
+        if self.ver is not None and self.ver < (3, 0, 0):
             raise exceptions.VersionMismatchError('Search functionality')
 
         container_map, manager_map, results = {}, {}, {'unknown': {}}

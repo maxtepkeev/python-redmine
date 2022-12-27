@@ -182,21 +182,21 @@ class ResultSetTestCase(BaseRedmineTestCase):
     def test_export_with_all_columns(self):
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
         self.assertEqual(self.redmine.issue.all().export('txt', '/foo/bar', columns='all'), '/foo/bar/issues.txt')
-        self.redmine.ver = '3.3.0'
+        self.redmine.ver = (3, 3, 0)
         self.assertEqual(self.redmine.issue.all().export('txt', '/foo/bar', columns='all'), '/foo/bar/issues.txt')
 
     @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_export_with_all_gui_columns(self):
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
         self.assertEqual(self.redmine.issue.all().export('txt', '/foo/bar', columns='all_gui'), '/foo/bar/issues.txt')
-        self.redmine.ver = '3.3.0'
+        self.redmine.ver = (3, 3, 0)
         self.assertEqual(self.redmine.issue.all().export('txt', '/foo/bar', columns='all_gui'), '/foo/bar/issues.txt')
 
     @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_export_with_all_gui_extra_columns(self):
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
         self.assertEqual(self.redmine.issue.all().export('txt', '/foo/bar', columns=['all_gui']), '/foo/bar/issues.txt')
-        self.redmine.ver = '3.3.0'
+        self.redmine.ver = (3, 3, 0)
         self.assertEqual(self.redmine.issue.all().export('txt', '/foo/bar', columns=['all_gui']), '/foo/bar/issues.txt')
 
     @mock.patch('redminelib.open', mock.mock_open(), create=True)

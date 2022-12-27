@@ -6,8 +6,6 @@ import operator
 import functools
 import itertools
 
-from distutils.version import LooseVersion
-
 from . import lookups, exceptions
 
 
@@ -67,16 +65,16 @@ class BaseResourceSet:
             if columns == 'all':
                 columns = ['all', 'all_inline'] + self.manager.resource_class.extra_export_columns
 
-                if self.manager.redmine.ver is not None and LooseVersion(str(self.manager.redmine.ver)) < '3.4.0':
+                if self.manager.redmine.ver is not None and self.manager.redmine.ver < (3, 4, 0):
                     params.update(dict.fromkeys(self.manager.resource_class.extra_export_columns, 1), columns='all')
             elif 'all_gui' in columns:
                 if columns == 'all_gui':
                     columns = ['all', 'all_inline']
 
-                    if self.manager.redmine.ver is not None and LooseVersion(str(self.manager.redmine.ver)) < '3.4.0':
+                    if self.manager.redmine.ver is not None and self.manager.redmine.ver < (3, 4, 0):
                         params['columns'] = 'all'
                 else:
-                    if self.manager.redmine.ver is not None and LooseVersion(str(self.manager.redmine.ver)) < '3.4.0':
+                    if self.manager.redmine.ver is not None and self.manager.redmine.ver < (3, 4, 0):
                         params.update(dict.fromkeys(columns, 1), columns='all')
 
                     columns = list(columns) + ['all', 'all_inline']

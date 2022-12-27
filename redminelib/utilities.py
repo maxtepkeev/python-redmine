@@ -6,6 +6,22 @@ import copy
 import string
 import urllib.parse
 
+from . import exceptions
+
+
+def versiontuple(version):
+    """
+    Converts numeric SemVer version string to tuple.
+
+    :param string version: (required). Version string to convert.
+    """
+    parts = str(version).split('.')
+
+    if len(parts) != 3 or not all(part.isnumeric() for part in parts):
+        raise exceptions.VersionFormatError(version)
+
+    return tuple(int(part) for part in parts)
+
 
 def merge_dicts(a, b):
     """
