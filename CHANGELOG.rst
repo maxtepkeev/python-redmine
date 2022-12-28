@@ -22,6 +22,11 @@ X.X.X (XXXX-XX-XX)
   caused warnings, because of that all version info internally is now being represented as tuples and not strings
   as before
 
+**Documentation**:
+
+- Mentioned support for ``user_id`` in TimeEntry's resource create/update (`Issue #298 <https://github.com/
+  maxtepkeev/python-redmine/issues/298>`__)
+
 2.3.0 (2020-05-21)
 ++++++++++++++++++
 

@@ -30,6 +30,7 @@ create
    :param int activity_id: (optional). The id of the time activity. This parameter is required unless
     a default activity is defined in Redmine. Available activity ids can be retrieved per project
     using ``include=['time_entry_activities']``, requires Redmine >= 3.4.0.
+   :param int user_id: (optional). Will create a time entry on behalf of this user id.
    :param string comments: (optional). Short description for the entry (255 characters max).
    :return: :ref:`Resource` object
 
@@ -40,6 +41,7 @@ create
    ...     spent_on=datetime.date(2014, 1, 14),
    ...     hours=3,
    ...     activity_id=10,
+   ...     user_id=5,
    ...     comments='hello'
    ... )
    >>> time_entry
@@ -65,6 +67,7 @@ new
    >>> time_entry.spent_on = datetime.date(2014, 1, 14)
    >>> time_entry.hours = 3
    >>> time_entry.activity_id = 10
+   >>> time_entry.user_id = 5
    >>> time_entry.comments = 'hello'
    >>> time_entry.save()
    <redminelib.resources.TimeEntry #12345>
@@ -169,6 +172,7 @@ update
    :type spent_on: string or date object
    :param int activity_id: (optional). The id of the time activity. Available activity ids can
     be retrieved per project using ``include=['time_entry_activities']``, requires Redmine >= 3.4.0.
+   :param int user_id: (optional). Will update a time entry on behalf of this user id.
    :param string comments: (optional). Short description for the entry (255 characters max).
    :return: True
 
@@ -180,6 +184,7 @@ update
    ...     spent_on=datetime.date(2014, 1, 14),
    ...     hours=3,
    ...     activity_id=10,
+   ...     user_id=5,
    ...     comments='hello'
    ... )
    True
@@ -203,6 +208,7 @@ save
    >>> time_entry.spent_on = datetime.date(2014, 1, 14)
    >>> time_entry.hours = 3
    >>> time_entry.activity_id = 10
+   >>> time_entry.user_id = 5
    >>> time_entry.comments = 'hello'
    >>> time_entry.save()
    <redminelib.resources.TimeEntry #1>
