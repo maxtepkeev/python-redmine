@@ -164,24 +164,22 @@ class BaseResource(metaclass=Registrar):
             raise AttributeError
 
         # If this isn't the first time attribute access we can return it from cache
-        encoded = self._encoded_attrs.get(attr)
-        if encoded is not None:
-            return encoded
+        if attr in self._encoded_attrs:
+            return self._encoded_attrs[attr]
 
-        # Else this is the first time access and we need to encode the attribute
-        decoded = self._decoded_attrs.get(attr)
-        if decoded is not None:
-            attr, encoded = self.encode(attr, decoded, self.manager)
-        elif attr in self._relations:
+        # Else this is the first time access hence we need to encode the attribute
+        if attr in self._relations:
             filters = {f'{self._relations_name}_id': self.internal_id}
-            encoded = self.manager.new_manager(self._resource_set_map[attr]).filter(**filters)
-        elif attr in self._includes:
-            attr, encoded = self.encode(attr, self.refresh(itself=False, include=attr).raw()[attr] or [], self.manager)
+            self._encoded_attrs[attr] = self.manager.new_manager(self._resource_set_map[attr]).filter(**filters)
+        elif attr in self._includes and self._decoded_attrs[attr] is None:
+            self._encoded_attrs.update(
+                [self.encode(attr, self.refresh(itself=False, include=attr).raw()[attr] or [], self.manager)])
+        elif attr in self._decoded_attrs:
+            self._encoded_attrs.update([self.encode(attr, self._decoded_attrs[attr], self.manager)])
 
         # In case of successful encoding we put it to a cache and return
-        if encoded is not None:
-            self._encoded_attrs[attr] = encoded
-            return encoded
+        if attr in self._encoded_attrs:
+            return self._encoded_attrs[attr]
 
         # Else we return the defaults if this is a new item or throw an exception
         if self.is_new():

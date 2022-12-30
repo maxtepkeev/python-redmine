@@ -22,6 +22,11 @@ X.X.X (XXXX-XX-XX)
   caused warnings, because of that all version info internally is now being represented as tuples and not strings
   as before
 
+**Bugfixes**:
+
+- Stop raising `ResourceAttrError` for attributes that actually exist, but their value is `None`
+  (`Issue #261 <https://github.com/maxtepkeev/python-redmine/pull/261>`__)
+
 **Documentation**:
 
 - Mentioned support for ``user_id`` in TimeEntry's resource create/update (`Issue #298 <https://github.com/
