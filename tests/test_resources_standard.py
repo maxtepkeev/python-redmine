@@ -290,6 +290,16 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertIsInstance(parent, resources.Project)
         self.assertEqual(parent.id, 2)
 
+    def test_project_resource_map_converts_to_resource(self):
+        self.response.json.return_value = responses['project']['get']
+        project = self.redmine.project.get(1)
+        project._decoded_attrs['default_version'] = {'id': 2, 'name': 'Release 4.0'}
+        self.assertIsInstance(project.default_version, resources.Version)
+        self.assertEqual(project.default_version.id, 2)
+        project._decoded_attrs['default_assignee'] = {'id': 4, 'name': 'John Smith'}
+        self.assertIsInstance(project.default_assignee, resources.User)
+        self.assertEqual(project.default_assignee.id, 4)
+
     def test_issue_version(self):
         self.assertEqual(self.redmine.issue.resource_class.redmine_version, (1, 0, 0))
 
@@ -419,6 +429,13 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         issue._decoded_attrs['journals'] = [{'id': 1}]
         self.assertEqual(issue.journals[0].url, None)
 
+    def test_issue_journals_resource_map_converts_to_resource(self):
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        issue._decoded_attrs['journals'] = [{'id': 1, 'user': responses['user']['get']['user']}]
+        self.assertIsInstance(issue.journals[0].user, resources.User)
+        self.assertEqual(issue.journals[0].user.firstname, 'John')
+
     def test_issue_version_can_be_retrieved_via_version_attribute(self):
         self.response.json.return_value = {
             'issue': {'subject': 'Foo', 'id': 1, 'fixed_version': {'id': 1, 'name': 'Foo'}}}
@@ -466,6 +483,34 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         parent = self.redmine.issue.get(1).parent
         self.assertIsInstance(parent, resources.Issue)
         self.assertEqual(parent.id, 2)
+
+    def test_issue_resource_map_converts_to_resource(self):
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        issue._decoded_attrs['project'] = responses['project']['get']['project']
+        self.assertIsInstance(issue.project, resources.Project)
+        self.assertEqual(issue.project.identifier, 'foo')
+        issue._decoded_attrs['tracker'] = responses['tracker']['all']['trackers'][0]
+        self.assertIsInstance(issue.tracker, resources.Tracker)
+        self.assertEqual(issue.tracker.id, 1)
+        issue._decoded_attrs['status'] = responses['issue_status']['all']['issue_statuses'][0]
+        self.assertIsInstance(issue.status, resources.IssueStatus)
+        self.assertEqual(issue.status.id, 1)
+        issue._decoded_attrs['priority'] = responses['enumeration']['filter']['time_entry_activities'][0]
+        self.assertIsInstance(issue.priority, resources.Enumeration)
+        self.assertEqual(issue.priority.id, 1)
+        issue._decoded_attrs['author'] = responses['user']['get']['user']
+        self.assertIsInstance(issue.author, resources.User)
+        self.assertEqual(issue.author.firstname, 'John')
+        issue._decoded_attrs['assigned_to'] = responses['user']['get']['user']
+        self.assertIsInstance(issue.assigned_to, resources.User)
+        self.assertEqual(issue.assigned_to.lastname, 'Smith')
+        issue._decoded_attrs['category'] = responses['issue_category']['get']['issue_category']
+        self.assertIsInstance(issue.category, resources.IssueCategory)
+        self.assertEqual(issue.category.id, 1)
+        issue._decoded_attrs['fixed_version'] = responses['version']['get']['version']
+        self.assertIsInstance(issue.fixed_version, resources.Version)
+        self.assertEqual(issue.fixed_version.id, 1)
 
     def test_time_entry_version(self):
         self.assertEqual(self.redmine.time_entry.resource_class.redmine_version, (1, 1, 0))
@@ -545,6 +590,22 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
         self.assertEqual(self.redmine.time_entry.all().export('txt', '/foo/bar'), '/foo/bar/time_entries.txt')
 
+    def test_time_entry_resource_map_converts_to_resource(self):
+        self.response.json.return_value = responses['time_entry']['get']
+        time_entry = self.redmine.time_entry.get(1)
+        time_entry._decoded_attrs['project'] = responses['project']['get']['project']
+        self.assertIsInstance(time_entry.project, resources.Project)
+        self.assertEqual(time_entry.project.identifier, 'foo')
+        time_entry._decoded_attrs['issue'] = responses['issue']['get']['issue']
+        self.assertIsInstance(time_entry.issue, resources.Issue)
+        self.assertEqual(time_entry.issue.id, 1)
+        time_entry._decoded_attrs['user'] = responses['user']['get']['user']
+        self.assertIsInstance(time_entry.user, resources.User)
+        self.assertEqual(time_entry.user.firstname, 'John')
+        time_entry._decoded_attrs['activity'] = responses['enumeration']['filter']['time_entry_activities'][0]
+        self.assertIsInstance(time_entry.activity, resources.Enumeration)
+        self.assertEqual(time_entry.activity.id, 1)
+
     def test_enumeration_version(self):
         self.assertEqual(self.redmine.enumeration.resource_class.redmine_version, (2, 2, 0))
 
@@ -623,6 +684,13 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
         self.assertEqual(self.redmine.attachment.get(1).download('/some/path'), '/some/path/bar.txt')
 
+    def test_attachment_resource_map_converts_to_resource(self):
+        self.response.json.return_value = responses['attachment']['get']
+        attachment = self.redmine.attachment.get(1)
+        attachment._decoded_attrs['author'] = responses['user']['get']['user']
+        self.assertIsInstance(attachment.author, resources.User)
+        self.assertEqual(attachment.author.firstname, 'John')
+
     def test_file_version(self):
         self.assertEqual(self.redmine.file.resource_class.redmine_version, (3, 4, 0))
 
@@ -696,6 +764,16 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = response
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
         self.assertEqual(self.redmine.file.get(1).download('/some/path'), '/some/path/bar.txt')
+
+    def test_file_resource_map_converts_to_resource(self):
+        self.response.json.return_value = responses['attachment']['get']
+        f = self.redmine.file.get(1)
+        f._decoded_attrs['author'] = responses['user']['get']['user']
+        self.assertIsInstance(f.author, resources.User)
+        self.assertEqual(f.author.firstname, 'John')
+        f._decoded_attrs['version'] = responses['version']['get']['version']
+        self.assertIsInstance(f.version, resources.Version)
+        self.assertEqual(f.version.id, 1)
 
     def test_wiki_page_version(self):
         self.assertEqual(self.redmine.wiki_page.resource_class.redmine_version, (2, 2, 0))
@@ -808,6 +886,13 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertIsInstance(parent, resources.WikiPage)
         self.assertEqual(parent.title, 'Bar')
 
+    def test_wiki_page_resource_map_converts_to_resource(self):
+        self.response.json.return_value = responses['wiki_page']['get']
+        wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
+        wiki_page._decoded_attrs['author'] = responses['user']['get']['user']
+        self.assertIsInstance(wiki_page.author, resources.User)
+        self.assertEqual(wiki_page.author.firstname, 'John')
+
     def test_project_membership_version(self):
         self.assertEqual(self.redmine.project_membership.resource_class.redmine_version, (1, 4, 0))
 
@@ -861,6 +946,19 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = responses['project_membership']['get']
         self.assertEqual(self.redmine.project_membership.get(1).url, f'{self.url}/memberships/1')
 
+    def test_project_membership_resource_map_converts_to_resource(self):
+        self.response.json.return_value = responses['project_membership']['get']
+        membership = self.redmine.project_membership.get(1)
+        membership._decoded_attrs['project'] = responses['project']['get']['project']
+        self.assertIsInstance(membership.project, resources.Project)
+        self.assertEqual(membership.project.identifier, 'foo')
+        membership._decoded_attrs['user'] = responses['user']['get']['user']
+        self.assertIsInstance(membership.user, resources.User)
+        self.assertEqual(membership.user.firstname, 'John')
+        membership._decoded_attrs['group'] = responses['group']['get']['group']
+        self.assertIsInstance(membership.group, resources.Group)
+        self.assertEqual(membership.group.id, 1)
+
     def test_issue_category_version(self):
         self.assertEqual(self.redmine.issue_category.resource_class.redmine_version, (1, 3, 0))
 
@@ -906,6 +1004,16 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_issue_category_url(self):
         self.response.json.return_value = responses['issue_category']['get']
         self.assertEqual(self.redmine.issue_category.get(1).url, f'{self.url}/issue_categories/1')
+
+    def test_issue_category_resource_map_converts_to_resource(self):
+        self.response.json.return_value = responses['issue_category']['get']
+        category = self.redmine.issue_category.get(1)
+        category._decoded_attrs['project'] = responses['project']['get']['project']
+        self.assertIsInstance(category.project, resources.Project)
+        self.assertEqual(category.project.identifier, 'foo')
+        category._decoded_attrs['assigned_to'] = responses['user']['get']['user']
+        self.assertIsInstance(category.assigned_to, resources.User)
+        self.assertEqual(category.assigned_to.firstname, 'John')
 
     def test_issue_relation_version(self):
         self.assertEqual(self.redmine.issue_relation.resource_class.redmine_version, (1, 3, 0))
@@ -1002,6 +1110,13 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_version_url(self):
         self.response.json.return_value = responses['version']['get']
         self.assertEqual(self.redmine.version.get(1).url, f'{self.url}/versions/1')
+
+    def test_version_resource_map_converts_to_resource(self):
+        self.response.json.return_value = responses['version']['get']
+        version = self.redmine.version.get(1)
+        version._decoded_attrs['project'] = responses['project']['get']['project']
+        self.assertIsInstance(version.project, resources.Project)
+        self.assertEqual(version.project.identifier, 'foo')
 
     def test_user_version(self):
         self.assertEqual(self.redmine.user.resource_class.redmine_version, (1, 1, 0))
@@ -1271,6 +1386,16 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_news_repr(self):
         self.response.json.return_value = responses['news']['filter']
         self.assertEqual(repr(self.redmine.news.filter(project_id=1)[0]), '<redminelib.resources.News #2 "Foo">')
+
+    def test_news_resource_map_converts_to_resource(self):
+        self.response.json.return_value = responses['news']['get']
+        news = self.redmine.news.get(1)
+        news._decoded_attrs['project'] = responses['project']['get']['project']
+        self.assertIsInstance(news.project, resources.Project)
+        self.assertEqual(news.project.identifier, 'foo')
+        news._decoded_attrs['author'] = responses['user']['get']['user']
+        self.assertIsInstance(news.author, resources.User)
+        self.assertEqual(news.author.firstname, 'John')
 
     def test_issue_status_version(self):
         self.assertEqual(self.redmine.issue_status.resource_class.redmine_version, (1, 3, 0))
