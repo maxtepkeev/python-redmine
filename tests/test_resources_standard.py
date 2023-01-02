@@ -364,6 +364,9 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         response_includes['issue']['watchers'] = responses['user']['all']['users']
         self.response.json.return_value = response_includes
         self.assertIsInstance(issue.watchers, resultsets.ResourceSet)
+        response_includes['issue']['allowed_statuses'] = responses['issue_status']['all']['issue_statuses']
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(issue.allowed_statuses, resultsets.ResourceSet)
 
     def test_issue_add_watcher_raises_exception_if_wrong_version(self):
         self.response.json.return_value = responses['issue']['get']

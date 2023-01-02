@@ -13,6 +13,8 @@ X.X.X (XXXX-XX-XX)
 **Improvements**:
 
 - Added support for Python 3.10, 3.11 and latest PyPy
+- Added support for `allowed_statuses` to ``include`` param and on demand includes for Issue resource (requires
+  Redmine >= 5.0.0)
 
 **Changes**:
 

@@ -73,7 +73,7 @@ class Issue(BaseResource):
     extra_export_columns = ['description', 'last_notes']
 
     _repr = [['id', 'subject'], ['title'], ['id']]
-    _includes = ['children', 'attachments', 'relations', 'changesets', 'journals', 'watchers']
+    _includes = ['children', 'attachments', 'relations', 'changesets', 'journals', 'watchers', 'allowed_statuses']
     _relations = ['relations', 'time_entries']
     _unconvertible = BaseResource._unconvertible + ['subject', 'notes']
     _create_readonly = BaseResource._create_readonly + ['spent_hours']
@@ -96,6 +96,7 @@ class Issue(BaseResource):
         'relations': 'IssueRelation',
         'watchers': 'User',
         'time_entries': 'TimeEntry',
+        'allowed_statuses': 'IssueStatus',
     }
     _single_attr_id_map = {
         'project_id': 'project',

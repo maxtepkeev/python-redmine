@@ -135,6 +135,7 @@ get
     - changesets
     - journals
     - watchers (requires Redmine >= 2.3.0)
+    - allowed_statuses (requires Redmine >= 5.0.0)
 
    :return: :ref:`Resource` object
 
