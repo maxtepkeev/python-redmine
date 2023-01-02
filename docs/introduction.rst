@@ -216,7 +216,12 @@ Both methods also support some options that can be combined together:
 * **titles_only**. ``True`` to search only in title/names and ignore everything else.
 * **open_issues**. ``True`` to search open issues only.
 * **attachments**. ``True`` to also search attachments, ``only`` to search attachments only.
-* **scope**. ``my_projects`` to search only in user's projects.
+* **scope**. Search scope condition. Accepted values:
+
+  * ``all``. Search all projects.
+  * ``my_projects``. Search only in user's projects.
+  * ``subprojects``. Include subprojects when my_projects specified.
+
 * **resources**. Only search for these types of resources, makes sense only when applied to ``search()``
   method on redmine object, available values are: issues, news, documents, changesets, wiki_pages,
   messages, projects and more if additional plugins that support this API are installed.

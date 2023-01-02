@@ -37,6 +37,7 @@ X.X.X (XXXX-XX-XX)
 
 - Mentioned support for ``user_id`` in TimeEntry's resource create/update (`Issue #298 <https://github.com/
   maxtepkeev/python-redmine/issues/298>`__)
+- Mentioned support for additional scopes for Search API
 
 2.3.0 (2020-05-21)
 ++++++++++++++++++
