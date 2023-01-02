@@ -134,7 +134,7 @@ get
     - relations
     - changesets
     - journals
-    - watchers
+    - watchers (requires Redmine >= 2.3.0)
 
    :return: :ref:`Resource` object
 
