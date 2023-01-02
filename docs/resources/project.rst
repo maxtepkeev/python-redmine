@@ -32,7 +32,7 @@ create
    :param list tracker_ids: (optional). The ids of trackers for this project.
    :param list issue_custom_field_ids: (optional). The ids of issue custom fields for this project.
    :param list custom_fields: (optional). Custom fields as [{'id': 1, 'value': 'foo'}].
-   :param list enabled_module_names: (optional). The names of enabled modules for this project (Redmine >= 2.6.0 only).
+   :param list enabled_module_names: (optional). The names of enabled modules for this project (requires Redmine >= 2.6.0).
    :return: :ref:`Resource` object
 
 .. code-block:: python
@@ -104,14 +104,15 @@ get
 
     - trackers
     - issue_categories
-    - enabled_modules (Redmine >= 2.6.0 only)
-    - time_entry_activities (Redmine >= 3.4.0 only)
+    - enabled_modules (requires Redmine >= 2.6.0)
+    - time_entry_activities (requires Redmine >= 3.4.0)
+    - issue_custom_fields (requires Redmine >= 4.2.0)
 
    :return: :ref:`Resource` object
 
 .. code-block:: python
 
-   >>> project = redmine.project.get('vacation', include=['trackers', 'issue_categories', 'enabled_modules', 'time_entry_activities'])
+   >>> project = redmine.project.get('vacation', include=['trackers', 'issue_categories', 'enabled_modules', 'time_entry_activities', 'issue_custom_fields'])
    >>> project
    <redminelib.resources.Project #123 "Vacation">
 
@@ -212,7 +213,7 @@ update
    :param list tracker_ids: (optional). The ids of trackers for this project.
    :param list issue_custom_field_ids: (optional). The ids of issue custom fields for this project.
    :param list custom_fields: (optional). Custom fields as [{'id': 1, 'value': 'foo'}].
-   :param list enabled_module_names: (optional). The names of enabled modules for this project (Redmine >= 2.6.0 only).
+   :param list enabled_module_names: (optional). The names of enabled modules for this project (requires Redmine >= 2.6.0).
    :return: True
 
 .. code-block:: python

@@ -15,6 +15,8 @@ X.X.X (XXXX-XX-XX)
 - Added support for Python 3.10, 3.11 and latest PyPy
 - Added support for `allowed_statuses` to ``include`` param and on demand includes for Issue resource (requires
   Redmine >= 5.0.0)
+- Added support for `issue_custom_fields` to ``include`` param and on demand includes for Project resource (requires
+  Redmine >= 4.2.0)
 
 **Changes**:
 

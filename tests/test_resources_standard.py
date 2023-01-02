@@ -262,6 +262,9 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         response_includes['project'].update({'time_entry_activities': [{'id': 1, 'name': 'developing'}]})
         self.response.json.return_value = response_includes
         self.assertEqual(project.time_entry_activities, [{'id': 1, 'name': 'developing'}])
+        response_includes['project'].update(responses['custom_field']['all'])
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(project.issue_custom_fields, resultsets.ResourceSet)
 
     def test_project_returns_status_without_conversion(self):
         self.response.json.return_value = {'project': {'name': 'Foo', 'id': 1, 'status': 1}}

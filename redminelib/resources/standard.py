@@ -21,7 +21,7 @@ class Project(BaseResource):
     search_hints = ['project']
 
     _repr = [['id', 'name'], ['title']]
-    _includes = ['trackers', 'issue_categories', 'enabled_modules', 'time_entry_activities']
+    _includes = ['trackers', 'issue_categories', 'enabled_modules', 'time_entry_activities', 'issue_custom_fields']
     _relations = ['wiki_pages', 'memberships', 'issue_categories', 'time_entries', 'versions',
                   'news', 'issues', 'files']
     _unconvertible = BaseResource._unconvertible + ['identifier', 'status']
@@ -38,6 +38,7 @@ class Project(BaseResource):
         'news': 'News',
         'issues': 'Issue',
         'files': 'File',
+        'issue_custom_fields': 'CustomField',
     }
     _single_attr_id_map = {'parent_id': 'parent'}
     _multiple_attr_id_map = {'tracker_ids': 'trackers'}
