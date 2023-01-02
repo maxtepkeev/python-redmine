@@ -26,7 +26,7 @@ class Project(BaseResource):
                   'news', 'issues', 'files']
     _unconvertible = BaseResource._unconvertible + ['identifier', 'status']
     _update_readonly = BaseResource._update_readonly + ['identifier']
-    _resource_map = {'default_version': 'Version'}
+    _resource_map = {'default_version': 'Version', 'default_assignee': 'User'}
     _resource_set_map = {
         'custom_fields': 'CustomField',
         'trackers': 'Tracker',

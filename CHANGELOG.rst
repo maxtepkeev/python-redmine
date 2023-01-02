@@ -28,6 +28,8 @@ X.X.X (XXXX-XX-XX)
 
 - Stop raising `ResourceAttrError` for attributes that actually exist, but their value is `None`
   (`Issue #261 <https://github.com/maxtepkeev/python-redmine/pull/261>`__)
+- Project resource ``default_assignee`` attribute was returned as a dict instead of being converted to
+  Resource object
 
 **Documentation**:
 
