@@ -19,6 +19,7 @@ class Project(BaseResource):
     query_update = '/projects/{}.json'
     query_delete = '/projects/{}.json'
     search_hints = ['project']
+    manager_class = managers.ProjectManager
 
     _repr = [['id', 'name'], ['title']]
     _includes = ['trackers', 'issue_categories', 'enabled_modules', 'time_entry_activities', 'issue_custom_fields']
@@ -53,6 +54,12 @@ class Project(BaseResource):
             return attr, [module['name'] for module in value]
 
         return super().encode(attr, value, manager)
+
+    def __getattr__(self, attr):
+        if attr in ('close', 'reopen', 'archive', 'unarchive'):
+            return lambda: getattr(self.manager, attr)(self.internal_id)
+
+        return super().__getattr__(attr)
 
 
 class Issue(BaseResource):

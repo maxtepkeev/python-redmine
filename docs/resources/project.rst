@@ -315,6 +315,125 @@ delete
    >>> project.delete()
    True
 
+Additional methods
+------------------
+
+.. versionadded:: 2.4.0
+
+close
++++++
+
+.. py:method:: close(resource_id)
+   :module: redminelib.managers.ProjectManager
+   :noindex:
+
+   Closes single Project Redmine resource by it's id or identifier.
+
+   :param resource_id: (required). Project id or identifier.
+   :type resource_id: int or string
+   :return: True
+
+.. code-block:: python
+
+   >>> redmine.project.close(1)
+   True
+
+.. py:method:: close()
+   :module: redminelib.resources.Project
+   :noindex:
+
+   Closes current Project Redmine resource object.
+
+   :return: True
+
+.. code-block:: python
+
+   >>> project = redmine.project.get(1)
+   >>> project.close()
+   True
+
+reopen
+++++++
+
+.. py:method:: reopen(resource_id)
+   :module: redminelib.managers.ProjectManager
+   :noindex:
+
+   Reopens previously closed single Project Redmine resource by it's id or identifier.
+
+   :param resource_id: (required). Project id or identifier.
+   :type resource_id: int or string
+   :return: True
+
+.. code-block:: python
+
+   >>> redmine.project.reopen(1)
+   True
+
+.. py:method:: reopen()
+   :module: redminelib.resources.Project
+   :noindex:
+
+   Reopens previously closed current Project Redmine resource object.
+
+   :return: True
+
+.. code-block:: python
+
+   >>> project = redmine.project.get(1)
+   >>> project.reopen()
+   True
+
+archive
++++++++
+
+.. py:method:: archive(resource_id)
+   :module: redminelib.managers.ProjectManager
+   :noindex:
+
+   Archives single Project Redmine resource by it's id or identifier.
+
+   :param resource_id: (required). Project id or identifier.
+   :type resource_id: int or string
+   :return: True
+
+.. code-block:: python
+
+   >>> redmine.project.archive(1)
+   True
+
+.. py:method:: archive()
+   :module: redminelib.resources.Project
+   :noindex:
+
+   Archives current Project Redmine resource object.
+
+   :return: True
+
+.. code-block:: python
+
+   >>> project = redmine.project.get(1)
+   >>> project.archive()
+   True
+
+unarchive
++++++++++
+
+.. py:method:: unarchive(resource_id)
+   :module: redminelib.managers.ProjectManager
+   :noindex:
+
+   Unarchives single Project Redmine resource by it's id or identifier.
+
+   :param resource_id: (required). Project id or identifier.
+   :type resource_id: int or string
+   :return: True
+
+.. code-block:: python
+
+   >>> redmine.project.unarchive(1)
+   True
+
 Export
 ------
 

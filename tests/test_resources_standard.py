@@ -303,6 +303,22 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertIsInstance(project.default_assignee, resources.User)
         self.assertEqual(project.default_assignee.id, 4)
 
+    def test_project_supports_close_reopen_archive_unarchive(self):
+        self.response.json.return_value = responses['project']['get']
+        project = self.redmine.project.get(1)
+        self.response.content = ''
+        self.assertEqual(project.close(), True)
+        self.assertEqual(project.reopen(), True)
+        self.assertEqual(project.archive(), True)
+        self.assertEqual(project.unarchive(), True)
+        self.assertEqual(self.redmine.project.close(1), True)
+        self.assertEqual(self.redmine.project.reopen(1), True)
+        self.assertEqual(self.redmine.project.archive(1), True)
+        self.assertEqual(self.redmine.project.unarchive(1), True)
+        self.redmine.ver = (4, 1, 0)
+        self.assertRaises(exceptions.VersionMismatchError, lambda: project.close())
+        self.assertRaises(AttributeError, lambda: project.open())
+
     def test_issue_version(self):
         self.assertEqual(self.redmine.issue.resource_class.redmine_version, (1, 0, 0))
 

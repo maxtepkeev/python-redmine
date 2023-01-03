@@ -6,6 +6,18 @@ from . import ResourceManager
 from .. import exceptions
 
 
+class ProjectManager(ResourceManager):
+    def __getattr__(self, attr):
+        if attr in ('close', 'reopen', 'archive', 'unarchive'):
+            if self.redmine.ver is not None and self.redmine.ver < (5, 0, 0):
+                raise exceptions.VersionMismatchError(f'Project {attr}')
+
+            return lambda resource_id: self.redmine.engine.request(
+                'put', f'{self.redmine.url}{self.resource_class.query_one.format(resource_id)[:-5]}/{attr}.json')
+
+        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{attr}'")
+
+
 class FileManager(ResourceManager):
     def _process_create_response(self, request, response):
         if response is True:
