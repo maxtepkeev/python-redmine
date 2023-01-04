@@ -498,6 +498,16 @@ Journals
 The history of an issue is represented as a :ref:`ResourceSet` of ``IssueJournal`` resources.
 Currently the following operations are possible:
 
+create
+++++++
+
+To create a new record in issue history, i.e. new journal:
+
+.. code-block:: python
+
+   redmine.issue.update(1, notes='new note')
+   True
+
 read
 ++++
 
@@ -522,20 +532,57 @@ After that they can be used as usual:
 .. code-block:: python
 
    >>> for journal in issue.journals:
-   ...     print journal.id, journal.notes
+   ...     print(journal.id, journal.notes)
    ...
    1 foobar
    2 lalala
    3 hohoho
 
-create
+update
 ++++++
 
-To create a new record in issue history, i.e. new journal:
+.. versionadded:: 2.4.0
+
+To update `notes` attribute (the only attribute that can be updated) of a journal:
 
 .. code-block:: python
 
-   redmine.issue.update(1, notes='new note')
+   >>> issue = redmine.issue.get(1, include=['journals'])
+   >>> for journal in issue.journals:
+   ...     journal.save(notes='setting notes to a new value')
+   ...
+
+Or if you know the `id` beforehand:
+
+.. code-block:: python
+
+   >>> redmine.issue_journal.update(1, notes='setting notes to a new value')
+   True
+
+delete
+++++++
+
+.. versionadded:: 2.4.0
+
+To delete a journal set it's `notes` attribute to empty string:
+
+.. code-block:: python
+
+   >>> issue = redmine.issue.get(1, include=['journals'])
+   >>> for journal in issue.journals:
+   ...     journal.save(notes='')
+   ...
+
+Or if you know the `id` beforehand:
+
+.. code-block:: python
+
+   >>> redmine.issue_journal.update(1, notes='')
+   True
+
+.. note::
+
+   You can only delete a journal that doesn't have the associated `details` attribute.
 
 Watchers
 --------

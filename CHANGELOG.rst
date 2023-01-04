@@ -21,6 +21,8 @@ X.X.X (XXXX-XX-XX)
   (requires Redmine >= 4.1.0)
 - Added support for Project ``close()``, ``reopen()``, ``archive()``, ``unarchive()`` operations (see `docs
   <https://python-redmine.com/resources/project.html#additional-methods>`__ for details, requires Redmine >= 5.0.0)
+- Added support for updating and deleting issue journals (see `docs
+  <https://python-redmine.com/resources/issue.html#journals>`__ for details, requires Redmine >= 5.0.0)
 
 **Changes**:
 

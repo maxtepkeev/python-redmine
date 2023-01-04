@@ -448,6 +448,14 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         issue._decoded_attrs['journals'] = [{'id': 1}]
         self.assertEqual(issue.journals[0].url, None)
 
+    def test_issue_journals_update(self):
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        issue._decoded_attrs['journals'] = [{'id': 1}]
+        self.response.content = ''
+        self.assertIsInstance(issue.journals[0].save(notes='new value'), resources.IssueJournal)
+        self.assertEqual(self.redmine.issue_journal.update(1, notes='new value'), True)
+
     def test_issue_journals_resource_map_converts_to_resource(self):
         self.response.json.return_value = responses['issue']['get']
         issue = self.redmine.issue.get(1)

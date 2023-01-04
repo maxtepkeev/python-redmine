@@ -253,6 +253,8 @@ class File(Attachment):
 
 class IssueJournal(BaseResource):
     redmine_version = (1, 0, 0)
+    container_update = 'journal'
+    query_update = '/journals/{}.json'
 
     _repr = [['id']]
     _unconvertible = ['notes']
