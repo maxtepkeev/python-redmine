@@ -300,20 +300,3 @@ Export
    >>> wiki = redmine.wiki_page.get('Foo', project_id=1)
    >>> wiki.export('pdf', savepath='/home/jsmith')
    '/home/jsmith/123.pdf'
-
-.. py:method:: export(fmt, savepath=None, filename=None)
-   :module: redminelib.resultsets.ResourceSet
-   :noindex:
-
-   Exports a resource set of WikiPage resources in one of the following formats: atom, pdf, html
-
-   :param string fmt: (required). Format to use for export.
-   :param string savepath: (optional). Path where to save the file.
-   :param string filename: (optional). Name that will be used for the file.
-   :return: String or Object
-
-.. code-block:: python
-
-   >>> wiki_pages = redmine.wiki_page.filter(project_id='vacation')
-   >>> wiki_pages.export('pdf', savepath='/home/jsmith', filename='wiki_pages.pdf')
-   '/home/jsmith/wiki_pages.pdf'
