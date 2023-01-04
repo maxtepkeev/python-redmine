@@ -91,20 +91,43 @@ get
 
 .. versionadded:: 2.1.0
 
-.. py:method:: get(resource_id)
+.. py:method:: get(resource_id, **params)
    :module: redminelib.managers.ResourceManager
    :noindex:
 
    Returns single News resource from Redmine by it's id.
 
    :param int resource_id: (required). News id.
+   :param list include:
+    .. raw:: html
+
+       (optional). Fetches associated data in one call. Accepted values:
+
+    - comments
+    - attachments
+
    :return: :ref:`Resource` object
 
 .. code-block:: python
 
-   >>> news = redmine.news.get(123)
+   >>> news = redmine.news.get(123, include=['comments', 'attachments'])
    >>> news
    <redminelib.resources.News #123 "Vacation">
+
+.. hint::
+
+   News resource object provides you with on demand includes. On demand includes are the
+   other resource objects wrapped in a :ref:`ResourceSet` which are associated with a News
+   resource object. Keep in mind that on demand includes are retrieved in a separate request,
+   that means that if the speed is important it is recommended to use ``get()`` method with
+   ``include`` keyword argument. On demand includes provided by the News resource object
+   are the same as in the ``get()`` method above:
+
+   .. code-block:: python
+
+      >>> news = redmine.news.get(123)
+      >>> news.attachments
+      <redminelib.resultsets.ResourceSet object with Attachment resources>
 
 all
 +++

@@ -1416,6 +1416,17 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertIsInstance(news.author, resources.User)
         self.assertEqual(news.author.firstname, 'John')
 
+    def test_news_includes(self):
+        response_includes = responses['news']['get']
+        self.response.json.return_value = response_includes
+        news = self.redmine.news.get(1)
+        response_includes['news'].update({'attachments': [responses['attachment']['get']['attachment']]})
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(news.attachments, resultsets.ResourceSet)
+        response_includes['news'].update({'comments': [{'id': 1, 'content': 'foobar'}]})
+        self.response.json.return_value = response_includes
+        self.assertIsInstance(news.comments, list)
+
     def test_issue_status_version(self):
         self.assertEqual(self.redmine.issue_status.resource_class.redmine_version, (1, 3, 0))
 

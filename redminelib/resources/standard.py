@@ -511,7 +511,9 @@ class News(BaseResource):
     manager_class = managers.NewsManager
 
     _repr = [['id', 'title']]
+    _includes = ['attachments', 'comments']
     _resource_map = {'project': 'Project', 'author': 'User'}
+    _resource_set_map = {'attachments': 'Attachment'}
 
     @property
     def url(self):
