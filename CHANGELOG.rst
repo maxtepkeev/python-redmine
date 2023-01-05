@@ -10,6 +10,11 @@ X.X.X (XXXX-XX-XX)
 - Removed Python 2.7, 3.5, 3.6 support as it's not supported by Requests anymore
 - Removed support for ``python setup.py test`` as it became deprecated by setuptools
 
+**New Features**:
+
+- Timezone support (see `docs <https://python-redmine.com/configuration.html#timezone>`__ for details)
+  (`Issue #271 <https://github.com/maxtepkeev/python-redmine/issues/271>`__)
+
 **Improvements**:
 
 - Added support for Python 3.10, 3.11 and latest PyPy

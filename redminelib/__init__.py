@@ -6,6 +6,7 @@ import os
 import io
 import inspect
 import warnings
+import datetime
 import contextlib
 
 from . import managers, exceptions, engines, utilities, resources
@@ -29,6 +30,8 @@ class Redmine:
         :param string datetime_format: (optional). Formatting directives for datetime format.
         :param raise_attr_exception: (optional). Control over resource attribute access exception raising.
         :type raise_attr_exception: bool or tuple
+        :param timezone: (optional). Whether to convert a naive datetime to a specific timezone aware one.
+        :type timezone: str or cls
         :param cls engine: (optional). Engine that will be used to make requests to Redmine.
         """
         self.url = url.rstrip('/')
@@ -36,6 +39,14 @@ class Redmine:
 
         if self.ver is not None:
             self.ver = utilities.versiontuple(self.ver)
+
+        self.timezone = kwargs.pop('timezone', None)
+
+        if self.timezone is not None and not isinstance(self.timezone, datetime.tzinfo):
+            try:
+                self.timezone = datetime.datetime.strptime(self.timezone, '%z').tzinfo
+            except (TypeError, ValueError):
+                raise exceptions.TimezoneError
 
         self.date_format = kwargs.pop('date_format', '%Y-%m-%d')
         self.datetime_format = kwargs.pop('datetime_format', '%Y-%m-%dT%H:%M:%SZ')

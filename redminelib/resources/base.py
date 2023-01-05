@@ -2,7 +2,7 @@
 Defines base Redmine resource class and it's infrastructure.
 """
 
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 
 from .. import managers, utilities, exceptions
 
@@ -246,6 +246,9 @@ class BaseResource(metaclass=Registrar):
         if type_ is date:
             return attr, value.strftime(manager.redmine.date_format)
         elif type_ is datetime:
+            if manager.redmine.timezone is not None and value.tzinfo is not None:
+                value = value.astimezone(timezone.utc)
+
             return attr, value.strftime(manager.redmine.datetime_format)
 
         if attr == 'uploads':
@@ -280,7 +283,12 @@ class BaseResource(metaclass=Registrar):
 
         try:
             try:
-                return attr, datetime.strptime(value, manager.redmine.datetime_format)
+                value = datetime.strptime(value, manager.redmine.datetime_format)
+
+                if manager.redmine.timezone is not None:
+                    value = value.replace(tzinfo=timezone.utc).astimezone(manager.redmine.timezone)
+
+                return attr, value
             except (TypeError, ValueError):
                 return attr, datetime.strptime(value, manager.redmine.date_format).date()
         except (TypeError, ValueError):

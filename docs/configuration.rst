@@ -106,6 +106,58 @@ object what datetime formatting you're using, e.g. if the string returned is ``3
 
    redmine = Redmine('https://redmine.url', date_format='%d.%m.%Y', datetime_format='%d.%m.%YT%H:%M:%SZ')
 
+Timezone
+++++++++
+
+.. versionadded:: 2.4.0
+
+Redmine REST API expects and returns all datetime attributes in UTC. As described in the previous section,
+by default Python-Redmine tries to convert datetime text representation to Python's naive datetime object
+during attribute access and vice versa from Python's datetime object to the text representation ignoring
+timezone information even if one exists. Since 2.4.0 a support for timezone aware datetime objects has
+been added via a `timezone` argument which accepts either a string in a form of ±HHMM which is a time
+offset from UTC in hours and minutes:
+
+.. code-block:: python
+
+   redmine = Redmine('https://redmine.url', timezone='-0930')
+
+or any Python object which is a subclass of `datetime.tzinfo`:
+
+.. code-block:: python
+
+   from datetime import timezone
+
+   redmine = Redmine('https://redmine.url', timezone=timezone.utc)
+
+Main difference between the two is that ±HHMM string doesn't take DST into account, but requires no
+extra packages to work, while a proper Python object which is a subclass of `datetime.tzinfo` does, but
+may require you to install additional packages. If you're on Python 3.9+, there is a built-in `zoneinfo`
+module which is a recommended way of specifying a timezone:
+
+.. code-block:: python
+
+   from zoneinfo import ZoneInfo
+
+   redmine = Redmine('https://redmine.url', timezone=ZoneInfo('America/Los_Angeles'))
+
+If you're on Python <3.9, there are several 3rd party packages that provide you with timezone databases
+and classes that can be used as a value for Python-Redmine's `timezone` argument.
+
+After setting a `timezone` attribute to the desired timezone, Python-Redmine will automatically convert
+Redmine's datetime strings to Python's aware datetime objects:
+
+.. code-block:: python
+
+   '2013-12-31T13:27:47Z' -> datetime.datetime(2013, 12, 31, 5, 27, 47, tzinfo=zoneinfo.ZoneInfo(key='America/Los_Angeles'))
+
+The conversion will also work backwards, i.e. you can use Python's aware datetime objects when setting
+resource attributes or in ``ResourceManager`` methods, e.g. ``filter()``:
+
+.. code-block:: python
+
+   datetime.datetime(2013, 12, 31, 5, 27, 47, tzinfo=zoneinfo.ZoneInfo(key='America/Los_Angeles')) -> '2013-12-31T13:27:47Z'
+
 Exception Control
 +++++++++++++++++
 

@@ -278,6 +278,15 @@ class HTTPProtocolError(BaseRedmineError):
         super().__init__('Redmine url should start with HTTPS and not with HTTP')
 
 
+class TimezoneError(BaseRedmineError):
+    """
+    Timezone is neither a string, suitable for a strptime %z, nor is an instance of tzinfo class.
+    """
+    def __init__(self):
+        super().__init__(
+            'Timezone has to be either a ±HHMM string, e.g. -0800 or +0545, or an instance of datetime.tzinfo class')
+
+
 class EngineClassError(BaseRedmineError):
     """
     Engine isn't a class or isn't a BaseEngine subclass.

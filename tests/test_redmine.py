@@ -9,21 +9,27 @@ class RedmineTestCase(BaseRedmineTestCase):
     def test_default_attributes(self):
         self.assertEqual(self.redmine.url, self.url)
         self.assertEqual(self.redmine.ver, None)
+        self.assertEqual(self.redmine.timezone, None)
         self.assertEqual(self.redmine.date_format, '%Y-%m-%d')
         self.assertEqual(self.redmine.datetime_format, '%Y-%m-%dT%H:%M:%SZ')
         self.assertEqual(self.redmine.raise_attr_exception, True)
         self.assertEqual(self.redmine.engine.__class__, engines.DefaultEngine)
 
     def test_set_attributes_through_kwargs(self):
+        from datetime import timezone
         FooEngine = type('FooEngine', (engines.BaseEngine,), {'create_session': lambda obj, **kwargs: None})
         redmine = Redmine(self.url, version='1.0.0', date_format='format', datetime_format='format',
-                          raise_attr_exception=False, engine=FooEngine)
+                          timezone='+0000', raise_attr_exception=False, engine=FooEngine)
         self.assertEqual(redmine.url, self.url)
         self.assertEqual(redmine.ver, (1, 0, 0))
+        self.assertEqual(redmine.timezone, timezone.utc)
         self.assertEqual(redmine.date_format, 'format')
         self.assertEqual(redmine.datetime_format, 'format')
         self.assertEqual(redmine.raise_attr_exception, False)
         self.assertEqual(redmine.engine.__class__, FooEngine)
+
+    def test_timezone_exception(self):
+        self.assertRaises(exceptions.TimezoneError, lambda: Redmine(self.url, timezone='foobar'))
 
     def test_engine_class_exception(self):
         self.assertRaises(exceptions.EngineClassError, lambda: Redmine(self.url, engine=type('Foo', (object,), {})))

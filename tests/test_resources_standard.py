@@ -55,7 +55,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(project.description, 'Bar')
 
     def test_supports_setting_of_date_datetime_attributes(self):
-        from datetime import date, datetime
+        from datetime import date, datetime, timezone
         issue = self.redmine.issue.new()
         issue.start_date = date(2014, 3, 9)
         self.assertEqual(issue.start_date, date(2014, 3, 9))
@@ -65,6 +65,12 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(issue._decoded_attrs['start_date'], '2014-03-09T20:02:02Z')
         self.assertEqual(issue._changes['start_date'], '2014-03-09T20:02:02Z')
         self.assertEqual(issue.start_date, datetime(2014, 3, 9, 20, 2, 2))
+        self.redmine.timezone = timezone.utc
+        issue.start_date = datetime(2014, 3, 9, 20, 2, 2, tzinfo=datetime.strptime('+0800', '%z').tzinfo)
+        self.assertEqual(issue._decoded_attrs['start_date'], '2014-03-09T12:02:02Z')
+        self.assertEqual(issue._changes['start_date'], '2014-03-09T12:02:02Z')
+        self.assertEqual(issue.start_date, datetime(
+            2014, 3, 9, 20, 2, 2, tzinfo=datetime.strptime('+0800', '%z').tzinfo))
 
     def test_supports_setting_of_attributes_via_dict(self):
         project = self.redmine.project.new()
@@ -144,11 +150,16 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(decoded['include'], 'a,b')
 
     def test_bulk_encode(self):
-        from datetime import date, datetime
+        from datetime import date, datetime, timezone, timedelta
         decoded = {'start_date': '2014-03-09', 'created_at': '2014-03-09T20:02:02Z'}
         encoded = self.redmine.project.resource_class.bulk_encode(decoded, self.redmine.project)
         self.assertEqual(encoded['start_date'], date(2014, 3, 9))
         self.assertEqual(encoded['created_at'], datetime(2014, 3, 9, 20, 2, 2))
+        self.redmine.timezone = datetime.strptime('+0800', '%z').tzinfo
+        encoded = self.redmine.project.resource_class.bulk_encode(decoded, self.redmine.project)
+        self.assertEqual(encoded['start_date'], date(2014, 3, 9))
+        self.assertEqual(encoded['created_at'], datetime(
+            2014, 3, 10, 4, 2, 2, tzinfo=timezone(timedelta(seconds=28800))))
 
     def test_resource_dict_is_converted_to_resource_object(self):
         self.response.json.return_value = responses['issue']['get']
