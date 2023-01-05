@@ -40,11 +40,12 @@ Version
 There are a lot of different Redmine versions out there and different versions support different
 resources and features. To be sure that everything will work as expected you need to tell
 Python-Redmine what version of Redmine you're using. You can find the Redmine version by visiting
-the following address ``https://redmine.url/admin/info``:
+the following address ``https://redmine.url/admin/info`` and taking the first 3 numbers, i.e. if you
+have a version of 5.0.4.stable.21982, Python-Redmine needs only the 5.0.4:
 
 .. code-block:: python
 
-   redmine = Redmine('https://redmine.url', version='2.3.3')
+   redmine = Redmine('https://redmine.url', version='5.0.4')
 
 Authentication
 ++++++++++++++
