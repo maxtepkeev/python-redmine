@@ -223,8 +223,15 @@ class ResourceRequirementsError(BaseRedmineError):
     Resource requires specific Redmine plugin(s) to function.
     """
     def __init__(self, requirements):
-        super().__init__('The following requirements must be installed for resource to function: {}'.format(
-                ', '.join(' >= '.join(req) if isinstance(req, (list, tuple)) else req for req in requirements)))
+        reqs = []
+
+        for req in requirements:
+            if isinstance(req, (list, tuple)):
+                reqs.append(' >= '.join([req[0], '.'.join(map(str, req[1]))]))
+            else:
+                reqs.append(req)
+
+        super().__init__(f"The following requirements must be installed for resource to function: {', '.join(reqs)}")
 
 
 class FileUrlError(BaseRedmineError):
