@@ -105,6 +105,7 @@ class BaseResource(metaclass=Registrar):
     query_create = None
     query_update = None
     query_delete = None
+    query_url = None
     search_hints = None
     extra_export_columns = []
     http_method_create = 'post'
@@ -444,7 +445,9 @@ class BaseResource(metaclass=Registrar):
         """
         Returns full URL to the Resource for humans if there is one.
         """
-        if self.query_one is not None:
+        if self.query_url is not None:
+            return self.manager.redmine.url + self.query_url.format(self.internal_id)
+        elif self.query_one is not None:
             return self.manager.redmine.url + self.query_one.format(self.internal_id)[:-5]
 
         return None

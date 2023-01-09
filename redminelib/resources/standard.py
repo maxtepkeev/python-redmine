@@ -212,10 +212,6 @@ class Enumeration(BaseResource):
 
     _resource_set_map = {'custom_fields': 'CustomField'}
 
-    @property
-    def url(self):
-        return self.manager.redmine.url + self.query_url.format(self.internal_id)
-
 
 class Attachment(BaseResource):
     redmine_version = (1, 3, 0)
@@ -509,7 +505,6 @@ class News(BaseResource):
     query_create = '/projects/{project_id}/news.json'
     query_update = '/news/{}.json'
     query_delete = '/news/{}.json'
-    query_url = '/news/{}'
     search_hints = ['news']
     manager_class = managers.NewsManager
 
@@ -518,10 +513,6 @@ class News(BaseResource):
     _resource_map = {'project': 'Project', 'author': 'User'}
     _resource_set_map = {'attachments': 'Attachment'}
     _single_attr_id_map = {'project_id': 'project'}
-
-    @property
-    def url(self):
-        return self.manager.redmine.url + self.query_url.format(self.internal_id)
 
 
 class IssueStatus(BaseResource):
@@ -534,10 +525,6 @@ class IssueStatus(BaseResource):
     _relations_name = 'status'
     _resource_set_map = {'issues': 'Issue'}
 
-    @property
-    def url(self):
-        return self.manager.redmine.url + self.query_url.format(self.internal_id)
-
 
 class Tracker(BaseResource):
     redmine_version = (1, 3, 0)
@@ -547,10 +534,6 @@ class Tracker(BaseResource):
 
     _relations = ['issues']
     _resource_set_map = {'issues': 'Issue'}
-
-    @property
-    def url(self):
-        return self.manager.redmine.url + self.query_url.format(self.internal_id)
 
 
 class Query(BaseResource):
@@ -592,7 +575,3 @@ class CustomField(BaseResource):
             value = [value['tracker']]
 
         return super().encode(attr, value, manager)
-
-    @property
-    def url(self):
-        return self.manager.redmine.url + self.query_url.format(self.internal_id)
