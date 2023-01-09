@@ -192,7 +192,7 @@ class TimeEntry(BaseResource):
     _repr = [['id']]
     _resource_map = {'project': 'Project', 'issue': 'Issue', 'user': 'User', 'activity': 'Enumeration'}
     _resource_set_map = {'custom_fields': 'CustomField'}
-    _single_attr_id_map = {'issue_id': 'issue', 'activity_id': 'activity'}
+    _single_attr_id_map = {'project_id': 'project', 'issue_id': 'issue', 'activity_id': 'activity'}
 
     @classmethod
     def decode(cls, attr, value, manager):
@@ -345,7 +345,7 @@ class ProjectMembership(BaseResource):
     _update_readonly = _create_readonly[:]
     _resource_map = {'project': 'Project', 'user': 'User', 'group': 'Group'}
     _resource_set_map = {'roles': 'Role'}
-    _single_attr_id_map = {'project_id': 'project', 'user_id': 'users'}
+    _single_attr_id_map = {'project_id': 'project', 'user_id': 'user'}
     _multiple_attr_id_map = {'role_ids': 'roles'}
 
 
@@ -362,6 +362,7 @@ class IssueCategory(BaseResource):
     query_delete = '/issue_categories/{}.json'
 
     _resource_map = {'project': 'Project', 'assigned_to': 'User'}
+    _single_attr_id_map = {'project_id': 'project', 'assigned_to_id': 'assigned_to'}
 
 
 class IssueRelation(BaseResource):
@@ -516,6 +517,7 @@ class News(BaseResource):
     _includes = ['attachments', 'comments']
     _resource_map = {'project': 'Project', 'author': 'User'}
     _resource_set_map = {'attachments': 'Attachment'}
+    _single_attr_id_map = {'project_id': 'project'}
 
     @property
     def url(self):
