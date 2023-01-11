@@ -35,12 +35,12 @@ all 2.x.x versions. Below you can find a feature matrix which shows all the diff
        <td class="group" colspan="3">Support (maximum response time)</td>
      </tr>
      <tr>
-       <td class="feature">GitHub (72 hours)</td>
+       <td class="feature">GitHub (no limit)</td>
        <td class="implemented">YES</td>
        <td class="implemented">YES</td>
      </tr>
      <tr>
-       <td class="feature">Email (12 hours)</td>
+       <td class="feature">Email (24 hours)</td>
        <td class="not-implemented">NO</td>
        <td class="implemented">YES</td>
      </tr>
@@ -122,6 +122,11 @@ all 2.x.x versions. Below you can find a feature matrix which shows all the diff
      </tr>
      <tr>
        <td class="feature">Query</td>
+       <td class="implemented">YES</td>
+       <td class="implemented">YES</td>
+     </tr>
+     <tr>
+       <td class="feature">File</td>
        <td class="implemented">YES</td>
        <td class="implemented">YES</td>
      </tr>
