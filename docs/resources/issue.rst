@@ -168,7 +168,7 @@ get
 
    * relations
    * time_entries
-   * checklists (requires Pro Edition and `Checklist plugin <https://www.redmineup.com/pages/plugins/checklists>`_)
+   * checklists (requires Pro Edition and `Checklists plugin <https://www.redmineup.com/pages/plugins/checklists>`_)
 
    .. code-block:: python
 

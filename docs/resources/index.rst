@@ -41,8 +41,8 @@ RedmineUP CRM
    deal_category
    crm_query
 
-RedmineUP Checklist
--------------------
+RedmineUP Checklists
+--------------------
 
 .. toctree::
    :maxdepth: 1

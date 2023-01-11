@@ -1,7 +1,7 @@
 Checklist
 =========
 
-Requires Pro Edition and `Checklist plugin <https://www.redmineup.com/pages/plugins/checklists>`_ >= 3.0.0.
+Requires Pro Edition and `Checklists plugin <https://www.redmineup.com/pages/plugins/checklists>`_ >= 3.0.0.
 
 Manager
 -------
@@ -20,7 +20,7 @@ create
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Creates new Checklist resource item with given fields and saves it to the Checklist plugin.
+   Creates new Checklist resource item with given fields and saves it to the Checklists plugin.
 
    :param int issue_id: (required). Issue to which checklist item belongs to.
    :param string subject: (required). Subject of checklist item.
@@ -40,7 +40,7 @@ new
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Creates new empty Checklist resource item but saves it to the Checklist plugin only when ``save()`` is
+   Creates new empty Checklist resource item but saves it to the Checklists plugin only when ``save()`` is
    called, also calls ``pre_create()`` and ``post_create()`` methods of the :ref:`Resource` object. Valid
    attributes are the same as for ``create()`` method above.
 
@@ -79,7 +79,7 @@ get
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Returns single Checklist resource item from the Checklist plugin by it's id.
+   Returns single Checklist resource item from the Checklists plugin by it's id.
 
    :param int resource_id: (required). Id of the checklist item.
    :return: :ref:`Resource` object
@@ -93,7 +93,7 @@ get
 all
 +++
 
-Not supported by Checklist plugin
+Not supported by Checklists plugin
 
 filter
 ++++++
@@ -133,7 +133,7 @@ update
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Updates values of given fields of a Checklist resource item and saves them to the Checklist plugin.
+   Updates values of given fields of a Checklist resource item and saves them to the Checklists plugin.
 
    :param int resource_id: (required). Checklist item id.
    :param int issue_id: (optional). Checklist item issue id.
@@ -154,7 +154,7 @@ save
    :module: redminelib.resources.Checklist
    :noindex:
 
-   Saves the current state of a Checklist item resource to the Checklist plugin. Attrs that
+   Saves the current state of a Checklist item resource to the Checklists plugin. Attrs that
    can be changed are the same as for ``update()`` method above.
 
    :return: :ref:`Resource` object
@@ -192,7 +192,7 @@ delete
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Deletes single Checklist resource item from the Checklist plugin by it's id.
+   Deletes single Checklist resource item from the Checklists plugin by it's id.
 
    :param int resource_id: (required). Checklist item id.
    :return: True
@@ -206,7 +206,7 @@ delete
    :module: redminelib.resources.Checklist
    :noindex:
 
-   Deletes current Checklist resource item object from the Checklist plugin.
+   Deletes current Checklist resource item object from the Checklists plugin.
 
    :return: True
 
@@ -219,4 +219,4 @@ delete
 Export
 ------
 
-Not supported by Checklist plugin
+Not supported by Checklists plugin

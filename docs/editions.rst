@@ -199,7 +199,7 @@ all 2.x.x versions. Below you can find a feature matrix which shows all the diff
        <td class="implemented">YES</td>
      </tr>
      <tr>
-       <td class="group" colspan="3">RedmineUP Checklist Plugin API endpoints</td>
+       <td class="group" colspan="3">RedmineUP Checklists Plugin API endpoints</td>
      </tr>
      <tr>
        <td class="feature">Checklist</td>
