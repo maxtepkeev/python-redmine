@@ -57,6 +57,11 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+# Either relative to html_static_path paths or full paths (eg. https://...)
+html_css_files = [
+    'css/python-redmine.css'
+]
+
 # Custom sidebar templates, maps document names to template names.
 html_sidebars = {
     '**': ['about.html', 'navigation.html', 'searchbox.html']
@@ -70,8 +75,3 @@ html_show_sourcelink = False
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'PythonRedminedoc'
-
-
-# Documentation setup
-def setup(app):
-    app.add_stylesheet('css/python-redmine.css')
