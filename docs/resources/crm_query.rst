@@ -46,6 +46,22 @@ get
    >>> query
    <redminelib.resources.CrmQuery #1 "By companies">
 
+.. hint::
+
+   CrmQuery resource object provides you with some relations. Relations are the other
+   resource objects wrapped in a :ref:`ResourceSet` which are somehow related to a CrmQuery
+   resource object. The relations provided by the CrmQuery resource object are:
+
+   * deals
+
+   .. code-block:: python
+
+      >>> queries = redmine.crm_query.filter(resource='deal')
+      >>> queries[0]
+      <redminelib.resources.CrmQuery #10 "Deals by category">
+      >>> queries[0].deals
+      <redminelib.resultsets.ResourceSet object with Deal resources>
+
 all
 +++
 
@@ -77,22 +93,6 @@ filter
    >>> queries = redmine.crm_query.filter(resource='contact')
    >>> queries
    <redminelib.resultsets.ResourceSet object with CrmQuery resources>
-
-.. hint::
-
-   CrmQuery resource object provides you with some relations. Relations are the other
-   resource objects wrapped in a :ref:`ResourceSet` which are somehow related to a CrmQuery
-   resource object. The relations provided by the CrmQuery resource object are:
-
-   * deals
-
-   .. code-block:: python
-
-      >>> queries = redmine.crm_query.filter(resource='deal')
-      >>> queries[0]
-      <redminelib.resources.CrmQuery #10 "Deals by category">
-      >>> queries[0].deals
-      <redminelib.resultsets.ResourceSet object with Deal resources>
 
 Update methods
 --------------

@@ -177,7 +177,7 @@ filter
 
 .. hint::
 
-   You can also get deals from a Project, User and DealStatus resource objects directly using
+   You can also get deals from a Project, User, DealStatus and CrmQuery resource objects directly using
    ``deals`` relation:
 
    .. code-block:: python
