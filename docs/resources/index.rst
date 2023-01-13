@@ -48,3 +48,13 @@ RedmineUP Checklists
    :maxdepth: 1
 
    checklist
+
+RedmineUP Invoices
+------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   invoice
+   invoice_payment
+   expense

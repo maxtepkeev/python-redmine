@@ -170,6 +170,25 @@ get
       >>> contact.issues
       <redminelib.resultsets.ResourceSet object with Issue resources>
 
+.. hint::
+
+   Contact resource object provides you with some relations. Relations are the other
+   resource objects wrapped in a :ref:`ResourceSet` which are somehow related to a Contact
+   resource object. The relations provided by the Contact resource object are:
+
+   * invoices (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_
+     >= 4.1.3)
+   * payments (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_
+     >= 4.1.3)
+   * expenses (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_
+     >= 4.1.3)
+
+   .. code-block:: python
+
+      >>> contact = redmine.contact.get(12345)
+      >>> contact.invoices
+      <redminelib.resultsets.ResourceSet object with Invoice resources>
+
 all
 +++
 

@@ -12,6 +12,8 @@ X.X.X (XXXX-XX-XX)
 
 **New Features**:
 
+- RedmineUP `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`__ support
+  (`Issue #301 <https://github.com/maxtepkeev/python-redmine/issues/301>`__)
 - Timezone support (see `docs <https://python-redmine.com/configuration.html#timezone>`__ for details)
   (`Issue #271 <https://github.com/maxtepkeev/python-redmine/issues/271>`__)
 

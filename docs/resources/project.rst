@@ -149,6 +149,10 @@ get
    * contacts (requires Pro Edition and `CRM plugin <https://www.redmineup.com/pages/plugins/crm>`_)
    * deal_categories (requires Pro Edition and `CRM plugin <https://www.redmineup.com/pages/plugins/crm>`_
      >= 3.3.0)
+   * invoices (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_
+     >= 4.1.3)
+   * expenses (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_
+     >= 4.1.3)
 
    .. code-block:: python
 

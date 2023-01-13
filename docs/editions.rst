@@ -212,6 +212,24 @@ all 2.x.x versions. Below you can find a feature matrix which shows all the diff
        <td class="implemented">YES</td>
      </tr>
      <tr>
+       <td class="group" colspan="3">RedmineUP Invoices Plugin API endpoints</td>
+     </tr>
+     <tr>
+       <td class="feature">Invoice</td>
+       <td class="not-implemented">NO</td>
+       <td class="implemented">YES</td>
+     </tr>
+     <tr>
+       <td class="feature">Invoice Payment</td>
+       <td class="not-implemented">NO</td>
+       <td class="implemented">YES</td>
+     </tr>
+     <tr>
+       <td class="feature">Expense</td>
+       <td class="not-implemented">NO</td>
+       <td class="implemented">YES</td>
+     </tr>
+     <tr>
        <td class="group" colspan="3">Lookups</td>
      </tr>
      <tr>
