@@ -46,6 +46,8 @@ X.X.X (XXXX-XX-XX)
 
 **Documentation**:
 
+- Document requirement of `project_id` param for `query_id` filter (`Issue #285 <https://github.com/maxtepkeev/
+  python-redmine/pull/285>`__) (thanks to `Doezer <https://github.com/Doezer>`__)
 - Mentioned support for ``user_id`` in TimeEntry's resource create/update (`Issue #298 <https://github.com/
   maxtepkeev/python-redmine/issues/298>`__)
 - Mentioned support for additional scopes for Search API
