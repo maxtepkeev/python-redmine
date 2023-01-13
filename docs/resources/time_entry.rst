@@ -6,7 +6,7 @@ Supported by Redmine starting from version 1.1
 Manager
 -------
 
-All operations on the TimeEntry resource are provided by it's manager. To get access
+All operations on the TimeEntry resource are provided by its manager. To get access
 to it you have to call ``redmine.time_entry`` where ``redmine`` is a configured redmine
 object. See the :doc:`../configuration` about how to configure redmine object.
 
@@ -82,7 +82,7 @@ get
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Returns single TimeEntry resource from Redmine by it's id.
+   Returns single TimeEntry resource from Redmine by its id.
 
    :param int resource_id: (required). Id of the time entry.
    :return: :ref:`Resource` object
@@ -237,7 +237,7 @@ delete
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Deletes single TimeEntry resource from Redmine by it's id.
+   Deletes single TimeEntry resource from Redmine by its id.
 
    :param int resource_id: (required). Time entry id.
    :return: True

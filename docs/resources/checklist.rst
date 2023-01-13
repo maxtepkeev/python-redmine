@@ -6,7 +6,7 @@ Requires Pro Edition and `Checklists plugin <https://www.redmineup.com/pages/plu
 Manager
 -------
 
-All operations on the Checklist resource are provided by it's manager. To get access to
+All operations on the Checklist resource are provided by its manager. To get access to
 it you have to call ``redmine.checklist`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -79,7 +79,7 @@ get
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Returns single Checklist resource item from the Checklists plugin by it's id.
+   Returns single Checklist resource item from the Checklists plugin by its id.
 
    :param int resource_id: (required). Id of the checklist item.
    :return: :ref:`Resource` object
@@ -192,7 +192,7 @@ delete
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Deletes single Checklist resource item from the Checklists plugin by it's id.
+   Deletes single Checklist resource item from the Checklists plugin by its id.
 
    :param int resource_id: (required). Checklist item id.
    :return: True

@@ -1,5 +1,5 @@
 """
-Defines base Redmine resource manager class and it's infrastructure.
+Defines base Redmine resource manager class and its infrastructure.
 """
 
 from .. import resultsets, exceptions

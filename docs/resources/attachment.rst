@@ -6,14 +6,14 @@ Supported by Redmine starting from version 1.3
 Manager
 -------
 
-All operations on the Attachment resource are provided by it's manager. To get access to it
+All operations on the Attachment resource are provided by its manager. To get access to it
 you have to call ``redmine.attachment`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
 Create methods
 --------------
 
-Not supported by Redmine. Some resources support adding attachments via it's create/update methods, e.g. Issue, WikiPage.
+Not supported by Redmine. Some resources support adding attachments via their create/update methods, e.g. Issue, WikiPage.
 
 Read methods
 ------------
@@ -25,7 +25,7 @@ get
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Returns single Attachment resource from Redmine by it's id.
+   Returns single Attachment resource from Redmine by its id.
 
    :param int resource_id: (required). Id of the attachment.
    :return: :ref:`Resource` object
@@ -139,7 +139,7 @@ delete
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Deletes single Attachment resource from Redmine by it's id.
+   Deletes single Attachment resource from Redmine by its id.
 
    :param int resource_id: (required). Attachment id.
    :return: True

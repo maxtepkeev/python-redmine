@@ -6,7 +6,7 @@ Supported by Redmine starting from version 1.0
 Manager
 -------
 
-All operations on the Project resource are provided by it's manager. To get access to
+All operations on the Project resource are provided by its manager. To get access to
 it you have to call ``redmine.project`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -93,7 +93,7 @@ get
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Returns single Project resource from Redmine by it's id or identifier.
+   Returns single Project resource from Redmine by its id or identifier.
 
    :param resource_id: (required). Project id or identifier.
    :type resource_id: int or string
@@ -294,7 +294,7 @@ delete
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Deletes single Project resource from Redmine by it's id or identifier.
+   Deletes single Project resource from Redmine by its id or identifier.
 
    :param resource_id: (required). Project id or identifier.
    :type resource_id: int or string
@@ -331,7 +331,7 @@ close
    :module: redminelib.managers.ProjectManager
    :noindex:
 
-   Closes single Project Redmine resource by it's id or identifier.
+   Closes single Project Redmine resource by its id or identifier.
 
    :param resource_id: (required). Project id or identifier.
    :type resource_id: int or string
@@ -363,7 +363,7 @@ reopen
    :module: redminelib.managers.ProjectManager
    :noindex:
 
-   Reopens previously closed single Project Redmine resource by it's id or identifier.
+   Reopens previously closed single Project Redmine resource by its id or identifier.
 
    :param resource_id: (required). Project id or identifier.
    :type resource_id: int or string
@@ -395,7 +395,7 @@ archive
    :module: redminelib.managers.ProjectManager
    :noindex:
 
-   Archives single Project Redmine resource by it's id or identifier.
+   Archives single Project Redmine resource by its id or identifier.
 
    :param resource_id: (required). Project id or identifier.
    :type resource_id: int or string
@@ -427,7 +427,7 @@ unarchive
    :module: redminelib.managers.ProjectManager
    :noindex:
 
-   Unarchives single Project Redmine resource by it's id or identifier.
+   Unarchives single Project Redmine resource by its id or identifier.
 
    :param resource_id: (required). Project id or identifier.
    :type resource_id: int or string

@@ -6,7 +6,7 @@ Supported by Redmine starting from version 1.0
 Manager
 -------
 
-All operations on the Issue resource are provided by it's manager. To get access to
+All operations on the Issue resource are provided by its manager. To get access to
 it you have to call ``redmine.issue`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -121,7 +121,7 @@ get
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Returns single Issue resource from Redmine by it's id.
+   Returns single Issue resource from Redmine by its id.
 
    :param int resource_id: (required). Id of the issue.
    :param list include:
@@ -424,7 +424,7 @@ delete
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Deletes single Issue resource from Redmine by it's id.
+   Deletes single Issue resource from Redmine by its id.
 
    :param int resource_id: (required). Issue id.
    :return: True
@@ -564,7 +564,7 @@ delete
 
 .. versionadded:: 2.4.0
 
-To delete a journal set it's `notes` attribute to empty string:
+To delete a journal set its `notes` attribute to empty string:
 
 .. code-block:: python
 
@@ -596,7 +596,7 @@ add
    :module: redminelib.resources.Issue.Watcher
    :noindex:
 
-   Adds a user to issue watchers list by it's id.
+   Adds a user to issue watchers list by its id.
 
    :param int user_id: (required). User id.
    :return: True
@@ -614,7 +614,7 @@ remove
    :module: redminelib.resources.Issue.Watcher
    :noindex:
 
-   Removes a user from issue watchers list by it's id.
+   Removes a user from issue watchers list by its id.
 
    :param int user_id: (required). User id.
    :return: True

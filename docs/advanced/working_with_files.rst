@@ -50,7 +50,7 @@ Download
    :return: string or `requests.Response <http://docs.python-requests.org/en/latest/api/#requests.Response>`_ object
 
 If a ``savepath`` argument is provided, then a file will be saved into the provided path with
-it's own name, if a ``filename`` argument is provided together with the ``savepath`` argument,
+its own name, if a ``filename`` argument is provided together with the ``savepath`` argument,
 then a file will be saved into the provided path under the provided name and the resulting path
 to the file will be returned.
 

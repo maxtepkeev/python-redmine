@@ -6,7 +6,7 @@ Requires Pro Edition and `CRM plugin <https://www.redmineup.com/pages/plugins/cr
 Manager
 -------
 
-All operations on the Contact resource are provided by it's manager. To get access to it
+All operations on the Contact resource are provided by its manager. To get access to it
 you have to call ``redmine.contact`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -133,7 +133,7 @@ get
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Returns single Contact resource from the CRM plugin by it's id.
+   Returns single Contact resource from the CRM plugin by its id.
 
    :param int resource_id: (required). Id of the contact.
    :param list include:
@@ -388,7 +388,7 @@ delete
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Deletes single Contact resource from the CRM plugin by it's id.
+   Deletes single Contact resource from the CRM plugin by its id.
 
    :param int resource_id: (required). Contact id.
    :return: True

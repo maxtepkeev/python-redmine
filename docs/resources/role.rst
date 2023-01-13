@@ -6,7 +6,7 @@ Supported by Redmine starting from version 1.4
 Manager
 -------
 
-All operations on the Role resource are provided by it's manager. To get access to
+All operations on the Role resource are provided by its manager. To get access to
 it you have to call ``redmine.role`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -25,7 +25,7 @@ get
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Returns single Role resource from Redmine by it's id.
+   Returns single Role resource from Redmine by its id.
 
    :param int resource_id: (required). Id of the role.
    :return: :ref:`Resource` object

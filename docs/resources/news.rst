@@ -6,7 +6,7 @@ Supported by Redmine starting from version 1.1
 Manager
 -------
 
-All operations on the News resource are provided by it's manager. To get access to
+All operations on the News resource are provided by its manager. To get access to
 it you have to call ``redmine.news`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -95,7 +95,7 @@ get
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Returns single News resource from Redmine by it's id.
+   Returns single News resource from Redmine by its id.
 
    :param int resource_id: (required). News id.
    :param list include:
@@ -249,7 +249,7 @@ delete
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Deletes single News resource from Redmine by it's id.
+   Deletes single News resource from Redmine by its id.
 
    :param int resource_id: (required). News id.
    :return: True

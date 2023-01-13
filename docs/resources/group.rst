@@ -6,7 +6,7 @@ Supported by Redmine starting from version 2.1
 Manager
 -------
 
-All operations on the Group resource are provided by it's manager. To get access to it
+All operations on the Group resource are provided by its manager. To get access to it
 you have to call ``redmine.group`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -63,7 +63,7 @@ get
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Returns single group resource from Redmine by it's id.
+   Returns single group resource from Redmine by its id.
 
    :param int resource_id: (required). Id of the group.
    :param list include:
@@ -184,7 +184,7 @@ delete
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Deletes single Group resource from Redmine by it's id.
+   Deletes single Group resource from Redmine by its id.
 
    :param int resource_id: (required). Group id.
    :return: True
@@ -225,7 +225,7 @@ add
    :module: redminelib.resources.Group.User
    :noindex:
 
-   Adds a user to a group by it's id.
+   Adds a user to a group by its id.
 
    :param int user_id: (required). User id.
    :return: True
@@ -243,7 +243,7 @@ remove
    :module: redminelib.resources.Group.User
    :noindex:
 
-   Removes a user from a group by it's id.
+   Removes a user from a group by its id.
 
    :param int user_id: (required). User id.
    :return: True

@@ -128,7 +128,7 @@ class Redmine:
             # object underneath, we need to convert it to bytes, otherwise we'll get an exception
             if isinstance(c, str):
                 warnings.warn("File-like object contains unicode, hence an additional step is performed to convert "
-                              "it's content to bytes, please consider switching to bytes to eliminate this warning",
+                              "its content to bytes, please consider switching to bytes to eliminate this warning",
                               exceptions.PerformanceWarning)
                 f = io.BytesIO(f.read().encode('utf-8'))
 

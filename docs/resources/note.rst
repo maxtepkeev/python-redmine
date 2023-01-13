@@ -6,7 +6,7 @@ Requires Pro Edition and `CRM plugin <https://www.redmineup.com/pages/plugins/cr
 Manager
 -------
 
-All operations on the Note resource are provided by it's manager. To get access to
+All operations on the Note resource are provided by its manager. To get access to
 it you have to call ``redmine.note`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -25,7 +25,7 @@ get
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Returns single Note resource from the CRM plugin by it's id.
+   Returns single Note resource from the CRM plugin by its id.
 
    :param int resource_id: (required). Id of the note.
    :return: :ref:`Resource` object

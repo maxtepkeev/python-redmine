@@ -6,7 +6,7 @@ Supported by Redmine starting from version 1.3
 Manager
 -------
 
-All operations on the IssueCategory resource are provided by it's manager. To get
+All operations on the IssueCategory resource are provided by its manager. To get
 access to it you have to call ``redmine.issue_category`` where ``redmine`` is a configured
 redmine object. See the :doc:`../configuration` about how to configure redmine object.
 
@@ -67,7 +67,7 @@ get
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Returns single IssueCategory resource from Redmine by it's id.
+   Returns single IssueCategory resource from Redmine by its id.
 
    :param int resource_id: (required). Id of the issue category.
    :return: :ref:`Resource` object
@@ -180,7 +180,7 @@ delete
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Deletes single IssueCategory resource from Redmine by it's id.
+   Deletes single IssueCategory resource from Redmine by its id.
 
    :param int resource_id: (required). Issue category id.
    :param int reassign_to_id: (optional). When there are issues assigned to the

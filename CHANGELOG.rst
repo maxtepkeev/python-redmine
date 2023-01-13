@@ -108,7 +108,7 @@ X.X.X (XXXX-XX-XX)
 **Deprecations**:
 
 - Removed vendored Requests package and make it an external dependency as Requests did
-  the same with it's own dependencies
+  the same with its own dependencies
 - Removed Python 2.6 and 3.3 support as they're not supported by Requests anymore
 
 **Improvements**:
@@ -134,7 +134,7 @@ X.X.X (XXXX-XX-XX)
 This release concentrates mostly on stability and adds small features here and there. Some of them
 are backwards incompatible and are marked as such. They shouldn't affect many users since most of
 them were used internally by Python-Redmine. A support for the Files API has been finally added, but
-please be sure to check it's documentation as the implementation on the Redmine side is horrible and
+please be sure to check its documentation as the implementation on the Redmine side is horrible and
 there are things to keep in mind while working with Files API. Lastly, only until the end of May 2018
 there is a chance to buy a Pro Edition for only 14.99$ instead of the usual 24.99$, this is your
 chance to get an edition with additional features for a good price and to support the further development
@@ -552,7 +552,7 @@ user.
 0.7.0 (2014-03-12)
 ++++++++++++++++++
 
-- Added: WikiPage resource now automatically requests all of it's available attributes from
+- Added: WikiPage resource now automatically requests all of its available attributes from
   Redmine in case if some of them are not available in an existent resource object
 - Added: Support for setting date/datetime resource attributes using date/datetime Python objects
 - Added: Support for using date/datetime Python objects in all ResourceManager methods, i.e.
@@ -732,7 +732,7 @@ user.
 ++++++++++++++++++
 
 - Added: Python 2.6 support
-- Changed: WikiPage resource ``refresh()`` method now automatically determines it's project_id
+- Changed: WikiPage resource ``refresh()`` method now automatically determines its project_id
 - Fixed: Resource representation, i.e. ``__repr__()``, was broken in Python 2.7
 - Fixed: ``dir()`` call on a resource object didn't work in Python 3.2
 

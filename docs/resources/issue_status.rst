@@ -6,7 +6,7 @@ Supported by Redmine starting from version 1.3
 Manager
 -------
 
-All operations on the IssueStatus resource are provided by it's manager. To get access to
+All operations on the IssueStatus resource are provided by its manager. To get access to
 it you have to call ``redmine.issue_status`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -27,7 +27,7 @@ get
    :module: redminelib.managers.ResourceManager
    :noindex:
 
-   Returns single IssueStatus resource from Redmine by it's id.
+   Returns single IssueStatus resource from Redmine by its id.
 
    :param int resource_id: (required). Id of the issue status.
    :return: :ref:`Resource` object

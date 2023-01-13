@@ -6,7 +6,7 @@ Supported by Redmine starting from version 3.4
 Manager
 -------
 
-All operations on the File resource are provided by it's manager. To get access to it
+All operations on the File resource are provided by its manager. To get access to it
 you have to call ``redmine.file`` where ``redmine`` is a configured redmine object.
 See the :doc:`../configuration` about how to configure redmine object.
 
@@ -103,7 +103,7 @@ get
    :module: redminelib.managers.FileManager
    :noindex:
 
-   Returns single File resource from Redmine by it's id.
+   Returns single File resource from Redmine by its id.
 
    :param int resource_id: (required). Id of the file.
    :return: :ref:`Resource` object
@@ -233,7 +233,7 @@ delete
    :module: redminelib.managers.FileManager
    :noindex:
 
-   Deletes single File resource from Redmine by it's id.
+   Deletes single File resource from Redmine by its id.
 
    :param int resource_id: (required). File id.
    :return: True

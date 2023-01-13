@@ -90,7 +90,7 @@ There's a big difference between creating a resource via ``create()`` and ``new(
 :ref:`ResourceManager <ResourceManager>`. A ``create()`` method is the most simple way to create a resource, it just creates
 a resource with the provided fields, returns a newly created :ref:`Resource` object and that's it. A
 ``new()`` method doesn't create a resource immediately, it just constructs an empty :ref:`Resource` object
-so you can use it's attributes to set their values as needed, also when you call a ``save()`` method on
+so you can use its attributes to set their values as needed, also when you call a ``save()`` method on
 the resource, at first its ``pre_create()`` method will be executed to run pre create tasks if any, then
 a request to Redmine will be made to actually save the resource and finally a ``post_create()`` method
 will be executed to run post create tasks if any. You can use any method you like, though it is
@@ -320,7 +320,7 @@ that we need to introspect a resource somehow to see what's inside before we can
       'versions',
       'wiki_pages']
 
-* **list()**. Returns all the attributes with it's values resource has as a list of tuples.
+* **list()**. Returns all the attributes with their values, which resource has, as a list of tuples.
 
   .. code-block:: python
 
@@ -412,7 +412,7 @@ Url
 +++
 
 :ref:`Resource` object also provides a convenient ``url`` attribute which can be used if there is a need
-to know it's url:
+to know its url:
 
 .. code-block:: python
 
@@ -450,7 +450,7 @@ conditions are met:
 
      list(redmine.project.all())
 
-* **Index**. A :ref:`ResourceSet` is evaluated when some of it's resources are requested by index.
+* **Index**. A :ref:`ResourceSet` is evaluated when some of its resources are requested by index.
 
   .. code-block:: python
 

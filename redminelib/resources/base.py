@@ -1,5 +1,5 @@
 """
-Defines base Redmine resource class and it's infrastructure.
+Defines base Redmine resource class and its infrastructure.
 """
 
 from datetime import date, datetime, timezone
@@ -227,7 +227,7 @@ class BaseResource(metaclass=Registrar):
             elif attr in self._multiple_attr_id_map:
                 self._decoded_attrs[self._multiple_attr_id_map[attr]] = [{'id': attr_id} for attr_id in decoded_value]
 
-        # When we set an attribute we put it's decoded value only to a _decoded_attrs
+        # When we set an attribute we put its decoded value only to a _decoded_attrs
         # dict because it may never be accessed again, that is why we don't waste time
         # on the encode process but only clean the cache, and in case if it will be
         # accessed, the encoding process will be run automatically by __getattr__
