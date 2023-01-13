@@ -6,7 +6,7 @@ X.X.X (XXXX-XX-XX)
 
 **Deprecations**:
 
-- Requests version required >= 2.28.1
+- Requests version required >= 2.28.2
 - Removed Python 2.7, 3.5, 3.6 support as it's not supported by Requests anymore
 - Removed support for ``python setup.py test`` as it became deprecated by setuptools
 
