@@ -45,6 +45,8 @@ X.X.X (XXXX-XX-XX)
 
 - Stop raising `ResourceAttrError` for attributes that actually exist, but their value is `None`
   (`Issue #261 <https://github.com/maxtepkeev/python-redmine/pull/261>`__)
+- RedmineUP Deal resource ``related_contacts`` attribute was returned as a list instead of being converted to
+  ResourceSet object
 - Project resource ``default_assignee`` attribute was returned as a dict instead of being converted to
   Resource object
 
