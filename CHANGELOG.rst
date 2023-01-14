@@ -26,6 +26,8 @@ X.X.X (XXXX-XX-XX)
   Redmine >= 4.2.0)
 - Added support for `comments` and `attachments` to ``include`` param and on demand includes for News resource
   (requires Redmine >= 4.1.0)
+- Added support for RedmineUP Note ``create()``, ``update()``, ``delete()`` operations (see `docs
+  <https://python-redmine.com/resources/note.html#create-methods>`__ for details)
 - Added support for Project ``close()``, ``reopen()``, ``archive()``, ``unarchive()`` operations (see `docs
   <https://python-redmine.com/resources/project.html#additional-methods>`__ for details, requires Redmine >= 5.0.0)
 - Added support for updating and deleting issue journals (see `docs
