@@ -12,7 +12,7 @@ X.X.X (XXXX-XX-XX)
 
 **New Features**:
 
-- RedmineUP `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`__ support
+- *Pro Edition:* RedmineUP `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`__ support
   (`Issue #301 <https://github.com/maxtepkeev/python-redmine/issues/301>`__)
 - Timezone support (see `docs <https://python-redmine.com/configuration.html#timezone>`__ for details)
   (`Issue #271 <https://github.com/maxtepkeev/python-redmine/issues/271>`__)
@@ -26,7 +26,7 @@ X.X.X (XXXX-XX-XX)
   Redmine >= 4.2.0)
 - Added support for `comments` and `attachments` to ``include`` param and on demand includes for News resource
   (requires Redmine >= 4.1.0)
-- Added support for RedmineUP Note ``create()``, ``update()``, ``delete()`` operations (see `docs
+- *Pro Edition:* Added support for RedmineUP Note ``create()``, ``update()``, ``delete()`` operations (see `docs
   <https://python-redmine.com/resources/note.html#create-methods>`__ for details)
 - Added support for Project ``close()``, ``reopen()``, ``archive()``, ``unarchive()`` operations (see `docs
   <https://python-redmine.com/resources/project.html#additional-methods>`__ for details, requires Redmine >= 5.0.0)
@@ -45,7 +45,7 @@ X.X.X (XXXX-XX-XX)
 
 - Stop raising `ResourceAttrError` for attributes that actually exist, but their value is `None`
   (`Issue #261 <https://github.com/maxtepkeev/python-redmine/pull/261>`__)
-- RedmineUP Deal resource ``related_contacts`` attribute was returned as a list instead of being converted to
+- *Pro Edition:* RedmineUP Deal resource ``related_contacts`` attribute was returned as a list instead of being converted to
   ResourceSet object
 - Project resource ``default_assignee`` attribute was returned as a dict instead of being converted to
   Resource object
@@ -206,8 +206,8 @@ of Python-Redmine, more info `here <https://python-redmine.com/editions.html#pro
   of being converted to ``ResourceSet`` object
 - Downloads were downloaded fully into memory instead of being streamed as needed
 - ``ResourceRequirementsError`` exception was broken since v2.0.0
-- RedmineUP CRM Contact and Deal resources export functionality didn't work
-- RedmineUP CRM Contact and Deal resources sometimes weren't converted to Resource objects using Search API
+- *Pro Edition:* RedmineUP CRM Contact and Deal resources export functionality didn't work
+- *Pro Edition:* RedmineUP CRM Contact and Deal resources sometimes weren't converted to Resource objects using Search API
 
 **Documentation**:
 
@@ -240,7 +240,7 @@ user.
 
 **New Features**:
 
-- RedmineUP `Checklist plugin <https://www.redmineup.com/pages/plugins/checklists>`__ support
+- *Pro Edition:* RedmineUP `Checklist plugin <https://www.redmineup.com/pages/plugins/checklists>`__ support
 - `Request Engines <https://python-redmine.com/advanced/request_engines.html>`__ support. It is
   now possible to create engines to define how requests to Redmine are made, e.g. synchronous (one by one)
   or asynchronous using threads or processes etc
@@ -277,8 +277,8 @@ user.
     attributes of the resource to/from Python/Redmine
 
 - Attachment ``delete()`` method support (requires Redmine >= 3.3.0)
-- RedmineUP CRM Note resource now provides ``type`` attribute which shows text representation of ``type_id``
-- RedmineUP CRM DealStatus resource now provides ``status`` attribute which shows text representation of
+- *Pro Edition:* RedmineUP CRM Note resource now provides ``type`` attribute which shows text representation of ``type_id``
+- *Pro Edition:* RedmineUP CRM DealStatus resource now provides ``status`` attribute which shows text representation of
   ``status_type``
 - WikiPage resource now provides ``project_id`` attribute
 - Unicode handling was significantly rewritten and shouldn't cause any more troubles
