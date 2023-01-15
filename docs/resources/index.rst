@@ -41,6 +41,14 @@ RedmineUP CRM
    deal_category
    crm_query
 
+RedmineUP Helpdesk
+------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   ticket
+
 RedmineUP Checklists
 --------------------
 

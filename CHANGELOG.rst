@@ -12,6 +12,8 @@ X.X.X (XXXX-XX-XX)
 
 **New Features**:
 
+- *Pro Edition:* RedmineUP `Helpdesk plugin <https://www.redmineup.com/pages/plugins/helpdesk>`__ support
+  (`Issue #116 <https://github.com/maxtepkeev/python-redmine/issues/116>`__)
 - *Pro Edition:* RedmineUP `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`__ support
   (`Issue #301 <https://github.com/maxtepkeev/python-redmine/issues/301>`__)
 - Timezone support (see `docs <https://python-redmine.com/configuration.html#timezone>`__ for details)

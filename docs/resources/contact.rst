@@ -146,6 +146,7 @@ get
     - deals
     - issues
     - projects
+    - tickets (requires Pro Edition and `Helpdesk plugin <https://www.redmineup.com/pages/plugins/helpdesk>`_ >= 4.1.12)
 
    :return: :ref:`Resource` object
 
