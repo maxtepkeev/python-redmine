@@ -190,7 +190,10 @@ class ResourceManager:
             return None
 
         resource = self._process_create_response(request, response)
-        self.url = self.redmine.url + self.resource_class.query_one.format(resource.internal_id, **fields)
+
+        if self.resource_class.query_one is not None:
+            self.url = self.redmine.url + self.resource_class.query_one.format(resource.internal_id, **fields)
+
         return resource
 
     def _process_create_response(self, request, response):
