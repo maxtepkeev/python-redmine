@@ -235,6 +235,7 @@ update
 .. code-block:: python
 
    >>> redmine.expense.update(
+   ...     123,
    ...     project_id='invoices',
    ...     status_id=2,
    ...     expense_date='2023-01-11',

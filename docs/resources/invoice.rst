@@ -344,6 +344,7 @@ update
 .. code-block:: python
 
    >>> redmine.invoice.update(
+   ...     123,
    ...     number='INV-001',
    ...     project_id='invoices',
    ...     status_id=1,
