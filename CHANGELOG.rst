@@ -51,6 +51,8 @@ X.X.X (XXXX-XX-XX)
   ResourceSet object
 - Project resource ``default_assignee`` attribute was returned as a dict instead of being converted to
   Resource object
+- Project resource ``time_entry_activities`` attribute was returned as a list instead of being converted to
+  ResourceSet object
 
 **Documentation**:
 

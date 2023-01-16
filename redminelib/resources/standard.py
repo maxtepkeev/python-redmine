@@ -39,6 +39,7 @@ class Project(BaseResource):
         'news': 'News',
         'issues': 'Issue',
         'files': 'File',
+        'time_entry_activities': 'Enumeration',
         'issue_custom_fields': 'CustomField',
     }
     _single_attr_id_map = {'parent_id': 'parent'}

@@ -270,9 +270,9 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         response_includes['project'].update({'enabled_modules': [{'id': 36, 'name': 'issue_tracking'}]})
         self.response.json.return_value = response_includes
         self.assertEqual(project.enabled_modules, ['issue_tracking'])
-        response_includes['project'].update({'time_entry_activities': [{'id': 1, 'name': 'developing'}]})
+        response_includes['project'].update(responses['enumeration']['filter'])
         self.response.json.return_value = response_includes
-        self.assertEqual(project.time_entry_activities, [{'id': 1, 'name': 'developing'}])
+        self.assertIsInstance(project.time_entry_activities, resultsets.ResourceSet)
         response_includes['project'].update(responses['custom_field']['all'])
         self.response.json.return_value = response_includes
         self.assertIsInstance(project.issue_custom_fields, resultsets.ResourceSet)
