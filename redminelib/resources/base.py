@@ -500,7 +500,7 @@ class BaseResource(metaclass=Registrar):
                 _repr_.insert(0, value)
 
                 if attr != 'id':
-                    _str_.insert(0, value)
+                    _str_.insert(0, str(value))
 
             if len(_repr_) > 0:
                 break
