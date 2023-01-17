@@ -201,11 +201,18 @@ all
 
    :param int limit: (optional). How much resources to return.
    :param int offset: (optional). Starting from what resource to return the other resources.
+   :param list include:
+    .. raw:: html
+
+       (optional). Fetches associated data in one call. Accepted values:
+
+    - projects
+
    :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
-   >>> contacts = redmine.contact.all(offset=10, limit=100)
+   >>> contacts = redmine.contact.all(offset=10, limit=100, include=['projects'])
    >>> contacts
    <redminelib.resultsets.ResourceSet object with Contact resources>
 
@@ -226,11 +233,18 @@ filter
    :param string tags: (optional). Get contacts with given tags (separated by ``,``).
    :param int limit: (optional). How much resources to return.
    :param int offset: (optional). Starting from what resource to return the other resources.
+   :param list include:
+    .. raw:: html
+
+       (optional). Fetches associated data in one call. Accepted values:
+
+    - projects
+
    :return: :ref:`ResourceSet` object
 
 .. code-block:: python
 
-   >>> contacts = redmine.contact.filter(project_id='vacation', assigned_to_id=123, search='Smith', tags='one,two')
+   >>> contacts = redmine.contact.filter(project_id='vacation', assigned_to_id=123, search='Smith', tags='one,two', include=['projects'])
    >>> contacts
    <redminelib.resultsets.ResourceSet object with Contact resources>
 

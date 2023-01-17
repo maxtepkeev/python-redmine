@@ -28,6 +28,8 @@ X.X.X (XXXX-XX-XX)
   Redmine >= 4.2.0)
 - Added support for `comments` and `attachments` to ``include`` param and on demand includes for News resource
   (requires Redmine >= 4.1.0)
+- *Pro Edition:* Added support for RedmineUP Contact `projects` to ``include`` param and on demand includes for
+  ``all()`` and ``filter()`` operations
 - *Pro Edition:* Added support for RedmineUP Note ``create()``, ``update()``, ``delete()`` operations (see `docs
   <https://python-redmine.com/resources/note.html#create-methods>`__ for details)
 - Added support for Project ``close()``, ``reopen()``, ``archive()``, ``unarchive()`` operations (see `docs
