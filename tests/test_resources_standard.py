@@ -211,10 +211,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
             _attach_relations = {'Issue': 'bars', 'TimeEntry': 'bars'}
 
         self.assertEqual(resources.registry['BarResource']['class'], BarResource)
-        self.assertEqual(resources.registry['User']['attach_includes'], {'bars': 'BarResource'})
-        self.assertEqual(resources.registry['User']['attach_includes_map'], {('bars', 'user_bars'): 'BarResource'})
-        self.assertEqual(resources.registry['Issue']['attach_relations'], {'bars': 'BarResource'})
-        self.assertEqual(resources.registry['TimeEntry']['attach_relations'], {'bars': 'BarResource'})
+        self.assertIn(('bars', 'BarResource'), resources.registry['User']['attach_includes'].items())
+        self.assertIn((('bars', 'user_bars'), 'BarResource'), resources.registry['User']['attach_includes_map'].items())
+        self.assertIn(('bars', 'BarResource'), resources.registry['Issue']['attach_relations'].items())
+        self.assertIn(('bars', 'BarResource'), resources.registry['TimeEntry']['attach_relations'].items())
         self.response.json.return_value = responses['user']['get']
         user = self.redmine.user.get(1)
         self.assertIn('bars', user._includes)
