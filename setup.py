@@ -14,6 +14,7 @@ setup(
     author='Maxim Tepkeev',
     author_email='support@python-redmine.com',
     description='Library for communicating with a Redmine project management application',
+    long_description_content_type='text/x-rst',
     long_description=open('README.rst').read() + '\n\n' + open('CHANGELOG.rst').read(),
     keywords='redmine redmineup redminecrm redminelib easyredmine',
     python_requires='>=3.7, <4',
