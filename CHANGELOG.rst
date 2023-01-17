@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-X.X.X (XXXX-XX-XX)
+2.4.0 (2023-01-18)
 ++++++++++++++++++
 
 **Deprecations**:
