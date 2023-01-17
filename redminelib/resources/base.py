@@ -26,13 +26,16 @@ class Registrar(type):
         if name not in registry:  # a name maybe already added to registry by other classes
             registry[name] = {}
 
-        for attr in ('_attach_includes', '_attach_relations'):
+        for attr in ('_attach_includes', '_attach_relations', '_attach_includes_map'):
             class_attr_name = attr[7:]
             registry_attr_name = attr[1:]
 
             if registry_attr_name in registry[name]:
-                mcs.update_cls_attr(cls, class_attr_name, registry[name][registry_attr_name].keys())
-                mcs.update_cls_attr(cls, '_resource_set_map', registry[name][registry_attr_name])
+                if attr == '_attach_includes_map':
+                    mcs.update_cls_attr(cls, class_attr_name, dict(registry[name][registry_attr_name].keys()))
+                else:
+                    mcs.update_cls_attr(cls, class_attr_name, registry[name][registry_attr_name].keys())
+                    mcs.update_cls_attr(cls, '_resource_set_map', registry[name][registry_attr_name])
 
             if not isinstance(getattr(cls, attr), dict):
                 continue
@@ -47,8 +50,11 @@ class Registrar(type):
                 registry[resource_name][registry_attr_name][value] = name
 
                 if 'class' in registry[resource_name]:
-                    mcs.update_cls_attr(registry[resource_name]['class'], class_attr_name, [value])
-                    mcs.update_cls_attr(registry[resource_name]['class'], '_resource_set_map', {value: name})
+                    if attr == '_attach_includes_map':
+                        mcs.update_cls_attr(registry[resource_name]['class'], class_attr_name, dict([value]))
+                    else:
+                        mcs.update_cls_attr(registry[resource_name]['class'], class_attr_name, [value])
+                        mcs.update_cls_attr(registry[resource_name]['class'], '_resource_set_map', {value: name})
 
         return registry[name].setdefault('class', cls)
 
@@ -115,6 +121,7 @@ class BaseResource(metaclass=Registrar):
 
     _repr = [['id', 'name']]
     _includes = []
+    _includes_map = {}
     _relations = []
     _relations_name = None
     _unconvertible = ['name', 'description']
@@ -122,6 +129,7 @@ class BaseResource(metaclass=Registrar):
     _create_readonly = ['id', 'created_on', 'updated_on', 'author', 'user', 'project', 'issue']
     _update_readonly = _create_readonly[:]
     _attach_includes = None
+    _attach_includes_map = None
     _attach_relations = None
     _resource_map = {}  # Resources that should become a Resource object
     _resource_set_map = {}  # Resources that should become a ResourceSet object
@@ -172,9 +180,13 @@ class BaseResource(metaclass=Registrar):
         if attr in self._relations:
             filters = {f'{self._relations_name}_id': self.internal_id}
             self._encoded_attrs[attr] = self.manager.new_manager(self._resource_set_map[attr]).filter(**filters)
-        elif attr in self._includes and self._decoded_attrs[attr] is None:
-            self._encoded_attrs.update(
-                [self.encode(attr, self.refresh(itself=False, include=attr).raw()[attr] or [], self.manager)])
+        elif attr in self._includes:
+            value = self._decoded_attrs[attr] = self._decoded_attrs.pop(self._includes_map.get(attr, attr), None)
+
+            if value is None:
+                value = self.refresh(itself=False, include=attr).raw().get(self._includes_map.get(attr, attr)) or []
+
+            self._encoded_attrs.update([self.encode(attr, value, self.manager)])
         elif attr in self._decoded_attrs:
             self._encoded_attrs.update([self.encode(attr, self._decoded_attrs[attr], self.manager)])
 

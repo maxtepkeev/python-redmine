@@ -204,6 +204,55 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(project.id, unpickled_project.id)
         self.assertEqual(project.name, unpickled_project.name)
 
+    def test_attach_attributes_through_registry(self):
+        class BarResource(resources.BaseResource):
+            _attach_includes = {'User': 'bars'}
+            _attach_includes_map = {'User': ('bars', 'user_bars')}
+            _attach_relations = {'Issue': 'bars', 'TimeEntry': 'bars'}
+
+        self.assertEqual(resources.registry['BarResource']['class'], BarResource)
+        self.assertEqual(resources.registry['User']['attach_includes'], {'bars': 'BarResource'})
+        self.assertEqual(resources.registry['User']['attach_includes_map'], {('bars', 'user_bars'): 'BarResource'})
+        self.assertEqual(resources.registry['Issue']['attach_relations'], {'bars': 'BarResource'})
+        self.assertEqual(resources.registry['TimeEntry']['attach_relations'], {'bars': 'BarResource'})
+        self.response.json.return_value = responses['user']['get']
+        user = self.redmine.user.get(1)
+        self.assertIn('bars', user._includes)
+        self.assertIn(('bars', 'BarResource'), user._resource_set_map.items())
+        self.assertIn(('bars', 'user_bars'), user._includes_map.items())
+        self.response.json.return_value = responses['issue']['get']
+        issue = self.redmine.issue.get(1)
+        self.assertIn('bars', issue._relations)
+        self.assertIn(('bars', 'BarResource'), issue._resource_set_map.items())
+        self.response.json.return_value = responses['time_entry']['get']
+        time_entry = self.redmine.time_entry.get(1)
+        self.assertIn('bars', time_entry._relations)
+        self.assertIn(('bars', 'BarResource'), time_entry._resource_set_map.items())
+
+    def test_attach_attributes_through_registry_before_resource_was_added(self):
+        resources.registry['BazResource'] = {'attach_relations': type('_', (), {'keys': lambda: set()})}
+
+        class BazResource(resources.BaseResource):
+            _relations = set()
+            _attach_includes = {'QuxResource': 'bazs'}
+            _attach_includes_map = {'QuxResource': ('bazs', 'qux_bazs')}
+
+        self.assertEqual(resources.registry['BazResource']['class'], BazResource)
+        self.assertEqual(resources.registry['QuxResource']['attach_includes'], {'bazs': 'BazResource'})
+        self.assertEqual(
+            resources.registry['QuxResource']['attach_includes_map'], {('bazs', 'qux_bazs'): 'BazResource'})
+
+    def test_attach_includes(self):
+        class QuxResource(resources.BaseResource):
+            _attach_includes = {'User': 'quxs'}
+            _attach_includes_map = {'User': ('quxs', 'user_quxs')}
+
+        self.response.json.return_value = {'user': {'id': 1, 'user_quxs': [{'id': 1}]}}
+        user = self.redmine.user.get(1)
+        self.assertIsInstance(user.quxs, resultsets.ResourceSet)
+        self.assertIsInstance(user.quxs[0], QuxResource)
+        self.assertEqual(user.quxs[0].id, 1)
+
     def test_project_version(self):
         self.assertEqual(self.redmine.project.resource_class.redmine_version, (1, 0, 0))
 
