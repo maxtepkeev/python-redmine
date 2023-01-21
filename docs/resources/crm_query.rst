@@ -37,6 +37,8 @@ get
 
     - contact
     - deal
+    - invoice (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_ >= 4.1.3)
+    - expense (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_ >= 4.1.3)
 
    :return: :ref:`Resource` object
 
@@ -53,6 +55,9 @@ get
    resource object. The relations provided by the CrmQuery resource object are:
 
    * deals
+   * contacts
+   * invoices (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_ >= 4.1.3)
+   * expenses (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_ >= 4.1.3)
 
    .. code-block:: python
 
@@ -83,6 +88,8 @@ filter
 
     - contact
     - deal
+    - invoice (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_ >= 4.1.3)
+    - expense (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_ >= 4.1.3)
 
    :param int limit: (optional). How much resources to return.
    :param int offset: (optional). Starting from what resource to return the other resources.

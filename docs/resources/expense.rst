@@ -177,7 +177,7 @@ filter
 
 .. hint::
 
-   You can also get expenses from a Project, User and Contact resource objects directly using
+   You can also get expenses from a Project, User, Contact and CrmQuery resource objects directly using
    ``expenses`` relation:
 
    .. code-block:: python

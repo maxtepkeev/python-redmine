@@ -1,6 +1,18 @@
 Changelog
 ---------
 
+2.5.0 (XXXX-XX-XX)
+++++++++++++++++++
+
+**Improvements**:
+
+- *Pro Edition:* RedmineUP CrmQuery resource now supports ``invoices`` and ``expenses`` relation attributes
+
+**Bugfixes**:
+
+- *Pro Edition:* RedmineUP CrmQuery resource ``deals`` and ``contacts`` relation attributes didn't work
+- *Pro Edition:* RedmineUP DealStatus resource ``deals`` relation attribute didn't work
+
 2.4.0 (2023-01-18)
 ++++++++++++++++++
 
