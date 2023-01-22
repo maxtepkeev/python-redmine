@@ -86,7 +86,7 @@ create
     - product_id (optional). ID of the product.
     - tax (optional). Tax in percentage.
     - price (optional). Price of the product.
-    - units (optional). Product amount.
+    - units (optional). Unit type, i.e. hours, days, products etc.
 
    :param list uploads:
     .. raw:: html
@@ -121,7 +121,7 @@ create
    ...     recurring_period='6month',
    ...     recurring_action=1,
    ...     recurring_occurrences=3,
-   ...     lines_attributes=[{'position': 1, 'quantity': '3', 'description': 'product description', 'product_id': 1, 'tax': '10', 'price': '5', 'units': '2'}],
+   ...     lines_attributes=[{'position': 1, 'quantity': '3', 'description': 'product description', 'product_id': 1, 'tax': '10', 'price': '5', 'units': 'hours'}],
    ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
    ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': BytesIO(b'I am content of file 2')}]
    ... )
@@ -162,7 +162,7 @@ new
    >>> invoice.recurring_period = '6month'
    >>> invoice.recurring_action = 1
    >>> invoice.recurring_occurrences = 3
-   >>> invoice.lines_attributes = [{'position': 1, 'quantity': '3', 'description': 'product description', 'product_id': 1, 'tax': '10', 'price': '5', 'units': '2'}]
+   >>> invoice.lines_attributes = [{'position': 1, 'quantity': '3', 'description': 'product description', 'product_id': 1, 'tax': '10', 'price': '5', 'units': 'hours'}]
    >>> invoice.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
    >>> invoice.uploads = [{'path': '/absolute/path/to/file'}, {'path': BytesIO(b'I am content of file 2')}]
    >>> invoice.save()
@@ -321,13 +321,15 @@ update
 
        (optional). Invoice lines as [{'': ''}, ...], accepted keys are:
 
-    - description (required). Product description.
+    - id (optional). If not set, a new line will be created.
+    - description (optional). Product description.
     - position (optional). Position of the line among other invoice lines.
     - quantity (optional). Product quantity.
     - product_id (optional). ID of the product.
     - tax (optional). Tax in percentage.
     - price (optional). Price of the product.
-    - units (optional). Product amount.
+    - units (optional). Unit type, i.e. hours, days, products etc.
+    - _destroy (optional). Whether to delete line with a specified id.
 
    :param list uploads:
     .. raw:: html
@@ -363,7 +365,7 @@ update
    ...     recurring_period='6month',
    ...     recurring_action=1,
    ...     recurring_occurrences=3,
-   ...     lines_attributes=[{'position': 1, 'quantity': '3', 'description': 'product description', 'product_id': 1, 'tax': '10', 'price': '5', 'units': '2'}],
+   ...     lines_attributes=[{'id': 1, '_destroy': True}, {'position': 1, 'quantity': '3', 'description': 'product description', 'product_id': 1, 'tax': '10', 'price': '5', 'units': 'hours'}],
    ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
    ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': BytesIO(b'I am content of file 2')}]
    ... )
@@ -402,7 +404,7 @@ save
    >>> invoice.recurring_period = '6month'
    >>> invoice.recurring_action = 1
    >>> invoice.recurring_occurrences = 3
-   >>> invoice.lines_attributes = [{'position': 1, 'quantity': '3', 'description': 'product description', 'product_id': 1, 'tax': '10', 'price': '5', 'units': '2'}]
+   >>> invoice.lines_attributes = [{'id': 1, '_destroy': True}, {'position': 1, 'quantity': '3', 'description': 'product description', 'product_id': 1, 'tax': '10', 'price': '5', 'units': 'hours'}]
    >>> invoice.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
    >>> invoice.uploads = [{'path': '/absolute/path/to/file'}, {'path': BytesIO(b'I am content of file 2')}]
    >>> invoice.save()
@@ -431,7 +433,7 @@ save
    ...     recurring_period='6month',
    ...     recurring_action=1,
    ...     recurring_occurrences=3,
-   ...     lines_attributes=[{'position': 1, 'quantity': '3', 'description': 'product description', 'product_id': 1, 'tax': '10', 'price': '5', 'units': '2'}],
+   ...     lines_attributes=[{'id': 1, '_destroy': True}, {'position': 1, 'quantity': '3', 'description': 'product description', 'product_id': 1, 'tax': '10', 'price': '5', 'units': 'hours'}],
    ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
    ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': BytesIO(b'I am content of file 2')}]
    ... )
