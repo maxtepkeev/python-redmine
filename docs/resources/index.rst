@@ -66,3 +66,14 @@ RedmineUP Invoices
    invoice
    invoice_payment
    expense
+
+RedmineUP Products
+------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   product
+   product_category
+   order
+   order_status

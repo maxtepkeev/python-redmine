@@ -4,6 +4,10 @@ Changelog
 2.5.0 (XXXX-XX-XX)
 ++++++++++++++++++
 
+**New Features**:
+
+- *Pro Edition:* RedmineUP `Products plugin <https://www.redmineup.com/pages/plugins/products>`__ support
+
 **Improvements**:
 
 - *Pro Edition:* RedmineUP CrmQuery resource now supports ``invoices`` and ``expenses`` relation attributes

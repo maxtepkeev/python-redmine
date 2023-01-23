@@ -39,6 +39,7 @@ get
     - deal
     - invoice (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_ >= 4.1.3)
     - expense (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_ >= 4.1.3)
+    - product (requires Pro Edition and `Products plugin <https://www.redmineup.com/pages/plugins/products>`_ >= 2.1.5)
 
    :return: :ref:`Resource` object
 
@@ -58,6 +59,7 @@ get
    * contacts
    * invoices (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_ >= 4.1.3)
    * expenses (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_ >= 4.1.3)
+   * products (requires Pro Edition and `Products plugin <https://www.redmineup.com/pages/plugins/products>`_ >= 2.1.5)
 
    .. code-block:: python
 
@@ -90,6 +92,7 @@ filter
     - deal
     - invoice (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_ >= 4.1.3)
     - expense (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_ >= 4.1.3)
+    - product (requires Pro Edition and `Products plugin <https://www.redmineup.com/pages/plugins/products>`_ >= 2.1.5)
 
    :param int limit: (optional). How much resources to return.
    :param int offset: (optional). Starting from what resource to return the other resources.
