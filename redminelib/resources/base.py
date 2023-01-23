@@ -77,7 +77,7 @@ class Registrar(type):
 
         :param any cls: (required). Resource class.
         :param string name: (required). Attribute name.
-        :param any value: (optional). Attribute value.
+        :param any value: (required). Attribute value.
         """
         attr = getattr(cls, name, None)
 
