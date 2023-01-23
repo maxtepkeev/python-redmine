@@ -13,7 +13,48 @@ See the :doc:`../configuration` about how to configure redmine object.
 Create methods
 --------------
 
-Not supported by CRM plugin
+.. versionadded:: 2.5.0
+
+create
+++++++
+
+.. py:method:: create(**fields)
+   :module: redminelib.managers.ResourceManager
+   :noindex:
+
+   Creates new DealCategory resource with given fields and saves it to the CRM plugin.
+
+   :param project_id: (required). Id or identifier of deal category's project.
+   :type project_id: int or string
+   :param string name: (required). Category name.
+   :return: :ref:`Resource` object
+
+.. code-block:: python
+
+   >>> category = redmine.deal_category.create(project_id='vacation', name='Integration')
+   >>> category
+   <redminelib.resources.DealCategory #123>
+
+new
++++
+
+.. py:method:: new()
+   :module: redminelib.managers.ResourceManager
+   :noindex:
+
+   Creates new empty DealCategory resource, but saves it to the CRM plugin only when ``save()`` is called,
+   also calls ``pre_create()`` and ``post_create()`` methods of the :ref:`Resource` object. Valid attributes
+   are the same as for ``create()`` method above.
+
+   :return: :ref:`Resource` object
+
+.. code-block:: python
+
+   >>> category = redmine.deal_category.new()
+   >>> category.project_id = 'vacation'
+   >>> category.name = 'Integration'
+   >>> category.save()
+   <redminelib.resources.DealCategory #123>
 
 Read methods
 ------------
@@ -81,12 +122,88 @@ filter
 Update methods
 --------------
 
-Not supported by CRM plugin
+.. versionadded:: 2.5.0
+
+update
+++++++
+
+.. py:method:: update(resource_id, **fields)
+   :module: redminelib.managers.ResourceManager
+   :noindex:
+
+   Updates values of given fields of a DealCategory resource and saves them to the CRM plugin.
+
+   :param int resource_id: (required). Category id.
+   :param string name: (required). Category name.
+   :return: True
+
+.. code-block:: python
+
+   >>> redmine.deal_category.update(123, name='Software')
+   True
+
+save
+++++
+
+.. py:method:: save(**attrs)
+   :module: redminelib.resources.DealCategory
+   :noindex:
+
+   Saves the current state of a DealCategory resource to the CRM plugin. Attrs that
+   can be changed are the same as for ``update()`` method above.
+
+   :return: :ref:`Resource` object
+
+.. code-block:: python
+
+   >>> category = redmine.deal_category.get(123)
+   >>> category.name = 'Software'
+   >>> category.save()
+   <redminelib.resources.DealCategory #123>
+
+.. versionadded:: 2.1.0 Alternative syntax was introduced.
+
+.. code-block:: python
+
+   >>> category = redmine.deal_category.get(123).save(name='Software')
+   >>> category
+   <redminelib.resources.DealCategory #123>
 
 Delete methods
 --------------
 
-Not supported by CRM plugin
+.. versionadded:: 2.5.0
+
+delete
+++++++
+
+.. py:method:: delete(resource_id)
+   :module: redminelib.managers.ResourceManager
+   :noindex:
+
+   Deletes single DealCategory resource from the CRM plugin by its id.
+
+   :param int resource_id: (required). Category id.
+   :return: True
+
+.. code-block:: python
+
+   >>> redmine.deal_category.delete(123)
+   True
+
+.. py:method:: delete()
+   :module: redminelib.resources.DealCategory
+   :noindex:
+
+   Deletes current DealCategory resource object from the CRM plugin.
+
+   :return: True
+
+.. code-block:: python
+
+   >>> category = redmine.deal_category.get(1)
+   >>> category.delete()
+   True
 
 Export
 ------
