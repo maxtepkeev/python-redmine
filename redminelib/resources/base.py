@@ -16,9 +16,8 @@ class Registrar(type):
     which name starts with Base are considered base classes and not added to the registry.
     """
     def __new__(mcs, name, bases, attrs):
-        mcs.update_query_strings(attrs)
-
-        cls = super().__new__(mcs, name, bases, attrs)
+        cls = super().__new__(mcs, name, bases, mcs.bulk_update_attrs(attrs))
+        mcs.bulk_update_cls_attrs(cls, attrs)
 
         if name.startswith('Base'):  # base classes shouldn't be added to the registry
             return cls
@@ -59,15 +58,35 @@ class Registrar(type):
         return registry[name].setdefault('class', cls)
 
     @staticmethod
-    def update_query_strings(attrs):
+    def bulk_update_attrs(attrs):
         """
-        Updates all `query_*` string attributes to use ResourceQueryFormatter by default.
+        Updates attrs with specific features and/or actualizes their content before a class is created.
+
+        :param dict attrs: (required). Attributes to work with.
         """
-        for k, v in attrs.items():
-            if k.startswith('query_') and v is not None:
-                attrs[k] = utilities.ResourceQueryStr(v)
+        for attr, value in attrs.items():
+            # `query_*` class attributes should use ResourceQueryFormatter by default
+            if attr.startswith('query_') and value is not None:
+                attrs[attr] = utilities.ResourceQueryStr(value)
 
         return attrs
+
+    @classmethod
+    def bulk_update_cls_attrs(mcs, cls, attrs):
+        """
+        Updates attrs with specific features and/or actualizes their content after a class is created.
+
+        :param any cls: (required). Resource class.
+        :param dict attrs: (required). Attributes to work with.
+        """
+        properties = []
+
+        for attr, value in attrs.items():
+            # `_members` class attribute should also contain all public properties
+            if not attr.startswith('_') and isinstance(value, property):
+                properties.append(attr)
+
+        mcs.update_cls_attr(cls, '_members', properties)
 
     @staticmethod
     def update_cls_attr(cls, name, value):
@@ -82,7 +101,7 @@ class Registrar(type):
         attr = getattr(cls, name, None)
 
         if isinstance(attr, list):
-            value = list(attr) + list(value)
+            value = list(set().union(attr, value))
         elif isinstance(attr, dict):
             value = dict(attr, **value)
         else:
@@ -211,7 +230,9 @@ class BaseResource(metaclass=Registrar):
         """
         Sets the requested attribute.
         """
-        if attr in self._members or attr.startswith('_'):
+        custom_settable = [*self._single_attr_id_map, *self._multiple_attr_id_map]
+
+        if attr.startswith('_') or attr in self._members and attr not in custom_settable:
             return super().__setattr__(attr, value)
         elif attr in self._create_readonly and self.is_new():
             raise exceptions.ReadonlyAttrError
@@ -481,13 +502,13 @@ class BaseResource(metaclass=Registrar):
         """
         Allows dir() to be called on a Resource object and shows Resource attributes.
         """
-        return list(self._decoded_attrs.keys())
+        return [*self._decoded_attrs, *self._members]
 
     def __iter__(self):
         """
         Provides a way to iterate through Resource attributes and its values.
         """
-        return iter(self._decoded_attrs.items())
+        return iter(dict(self._decoded_attrs, **{m: getattr(self, m, None) for m in self._members}).items())
 
     def __int__(self):
         """

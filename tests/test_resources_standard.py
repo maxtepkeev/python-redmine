@@ -183,12 +183,21 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertIn('subject', attributes)
         self.assertIn('relations', attributes)
         self.assertIn('time_entries', attributes)
+        self.assertIn('children', attributes)
+        self.assertIn('attachments', attributes)
+        self.assertIn('manager', attributes)
+        self.assertIn('url', attributes)
+        self.assertIn('internal_id', attributes)
 
     def test_supports_iteration(self):
         self.response.json.return_value = responses['project']['get']
-        project = list(self.redmine.project.get(1))
+        p = self.redmine.project.get(1)
+        project = list(p)
         self.assertIn(('name', 'Foo'), project)
         self.assertIn(('id', 1), project)
+        self.assertIn(('manager', p.manager), project)
+        self.assertIn(('url', f'{self.url}/projects/foo'), project)
+        self.assertIn(('internal_id', 1), project)
 
     def test_setting_custom_field_raises_exception_if_not_list_of_dicts(self):
         self.response.json.return_value = {'project': {'name': 'Foo', 'id': 1, 'custom_fields': [{'id': 1}]}}
