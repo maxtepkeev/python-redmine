@@ -7,6 +7,8 @@ Changelog
 **New Features**:
 
 - *Pro Edition:* RedmineUP `Products plugin <https://www.redmineup.com/pages/plugins/products>`__ support
+- Issue copying (see `docs <https://python-redmine.com/resources/issue.html#copying>`__ for details)
+  (`Issue #203 <https://github.com/maxtepkeev/python-redmine/issues/203>`__)
 
 **Improvements**:
 

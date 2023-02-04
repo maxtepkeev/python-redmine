@@ -1,7 +1,7 @@
 from . import mock, BaseRedmineTestCase
 from .responses import responses
 
-from redminelib import resources, resultsets, exceptions
+from redminelib import resources, managers, resultsets, exceptions
 
 
 class StandardResourcesTestCase(BaseRedmineTestCase):
@@ -448,6 +448,32 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         issue.custom_fields = [{'id': 1, 'value': 'bar'}]
         self.assertIsInstance(issue.save(), resources.Issue)
         self.assertEqual(issue.custom_fields[0].value, 'bar')
+
+    def test_issue_copy(self):
+        import json
+        self.response.status_code = 201
+        self.response.json.return_value = {'issue': {'subject': 'Foo', 'id': 1, 'project': {'id': 1}}}
+        self.redmine.issue.get(1).copy()
+        request = json.loads(self.patch_requests.call_args[1]['data'])
+        self.assertEqual(request['copy_from'], 1)
+        self.assertEqual(request['link_copy'], '1')
+        self.assertEqual(request['copy_subtasks'], '1')
+        self.assertEqual(request['copy_attachments'], '1')
+
+    def test_issue_copy_via_manager(self):
+        import json
+        self.response.status_code = 201
+        self.response.json.return_value = responses['issue']['get']
+        self.redmine.issue.copy(1, project_id=1, link_original=False, include=None)
+        request = json.loads(self.patch_requests.call_args[1]['data'])
+        self.assertEqual(request['copy_from'], 1)
+        self.assertNotIn('link_copy', request)
+        self.assertNotIn('copy_subtasks', request)
+        self.assertNotIn('copy_attachments', request)
+
+    def test_issue_custom_manager(self):
+        self.assertEqual(repr(self.redmine.issue), '<redminelib.managers.IssueManager object for Issue resource>')
+        self.assertIsInstance(self.redmine.issue, managers.IssueManager)
 
     def test_issue_relations(self):
         self.response.json.return_value = responses['issue']['get']

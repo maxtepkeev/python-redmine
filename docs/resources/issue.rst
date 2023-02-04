@@ -448,6 +448,55 @@ delete
    >>> issue.delete()
    True
 
+Copying
+-------
+
+.. versionadded:: 2.5.0
+
+.. py:method:: copy(resource_id, project_id=None, link_original=True, include=('subtasks', 'attachments'), **fields)
+   :module: redminelib.managers.IssueManager
+   :noindex:
+
+   Copies single Issue resource by its id using the same API as Redmine's GUI copying which means copying
+   is done the most efficient way possible. By default links original to a copy via relations and copies
+   both subtasks and attachments.
+
+   :param int resource_id: (required). Issue id.
+   :param project_id: (required). Id or identifier of issue's project.
+   :type project_id: int or string
+   :param bool link_original: (optional). Whether to link the original issue to a copy via relations.
+   :param list include:
+    .. raw:: html
+
+       (optional). Additional data to copy or <code>None</code>. Accepted values:
+
+    - subtasks
+    - attachments
+
+   :param dict fields: (optional). Accepts the same fields as Issue's ``create()`` method to add or modify original values.
+   :return: :ref:`Resource` object
+
+.. code-block:: python
+
+   >>> copy = redmine.issue.copy(1, project_id='vacation', link_original=False, include=['attachments'])
+   >>> copy
+   <redminelib.resources.Issue #124 "Vacation">
+
+.. py:method:: copy(link_original=True, include=('subtasks', 'attachments'), **fields)
+   :module: redminelib.resources.Issue
+   :noindex:
+
+   Copies current Issue resource object.
+
+   :return: :ref:`Resource` object
+
+.. code-block:: python
+
+   >>> issue = redmine.issue.get(123)
+   >>> copy = issue.copy(subject='this is a copy')
+   >>> copy
+   <redminelib.resources.Issue #124 "this is a copy">
+
 Export
 ------
 

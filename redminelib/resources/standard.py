@@ -80,6 +80,7 @@ class Issue(BaseResource):
     query_delete = '/issues/{}.json'
     search_hints = ['issue', 'issue closed']
     extra_export_columns = ['description', 'last_notes']
+    manager_class = managers.IssueManager
 
     _repr = [['id', 'subject'], ['title'], ['id']]
     _includes = ['children', 'attachments', 'relations', 'changesets', 'journals', 'watchers', 'allowed_statuses']
@@ -173,6 +174,12 @@ class Issue(BaseResource):
             return 'checklists_attributes', value
 
         return super().decode(attr, value, manager)
+
+    def copy(self, link_original=True, include=(), **fields):
+        if 'project_id' not in fields and not self.is_new():
+            fields['project_id'] = self._decoded_attrs['project']['id']
+
+        return self.manager.copy(self.internal_id, link_original=link_original, include=include, **fields)
 
 
 class TimeEntry(BaseResource):

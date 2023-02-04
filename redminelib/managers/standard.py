@@ -18,6 +18,25 @@ class ProjectManager(ResourceManager):
         raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{attr}'")
 
 
+class IssueManager(ResourceManager):
+    def copy(self, issue_id, link_original=True, include=(), **fields):
+        fields['_copy'] = {'copy_from': issue_id}
+
+        if link_original:
+            fields['_copy']['link_copy'] = '1'
+
+        if include is not None:
+            for i in include or ('subtasks', 'attachments'):
+                fields['_copy'][f'copy_{i}'] = '1'
+
+        return self.create(**fields)
+
+    def _prepare_create_request(self, request):
+        request = super()._prepare_create_request(request)
+        request.update(request[self.container].pop('_copy', {}))
+        return request
+
+
 class FileManager(ResourceManager):
     def _process_create_response(self, request, response):
         if response is True:
