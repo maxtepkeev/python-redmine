@@ -78,7 +78,7 @@ class Issue(BaseResource):
     query_create = '/projects/{project_id}/issues.json'
     query_update = '/issues/{}.json'
     query_delete = '/issues/{}.json'
-    search_hints = ['issue', 'issue closed']
+    search_hints = ['issue', 'issue closed', 'issue-closed']
     extra_export_columns = ['description', 'last_notes']
     manager_class = managers.IssueManager
 
