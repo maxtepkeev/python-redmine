@@ -84,7 +84,7 @@ class RedmineTestCase(BaseRedmineTestCase):
     def test_successful_file_download(self):
         self.response.status_code = 200
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
-        self.assertEqual(self.redmine.download('http://foo/bar.txt', '/some/path'), '/some/path/bar.txt')
+        self.assertEqual(self.redmine.download('http://foo/bar.txt', '/some/path/'), '/some/path/bar.txt')
 
     def test_successful_in_memory_file_download(self):
         self.response.status_code = 200

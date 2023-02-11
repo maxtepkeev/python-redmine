@@ -19,6 +19,7 @@ Changelog
 
 **Bugfixes**:
 
+- Tests were failing on Windows OS
 - Some closed Issues weren't converted to Resource objects using ``redmine.search()``
 - *Pro Edition:* RedmineUP CrmQuery resource ``deals`` and ``contacts`` relation attributes didn't work
 - *Pro Edition:* RedmineUP DealStatus resource ``deals`` relation attribute didn't work

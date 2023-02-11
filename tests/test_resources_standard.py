@@ -25,7 +25,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_export(self):
         self.response.json.return_value = responses['issue']['get']
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
-        self.assertEqual(self.redmine.issue.get(1).export('txt', '/foo/bar'), '/foo/bar/1.txt')
+        self.assertEqual(self.redmine.issue.get(1).export('txt', '/foo/bar/'), '/foo/bar/1.txt')
 
     def test_export_not_supported_exception(self):
         self.response.json.return_value = responses['attachment']['get']
@@ -354,7 +354,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_project_export(self):
         self.response.json.return_value = responses['project']['all']
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
-        self.assertEqual(self.redmine.project.all().export('txt', '/foo/bar'), '/foo/bar/projects.txt')
+        self.assertEqual(self.redmine.project.all().export('txt', '/foo/bar/'), '/foo/bar/projects.txt')
 
     def test_project_parent_converts_to_resource(self):
         self.response.json.return_value = {'project': {'name': 'Foo', 'id': 1, 'parent': {'id': 2}}}
@@ -608,9 +608,9 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_issue_export(self):
         self.response.json.return_value = responses['issue']['all']
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
-        self.assertEqual(self.redmine.issue.all().export('txt', '/foo/bar'), '/foo/bar/issues.txt')
+        self.assertEqual(self.redmine.issue.all().export('txt', '/foo/bar/'), '/foo/bar/issues.txt')
         self.response.json.return_value = responses['issue']['get']
-        self.assertEqual(self.redmine.issue.get(1).export('txt', '/foo/bar'), '/foo/bar/1.txt')
+        self.assertEqual(self.redmine.issue.get(1).export('txt', '/foo/bar/'), '/foo/bar/1.txt')
 
     def test_issue_parent_converts_to_resource(self):
         self.response.json.return_value = {'issue': {'subject': 'Foo', 'id': 1, 'parent': {'id': 2}}}
@@ -748,7 +748,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_time_entry_export(self):
         self.response.json.return_value = responses['time_entry']['all']
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
-        self.assertEqual(self.redmine.time_entry.all().export('txt', '/foo/bar'), '/foo/bar/time_entries.txt')
+        self.assertEqual(self.redmine.time_entry.all().export('txt', '/foo/bar/'), '/foo/bar/time_entries.txt')
 
     def test_time_entry_resource_map_converts_to_resource(self):
         self.response.json.return_value = responses['time_entry']['get']
@@ -852,7 +852,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         response['attachment']['content_url'] = 'http://foo/bar.txt'
         self.response.json.return_value = response
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
-        self.assertEqual(self.redmine.attachment.get(1).download('/some/path'), '/some/path/bar.txt')
+        self.assertEqual(self.redmine.attachment.get(1).download('/some/path/'), '/some/path/bar.txt')
 
     def test_attachment_resource_map_converts_to_resource(self):
         self.response.json.return_value = responses['attachment']['get']
@@ -933,7 +933,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         response['attachment']['content_url'] = 'http://foo/bar.txt'
         self.response.json.return_value = response
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
-        self.assertEqual(self.redmine.file.get(1).download('/some/path'), '/some/path/bar.txt')
+        self.assertEqual(self.redmine.file.get(1).download('/some/path/'), '/some/path/bar.txt')
 
     def test_file_resource_map_converts_to_resource(self):
         self.response.json.return_value = responses['attachment']['get']
@@ -1048,7 +1048,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_wiki_page_export(self):
         self.response.json.return_value = responses['wiki_page']['get']
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
-        self.assertEqual(self.redmine.wiki_page.get('Foo', project_id='Foo').export('txt', '/foo'), '/foo/Foo.txt')
+        self.assertEqual(self.redmine.wiki_page.get('Foo', project_id='Foo').export('txt', '/foo/'), '/foo/Foo.txt')
 
     def test_wiki_page_parent_converts_to_resource(self):
         self.response.json.return_value = {'wiki_page': {'title': 'Foo', 'project_id': 1, 'parent': {'title': 'Bar'}}}
@@ -1441,7 +1441,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_user_export(self):
         self.response.json.return_value = responses['user']['all']
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
-        self.assertEqual(self.redmine.user.all().export('txt', '/foo/bar'), '/foo/bar/users.txt')
+        self.assertEqual(self.redmine.user.all().export('txt', '/foo/bar/'), '/foo/bar/users.txt')
 
     def test_group_version(self):
         self.assertEqual(self.redmine.group.resource_class.redmine_version, (2, 1, 0))
@@ -1599,7 +1599,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     def test_news_export(self):
         self.response.json.return_value = responses['news']['all']
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
-        self.assertEqual(self.redmine.news.all().export('txt', '/foo/bar'), '/foo/bar/news.txt')
+        self.assertEqual(self.redmine.news.all().export('txt', '/foo/bar/'), '/foo/bar/news.txt')
 
     def test_news_str(self):
         self.response.json.return_value = responses['news']['filter']
