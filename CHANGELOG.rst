@@ -12,6 +12,7 @@ Changelog
 
 **Improvements**:
 
+- Migrated CI to GitHub Actions, also we now test not only on Linux, but on macOS and Windows as well
 - ``dir(resource)`` and ``list(resource)`` now also show properties of an object
 - *Pro Edition:* Added support for RedmineUP DealCategory ``create()``, ``update()``, ``delete()`` operations
   (see `docs <https://python-redmine.com/resources/deal_category.html#create-methods>`__ for details)

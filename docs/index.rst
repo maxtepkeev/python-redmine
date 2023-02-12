@@ -4,8 +4,8 @@ Python-Redmine
 .. image:: https://badge.fury.io/py/python-redmine.svg
    :target: https://badge.fury.io/py/python-redmine
 
-.. image:: https://img.shields.io/travis/com/maxtepkeev/python-redmine/master
-   :target: https://app.travis-ci.com/maxtepkeev/python-redmine
+.. image:: https://img.shields.io/github/actions/workflow/status/maxtepkeev/python-redmine/tests.yml
+   :target: https://github.com/maxtepkeev/python-redmine/actions/workflows/tests.yml
 
 .. image:: https://img.shields.io/coverallsCoverage/github/maxtepkeev/python-redmine?branch=master
    :target: https://coveralls.io/github/maxtepkeev/python-redmine?branch=master
