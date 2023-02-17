@@ -1,0 +1,33 @@
+name: Docs
+
+on:
+  push:
+    paths: ['docs/**', '.github/workflows/docs.yml']
+  pull_request:
+    paths: ['docs/**', '.github/workflows/docs.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: pip install -r docs/requirements.txt
+      - name: Build docs
+        run: |
+          cd docs
+          sphinx-build -b html -n -W --keep-going -j auto . _build
+      - name: Upload docs
+        uses: easingthemes/ssh-deploy@v4
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DOCS_KEY }}
+          ARGS: '-rzvc'
+          SOURCE: 'docs/_build/'
+          REMOTE_HOST: ${{ secrets.DOCS_HOST }}
+          REMOTE_USER: ${{ secrets.DOCS_USER }}
+          TARGET: '_build/docs/'
+          SCRIPT_BEFORE: mkdir -p _build
+          SCRIPT_AFTER: ./initdocs.sh && echo $RSYNC_STDOUT

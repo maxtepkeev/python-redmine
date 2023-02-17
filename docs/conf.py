@@ -1,5 +1,6 @@
 import os
 import sys
+import datetime
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -24,8 +25,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Python-Redmine'
-copyright = u'2023, Maxim Tepkeev'
+project = 'Python-Redmine'
+project_copyright = f'{datetime.date.today().year}, Maxim Tepkeev'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -68,10 +69,19 @@ html_sidebars = {
 }
 
 # If false, no index is generated.
-html_use_index = True
+html_use_index = False
+
+# If false, no module index is generated.
+html_domain_indices = False
+
+# If true, the reST sources are included in the HTML build as _sources/name.
+html_copy_source = False
 
 # If true, links to the reST sources are added to the pages.
 html_show_sourcelink = False
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'PythonRedminedoc'
+
+# Ignore all py:class warning in nitpicky mode.
+nitpick_ignore_regex = [(r'py:class', r'.*')]
