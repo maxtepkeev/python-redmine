@@ -17,6 +17,8 @@ Changelog
 - *Pro Edition:* Added support for RedmineUP DealCategory ``create()``, ``update()``, ``delete()`` operations
   (see `docs <https://python-redmine.com/resources/deal_category.html#create-methods>`__ for details)
 - *Pro Edition:* RedmineUP CrmQuery resource now supports ``invoices`` and ``expenses`` relation attributes
+- ``PerformanceWarning`` will be issued when Python-Redmine does some unnecessary redirects before the actual
+  request is made
 
 **Bugfixes**:
 

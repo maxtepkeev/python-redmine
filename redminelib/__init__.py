@@ -127,8 +127,8 @@ class Redmine:
             # We need to send bytes over the socket, so in case a file-like object contains a unicode
             # object underneath, we need to convert it to bytes, otherwise we'll get an exception
             if isinstance(c, str):
-                warnings.warn("File-like object contains unicode, hence an additional step is performed to convert "
-                              "its content to bytes, please consider switching to bytes to eliminate this warning",
+                warnings.warn('File-like object contains unicode, hence an additional step is performed to convert '
+                              'its content to bytes, please consider switching to bytes to eliminate this warning',
                               exceptions.PerformanceWarning)
                 f = io.BytesIO(f.read().encode('utf-8'))
 

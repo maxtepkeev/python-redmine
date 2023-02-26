@@ -297,7 +297,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = {
             'project': {'name': 'Foo', 'id': 1, 'custom_fields': [{'id': 1, 'value': 'foo'}]}}
         project = self.redmine.project.get(1)
-        project.homepage = 'http://foo.bar'
+        project.homepage = self.url
         project.parent_id = 3
         project.custom_fields = [{'id': 1, 'value': 'bar'}]
         self.assertIsInstance(project.save(), resources.Project)
@@ -849,7 +849,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_attachment_download(self):
         response = responses['attachment']['get']
-        response['attachment']['content_url'] = 'http://foo/bar.txt'
+        response['attachment']['content_url'] = f'{self.url}/bar.txt'
         self.response.json.return_value = response
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
         self.assertEqual(self.redmine.attachment.get(1).download('/some/path/'), '/some/path/bar.txt')
@@ -930,7 +930,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
     @mock.patch('redminelib.open', mock.mock_open(), create=True)
     def test_file_download(self):
         response = responses['attachment']['get']
-        response['attachment']['content_url'] = 'http://foo/bar.txt'
+        response['attachment']['content_url'] = f'{self.url}/bar.txt'
         self.response.json.return_value = response
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
         self.assertEqual(self.redmine.file.get(1).download('/some/path/'), '/some/path/bar.txt')
@@ -959,7 +959,7 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         wiki_page = self.redmine.wiki_page.get('Foo%Bar', project_id=1)
         self.assertEqual(self.patch_requests.call_args[0][1], f'{self.url}/projects/1/wiki/Foo%25Bar.json')
         self.assertEqual(wiki_page.title, 'Foo%Bar')
-        self.assertEqual(wiki_page.url, 'http://foo.bar/projects/1/wiki/Foo%25Bar')
+        self.assertEqual(wiki_page.url, f'{self.url}/projects/1/wiki/Foo%25Bar')
 
     def test_wiki_page_filter(self):
         self.response.json.return_value = responses['wiki_page']['filter']

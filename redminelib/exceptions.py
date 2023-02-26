@@ -282,7 +282,7 @@ class HTTPProtocolError(BaseRedmineError):
     Wrong HTTP protocol usage.
     """
     def __init__(self):
-        super().__init__('Redmine url should start with HTTPS and not with HTTP')
+        super().__init__('Protocol redirect detected, Redmine URL expects HTTPS, but code uses HTTP or vice versa')
 
 
 class TimezoneError(BaseRedmineError):

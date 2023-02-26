@@ -3,6 +3,7 @@ Base engine that defines common behaviour and settings for all engines.
 """
 
 import json
+import warnings
 
 from .. import exceptions
 
@@ -144,8 +145,17 @@ class BaseEngine:
 
         if response.history:
             r = response.history[0]
-            if r.is_redirect and r.request.url.startswith('http://') and response.request.url.startswith('https://'):
-                raise exceptions.HTTPProtocolError
+
+            if 300 <= r.status_code <= 399:
+                url1, url2 = str(r.request.url), str(response.request.url)
+
+                if (url1[:5] == 'http:' and url2[:6] == 'https:') or (url1[:6] == 'https:' and url2[:5] == 'http:'):
+                    raise exceptions.HTTPProtocolError
+                else:
+                    warnings.warn('Redirect detected during request-response, normally there should be no redirects, '
+                                  'so please check your Redmine URL for things like prepending www which redirects to '
+                                  'a no www domain and vice versa or using an old domain which redirects to a new one',
+                                  exceptions.PerformanceWarning)
 
         status_code = response.status_code
 

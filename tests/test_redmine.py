@@ -84,16 +84,16 @@ class RedmineTestCase(BaseRedmineTestCase):
     def test_successful_file_download(self):
         self.response.status_code = 200
         self.response.iter_content = lambda chunk_size: (str(num) for num in range(0, 5))
-        self.assertEqual(self.redmine.download('http://foo/bar.txt', '/some/path/'), '/some/path/bar.txt')
+        self.assertEqual(self.redmine.download(f'{self.url}/bar.txt', '/some/path/'), '/some/path/bar.txt')
 
     def test_successful_in_memory_file_download(self):
         self.response.status_code = 200
         self.response.iter_content = lambda: (str(num) for num in range(0, 5))
-        self.assertEqual(''.join(self.redmine.download('http://foo/bar.txt').iter_content()), '01234')
+        self.assertEqual(''.join(self.redmine.download(f'{self.url}/bar.txt').iter_content()), '01234')
 
     def test_file_url_exception(self):
         self.response.status_code = 200
-        self.assertRaises(exceptions.FileUrlError, lambda: self.redmine.download('http://bad_url', '/some/path'))
+        self.assertRaises(exceptions.FileUrlError, lambda: self.redmine.download('https://bad_url', '/some/path'))
 
     def test_file_upload_no_file_exception(self):
         self.assertRaises(exceptions.NoFileError, lambda: self.redmine.upload('foo',))
