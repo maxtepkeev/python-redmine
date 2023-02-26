@@ -25,7 +25,7 @@ class BaseEngine:
         self.ignore_response = options.pop('ignore_response', False)
         self.return_response = options.pop('return_response', True)
         self.return_raw_response = options.pop('return_raw_response', False)
-        self.requests = dict(dict(headers={}, params={}, data={}), **options.get('requests', {}))
+        self.requests = dict(dict(headers={}, params={}), **options.get('requests', {}))
 
         if self.ignore_response:
             self.requests['stream'] = True
