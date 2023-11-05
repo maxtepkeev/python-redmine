@@ -125,7 +125,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter('always')
             issue = self.redmine.issue.create(project_id=1, subject='Foo', uploads=[{'path': stream}])
-            self.assertEquals(len(w), 1)
+            self.assertEqual(len(w), 1)
             self.assertIs(w[0].category, exceptions.PerformanceWarning)
         self.assertEqual(issue.project_id, 1)
         self.assertEqual(issue.subject, 'Foo')
@@ -166,7 +166,7 @@ class ResourceManagerTestCase(BaseRedmineTestCase):
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter('always')
             self.assertEqual(self.redmine.issue.update(1, subject='Bar', uploads=[{'path': stream}]), True)
-            self.assertEquals(len(w), 1)
+            self.assertEqual(len(w), 1)
             self.assertIs(w[0].category, exceptions.PerformanceWarning)
 
     def test_update_resource_returns_none(self):
