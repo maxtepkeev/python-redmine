@@ -21,7 +21,7 @@ jobs:
           cd docs
           sphinx-build -b html -n -W --keep-going -j auto . _build
       - name: Upload docs
-        uses: easingthemes/ssh-deploy@v5
+        uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DOCS_KEY }}
           ARGS: '-rzvc'
