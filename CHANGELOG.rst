@@ -35,6 +35,10 @@ Changelog
 - *Pro Edition:* RedmineUP CrmQuery resource ``deals`` and ``contacts`` relation attributes didn't work
 - *Pro Edition:* RedmineUP DealStatus resource ``deals`` relation attribute didn't work
 
+**Documentation**:
+
+- Mentioned support for ``author_id`` in Issue's resource filter operation
+
 2.4.0 (2023-01-18)
 ++++++++++++++++++
 

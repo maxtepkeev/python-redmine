@@ -236,6 +236,7 @@ filter
     - id - status id
 
    :type status_id: int or string
+   :param int author_id: (optional). Get issues which are authored by the given user id.
    :param int assigned_to_id: (optional). Get issues which are assigned to the given user id.
     To get the issues assigned to the user whose credentials were used to access the API pass ``me``
     as a string.
