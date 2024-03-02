@@ -4,6 +4,10 @@ Changelog
 2.5.0 (XXXX-XX-XX)
 ++++++++++++++++++
 
+**Deprecations**:
+
+- Requests version required >= 2.31.0
+
 **New Features**:
 
 - *Pro Edition:* RedmineUP `Products plugin <https://www.redmineup.com/pages/plugins/products>`__ support
