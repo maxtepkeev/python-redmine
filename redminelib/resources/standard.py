@@ -409,7 +409,7 @@ class User(BaseResource):
     container_create = 'user'
     container_update = 'user'
     query_all_export = '/users.{format}'
-    query_all = '/users.json'
+    query_all = '/users.json?status='
     query_one = '/users/{}.json'
     query_filter = '/users.json'
     query_create = '/users.json'

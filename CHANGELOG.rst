@@ -20,6 +20,12 @@ Changelog
 - ``PerformanceWarning`` will be issued when Python-Redmine does some unnecessary redirects before the actual
   request is made
 
+**Changes**:
+
+- *Backwards Incompatible:* User ``all`` operation now really returns all users, i.e. not only active, but locked,
+  registered and anonymous as well instead of only returning just active users in previous versions due to the
+  respect to Redmine's standard behaviour (`Issue #327 <https://github.com/maxtepkeev/python-redmine/issues/327>`__)
+
 **Bugfixes**:
 
 - Tests were failing on Windows OS
