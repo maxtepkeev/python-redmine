@@ -101,7 +101,7 @@ class BaseEngineTestCase(BaseRedmineTestCase):
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter('always')
             self.redmine.engine.request('get', self.url)
-            self.assertEquals(len(w), 1)
+            self.assertEqual(len(w), 1)
             self.assertIs(w[0].category, exceptions.PerformanceWarning)
 
     def test_engine_is_picklable(self):

@@ -417,7 +417,8 @@ class BaseResource(metaclass=Registrar):
         if not self.is_new():
             self.pre_update()
             self.manager.update(self.internal_id, **self._changes)
-            self._decoded_attrs['updated_on'] = datetime.utcnow().strftime(self.manager.redmine.datetime_format)
+            self._decoded_attrs['updated_on'] = datetime.now(timezone.utc).strftime(
+                self.manager.redmine.datetime_format)
             self.post_update()
         else:
             self.pre_create()
