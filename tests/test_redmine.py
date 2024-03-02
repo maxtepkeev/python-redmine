@@ -77,7 +77,7 @@ class RedmineTestCase(BaseRedmineTestCase):
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter('always')
             self.assertEqual(self.redmine.upload(StringIO(b'\xcf\x86oo'.decode('utf-8')))['token'], '456789')
-            self.assertEquals(len(w), 1)
+            self.assertEqual(len(w), 1)
             self.assertIs(w[0].category, exceptions.PerformanceWarning)
 
     @mock.patch('redminelib.open', mock.mock_open(), create=True)
