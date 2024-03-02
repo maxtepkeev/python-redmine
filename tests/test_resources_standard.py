@@ -1409,6 +1409,8 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = responses['user']['get']
         user = self.redmine.user.get(1)
         self.assertIsInstance(user.issues, resultsets.ResourceSet)
+        self.assertIsInstance(user.issues_assigned, resultsets.ResourceSet)
+        self.assertIsInstance(user.issues_authored, resultsets.ResourceSet)
         self.assertIsInstance(user.time_entries, resultsets.ResourceSet)
 
     def test_user_includes(self):

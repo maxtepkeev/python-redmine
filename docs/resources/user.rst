@@ -154,8 +154,10 @@ get
    resource objects wrapped in a :ref:`ResourceSet` which are somehow related to a User
    resource object. The relations provided by the User resource object are:
 
-   * issues
    * time_entries
+   * issues (alias to issues_assigned)
+   * issues_assigned (requires Python-Redmine v2.5.0)
+   * issues_authored (requires Python-Redmine v2.5.0)
    * deals (requires Pro Edition and `CRM plugin <https://www.redmineup.com/pages/plugins/crm>`_)
    * contacts (requires Pro Edition and `CRM plugin <https://www.redmineup.com/pages/plugins/crm>`_)
    * invoices (requires Pro Edition and `Invoices plugin <https://www.redmineup.com/pages/plugins/invoices>`_

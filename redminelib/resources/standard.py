@@ -419,7 +419,7 @@ class User(BaseResource):
 
     _repr = [['id', 'firstname', 'lastname'], ['id', 'name']]
     _includes = ['memberships', 'groups']
-    _relations = ['issues', 'time_entries']
+    _relations = ['issues', 'issues_assigned', 'issues_authored', 'time_entries']
     _relations_name = 'assigned_to'
     _unconvertible = ['status']
     _create_readonly = BaseResource._create_readonly + ['api_key', 'last_login_on']
@@ -429,12 +429,18 @@ class User(BaseResource):
         'groups': 'Group',
         'memberships': 'ProjectMembership',
         'issues': 'Issue',
+        'issues_assigned': 'Issue',
+        'issues_authored': 'Issue',
         'time_entries': 'TimeEntry',
     }
 
     def __getattr__(self, attr):
-        if attr == 'time_entries' and attr not in self._encoded_attrs:
-            self._relations_name = 'user'
+        if attr in self._relations and attr not in self._encoded_attrs:
+            if attr == 'issues_authored':
+                self._relations_name = 'author'
+            elif attr == 'time_entries':
+                self._relations_name = 'user'
+
             value = super().__getattr__(attr)
             self._relations_name = 'assigned_to'
             return value

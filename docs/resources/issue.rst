@@ -287,6 +287,21 @@ filter
       >>> project.issues
       <redminelib.resultsets.ResourceSet object with Issue resources>
 
+   .. versionadded:: 2.5.0
+
+   Apart from ``issues`` relation a User resource object provides ``issues_assigned`` which is an alias
+   to ``issues`` relation and ``issues_authored`` relation which returns Issue objects authored by a user:
+
+   .. code-block:: python
+
+      >>> user = redmine.user.get(9)
+      >>> user.issues
+      <redminelib.resultsets.ResourceSet object with Issue resources>
+      >>> user.issues_assigned
+      <redminelib.resultsets.ResourceSet object with Issue resources>
+      >>> user.issues_authored
+      <redminelib.resultsets.ResourceSet object with Issue resources>
+
 Update methods
 --------------
 

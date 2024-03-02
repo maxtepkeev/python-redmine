@@ -14,6 +14,8 @@ Changelog
 
 - Migrated CI to GitHub Actions, also we now test not only on Linux, but on macOS and Windows as well
 - ``dir(resource)`` and ``list(resource)`` now also show properties of an object
+- Support for ``issues_assigned`` and ``issues_authored`` relations in User object
+  (`Issue #317 <https://github.com/maxtepkeev/python-redmine/issues/317>`__)
 - *Pro Edition:* Added support for RedmineUP DealCategory ``create()``, ``update()``, ``delete()`` operations
   (see `docs <https://python-redmine.com/resources/deal_category.html#create-methods>`__ for details)
 - *Pro Edition:* RedmineUP CrmQuery resource now supports ``invoices`` and ``expenses`` relation attributes
