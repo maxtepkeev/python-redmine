@@ -13,7 +13,7 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install dependencies
         run: pip install -r docs/requirements.txt
       - name: Build docs
@@ -21,7 +21,7 @@ jobs:
           cd docs
           sphinx-build -b html -n -W --keep-going -j auto . _build
       - name: Upload docs
-        uses: easingthemes/ssh-deploy@v4
+        uses: easingthemes/ssh-deploy@v5
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DOCS_KEY }}
           ARGS: '-rzvc'
