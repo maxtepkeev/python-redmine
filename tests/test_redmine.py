@@ -41,8 +41,8 @@ class RedmineTestCase(BaseRedmineTestCase):
 
     def test_session_key(self):
         with self.redmine.session(key='opa'):
-            self.assertEqual(self.redmine.engine.requests['params']['key'], 'opa')
-        self.assertRaises(KeyError, lambda: self.redmine.engine.requests['params']['key'])
+            self.assertEqual(self.redmine.engine.requests['headers']['X-Redmine-API-Key'], 'opa')
+        self.assertRaises(KeyError, lambda: self.redmine.engine.requests['headers']['X-Redmine-API-Key'])
 
     def test_session_username_password(self):
         with self.redmine.session(username='john', password='smith'):
@@ -53,7 +53,8 @@ class RedmineTestCase(BaseRedmineTestCase):
         self.redmine.engine.requests['cert'] = ('bar', 'baz')
         requests = {'verify': False, 'timeout': 2, 'cert': ('foo', 'bar'), 'params': {'foo': 'bar'}}
         with self.redmine.session(key='secret', requests=requests):
-            self.assertEqual(self.redmine.engine.requests['params'], dict(key='secret', **requests['params']))
+            self.assertEqual(self.redmine.engine.requests['headers'], {'X-Redmine-API-Key': 'secret'})
+            self.assertEqual(self.redmine.engine.requests['params'], requests['params'])
             self.assertEqual(self.redmine.engine.requests['verify'], requests['verify'])
             self.assertEqual(self.redmine.engine.requests['timeout'], requests['timeout'])
             self.assertEqual(self.redmine.engine.requests['cert'], requests['cert'])

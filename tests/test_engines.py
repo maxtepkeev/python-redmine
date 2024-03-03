@@ -8,7 +8,7 @@ from redminelib import engines, exceptions
 class BaseEngineTestCase(BaseRedmineTestCase):
     def test_engine_init(self):
         redmine = Redmine(self.url, key='123', impersonate='jsmith', requests={'foo': 'bar'})
-        self.assertEqual(redmine.engine.requests['params']['key'], '123')
+        self.assertEqual(redmine.engine.requests['headers']['X-Redmine-API-Key'], '123')
         self.assertEqual(redmine.engine.requests['headers']['X-Redmine-Switch-User'], 'jsmith')
         self.assertEqual(redmine.engine.requests['foo'], 'bar')
         redmine = Redmine(self.url, username='john', password='qwerty')

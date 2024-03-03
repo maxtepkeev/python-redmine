@@ -28,6 +28,12 @@ Changelog
 
 **Changes**:
 
+- *Backwards Incompatible:* API key is now being sent in the X-Redmine-API-Key header instead of the key GET
+  parameter which makes things more secure in case of a failed connection, but it might created issues for servers
+  that don't do custom request header forwarding by default, so be sure to check your web server before upgrading
+  (`Issue #328 <https://github.com/maxtepkeev/python-redmine/issues/328>`__ and
+  `Issue #330 <https://github.com/maxtepkeev/python-redmine/issues/330>`__) (thanks to `Tom Misilo <https://github.com/misilot>`__
+  and `Ricardo Branco <https://github.com/ricardobranco777>`__)
 - *Backwards Incompatible:* User ``all`` operation now really returns all users, i.e. not only active, but locked,
   registered and anonymous as well instead of only returning just active users in previous versions due to the
   respect to Redmine's standard behaviour (`Issue #327 <https://github.com/maxtepkeev/python-redmine/issues/327>`__)
