@@ -64,6 +64,18 @@ class UserManager(ResourceManager):
     def _construct_get_url(self, path):
         return super()._construct_get_url(self._check_custom_url(path))
 
+    def all(self, **params):
+        resourceset = super().all(**params)
+
+        if self.redmine.ver is not None:  # https://www.redmine.org/issues/32090#note-6
+            if self.redmine.ver >= (5, 1, 2):
+                resourceset.manager.url = f'{resourceset.manager.url}*'
+            elif self.redmine.ver in ((5, 1, 0), (5, 1, 1)):
+                resourceset.manager.url = (f'{resourceset.manager.url[:-7]}f[]=status_id&'
+                                           f'op[status_id]==&v[status_id][]=1&v[status_id][]=2&v[status_id][]=3')
+
+        return resourceset
+
     def _prepare_create_request(self, request):
         request = super()._prepare_create_request(request)
         request['send_information'] = request[self.container].pop('send_information', False)

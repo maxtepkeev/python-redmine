@@ -1351,6 +1351,15 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(users[1].id, 2)
         self.assertEqual(users[1].firstname, 'Jack')
 
+    def test_user_all_url_variations(self):
+        self.redmine.ver = (5, 0, 0)
+        self.assertEqual(self.redmine.user.all().manager.url, f'{self.url}/users.json?status=')
+        self.redmine.ver = (5, 1, 0)
+        self.assertEqual(self.redmine.user.all().manager.url, f'{self.url}/users.json?f[]=status_id&'
+                                            f'op[status_id]==&v[status_id][]=1&v[status_id][]=2&v[status_id][]=3')
+        self.redmine.ver = (6, 0, 0)
+        self.assertEqual(self.redmine.user.all().manager.url, f'{self.url}/users.json?status=*')
+
     def test_user_filter(self):
         self.response.json.return_value = responses['user']['filter']
         users = self.redmine.user.filter(status_id=2)
