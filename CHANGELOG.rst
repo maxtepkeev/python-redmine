@@ -44,6 +44,8 @@ Changelog
 - Tests were failing on Python 3.12 (`Issue #332 <https://github.com/maxtepkeev/python-redmine/pull/332>`__)
   (thanks to `Michał Górny <https://github.com/mgorny>`__)
 - Some closed Issues weren't converted to Resource objects using ``redmine.search()``
+- *Pro Edition:* RedmineUP Invoice resource ``order`` attribute was returned as a dict instead of being converted to
+  Resource object
 - *Pro Edition:* RedmineUP CrmQuery resource ``deals`` and ``contacts`` relation attributes didn't work
 - *Pro Edition:* RedmineUP DealStatus resource ``deals`` relation attribute didn't work
 
