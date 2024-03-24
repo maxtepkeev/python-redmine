@@ -20,6 +20,7 @@ Changelog
 - ``dir(resource)`` and ``list(resource)`` now also show properties of an object
 - Support for ``issues_assigned`` and ``issues_authored`` relations in User object
   (`Issue #317 <https://github.com/maxtepkeev/python-redmine/issues/317>`__)
+- Original filename will be used as a filename for all uploaded files if a path was provided and filename wasn't set
 - *Pro Edition:* Added support for RedmineUP DealCategory ``create()``, ``update()``, ``delete()`` operations
   (see `docs <https://python-redmine.com/resources/deal_category.html#create-methods>`__ for details)
 - *Pro Edition:* RedmineUP CrmQuery resource now supports ``invoices`` and ``expenses`` relation attributes
