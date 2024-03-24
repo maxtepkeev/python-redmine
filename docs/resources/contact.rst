@@ -61,6 +61,14 @@ create
     - 1 - public
     - 2 - private
 
+   :param dict avatar:
+    .. raw:: html
+
+       (optional). Avatar to be used for the contact as dict, accepted keys are:
+
+    - path (required). Absolute file path or file-like object that should be uploaded.
+    - filename (optional). Required if a file-like object is provided.
+
    :return: :ref:`Resource` object
 
 .. code-block:: python
@@ -82,7 +90,8 @@ create
    ...     is_company=False,
    ...     address_attributes={'street1': 'foo', 'street2': 'bar', 'city': 'Moscow', 'postcode': '111111', 'country_code': 'RU'},
    ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
-   ...     visibility=0
+   ...     visibility=0,
+   ...     avatar={'path': '/absolute/path/to/file.jpg'}
    ... )
    >>> contact
    <redminelib.resources.Contact #1 "Ivan Ivanov">
@@ -120,6 +129,7 @@ new
    >>> contact.address_attributes = {'street1': 'foo', 'street2': 'bar', 'city': 'Moscow', 'postcode': '111111', 'country_code': 'RU'}
    >>> contact.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
    >>> contact.visibility = 0
+   >>> contact.avatar = {'path': '/absolute/path/to/file.jpg'}
    >>> contact.save()
    <redminelib.resources.Contact #1 "Ivan Ivanov">
 
@@ -311,6 +321,14 @@ update
     - 1 - public
     - 2 - private
 
+   :param dict avatar:
+    .. raw:: html
+
+       (optional). Avatar to be used for the contact as dict, accepted keys are:
+
+    - path (required). Absolute file path or file-like object that should be uploaded.
+    - filename (optional). Required if a file-like object is provided.
+
    :return: True
 
 .. code-block:: python
@@ -332,7 +350,8 @@ update
    ...     is_company=False,
    ...     address_attributes={'street1': 'foo', 'street2': 'bar', 'city': 'Moscow', 'postcode': '111111', 'country_code': 'RU'},
    ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
-   ...     visibility=0
+   ...     visibility=0,
+   ...     avatar={'path': '/absolute/path/to/file.jpg'}
    ... )
    True
 
@@ -367,6 +386,7 @@ save
    >>> contact.address_attributes = {'street1': 'foo', 'street2': 'bar', 'city': 'Moscow', 'postcode': '111111', 'country_code': 'RU'}
    >>> contact.custom_fields = [{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}]
    >>> contact.visibility = 0
+   >>> contact.avatar = {'path': '/absolute/path/to/file.jpg'}
    >>> contact.save()
    <redminelib.resources.Contact #12345 "Ivan Ivanov">
 
@@ -390,7 +410,8 @@ save
    ...     is_company=False,
    ...     address_attributes={'street1': 'foo', 'street2': 'bar', 'city': 'Moscow', 'postcode': '111111', 'country_code': 'RU'},
    ...     custom_fields=[{'id': 1, 'value': 'foo'}, {'id': 2, 'value': 'bar'}],
-   ...     visibility = 0
+   ...     visibility=0,
+   ...     avatar={'path': '/absolute/path/to/file.jpg'}
    ... )
    >>> contact
    <redminelib.resources.Contact #12345 "Ivan Ivanov">
