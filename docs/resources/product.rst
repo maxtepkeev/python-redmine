@@ -42,6 +42,14 @@ create
    :param string description: (optional). Product description.
    :param list tag_list: (optional). List of tags.
    :param list custom_fields: (optional). Custom fields as [{'id': 1, 'value': 'foo'}].
+   :param dict image:
+    .. raw:: html
+
+       (optional). Image to be used for the product as dict, accepted keys are:
+
+    - path (required). Absolute file path or file-like object that should be uploaded.
+    - filename (optional). Required if a file-like object is provided.
+
    :param list uploads:
     .. raw:: html
 
@@ -67,6 +75,7 @@ create
    ...     description='product description',
    ...     tag_list=['foo', 'bar'],
    ...     custom_fields=[{'id': 1, 'value': '11'}],
+   ...     image={'path': '/absolute/path/to/file.jpg'},
    ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': BytesIO(b'I am content of file 2')}]
    ... )
    >>> product
@@ -98,6 +107,7 @@ new
    >>> product.description = 'product description'
    >>> product.tag_list = ['foo', 'bar']
    >>> product.custom_fields = [{'id': 1, 'value': '11'}]
+   >>> product.image = {'path': '/absolute/path/to/file.jpg'}
    >>> product.uploads = [{'path': '/absolute/path/to/file'}, {'path': BytesIO(b'I am content of file 2')}]
    >>> product.save()
    <redminelib.resources.Product #123>
@@ -251,6 +261,14 @@ update
    :param string description: (optional). Product description.
    :param list tag_list: (optional). List of tags.
    :param list custom_fields: (optional). Custom fields as [{'id': 1, 'value': 'foo'}].
+   :param dict image:
+    .. raw:: html
+
+       (optional). Image to be used for the product as dict, accepted keys are:
+
+    - path (required). Absolute file path or file-like object that should be uploaded.
+    - filename (optional). Required if a file-like object is provided.
+
    :param list uploads:
     .. raw:: html
 
@@ -277,6 +295,7 @@ update
    ...     description='product description',
    ...     tag_list=['foo', 'bar'],
    ...     custom_fields=[{'id': 1, 'value': '11'}],
+   ...     image={'path': '/absolute/path/to/file.jpg'},
    ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': BytesIO(b'I am content of file 2')}]
    ... )
    True
@@ -306,6 +325,7 @@ save
    >>> product.description = 'product description'
    >>> product.tag_list = ['foo', 'bar']
    >>> product.custom_fields = [{'id': 1, 'value': '11'}]
+   >>> product.image = {'path': '/absolute/path/to/file.jpg'}
    >>> product.uploads = [{'path': '/absolute/path/to/file'}, {'path': BytesIO(b'I am content of file 2')}]
    >>> product.save()
    <redminelib.resources.Product #123>
@@ -325,6 +345,7 @@ save
    ...     description='product description',
    ...     tag_list=['foo', 'bar'],
    ...     custom_fields=[{'id': 1, 'value': '11'}],
+   ...     image={'path': '/absolute/path/to/file.jpg'},
    ...     uploads=[{'path': '/absolute/path/to/file'}, {'path': BytesIO(b'I am content of file 2')}]
    ... )
    >>> product
