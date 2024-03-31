@@ -219,7 +219,7 @@ class ResourceManager:
 
         :param dict request: Request data.
         """
-        return {self.resource_class.container_update: self.resource_class.bulk_decode(request, self)}
+        return {self.container: self.resource_class.bulk_decode(request, self)}
 
     def update(self, resource_id, **fields):
         """
@@ -246,6 +246,8 @@ class ResourceManager:
             else:
                 raise exceptions.ValidationError(f'{e} argument is required')
 
+        self.params.update(self.resource_class.query_update.formatter.used_kwargs)
+        self.container = self.resource_class.container_update
         url = self._construct_update_url(query_update)
         request = self._prepare_update_request(self.resource_class.query_update.formatter.unused_kwargs)
         response = self.redmine.engine.request(self.resource_class.http_method_update, url, data=request)
