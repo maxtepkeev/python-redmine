@@ -7,7 +7,7 @@ Python-Redmine
    :target: https://badge.fury.io/py/python-redmine
 
 .. |Tests| image:: https://img.shields.io/github/actions/workflow/status/maxtepkeev/python-redmine/tests.yml.svg
-   :target: https://github.com/maxtepkeev/python-redmine/actions/workflows/tests
+   :target: https://github.com/maxtepkeev/python-redmine/actions/workflows/tests.yml
 
 .. |Coveralls| image:: https://img.shields.io/coverallsCoverage/github/maxtepkeev/python-redmine?branch=master
    :target: https://coveralls.io/github/maxtepkeev/python-redmine?branch=master
