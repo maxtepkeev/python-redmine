@@ -1,13 +1,15 @@
 Python-Redmine
 ==============
 
-.. image:: https://badge.fury.io/py/python-redmine.svg
+|PyPI| |Tests| |Coveralls|
+
+.. |PyPI| image:: https://badge.fury.io/py/python-redmine.svg
    :target: https://badge.fury.io/py/python-redmine
 
-.. image:: https://img.shields.io/github/actions/workflow/status/maxtepkeev/python-redmine/tests.yml
-   :target: https://github.com/maxtepkeev/python-redmine/actions/workflows/tests.yml
+.. |Tests| image:: https://img.shields.io/github/actions/workflow/status/maxtepkeev/python-redmine/tests.yml.svg
+   :target: https://github.com/maxtepkeev/python-redmine/actions/workflows/tests
 
-.. image:: https://img.shields.io/coverallsCoverage/github/maxtepkeev/python-redmine?branch=master
+.. |Coveralls| image:: https://img.shields.io/coverallsCoverage/github/maxtepkeev/python-redmine?branch=master
    :target: https://coveralls.io/github/maxtepkeev/python-redmine?branch=master
 
 Python-Redmine is a library for communicating with a `Redmine <http://www.redmine.org>`__
