@@ -5,6 +5,12 @@ from redminelib import resources, managers, resultsets, exceptions
 
 
 class StandardResourcesTestCase(BaseRedmineTestCase):
+    def _test_eq_helper(self, f):
+        r1 = f()
+        r2 = f()
+        self.assertNotEqual(id(r1), id(r2))
+        self.assertEqual(r1, r2)
+
     def test_supports_dictionary_like_attribute_retrieval(self):
         self.response.json.return_value = responses['project']['get']
         project = self.redmine.project.get(1)
@@ -271,6 +277,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(project.id, 1)
         self.assertEqual(project.name, 'Foo')
 
+    def test_project_eq(self):
+        self.response.json.return_value = responses['project']['get']
+        return self._test_eq_helper(lambda: self.redmine.project.get(1))
+
     def test_project_all(self):
         self.response.json.return_value = responses['project']['all']
         projects = self.redmine.project.all()
@@ -408,6 +418,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         issue = self.redmine.issue.get(1)
         self.assertEqual(issue.id, 1)
         self.assertEqual(issue.subject, 'Foo')
+
+    def test_issue_eq(self):
+        self.response.json.return_value = responses['issue']['get']
+        return self._test_eq_helper(lambda: self.redmine.issue.get(1))
 
     def test_issue_all(self):
         self.response.json.return_value = responses['issue']['all']
@@ -681,6 +695,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(time_entry.id, 1)
         self.assertEqual(time_entry.hours, 2)
 
+    def test_time_entry_eq(self):
+        self.response.json.return_value = responses['time_entry']['get']
+        return self._test_eq_helper(lambda: self.redmine.time_entry.get(1))
+
     def test_time_entry_all(self):
         self.response.json.return_value = responses['time_entry']['all']
         time_entries = self.redmine.time_entry.all()
@@ -785,6 +803,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(enumeration.id, 1)
         self.assertEqual(enumeration.name, 'Foo')
 
+    def test_enumeration_eq(self):
+        self.response.json.return_value = responses['enumeration']['filter']
+        return self._test_eq_helper(lambda: self.redmine.enumeration.get(1, resource='time_entry_activities'))
+
     def test_enumeration_filter(self):
         self.response.json.return_value = responses['enumeration']['filter']
         enumerations = self.redmine.enumeration.filter(resource='time_entry_activities')
@@ -808,6 +830,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         attachment = self.redmine.attachment.get(1)
         self.assertEqual(attachment.id, 1)
         self.assertEqual(attachment.filename, 'foo.jpg')
+
+    def test_attachment_entry_eq(self):
+        self.response.json.return_value = responses['attachment']['get']
+        return self._test_eq_helper(lambda: self.redmine.attachment.get(1))
 
     def test_attachment_update(self):
         self.response.json.return_value = responses['attachment']['get']
@@ -869,6 +895,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         f = self.redmine.file.get(1)
         self.assertEqual(f.id, 1)
         self.assertEqual(f.filename, 'foo.jpg')
+
+    def test_file_eq(self):
+        self.response.json.return_value = responses['attachment']['get']
+        return self._test_eq_helper(lambda: self.redmine.file.get(1))
 
     def test_file_filter(self):
         self.response.json.return_value = responses['file']['filter']
@@ -952,6 +982,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.response.json.return_value = responses['wiki_page']['get']
         wiki_page = self.redmine.wiki_page.get('Foo', project_id=1)
         self.assertEqual(wiki_page.title, 'Foo')
+
+    def test_wiki_eq(self):
+        self.response.json.return_value = responses['wiki_page']['get']
+        return self._test_eq_helper(lambda: self.redmine.wiki_page.get('Foo', project_id=1))
 
     def test_wiki_page_get_special(self):
         """Test getting a wiki page with special char in title."""
@@ -1077,6 +1111,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         membership = self.redmine.project_membership.get(1)
         self.assertEqual(membership.id, 1)
 
+    def test_project_membership_eq(self):
+        self.response.json.return_value = responses['project_membership']['get']
+        return self._test_eq_helper(lambda: self.redmine.project_membership.get(1))
+
     def test_project_membership_filter(self):
         self.response.json.return_value = responses['project_membership']['filter']
         memberships = self.redmine.project_membership.filter(project_id=1)
@@ -1158,6 +1196,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(issue_category.id, 1)
         self.assertEqual(issue_category.name, 'Foo')
 
+    def test_issue_category_eq(self):
+        self.response.json.return_value = responses['issue_category']['get']
+        return self._test_eq_helper(lambda: self.redmine.issue_category.get(1))
+
     def test_issue_category_filter(self):
         self.response.json.return_value = responses['issue_category']['filter']
         categories = self.redmine.issue_category.filter(project_id=1)
@@ -1221,6 +1263,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         relation = self.redmine.issue_relation.get(1)
         self.assertEqual(relation.id, 1)
 
+    def test_issue_relation_eq(self):
+        self.response.json.return_value = responses['issue_relation']['get']
+        return self._test_eq_helper(lambda: self.redmine.issue_relation.get(1))
+
     def test_issue_relation_filter(self):
         self.response.json.return_value = responses['issue_relation']['filter']
         relations = self.redmine.issue_relation.filter(issue_id=1)
@@ -1272,6 +1318,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         version = self.redmine.version.get(1)
         self.assertEqual(version.id, 1)
         self.assertEqual(version.name, 'Foo')
+
+    def test_version_eq(self):
+        self.response.json.return_value = responses['version']['get']
+        return self._test_eq_helper(lambda: self.redmine.version.get(1))
 
     def test_version_filter(self):
         self.response.json.return_value = responses['version']['filter']
@@ -1336,6 +1386,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         user = self.redmine.user.get(1)
         self.assertEqual(user.id, 1)
         self.assertEqual(user.firstname, 'John')
+
+    def test_user_eq(self):
+        self.response.json.return_value = responses['user']['get']
+        return self._test_eq_helper(lambda: self.redmine.user.get(1))
 
     def test_user_get_account(self):
         self.response.json.return_value = responses['user']['get']
@@ -1463,6 +1517,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(group.id, 1)
         self.assertEqual(group.name, 'Foo')
 
+    def test_group_eq(self):
+        self.response.json.return_value = responses['group']['get']
+        return self._test_eq_helper(lambda: self.redmine.group.get(1))
+
     def test_group_all(self):
         self.response.json.return_value = responses['group']['all']
         groups = self.redmine.group.all()
@@ -1538,6 +1596,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(role.id, 1)
         self.assertEqual(role.name, 'Foo')
 
+    def test_role_eq(self):
+        self.response.json.return_value = responses['role']['get']
+        return self._test_eq_helper(lambda: self.redmine.role.get(1))
+
     def test_role_all(self):
         self.response.json.return_value = responses['role']['all']
         roles = self.redmine.role.all()
@@ -1558,6 +1620,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         news = self.redmine.news.get(1)
         self.assertEqual(news.id, 1)
         self.assertEqual(news.title, 'Foo')
+
+    def test_news_eq(self):
+        self.response.json.return_value = responses['news']['get']
+        return self._test_eq_helper(lambda: self.redmine.news.get(1))
 
     def test_news_all(self):
         self.response.json.return_value = responses['news']['all']
@@ -1656,6 +1722,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(status.id, 1)
         self.assertEqual(status.name, 'Foo')
 
+    def test_issue_status_eq(self):
+        self.response.json.return_value = responses['issue_status']['all']
+        return self._test_eq_helper(lambda: self.redmine.issue_status.get(1))
+
     def test_issue_status_all(self):
         self.response.json.return_value = responses['issue_status']['all']
         statuses = self.redmine.issue_status.all()
@@ -1676,6 +1746,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         tracker = self.redmine.tracker.get(1)
         self.assertEqual(tracker.id, 1)
         self.assertEqual(tracker.name, 'Foo')
+
+    def test_tracker_eq(self):
+        self.response.json.return_value = responses['tracker']['all']
+        return self._test_eq_helper(lambda: self.redmine.tracker.get(1))
 
     def test_tracker_all(self):
         self.response.json.return_value = responses['tracker']['all']
@@ -1698,6 +1772,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         self.assertEqual(query.id, 1)
         self.assertEqual(query.name, 'Foo')
 
+    def test_query_eq(self):
+        self.response.json.return_value = responses['query']['all']
+        return self._test_eq_helper(lambda: self.redmine.query.get(1))
+
     def test_query_all(self):
         self.response.json.return_value = responses['query']['all']
         queries = self.redmine.query.all()
@@ -1718,6 +1796,10 @@ class StandardResourcesTestCase(BaseRedmineTestCase):
         field = self.redmine.custom_field.get(1)
         self.assertEqual(field.id, 1)
         self.assertEqual(field.name, 'Foo')
+
+    def test_custom_field_eq(self):
+        self.response.json.return_value = responses['custom_field']['all']
+        return self._test_eq_helper(lambda: self.redmine.custom_field.get(1))
 
     def test_custom_field_all(self):
         self.response.json.return_value = responses['custom_field']['all']
