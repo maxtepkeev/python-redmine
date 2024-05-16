@@ -1,6 +1,15 @@
 Changelog
 ---------
 
+2.6.0 (XXXX-XX-XX)
+++++++++++++++++++
+
+**Improvements**:
+
+- Added `__eq__` methods to resources for direct instance equality comparison (`Issue #336
+  <https://github.com/maxtepkeev/python-redmine/pull/336>`__) (thanks to `Patrick Donnelly
+  <https://github.com/batrick>`__)
+
 2.5.0 (2024-03-31)
 ++++++++++++++++++
 
