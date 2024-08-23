@@ -50,8 +50,7 @@ class BaseEngine:
         """
         raise NotImplementedError
 
-    @staticmethod
-    def construct_request_kwargs(method, headers, params, data):
+    def construct_request_kwargs(self, method, headers, params, data):
         """
         Constructs kwargs that will be used in all requests to Redmine.
 
@@ -66,7 +65,8 @@ class BaseEngine:
         if method in ('post', 'put', 'patch') and 'Content-Type' not in kwargs['headers']:
             kwargs['data'] = json.dumps(data)
             kwargs['headers']['Content-Type'] = 'application/json'
-
+        if getattr(self.session, "timeout", None) is not None:
+            kwargs["timeout"] = self.session.timeout
         return kwargs
 
     def request(self, method, url, headers=None, params=None, data=None):
