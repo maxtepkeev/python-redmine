@@ -60,12 +60,12 @@ class BaseEngine:
         :param data: (required). Data to send in the body of the request.
         :type data: dict, bytes or file-like object
         """
-
         kwargs = dict(self.requests, **{'data': data or {}, 'params': params or {}, 'headers': headers or {}})
 
         if method in ('post', 'put', 'patch') and 'Content-Type' not in kwargs['headers']:
             kwargs['data'] = json.dumps(data)
             kwargs['headers']['Content-Type'] = 'application/json'
+
         return kwargs
 
     def request(self, method, url, headers=None, params=None, data=None):
