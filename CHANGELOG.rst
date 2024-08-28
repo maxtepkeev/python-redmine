@@ -10,6 +10,11 @@ Changelog
   <https://github.com/maxtepkeev/python-redmine/pull/336>`__) (thanks to `Patrick Donnelly
   <https://github.com/batrick>`__)
 
+**Bugfixes**:
+
+- Not all parameters, i.e. timeout, were forwarded to requests module (`Issue #343 <https://github.com/maxtepkeev/python-redmine/pull/343>`__)
+  (thanks to `timerke <https://github.com/timerke>`__)
+
 2.5.0 (2024-03-31)
 ++++++++++++++++++
 
