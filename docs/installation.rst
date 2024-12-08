@@ -44,8 +44,8 @@ You can also install latest stable development version via `pip <http://www.pip-
 Pro Edition
 -----------
 
-License for a Pro Edition can be bought
-`here <https://secure.2checkout.com/order/checkout.php?PRODS=4708754&QTY=1&CART=1&CARD=1&DISABLE_SHORT_FORM_MOBILE=1>`_.
-You will receive an email with all the details regarding Pro Edition installation process. In case of any
-problems support is provided via support@python-redmine.com. Please be sure to write from email that was
-specified during the purchase procedure.
+License for a Pro Edition can currently only be bought via `TON <https://ton.org>`__ by transferring 25 USDT
+to the following wallet address: :code:`UQBn0FIZM1zM7lmIeCczdk9sIMDrvBfFbbuXsYJPdCaFcmYJ`. After the
+transaction is complete, be sure to send an email to support@python-redmine.com that contains your transaction ID
+and you will receive an email back with all the details regarding Pro Edition installation process. Please give us
+at least 3 to 6 hours to process these emails.
